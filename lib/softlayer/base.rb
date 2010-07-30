@@ -35,7 +35,7 @@
 # - <tt>$SL_API_BASE_URL</tt>- The default URL used to access the SoftLayer API. This defaults to the value of SoftLayer::API_PUBLIC_ENDPOINT
 #
 module SoftLayer
-  VERSION = "0.9.0"
+  VERSION = "1.0.0"
 
   # The base URL of the SoftLayer API's REST-like endpoints available to the public internet.
   API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/rest/v3/'
