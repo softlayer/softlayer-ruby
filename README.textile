@@ -1,6 +1,6 @@
 h1=. SoftLayer API Client for Ruby
 
-The SoftLayer API Client for Ruby is a library for connecting to and calling the routines of "The SoftLayer API":http://sldn.softlayer.com/wiki/index.php/The_SoftLayer_API from the "%{color:#9E0803}*Ruby*%":http://www.ruby-lang.org programming language.
+The SoftLayer API Client for Ruby is a library for connecting to and calling the routines of "The SoftLayer API":http://sldn.softlayer.com/wiki/index.php/The_SoftLayer_API from the "Ruby":http://www.ruby-lang.org programming language.
 
 h2. Overview
 
