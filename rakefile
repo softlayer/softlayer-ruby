@@ -1,0 +1,76 @@
+# Copyright (c) 2010, SoftLayer Technologies, Inc. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+#  * Redistributions of source code must retain the above copyright notice,
+#    this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+#  * Neither SoftLayer Technologies, Inc. nor the names of its contributors may
+#    be used to endorse or promote products derived from this software without
+#    specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+require 'rubygems'
+require 'rake/gempackagetask'
+require 'spec/rake/spectask'
+
+require 'lib/softlayer/base'
+
+softlayer_api_gem = Gem::Specification.new do |s|
+  s.platform  =   Gem::Platform::RUBY
+  s.name = %q{softlayer_api}
+  s.version = SoftLayer::VERSION
+  s.author = "SoftLayer Development Team"
+  s.email = %q{sldn@softlayer.com}
+  s.homepage = %q{http://sldn.softlayer.com/}
+  s.summary = %q{Library for accessing the SoftLayer portal API}
+  s.description = %q{The softlayer_api gem offers a convenient mechanism for invoking the services of the SoftLayer API from Ruby.}
+  s.files = FileList["README.textile", "LICENSE.textile", "lib/**/*.rb", "test/**/*.rb", "examples/**/*.rb"]
+  s.require_path = "lib"
+  s.has_rdoc = true
+  s.add_dependency("json")
+end
+
+softlayer_api_jruby_gem = Gem::Specification.new do |s|
+  s.platform  =   Gem::Platform::RUBY
+  s.name = %q{softlayer_api_jruby}
+  s.version = SoftLayer::VERSION
+  s.author = "SoftLayer Development Team"
+  s.email = %q{sldn@softlayer.com}
+  s.homepage = %q{http://sldn.softlayer.com/}
+  s.summary = %q{Library for accessing the SoftLayer portal API through JRuby}
+  s.description = %q{The softlayer_api_jruby gem offers a convenient mechanism for invoking the services of the SoftLayer API from JRuby.}
+  s.files = FileList["README.textile", "LICENSE.textile", "lib/**/*.rb", "test/**/*.rb", "examples/**/*.rb"]
+  s.require_path = "lib"
+  s.has_rdoc = true
+  s.add_dependency("json-jruby")
+end
+
+Rake::GemPackageTask.new(softlayer_api_gem) do |pkg|
+end
+
+Rake::GemPackageTask.new(softlayer_api_jruby_gem) do |pkg|
+end
+
+Spec::Rake::SpecTask.new do |tester|
+  $DEBUG = 1
+  tester.spec_files = FileList["test/**/*.rb"]
+  tester.spec_opts = ["-c", "-f nested"]
+end
+
+task :default => [:spec] do
+end
