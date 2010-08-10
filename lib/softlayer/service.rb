@@ -230,21 +230,12 @@ module SoftLayer
       # find out what URL will invoke the method (with the given parameters)
       request_url = url_to_call_method(method_name, parameters)
 
-      # construct an HTTP request for that method with the given URL
-      http_request = http_request_for_method(method_name, request_url);
-      http_request.basic_auth(self.username, self.api_key)
-
       # marshall the arguments into the http_request
       request_body = marshall_arguments_for_call(args)
 
-      # If you provide arguments to a call that is not supposed to have
-      # arguments, this will print a warning to the console.
-      if request_body && !http_request.request_body_permitted?
-        $stderr.puts("Warning - The HTTP request for #{method_name} does not allow arguments to be passed to the server")
-      else
-        # Otherwise, add the arguments as the body of the request
-        http_request.body = request_body
-      end
+      # construct an HTTP request for that method with the given URL
+      http_request = http_request_for_method(method_name, request_url, request_body);
+      http_request.basic_auth(self.username, self.api_key)
 
       # Send the url request and recover the results.  Parse the response (if any)
       # as JSON
@@ -289,21 +280,45 @@ module SoftLayer
     # and create a Net::HTTP request of that type. This is intended
     # to be used in the internal processing of method_missing and
     # need not be called directly.
-    def http_request_for_method(method_name, method_url)
+    def http_request_for_method(method_name, method_url, request_body)
       content_type_header = {"Content-Type" => "application/json"}
 
       case method_name.to_s
       when /^get/
-        Net::HTTP::Get.new(method_url.request_uri())
+		# if the user has provided some arguments to the call, we 
+		# use a POST instead of a GET in spite of the method name.
+		if request_body && !request_body.empty?
+	        url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
+		else 
+        	url_request = Net::HTTP::Get.new(method_url.request_uri())
+		end
       when /^edit/
-        Net::HTTP::Put.new(method_url.request_uri(), content_type_header)
+        url_request = Net::HTTP::Put.new(method_url.request_uri(), content_type_header)
       when /^delete/
-        Net::HTTP::Delete.new(method_url.request_uri())
+        url_request = Net::HTTP::Delete.new(method_url.request_uri())
       when /^create/, /^add/, /^remove/, /^findBy/
-        Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
+        url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
       else
-        Net::HTTP::Get.new(method_url.request_uri())
+		# The name doesn't match one of our expected patterns... Use GET if 
+		# there are no parameters, and POST if the user has given parameters.
+		if request_body && !request_body.empty?
+	        url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
+		else 
+        	url_request = Net::HTTP::Get.new(method_url.request_uri())
+		end
       end
+
+      # This warning should be obsolete as we should be using POST if the user
+ 	  # has provided parameters. I'm going to leave it in, however, on the off
+	  # chance that it catches a case we aren't expecting.
+      if request_body && !url_request.request_body_permitted?
+        $stderr.puts("Warning - The HTTP request for #{method_name} does not allow arguments to be passed to the server")
+      else
+        # Otherwise, add the arguments as the body of the request
+        url_request.body = request_body
+      end
+
+	  url_request
     end
 
     # Connect to the network and request the content of the resource
@@ -314,7 +329,7 @@ module SoftLayer
     def issue_http_request(request_url, http_request, &block)
       # create and run an SSL request
       https = Net::HTTP.new(request_url.host, request_url.port)
-      https.use_ssl = true
+      https.use_ssl = (request_url.scheme == "https")
 
       # This line silences an annoying warning message if you're in debug mode
       https.verify_mode = OpenSSL::SSL::VERIFY_NONE if $DEBUG

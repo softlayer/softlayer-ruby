@@ -34,8 +34,9 @@
 #   Set this if you want to use the same api for all clients and don't want to have to specify it when the client is created
 # - <tt>$SL_API_BASE_URL</tt>- The default URL used to access the SoftLayer API. This defaults to the value of SoftLayer::API_PUBLIC_ENDPOINT
 #
+
 module SoftLayer
-  VERSION = "1.0.1"
+  VERSION = "1.0.2"  # version history at the bottom of the file.
 
   # The base URL of the SoftLayer API's REST-like endpoints available to the public internet.
   API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/rest/v3/'
@@ -59,3 +60,15 @@ module SoftLayer
   # The base URL used for the SoftLayer API's
   $SL_API_BASE_URL = SoftLayer::API_PUBLIC_ENDPOINT
 end # module SoftLayer
+
+#
+# History:
+#
+# 1.0 - 1.0.1 - Initial release.  There was some confusion over getting the gem
+# posted up to rubygems.org and the 1.0.1 release came about because of that
+# confusion.  There should be no real functionality differences there.
+#
+# 1.0.2 - We have some API routines that start with "get" but expect arguments
+# anyway.  The code now uses HTTP POST to send requests for which the user
+# has provided arguments regardless of the name of the routine.
+#
