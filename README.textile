@@ -79,9 +79,9 @@ table{position:relative;left:2em;width:80%}.
 Here is an example, analogous to the one for global variables, which provides the username and API key as hash arguments. This example also changes the endpoint with the @:endpoint_url@ symbol so that the service will use the API on the SoftLayer Private Network:
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">account_service = SoftLayer::Service.new("SoftLayer_Account",
-  :username => "joeusername",
-  :api_key => "omitted_for_brevity",
-  :endpoint_url => API_PRIVATE_ENDPOINT)
+    :username => "joeusername",
+    :api_key => "omitted_for_brevity",
+    :endpoint_url => API_PRIVATE_ENDPOINT)
 </code></pre>
 
 h3. Calling Service Methods
@@ -96,12 +96,12 @@ If the method requires arguments, you can supply them as arguments to the method
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">#authentication information will be found in the global variables
 ticket_service = SoftLayer::Service.new("SoftLayer_Ticket")
 new_ticket = ticket_service.createStandardTicket(
-  {
+{
     "assignedUserId" => my_account_id,
     "subjectId" => 1022,
     "notifyUserOnUpdateFlag" => true
-  },
-  "This is a test ticket created from a Ruby client")
+},
+"This is a test ticket created from a Ruby client")
 </code></pre>
 
 h4. Identifying Particular Objects
@@ -114,13 +114,13 @@ Some method calls in the SoftLayer API are made on particular objects, rather th
 The @object_with_id@ call returns an object that you can use as a reference to a particular object through the service.  This allows you to reuse that object multiple times without having to repeatedly tack @object_with_id@ on to all your requests. For example, if you want to find a ticket with the id 98765 and add an update to it if it's assigned to user 123456, you might write code like this:
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">begin
-  ticket_ref = ticket_service.object_with_id(98765)
-  ticket = ticket_ref.object_mask("assignedUserId").getObject
-  if ticket['assignedUserId'] == 123456
-  	updates = ticket_ref.addUpdate({"entry" => "Get to work on these tickets!"})
-  end
+    ticket_ref = ticket_service.object_with_id(98765)
+    ticket = ticket_ref.object_mask("assignedUserId").getObject
+    if ticket['assignedUserId'] == 123456
+        updates = ticket_ref.addUpdate({"entry" => "Get to work on these tickets!"})
+    end
 rescue Exception => exception
-	puts "An error occurred while updating the ticket: #{exception}"
+    puts "An error occurred while updating the ticket: #{exception}"
 end
 </code></pre>
 
@@ -137,15 +137,15 @@ To look at some examples, consider the following object from the server.  It has
 The assignedUser entity has three properties, id, username, and health.
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">{
-	"id"=>1736473,
-	"title"=>"VM Polling Failure - unable to login",
-	"createDate"=>"2010-04-22T00:12:36-05:00",
-	"modifyDate"=>"2010-06-09T06:44:18-05:00"
-	"assignedUser"=> {
-		"id"=>14
-		"username"=>"AlfredQHacker", 
-		"health"=>"Fantastic"
-	},
+    "id"=>1736473,
+    "title"=>"VM Polling Failure - unable to login",
+    "createDate"=>"2010-04-22T00:12:36-05:00",
+    "modifyDate"=>"2010-06-09T06:44:18-05:00"
+    "assignedUser"=> {
+        "id"=>14
+        "username"=>"AlfredQHacker",
+        "health"=>"Fantastic"
+    },
 }
 </code></pre>
 
@@ -199,15 +199,15 @@ require 'softlayer_api'
 require 'pp'
 
 begin
-	# use an account service to get a list of the open tickets and print their IDs and titles
-	account_service = SoftLayer::Service.new("SoftLayer_Account",
-  	:username => "joecustomer"              # enter your username here
-  	:api_key => "feeddeadbeefbadf00d...")   # enter your api key here
+    # use an account service to get a list of the open tickets and print their IDs and titles
+    account_service = SoftLayer::Service.new("SoftLayer_Account",
+    :username => "joecustomer",             # enter your username here
+    :api_key => "feeddeadbeefbadf00d...")   # enter your api key here
 
-	account = account_service.getObject
-	pp account
+    account = account_service.getObject
+    pp account
 rescue Exception => exception
-	puts "Unable to retrieve account information: #{exception}"
+    puts "Unable to retrieve account information: #{exception}"
 end
 </code></pre>
 
@@ -219,26 +219,26 @@ require 'softlayer_api'
 require 'pp'
 
 ticket_service = SoftLayer::Service.new("SoftLayer_Ticket",
-  :username => "joecustomer",              # enter your username here
-  :api_key => "feeddeadbeefbadf00d...")    # enter your api key here
+    :username => "joecustomer",              # enter your username here
+    :api_key => "feeddeadbeefbadf00d...")    # enter your api key here
 
 begin
-  ticket_ref = ticket_service.object_with_id(1683973)
+    ticket_ref = ticket_service.object_with_id(123456)
 
-  ticket = ticket_ref.object_mask({"updates" => ["entry", "createDate"]}, 
-                                  "assignedUserId", 
-                                  {"attachedHardware" => "datacenter"}).getObject
-  pp ticket
+    ticket = ticket_ref.object_mask({"updates" => ["entry", "createDate"]},
+                                    "assignedUserId",
+                                    {"attachedHardware" => "datacenter"}).getObject
+    pp ticket
 rescue Exception => exception
 	puts "Unable to retrieve the ticket"
 end
 
 # update the ticket
 begin
-  updates = ticket_ref.addUpdate({"entry" => "An update from the Ruby client!"})
-  puts "Update ticket 123456. The new update's id is #{updates[0]['id']}"
+    updates = ticket_ref.addUpdate({"entry" => "An update from the Ruby client!"})
+    puts "Update ticket 123456. The new update's id is #{updates[0]['id']}"
 rescue Exception => exception
-	puts "Unable to update the ticket: #{exception}"
+    puts "Unable to update the ticket: #{exception}"
 end
 </code></pre>
 
