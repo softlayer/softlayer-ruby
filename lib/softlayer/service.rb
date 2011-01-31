@@ -81,6 +81,28 @@ module SoftLayer
       merged_object.parameters = @parameters.merge({ :object_mask => args }) if args && !args.empty?
       merged_object
     end
+    
+    def result_limit(limit)
+      merged_object = APIParameterFilter.new;
+      merged_object.target = self.target
+      merged_object.parameters = @parameters.merge({ :result_limit => limit })
+      merged_object
+    end
+    
+    def server_result_limit
+      self.parameters[:result_limit]
+    end
+    
+    
+    def result_offset(offset)
+      self.parameters[:result_offset] = offset
+      self
+    end
+    
+    def server_result_offset
+      self.parameters[:result_offset]
+    end
+    
 
     def method_missing(method_name, *args, &block)
       return @target.call_softlayer_api_with_params(method_name, self, args, &block)
@@ -183,6 +205,12 @@ module SoftLayer
       proxy.target = self
 
       return proxy.object_mask(*args)
+    end
+    
+    def result_limit(limit)
+      proxy = APIParameterFilter.new
+      proxy.target = self
+      return proxy.result_limit=limit
     end
 
     # This is the primary mechanism by which requests are made. If you call
@@ -394,6 +422,18 @@ module SoftLayer
       if(parameters && parameters.server_object_mask)
         mask_value = parameters.server_object_mask.to_sl_object_mask.map { |mask_key| URI.encode(mask_key.to_s.strip) }.join(";")
         query_string = "objectMask=#{mask_value}"
+      end
+      
+      if (parameters && parameters.server_result_limit)
+        resultLimit = parameters.server_result_limit
+        resultOffset = parameters.server_result_offset
+        resultOffset = 0 if resultOffset.nil?
+        limit_string = "resultLimit=#{resultOffset},#{resultLimit}"
+        if query_string.nil?
+          query_string = limit_string
+        else
+          query_string << "&#{limit_string}"
+        end
       end
 
       uri.query = query_string
