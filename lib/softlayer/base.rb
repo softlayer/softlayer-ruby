@@ -36,7 +36,7 @@
 #
 
 module SoftLayer
-  VERSION = "1.0.3  # version history at the bottom of the file.
+  VERSION = "1.0.3"  # version history at the bottom of the file.
 
   # The base URL of the SoftLayer API's REST-like endpoints available to the public internet.
   API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/rest/v3/'
@@ -68,7 +68,7 @@ end # module SoftLayer
 # posted up to rubygems.org and the 1.0.1 release came about because of that
 # confusion.  There should be no real functionality differences there.
 #
-# 1.0.2 - We have some API routines that start with "get" but expect arguments
+# 1.0.2 - We have some API routines that start with 'get' but expect arguments
 # anyway.  The code now uses HTTP POST to send requests for which the user
 # has provided arguments regardless of the name of the routine.
 #
