@@ -36,7 +36,7 @@
 #
 
 module SoftLayer
-  VERSION = "1.0.3"  # version history at the bottom of the file.
+  VERSION = "1.0.4"  # version history at the bottom of the file.
 
   # The base URL of the SoftLayer API's REST-like endpoints available to the public internet.
   API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/rest/v3/'
@@ -74,4 +74,6 @@ end # module SoftLayer
 #
 # 1.0.3 - Added a request filter to add result limits to request.  Submitted by
 # JN.  Thanks!
+#
+# 1.0.4 - Fixed a bug where the result_limit and result_offset object filters were just not working. 
 #

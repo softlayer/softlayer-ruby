@@ -245,13 +245,6 @@ describe SoftLayer::Service, "#call_softlayer_api_with_params" do
     service.call_softlayer_api_with_params(:getObject, SoftLayer::APIParameterFilter.new.object_mask("cow  ", "  duck", "chicken", "bull dog"), []);
   end
 
-  it "should warn about calling a get method with arguments" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    service.should_receive(:issue_http_request).with(any_args())
-    $stderr.should_receive(:puts).with("Warning - The HTTP request for getObject does not allow arguments to be passed to the server")
-    service.getObject("Hello", "Bindigo")
-  end
-
   it "should return the parsed JSON when completing successfully" do
     service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
     service.should_receive(:issue_http_request).with(any_args()).and_return('{"successful":"Yipeee!", "array":[1,2,3], "bool":true}')
@@ -285,6 +278,28 @@ describe SoftLayer::Service, "#object_mask" do
     filter.should_not be_nil
     filter.target.should === service
     filter.server_object_mask.should == ["fish", "cow", "duck"]
+  end
+end
+
+describe SoftLayer::Service, "#result_limit" do
+  it "should return an APIParameterFilter with itself as the target" do
+    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
+    filter = service.result_limit(10)
+
+    filter.should_not be_nil
+    filter.target.should === service
+    filter.server_result_limit.should == 10
+  end
+end
+
+describe SoftLayer::Service, "#result_offset" do
+  it "should return an APIParameterFilter with itself as the target" do
+    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
+    filter = service.result_offset(5)
+
+    filter.should_not be_nil
+    filter.target.should === service
+    filter.server_result_offset.should == 5
   end
 end
 

@@ -93,7 +93,6 @@ module SoftLayer
       self.parameters[:result_limit]
     end
     
-    
     def result_offset(offset)
       self.parameters[:result_offset] = offset
       self
@@ -210,7 +209,13 @@ module SoftLayer
     def result_limit(limit)
       proxy = APIParameterFilter.new
       proxy.target = self
-      return proxy.result_limit=limit
+      return proxy.result_limit(limit)
+    end
+    
+    def result_offset(offset)
+      proxy = APIParameterFilter.new
+      proxy.target = self
+      return proxy.result_offset(offset)
     end
 
     # This is the primary mechanism by which requests are made. If you call
@@ -308,18 +313,18 @@ module SoftLayer
     # and create a Net::HTTP request of that type. This is intended
     # to be used in the internal processing of method_missing and
     # need not be called directly.
-    def http_request_for_method(method_name, method_url, request_body)
+    def http_request_for_method(method_name, method_url, request_body = nil)
       content_type_header = {"Content-Type" => "application/json"}
 
       case method_name.to_s
       when /^get/
-		# if the user has provided some arguments to the call, we 
-		# use a POST instead of a GET in spite of the method name.
-		if request_body && !request_body.empty?
-	        url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
-		else 
-        	url_request = Net::HTTP::Get.new(method_url.request_uri())
-		end
+        # if the user has provided some arguments to the call, we 
+        # use a POST instead of a GET in spite of the method name.
+        if request_body && !request_body.empty?
+              url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
+        else 
+            	url_request = Net::HTTP::Get.new(method_url.request_uri())
+        end
       when /^edit/
         url_request = Net::HTTP::Put.new(method_url.request_uri(), content_type_header)
       when /^delete/
@@ -327,16 +332,16 @@ module SoftLayer
       when /^create/, /^add/, /^remove/, /^findBy/
         url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
       else
-		# The name doesn't match one of our expected patterns... Use GET if 
-		# there are no parameters, and POST if the user has given parameters.
-		if request_body && !request_body.empty?
-	        url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
-		else 
-        	url_request = Net::HTTP::Get.new(method_url.request_uri())
-		end
+        # The name doesn't match one of our expected patterns... Use GET if 
+        # there are no parameters, and POST if the user has given parameters.
+        if request_body && !request_body.empty?
+              url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
+        else 
+            	url_request = Net::HTTP::Get.new(method_url.request_uri())
+        end
       end
 
-      # This warning should be obsolete as we should be using POST if the user
+    # This warning should be obsolete as we should be using POST if the user
  	  # has provided parameters. I'm going to leave it in, however, on the off
 	  # chance that it catches a case we aren't expecting.
       if request_body && !url_request.request_body_permitted?
