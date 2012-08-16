@@ -28,8 +28,8 @@ $: << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
 require 'rubygems'
 require 'softlayer_api'
-require 'spec'
-require 'spec/autorun'
+require 'rspec'
+require 'rspec/autorun'
 
 describe String, "#to_sl_object_mask" do
   it "should echo back a string with no base" do
@@ -50,8 +50,8 @@ describe String, "#to_sl_object_mask" do
 end
 
 describe Array,"#to_sl_object_mask" do
-  it "should return the empty array if run on an empty array" do
-    [].to_sl_object_mask.should eql([])
+  it "should return and empty string if run on an empty array" do
+    [].to_sl_object_mask.should eql("")
   end
 
   it "should call to_sl_object_mask passing the base to all its elements" do
@@ -70,6 +70,10 @@ describe Array,"#to_sl_object_mask" do
 end
 
 describe Hash, "#to_sl_object_mask" do
+  it "should return an empty string if run on an empty hash" do
+	  {}.to_sl_object_mask.should eql("")
+  end
+
   it "should call to_sl_object_mask on values with the key as the base" do
     proxy = "value"
     proxy.should_receive(:to_sl_object_mask).with("key").and_return("key.value")
@@ -80,4 +84,9 @@ describe Hash, "#to_sl_object_mask" do
   it "should resolve the mapped values with the base provided" do
     {"top" => [ "middle1", {"middle2" => "end"}]}.to_sl_object_mask.should eql(["top.middle1", "top.middle2.end"])
   end
+  
+  it "should handle a complex hash object mask with an inner empty hash" do
+    { "ipAddress" => { "ipAddress" => {}}}.to_sl_object_mask.should eql(["ipAddress.ipAddress"])
+  end
+  
 end
