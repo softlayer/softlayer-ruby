@@ -36,7 +36,7 @@
 #
 
 module SoftLayer
-  VERSION = "1.0.4"  # version history at the bottom of the file.
+  VERSION = "1.0.5"  # version history at the bottom of the file.
 
   # The base URL of the SoftLayer API's REST-like endpoints available to the public internet.
   API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/rest/v3/'
@@ -76,4 +76,6 @@ end # module SoftLayer
 # JN.  Thanks!
 #
 # 1.0.4 - Fixed a bug where the result_limit and result_offset object filters were just not working. 
+#
+# 1.0.5 - Fixed a bug where empty hashes and empty arrays would not generate meaningful object masks
 #

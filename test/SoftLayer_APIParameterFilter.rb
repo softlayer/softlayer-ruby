@@ -28,7 +28,7 @@ $: << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
 require 'rubygems'
 require 'softlayer_api'
-require 'spec'
+require 'rspec'
 
 describe SoftLayer::APIParameterFilter, "#object_with_id" do
   it "should intitialize with empty parameter values" do

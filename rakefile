@@ -24,11 +24,13 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-require 'rubygems'
-require 'rake/gempackagetask'
-require 'spec/rake/spectask'
 
+$: << File.expand_path(File.join(File.dirname(__FILE__)))
+
+require 'rubygems'
+require 'rubygems/package_task'
 require 'lib/softlayer/base'
+require 'rspec/core/rake_task'
 
 softlayer_api_gem = Gem::Specification.new do |s|
   s.platform  =   Gem::Platform::RUBY
@@ -60,16 +62,13 @@ softlayer_api_jruby_gem = Gem::Specification.new do |s|
   s.add_dependency("json-jruby")
 end
 
-Rake::GemPackageTask.new(softlayer_api_gem) do |pkg|
+Gem::PackageTask.new(softlayer_api_gem) do |pkg|
 end
 
-Rake::GemPackageTask.new(softlayer_api_jruby_gem) do |pkg|
-end
-
-Spec::Rake::SpecTask.new do |tester|
-  $DEBUG = 1
-  tester.spec_files = FileList["test/**/*.rb"]
-  tester.spec_opts = ["-c", "-f nested"]
+RSpec::Core::RakeTask.new do |tester|
+	$DEBUG = 1
+	tester.pattern = 'test/*.rb'
+	tester.rspec_opts = ["-c", "-f nested"]
 end
 
 task :default => [:spec] do

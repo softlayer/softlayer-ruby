@@ -28,8 +28,8 @@ $: << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
 require 'rubygems'
 require 'softlayer_api'
-require 'spec'
-require 'spec/autorun'
+require 'rspec'
+require 'rspec/autorun'
 
 describe SoftLayer::Service, "#new" do
   before(:each) do
