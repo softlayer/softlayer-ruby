@@ -303,45 +303,6 @@ describe SoftLayer::Service, "#result_offset" do
   end
 end
 
-describe SoftLayer::Service, "#http_request_for_method" do
-  it "should generate a GET request for methods staring with get" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    url_request = service.http_request_for_method(:getObject, URI.parse("http://bogus.com"))
-    url_request.should_not be_nil
-    url_request.should be_kind_of(Net::HTTP::Get)
-  end
-
-  it "should generate a POST request for methods starting with crate" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    url_request = service.http_request_for_method(:createSomeTicket, URI.parse("http://bogus.com"))
-    url_request.should_not be_nil
-    url_request.should be_kind_of(Net::HTTP::Post)
-  end
-
-  it "should generate a PUT request for methods starting with edit" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    url_request = service.http_request_for_method(:editFoo, URI.parse("http://bogus.com"))
-    url_request.should_not be_nil
-    url_request.should be_kind_of(Net::HTTP::Put)
-
-    # I know of at least one service (I think it's the ticket service) that uses "edit" as
-    # a method name. Make sure that the lack of additional characters doesn't throw off
-    # the service
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    url_request = service.http_request_for_method(:edit, URI.parse("http://bogus.com"))
-    url_request.should_not be_nil
-    url_request.should be_kind_of(Net::HTTP::Put)
-  end
-
-  it "should generate a DELETE request for methods starting with delete" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    url_request = service.http_request_for_method(:deleteObject, URI.parse("http://bogus.com"))
-
-    url_request.should_not be_nil
-    url_request.should be_kind_of(Net::HTTP::Delete)
-  end
-end
-
 describe SoftLayer::Service, "#marshall_arguments_for_call" do
   service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
   request_body = service.marshall_arguments_for_call(["first", 3, {"cow" => "chicken"}])

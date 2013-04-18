@@ -316,34 +316,15 @@ module SoftLayer
     def http_request_for_method(method_name, method_url, request_body = nil)
       content_type_header = {"Content-Type" => "application/json"}
 
-      case method_name.to_s
-      when /^get/
-        # if the user has provided some arguments to the call, we 
-        # use a POST instead of a GET in spite of the method name.
-        if request_body && !request_body.empty?
-              url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
-        else 
-            	url_request = Net::HTTP::Get.new(method_url.request_uri())
-        end
-      when /^edit/
-        url_request = Net::HTTP::Put.new(method_url.request_uri(), content_type_header)
-      when /^delete/
-        url_request = Net::HTTP::Delete.new(method_url.request_uri())
-      when /^create/, /^add/, /^remove/, /^findBy/
-        url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
-      else
-        # The name doesn't match one of our expected patterns... Use GET if 
-        # there are no parameters, and POST if the user has given parameters.
-        if request_body && !request_body.empty?
-              url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
-        else 
-            	url_request = Net::HTTP::Get.new(method_url.request_uri())
-        end
+      if request_body && !request_body.empty?
+            url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
+      else 
+          	url_request = Net::HTTP::Get.new(method_url.request_uri())
       end
 
-    # This warning should be obsolete as we should be using POST if the user
- 	  # has provided parameters. I'm going to leave it in, however, on the off
-	  # chance that it catches a case we aren't expecting.
+      # This warning should be obsolete as we should be using POST if the user
+   	  # has provided parameters. I'm going to leave it in, however, on the off
+  	  # chance that it catches a case we aren't expecting.
       if request_body && !url_request.request_body_permitted?
         $stderr.puts("Warning - The HTTP request for #{method_name} does not allow arguments to be passed to the server")
       else
@@ -351,7 +332,7 @@ module SoftLayer
         url_request.body = request_body
       end
 
-	  url_request
+  	  url_request
     end
 
     # Connect to the network and request the content of the resource
