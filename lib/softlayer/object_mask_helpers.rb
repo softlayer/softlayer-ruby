@@ -27,7 +27,7 @@
 class Hash
   def to_sl_object_mask(base = "")
     return base if(self.empty?)
-    
+
     # ask the children to convert themselves with the key as the base
     masked_children = self.map { |key, value| result = value.to_sl_object_mask(key); }.flatten
 

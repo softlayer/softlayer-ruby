@@ -31,7 +31,7 @@ require 'pp'
 $SL_API_USERNAME = "joecustomer"         # enter your username here
 $SL_API_KEY = "feeddeadbeefbadf00d..."   # enter your api key here
 
-# use an account service to get a list of the open tickets and print their 
+# use an account service to get a list of the open tickets and print their
 # IDs and titles
 account_service = SoftLayer::Service.new("SoftLayer_Account")
 

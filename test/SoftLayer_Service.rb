@@ -224,6 +224,15 @@ describe SoftLayer::Service, "#missing_method" do
   end
 end
 
+describe SoftLayer::Service, "#http_request_for_method" do
+  it "should only use HTTP GET for requests to the getObject method even if paramters are provided" do
+    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
+    request = service.http_request_for_method(:getObject, URI.parse("https://api.softlayer.com/rest/v3/SoftLayer_Ticket/12345/getObject.json"), '{"simple" : "object"}')
+    request.should be_a_kind_of(Net::HTTP::Get)
+    request.should_not be_a_kind_of(Net::HTTP::Post)
+  end
+end
+
 describe SoftLayer::Service, "#call_softlayer_api_with_params" do
   it "should issue an HTTP request for the given method" do
     service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")

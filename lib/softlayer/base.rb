@@ -36,7 +36,7 @@
 #
 
 module SoftLayer
-  VERSION = "1.0.6"  # version history at the bottom of the file.
+  VERSION = "1.0.7"  # version history at the bottom of the file.
 
   # The base URL of the SoftLayer API's REST-like endpoints available to the public internet.
   API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/rest/v3/'
@@ -75,8 +75,12 @@ end # module SoftLayer
 # 1.0.3 - Added a request filter to add result limits to request.  Submitted by
 # JN.  Thanks!
 #
-# 1.0.4 - Fixed a bug where the result_limit and result_offset object filters were just not working. 
+# 1.0.4 - Fixed a bug where the result_limit and result_offset object filters were just not working.
 #
 # 1.0.5 - Fixed a bug where empty hashes and empty arrays would not generate meaningful object masks
 #
 # 1.0.6 - Make all API calls with either a GET or a POST as the HTTP verb.
+#
+# 1.0.7 - Calls to the "getObject" method of any service should not take parameters.  The gem now
+# warns if you make this type of call and ignores the parameters. This prevents
+# SoftLayer_Virtual_Guest::getObject from accidentally creating (billable) CCI instances.

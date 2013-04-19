@@ -35,8 +35,8 @@ ticket_service = SoftLayer::Service.new("SoftLayer_Ticket",
 begin
   ticket_ref = ticket_service.object_with_id(1683973)
 
-  ticket = ticket_ref.object_mask({"updates" => ["entry", "createDate"]}, 
-                                  "assignedUserId", 
+  ticket = ticket_ref.object_mask({"updates" => ["entry", "createDate"]},
+                                  "assignedUserId",
                                   {"attachedHardware" => "datacenter"}).getObject
   pp ticket
 rescue Exception => exception

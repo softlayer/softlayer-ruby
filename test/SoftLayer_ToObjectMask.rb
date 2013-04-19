@@ -84,9 +84,9 @@ describe Hash, "#to_sl_object_mask" do
   it "should resolve the mapped values with the base provided" do
     {"top" => [ "middle1", {"middle2" => "end"}]}.to_sl_object_mask.should eql(["top.middle1", "top.middle2.end"])
   end
-  
+
   it "should handle a complex hash object mask with an inner empty hash" do
     { "ipAddress" => { "ipAddress" => {}}}.to_sl_object_mask.should eql(["ipAddress.ipAddress"])
   end
-  
+
 end

@@ -81,27 +81,27 @@ module SoftLayer
       merged_object.parameters = @parameters.merge({ :object_mask => args }) if args && !args.empty?
       merged_object
     end
-    
+
     def result_limit(limit)
       merged_object = APIParameterFilter.new;
       merged_object.target = self.target
       merged_object.parameters = @parameters.merge({ :result_limit => limit })
       merged_object
     end
-    
+
     def server_result_limit
       self.parameters[:result_limit]
     end
-    
+
     def result_offset(offset)
       self.parameters[:result_offset] = offset
       self
     end
-    
+
     def server_result_offset
       self.parameters[:result_offset]
     end
-    
+
 
     def method_missing(method_name, *args, &block)
       return @target.call_softlayer_api_with_params(method_name, self, args, &block)
@@ -205,13 +205,13 @@ module SoftLayer
 
       return proxy.object_mask(*args)
     end
-    
+
     def result_limit(limit)
       proxy = APIParameterFilter.new
       proxy.target = self
       return proxy.result_limit(limit)
     end
-    
+
     def result_offset(offset)
       proxy = APIParameterFilter.new
       proxy.target = self
@@ -278,7 +278,7 @@ module SoftLayer
         # not JSON values.  As a result, 'JSON.parse("true")' yields a parsing
         # exception. To work around this, we force the result JSON text by
         # including it in Array markers, then take the first element of the
-        # resulting array as the result of the parsing. This should allow values 
+        # resulting array as the result of the parsing. This should allow values
         # like true, false, null, and numbers to parse the same way they would in
         # a browser.
         parsed_json = JSON.parse("[ #{json_results} ]")[0]
@@ -316,9 +316,23 @@ module SoftLayer
     def http_request_for_method(method_name, method_url, request_body = nil)
       content_type_header = {"Content-Type" => "application/json"}
 
+      # This is a workaround for a potential problem that arises from mis-using the
+      # API.  If you call SoftLayer_Virtual_Guest and you call the getObject method
+      # but pass a virtual guest as a parameter, what happens is the getObject method
+      # is called through an HTTP POST verb and the API creates a new CCI that is a copy
+      # of the one you passed in.
+      #
+      # The counter-intuitive creation of a new CCI is unexpected and, even worse,
+      # is something you can be billed for.  To prevent that, we ignore the request
+      # body on a "getObject" call and print out a warning.
+      if (method_name == :getObject) && (nil != request_body) then
+        $stderr.puts "Warning - The getObject method takes no parameters.  The parameters you have provided will be ignored."
+        request_body = nil
+      end
+
       if request_body && !request_body.empty?
             url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
-      else 
+      else
           	url_request = Net::HTTP::Get.new(method_url.request_uri())
       end
 
@@ -409,7 +423,7 @@ module SoftLayer
         mask_value = parameters.server_object_mask.to_sl_object_mask.map { |mask_key| URI.encode(mask_key.to_s.strip) }.join(";")
         query_string = "objectMask=#{mask_value}"
       end
-      
+
       if (parameters && parameters.server_result_limit)
         resultLimit = parameters.server_result_limit
         resultOffset = parameters.server_result_offset
