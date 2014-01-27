@@ -28,20 +28,12 @@ require 'rspec'
 require 'rspec/autorun'
 
 describe String, "#to_sl_object_mask" do
-  it "should echo back a string with no base" do
+  it "should echo back a string" do
     "blah".to_sl_object_mask.should eql("blah")
   end
 
-  it "should prepend the base with a dot if given" do
-    "blah".to_sl_object_mask("foo").should eql("foo.blah")
-  end
-
-  it "should return the empty string if given the empty string with no base" do
+  it "should return the empty string if given the empty string" do
     "".to_sl_object_mask.should eql("")
-  end
-
-  it "should return the base with no dot if applied to the empty string" do
-    "".to_sl_object_mask("foo").should eql("foo")
   end
 end
 
@@ -50,39 +42,90 @@ describe Array,"#to_sl_object_mask" do
     [].to_sl_object_mask.should eql("")
   end
 
-  it "should call to_sl_object_mask passing the base to all its elements" do
-    proxy = "Hello"
-    proxy.should_receive(:to_sl_object_mask).with("")
-    [proxy].to_sl_object_mask
-
-    proxy = "Hello"
-    proxy.should_receive(:to_sl_object_mask).with("foo")
-    [proxy].to_sl_object_mask('foo')
+  it "should handle simple arrays" do
+    ["foo", "bar", "baz"].to_sl_object_mask().should eql("foo,bar,baz")
   end
-
+  
   it "should flatten any arrays inside of itself" do
-    ["foo", ["bar", "baz"]].to_sl_object_mask("buz").should eql(["buz.foo", "buz.bar", "buz.baz"])
+    ["foo", ["bar", "baz"]].to_sl_object_mask().should eql("foo,bar,baz")
   end
 end
 
 describe Hash, "#to_sl_object_mask" do
   it "should return an empty string if run on an empty hash" do
-	  {}.to_sl_object_mask.should eql("")
+      {}.to_sl_object_mask.should eql("")
+  end
+  
+  it "should return a dot expression for a simple string value" do
+    {"foo" => "foobar"}.to_sl_object_mask.should eql("foo.foobar")
+  end
+  
+  it "should return a bracket expression for an array value" do
+    {"foo" => ["one", "two", "three"]}.to_sl_object_mask.should eql("foo[one,two,three]")
+  end
+  
+  it "should handle nested hashes" do
+    {"foo" => {"sub" => "resub"}}.to_sl_object_mask.should eql("foo[sub.resub]")
   end
 
-  it "should call to_sl_object_mask on values with the key as the base" do
-    proxy = "value"
-    proxy.should_receive(:to_sl_object_mask).with("key").and_return("key.value")
-    mask_elements = {"key" => proxy}.to_sl_object_mask
-    mask_elements.should eql(["key.value"])
+  it "should resolve the mapped values" do
+    {"top" => [ "middle1", {"middle2" => "end"}]}.to_sl_object_mask.should eql("top[middle1,middle2.end]")
   end
-
-  it "should resolve the mapped values with the base provided" do
-    {"top" => [ "middle1", {"middle2" => "end"}]}.to_sl_object_mask.should eql(["top.middle1", "top.middle2.end"])
-  end
-
+  
   it "should handle a complex hash object mask with an inner empty hash" do
-    { "ipAddress" => { "ipAddress" => {}}}.to_sl_object_mask.should eql(["ipAddress.ipAddress"])
+    { "ipAddress" => { "ipAddress" => {}}}.to_sl_object_mask.should eql("ipAddress[ipAddress]")
+  end
+  
+  it "should handle a complex hash dreamed up during iOS testing" do
+    {"foo" => "foobar",
+		  "bar" => ["one", "two", "three"],
+		  "baz" => { "sub" => "resub"}}.to_sl_object_mask.should eql("foo.foobar,bar[one,two,three],baz[sub.resub]")
+  end
+end
+
+describe SoftLayer::ObjectMaskProperty, "#initialize" do
+  it "should initialize with a name" do
+    mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
+    mask_property.name.should eql("simple_name")
   end
 
+  it "should raise argument error if given an nil name" do
+    expect { SoftLayer::ObjectMaskProperty.new(nil) }.to raise_error(ArgumentError)
+  end
+  
+  it "should raise argument error if given an empty name" do
+    expect { SoftLayer::ObjectMaskProperty.new("") }.to raise_error(ArgumentError)
+  end
+end
+
+describe SoftLayer::ObjectMaskProperty, "#to_sl_object_mask" do
+  it "should convert simple mask properties to string" do
+    mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
+    mask_property.to_sl_object_mask.should eql("simple_name")
+  end
+
+  it "should convert mask properties with a type" do
+    mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
+    mask_property.type = "property_type"
+    mask_property.to_sl_object_mask.should eql("simple_name(property_type)")
+  end
+  
+  it "should convert mask properties with simple subproperties" do
+    mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
+    mask_property.type = "property_type"
+    mask_property.subproperties = "subproperty"
+    mask_property.to_sl_object_mask.should eql("simple_name(property_type).subproperty")
+  end
+  
+  it "should allow Array subproperties" do
+    mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
+    mask_property.subproperties = ["one", "two", "three"]
+    mask_property.to_sl_object_mask.should eql("simple_name[one,two,three]")
+  end
+  
+  it "should allow Hash subproperties" do
+    mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
+    mask_property.subproperties = { "foo" => "subfoo" }
+    mask_property.to_sl_object_mask.should eql("simple_name[foo.subfoo]")
+  end
 end

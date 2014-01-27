@@ -21,27 +21,86 @@
 #
 
 class Hash
-  def to_sl_object_mask(base = "")
-    return base if(self.empty?)
+  def to_sl_object_mask()
+    key_strings = [];
 
-    # ask the children to convert themselves with the key as the base
-    masked_children = self.map { |key, value| result = value.to_sl_object_mask(key); }.flatten
+    each do |key, value|
+      string_for_key = key.to_sl_object_mask
+      
+      if(nil == value)
+        return ""
+      end
+      
+      if value.kind_of? String then
+        string_for_key = "#{string_for_key}.#{value.to_sl_object_mask}"
+      end
+      
+      if value.kind_of?(Array) || value.kind_of?(Hash) then
+        value_string = value.to_sl_object_mask
+        if value_string && !value_string.empty?
+          string_for_key = "#{string_for_key}[#{value.to_sl_object_mask}]"
+        end
+      end
+      
+      key_strings.push(string_for_key)
+    end
 
-    # now resolve the children with respect to the base passed in.
-    masked_children.map { |mask_item| mask_item.to_sl_object_mask(base) }
+    return key_strings.join(",")
   end
 end
 
 class Array
-  def to_sl_object_mask(base = "")
-    return base if self.empty?
-    self.map { |item| item.to_sl_object_mask(base) }.flatten
+  def to_sl_object_mask()
+    return "" if self.empty?
+    map { |item| item.to_sl_object_mask() }.flatten.join(",")
   end
 end
 
 class String
-  def to_sl_object_mask(base = "")
-    return base if self.empty?
-    base.empty? ? self : "#{base}.#{self}"
+  def to_sl_object_mask()
+    return clone()
+  end
+end
+
+module SoftLayer
+  class ObjectMaskProperty
+    attr_reader :name
+    attr_accessor :type
+    attr_accessor :subproperties
+
+    def initialize(property_name)
+      raise(ArgumentError, "property name cannot be empty or nil") if property_name.nil? || property_name.empty?
+      @name = property_name.clone
+    end
+    
+    def to_sl_object_mask()
+      object_mask_string = self.name.clone
+      
+      if self.type then
+        object_mask_string = object_mask_string + "(#{self.type})"
+      end
+      
+      if self.subproperties then
+        subproperty_string = "";
+
+        if self.subproperties.kind_of?(String) then
+          subproperty_string = ".#{subproperties}"
+        end
+        
+        if self.subproperties.kind_of?(Array) || self.subproperties.kind_of?(Hash) then
+          subproperty_string = "[#{self.subproperties.to_sl_object_mask}]"
+        end
+        
+        object_mask_string = object_mask_string + subproperty_string
+      end
+      
+      object_mask_string
+    end
+  end
+  
+  class ObjectMask < ObjectMaskProperty
+    def initialize()
+      self.name = "mask"
+    end
   end
 end
