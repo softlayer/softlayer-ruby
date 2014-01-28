@@ -100,7 +100,7 @@ module SoftLayer
   
   class ObjectMask < ObjectMaskProperty
     def initialize()
-      self.name = "mask"
+      @name = "mask"
     end
   end
 end

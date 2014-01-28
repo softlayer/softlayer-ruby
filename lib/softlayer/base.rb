@@ -31,14 +31,17 @@
 # - <tt>$SL_API_BASE_URL</tt>- The default URL used to access the SoftLayer API. This defaults to the value of SoftLayer::API_PUBLIC_ENDPOINT
 #
 
+require 'rubygems'
+require 'savon'
+
 module SoftLayer
-  VERSION = "1.0.7"  # version history at the bottom of the file.
+  VERSION = "2.0.0"  # version history at the bottom of the file.
 
   # The base URL of the SoftLayer API's REST-like endpoints available to the public internet.
-  API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/rest/v3/'
+  API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/soap/v3/'
 
   # The base URL of the SoftLayer API's REST-like endpoints available through SoftLayer's private network
-  API_PRIVATE_ENDPOINT = 'https://api.service.softlayer.com/rest/v3/'
+  API_PRIVATE_ENDPOINT = 'https://api.service.softlayer.com/soap/v3/'
 
   #
   # These globals can be used to simplify client creation
@@ -80,3 +83,7 @@ end # module SoftLayer
 # 1.0.7 - Calls to the "getObject" method of any service should not take parameters.  The gem now
 # warns if you make this type of call and ignores the parameters. This prevents
 # SoftLayer_Virtual_Guest::getObject from accidentally creating (billable) CCI instances.
+#
+# 2.0 - Switched the Ruby API client to use the SOAP interface using the Savon web services gem
+#     - Result limits are now specified using result_limit(offset,limit).  The result_offset API filter has been removed.
+#     - Object masks are now sent to the server in the "Extended Object Mask" format.

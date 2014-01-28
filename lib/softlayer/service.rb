@@ -21,8 +21,21 @@
 #
 
 require 'rubygems'
-require 'net/https'
-require 'json/add/core'
+require 'savon'
+
+class String
+  # This code was taken from ActiveSupport in Rails and modified just a bit to remove
+  # parts that would handle non-english text.  The odd name is there specifically to
+  # prevent collisions with other methods
+  def sl_camelcase_to_underscore
+    word = self.dup
+    word.gsub!(/([A-Z\d]+)([A-Z][a-z])/,'\1_\2')
+    word.gsub!(/([a-z\d])([A-Z])/,'\1_\2')
+    word.tr!("-", "_")
+    word.downcase!
+    word
+  end
+end
 
 module SoftLayer
   # A subclass of Exception with nothing new provided.  This simply provides
@@ -78,10 +91,10 @@ module SoftLayer
       merged_object
     end
 
-    def result_limit(limit)
+    def result_limit(offset, limit)
       merged_object = APIParameterFilter.new;
       merged_object.target = self.target
-      merged_object.parameters = @parameters.merge({ :result_limit => limit })
+      merged_object.parameters = @parameters.merge({ :result_offset => offset, :result_limit => limit })
       merged_object
     end
 
@@ -89,15 +102,9 @@ module SoftLayer
       self.parameters[:result_limit]
     end
 
-    def result_offset(offset)
-      self.parameters[:result_offset] = offset
-      self
-    end
-
     def server_result_offset
       self.parameters[:result_offset]
     end
-
 
     def method_missing(method_name, *args, &block)
       return @target.call_softlayer_api_with_params(method_name, self, args, &block)
@@ -122,18 +129,19 @@ module SoftLayer
   #   => {... lots of information here representing the list of open tickets ...}
   #
   class Service
-    # The name of the service that this object calls. Cannot be emtpy or nil.
-    attr_accessor :service_name
 
     # A username passed as authentication for each request. Cannot be emtpy or nil.
     attr_accessor :username
 
     # An API key passed as part of the authentication of each request. Cannot be emtpy or nil.
     attr_accessor :api_key
+    
+    # The name of the service that this object calls. Cannot be emtpy or nil.
+    attr_accessor :service_name
 
     # The base URL for requests that are passed to the server. Cannot be emtpy or nil.
     attr_accessor :endpoint_url
-
+  
     # Initialize an instance of the Client class. You pass in the service name
     # and optionally hash arguments specifying how the client should access the
     # SoftLayer API.
@@ -142,6 +150,7 @@ module SoftLayer
     # - <tt>:username</tt> - a non-empty string providing the username to use for requests to the service
     # - <tt>:api_key</tt> - a non-empty string providing the api key to use for requests to the service
     # - <tt>:endpoint_url</tt> - a non-empty string providing the endpoint URL to use for requests to the service
+    # - <tt>:savon_client_options</tt> - A hash of options that are passed to the savon SOAP client created for the service
     #
     # If any of the options above are missing then the constructor will try to use the corresponding
     # global variable declared in the SoftLayer Module:
@@ -151,24 +160,39 @@ module SoftLayer
     #
     def initialize(service_name, options = {})
       raise SoftLayerAPIException.new("Please provide a service name") if service_name.nil? || service_name.empty?
+
       self.service_name = service_name;
 
-      # pick up the username provided in options or the default one from the *globals*
+      # pick up the username from the options, the global, or assume no username
       self.username = options[:username] || $SL_API_USERNAME || ""
-
-      # pick up the api_key provided in options or the default one from the globals
+      
+      # do a similar thing for the api key
       self.api_key = options[:api_key] || $SL_API_KEY || ""
-
-      # pick up the url endpoint from options or the default one in the globals OR the
-      # public endpoint
+  
+      # and the endpoint url
       self.endpoint_url = options[:endpoint_url] || $SL_API_BASE_URL || API_PUBLIC_ENDPOINT
+      
+      # Create the SOAP client object that will be used for calls to this service
+      savon_options = {
+				wsdl: (@endpoint_url + @service_name + '?wsdl'),
+        convert_request_keys_to: :none,
+        convert_response_tags_to: :none,
+        log: $DEBUG || false,
+				soap_header: {'tns:authenticate' => { 'username' => @username, "apiKey" => @api_key } }
+      }
 
-      if($DEBUG)
-        @method_missing_call_depth = 0
+      # if the caller provided any savon options, put them into the client options hash
+      if(options[:savon_client_options]) then
+        savon_options = savon_options.merge(options[:savon_client_options])
       end
-    end #initalize
 
+      @_soap_service = Savon.client(savon_options);
 
+      # this has proven to be very helpful during debugging.  It helps prevent infinite recursion
+      # when you don't get a method call just right
+      @method_missing_call_depth = 0 if $DEBUG
+    end
+  
     # Use this as part of a method call chain to identify a particular
     # object as the target of the request. The parameter is the SoftLayer
     # object identifier you are interested in. For example, this call
@@ -202,18 +226,12 @@ module SoftLayer
       return proxy.object_mask(*args)
     end
 
-    def result_limit(limit)
+    def result_limit(offset, limit)
       proxy = APIParameterFilter.new
       proxy.target = self
-      return proxy.result_limit(limit)
+      return proxy.result_limit(offset, limit)
     end
-
-    def result_offset(offset)
-      proxy = APIParameterFilter.new
-      proxy.target = self
-      return proxy.result_offset(offset)
-    end
-
+    
     # This is the primary mechanism by which requests are made. If you call
     # the service with a method it doesn't understand, it will send a call to
     # the endpoint for a method of the same name.
@@ -256,185 +274,39 @@ module SoftLayer
     # This is intended to be used in the internal
     # processing of method_missing and need not be called directly.
     def call_softlayer_api_with_params(method_name, parameters, args, &block)
-      # find out what URL will invoke the method (with the given parameters)
-      request_url = url_to_call_method(method_name, parameters)
+      
+      additional_headers = {};
 
-      # marshall the arguments into the http_request
-      request_body = marshall_arguments_for_call(args)
-
-      # construct an HTTP request for that method with the given URL
-      http_request = http_request_for_method(method_name, request_url, request_body);
-      http_request.basic_auth(self.username, self.api_key)
-
-      # Send the url request and recover the results.  Parse the response (if any)
-      # as JSON
-      json_results = issue_http_request(request_url, http_request, &block)
-      if json_results
-        # The JSON parser for Ruby parses JSON "Text" according to RFC 4627, but
-        # not JSON values.  As a result, 'JSON.parse("true")' yields a parsing
-        # exception. To work around this, we force the result JSON text by
-        # including it in Array markers, then take the first element of the
-        # resulting array as the result of the parsing. This should allow values
-        # like true, false, null, and numbers to parse the same way they would in
-        # a browser.
-        parsed_json = JSON.parse("[ #{json_results} ]")[0]
-
-        # if the results indicate an error, convert it into an exception
-        if parsed_json.kind_of?(Hash) && parsed_json['error']
-          raise SoftLayerAPIException.new(parsed_json['error'])
-        end
-      else
-        parsed_json = nil
+      if(parameters && parameters.server_object_id)        
+        additional_headers = {"tns:#{@service_name}InitParameters" => { "id" => parameters.server_object_id}}
       end
-
-      # return the results, if any
-      return parsed_json
-    end
-
-    # Marshall the arguments into a JSON string suitable for the body of
-    # an HTTP message. This is intended to be used in the internal
-    # processing of method_missing and need not be called directly.
-    def marshall_arguments_for_call(args)
-      request_body = nil;
-
-      if(args && !args.empty?)
-        request_body = {"parameters" => args}.to_json
-      end
-
-      return request_body
-    end
-
-    # Given a method name, determine the appropriate HTTP mechanism
-    # for sending a request to execute that method to the server.
-    # and create a Net::HTTP request of that type. This is intended
-    # to be used in the internal processing of method_missing and
-    # need not be called directly.
-    def http_request_for_method(method_name, method_url, request_body = nil)
-      content_type_header = {"Content-Type" => "application/json"}
-
-      # This is a workaround for a potential problem that arises from mis-using the
-      # API.  If you call SoftLayer_Virtual_Guest and you call the getObject method
-      # but pass a virtual guest as a parameter, what happens is the getObject method
-      # is called through an HTTP POST verb and the API creates a new CCI that is a copy
-      # of the one you passed in.
-      #
-      # The counter-intuitive creation of a new CCI is unexpected and, even worse,
-      # is something you can be billed for.  To prevent that, we ignore the request
-      # body on a "getObject" call and print out a warning.
-      if (method_name == :getObject) && (nil != request_body) then
-        $stderr.puts "Warning - The getObject method takes no parameters.  The parameters you have provided will be ignored."
-        request_body = nil
-      end
-
-      if request_body && !request_body.empty?
-            url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
-      else
-          	url_request = Net::HTTP::Get.new(method_url.request_uri())
-      end
-
-      # This warning should be obsolete as we should be using POST if the user
-   	  # has provided parameters. I'm going to leave it in, however, on the off
-  	  # chance that it catches a case we aren't expecting.
-      if request_body && !url_request.request_body_permitted?
-        $stderr.puts("Warning - The HTTP request for #{method_name} does not allow arguments to be passed to the server")
-      else
-        # Otherwise, add the arguments as the body of the request
-        url_request.body = request_body
-      end
-
-  	  url_request
-    end
-
-    # Connect to the network and request the content of the resource
-    # specified. This is used to do the actual work of connecting
-    # to the SoftLayer servers and exchange data. This is intended
-    # to be used in the internal processing of method_missing and
-    # need not be called directly.
-    def issue_http_request(request_url, http_request, &block)
-      # create and run an SSL request
-      https = Net::HTTP.new(request_url.host, request_url.port)
-      https.use_ssl = (request_url.scheme == "https")
-
-      # This line silences an annoying warning message if you're in debug mode
-      https.verify_mode = OpenSSL::SSL::VERIFY_NONE if $DEBUG
-
-      https.start do |http|
-
-        puts "SoftLayer API issuing an HTTP request for #{request_url}" if $DEBUG
-
-        response = https.request(http_request)
-
-        case response
-        when Net::HTTPSuccess
-          return response.body
-        else
-          # We have an error. It might have a meaningful error message
-          # from the server. Check to see if there is a body and whether
-          # or not that body parses as JSON.  If it does, then we return
-          # that as a result (assuming it's an error)
-          json_parses = false
-          body = response.body
-
-          begin
-            if body
-              JSON.parse(body)
-              json_parses = true
-            end
-          rescue => json_parse_exception
-            json_parses = false;
-          end
-
-          # Let the HTTP library generate and raise an exception if
-          # the body was empty or could not be parsed as JSON
-          response.value() if !json_parses
-
-          return body
-        end
-      end
-    end
-
-    # Construct a URL for calling the given method on this endpoint and
-    # expecting a JSON response. This is intended to be used in the internal
-    # processing of method_missing and need not be called directly.
-    def url_to_call_method(method_name, parameters)
-      method_path = method_name.to_s
-
-      # if there's an object ID on the parameters, add that to the URL
-      if(parameters && parameters.server_object_id)
-        method_path = parameters.server_object_id.to_s + "/" + method_path
-      end
-
-      # tag ".json" onto the method path (if it's not already there)
-      method_path.sub!(%r|(\.json){0,1}$|, ".json")
-
-      # put the whole thing together into a URL
-      # (reusing a variation on the clever regular expression above. This one appends a "slash"
-      # to the service name if theres not already one there otherwise. Without it URI.join
-      # doesn't do the right thing)
-      uri = URI.join(self.endpoint_url, self.service_name.sub(%r{/*$},"/"), method_path)
-
-      query_string = nil
 
       if(parameters && parameters.server_object_mask)
-        mask_value = parameters.server_object_mask.to_sl_object_mask.map { |mask_key| URI.encode(mask_key.to_s.strip) }.join(";")
-        query_string = "objectMask=#{mask_value}"
+        object_mask = SoftLayer::ObjectMask.new()
+        object_mask.subproperties = parameters.server_object_mask
+
+        additional_headers = additional_headers.merge({ "tns:SoftLayer_ObjectMask" => { "mask" => object_mask.to_sl_object_mask } })
       end
 
       if (parameters && parameters.server_result_limit)
-        resultLimit = parameters.server_result_limit
-        resultOffset = parameters.server_result_offset
-        resultOffset = 0 if resultOffset.nil?
-        limit_string = "resultLimit=#{resultOffset},#{resultLimit}"
-        if query_string.nil?
-          query_string = limit_string
-        else
-          query_string << "&#{limit_string}"
-        end
+        additional_headers = additional_headers.merge("tns:resultLimit" => { "offset" => (parameters.server_result_offset || 0), "limit" => parameters.server_result_limit })
       end
 
-      uri.query = query_string
+      soap_symbol = method_name.to_s.sl_camelcase_to_underscore.to_sym
 
-      return uri
+      if(additional_headers && !additional_headers.empty?)
+        soap_result = @_soap_service.call(soap_symbol, *args, soap_header: additional_headers)
+      else
+        soap_result = @_soap_service.call(soap_symbol, *args)
+      end
+      
+      soap_return_value = soap_result.body["#{method_name}Response"]["#{method_name}Return"]
+      
+      if soap_return_value.has_key? "@SOAP_ENC:arrayType" then
+        soap_return_value = soap_return_value["item"]
+      end
+
+      return soap_return_value
     end
 
     # Change the username. The username cannot be nil or the empty string.
@@ -454,5 +326,5 @@ module SoftLayer
       raise SoftLayerAPIException.new("The endpoint url cannot be nil or empty") if new_url.nil? || new_url.empty?
       @endpoint_url = new_url.strip
     end
-  end # class Service
+  end # Service class
 end # module SoftLayer

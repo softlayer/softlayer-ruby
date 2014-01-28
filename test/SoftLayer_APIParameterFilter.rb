@@ -67,7 +67,7 @@ describe SoftLayer::APIParameterFilter, "#method_missing" do
   it "should invoke call_softlayer_api_with_params(method_name, self, args, &block) on it's target with itself and the method_missing parameters" do
     filter = SoftLayer::APIParameterFilter.new.object_mask("fish", "cow", "duck").object_with_id(12345)
 
-    target = mock("method_missing_target")
+    target = double("method_missing_target")
     target.should_receive(:call_softlayer_api_with_params).with(:getObject, filter, ["marshmallow"])
 
     filter.target = target

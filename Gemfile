@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
-gem 'json', '~> 1.5', '>= 1.5.2'
+gem 'savon', '~> 2.0', '>= 2.3.3'
 gem 'rake'
 gem 'rspec'
