@@ -174,11 +174,11 @@ module SoftLayer
       
       # Create the SOAP client object that will be used for calls to this service
       savon_options = {
-				wsdl: (@endpoint_url + @service_name + '?wsdl'),
-        convert_request_keys_to: :none,
-        convert_response_tags_to: :none,
-        log: $DEBUG || false,
-				soap_header: {'tns:authenticate' => { 'username' => @username, "apiKey" => @api_key } }
+				:wsdl => (@endpoint_url + @service_name + '?wsdl'),
+        :convert_request_keys_to => :none,
+        :convert_response_tags_to => :none,
+        :log => $DEBUG || false,
+				:soap_header => {'tns:authenticate' => { 'username' => @username, "apiKey" => @api_key } }
       }
 
       # if the caller provided any savon options, put them into the client options hash
@@ -295,7 +295,7 @@ module SoftLayer
       soap_symbol = method_name.to_s.sl_camelcase_to_underscore.to_sym
 
       if(additional_headers && !additional_headers.empty?)
-        soap_result = @_soap_service.call(soap_symbol, *args, soap_header: additional_headers)
+        soap_result = @_soap_service.call(soap_symbol, *args, :soap_header => additional_headers)
       else
         soap_result = @_soap_service.call(soap_symbol, *args)
       end
