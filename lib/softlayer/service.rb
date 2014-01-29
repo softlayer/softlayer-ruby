@@ -295,11 +295,11 @@ module SoftLayer
       soap_symbol = method_name.to_s.sl_camelcase_to_underscore.to_sym
 
       if(additional_headers && !additional_headers.empty?)
-        soap_result = @_soap_service.call(soap_symbol, *args, :soap_header => additional_headers)
-      else
-        soap_result = @_soap_service.call(soap_symbol, *args)
+        args << {:soap_header => additional_headers };
       end
       
+      soap_result = @_soap_service.call(soap_symbol, *args)
+  
       soap_return_value = soap_result.body["#{method_name}Response"]["#{method_name}Return"]
       
       if soap_return_value.has_key? "@SOAP_ENC:arrayType" then

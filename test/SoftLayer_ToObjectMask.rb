@@ -74,13 +74,7 @@ describe Hash, "#to_sl_object_mask" do
   
   it "should handle a complex hash object mask with an inner empty hash" do
     { "ipAddress" => { "ipAddress" => {}}}.to_sl_object_mask.should eql("ipAddress[ipAddress]")
-  end
-  
-  it "should handle a complex hash dreamed up during iOS testing" do
-    {"foo" => "foobar",
-		  "bar" => ["one", "two", "three"],
-		  "baz" => { "sub" => "resub"}}.to_sl_object_mask.should eql("foo.foobar,bar[one,two,three],baz[sub.resub]")
-  end
+  end  
 end
 
 describe SoftLayer::ObjectMaskProperty, "#initialize" do
