@@ -1,0 +1,6 @@
+source 'https://rubygems.org'
+gem 'weakling'
+gem 'nokogiri', '~>1.4.1'
+gem 'savon', '~> 2.0', '>= 2.3.3'
+gem 'rake'
+gem 'rspec'
