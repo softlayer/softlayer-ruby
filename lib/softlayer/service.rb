@@ -325,9 +325,27 @@ module SoftLayer
       if (parameters && parameters.server_result_limit)
         additional_headers.merge!("tns:resultLimit" => { "offset" => (parameters.server_result_offset || 0), "limit" => parameters.server_result_limit })
       end
+      
+      # This is a workaround for a potential problem that arises from mis-using the
+      # API.  If you call SoftLayer_Virtual_Guest and you call the getObject method
+      # but pass a virtual guest as a parameter, what happens is the getObject method
+      # is called through an HTTP POST verb and the API creates a new CCI that is a copy
+      # of the one you passed in.
+      #
+      # The counter-intuitive creation of a new CCI is unexpected and, even worse,
+      # is something you can be billed for.  To prevent that, we ignore the request
+      # body on a "getObject" call and print out a warning.
+      if (method_name == :getObject) && (nil != args) && (!args.empty?) then
+        $stderr.puts "Warning - The getObject method takes no parameters. The parameters you have provided will be ignored."
+        args = nil
+      end
 
-      # convert the arguments array into a SOAP array structure and stuff that in as the message
-      call_arguments = { :message => fix_argument_arrays(args) }
+      # convert the arguments array into a SOAP array structure and stuff that in as the message\
+      if(args && !args.empty?)
+        call_arguments = { :message => fix_argument_arrays(args) }
+      else
+        call_arguments = {}
+      end
       
       # if there were any additional soap headers that were added as part of this call,
       # add those in too.
