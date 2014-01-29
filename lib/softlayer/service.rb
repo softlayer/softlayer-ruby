@@ -106,7 +106,9 @@ module SoftLayer
       self.parameters[:result_offset]
     end
 
-    def method_missing(method_name, *args, &block)
+    def method_missing(method_name, *args, &block)      
+      puts "SoftLayer::APIParameterFilter#method_missing called #{method_name}, #{args.inspect}" if $DEBUG
+
       return @target.call_softlayer_api_with_params(method_name, self, args, &block)
     end
   end
@@ -261,6 +263,39 @@ module SoftLayer
 
       return result
     end
+    
+    # When SOAP returns an array it actually returns a structure with information about the type
+    # of the array included.  What this does is recursively traverse a response and replaces
+    # all these structures with their actual array values.
+    def fix_soap_arrays(response_value)
+      if response_value.kind_of? Hash 
+        if response_value.has_key?("@SOAP_ENC:arrayType") && response_value.has_key?("item") then
+          response_value = response_value["item"]
+        else
+          response_value.each { |key, value| response_value[key] = fix_soap_arrays(value) }
+        end
+      end
+
+      if response_value.kind_of? Array then
+        response_value.each_with_index { | value, index | response_value[index] = fix_soap_arrays(value) }
+      end
+      
+      response_value
+    end
+    
+    def fix_argument_arrays(arguments_value)
+      if arguments_value.kind_of? Hash then
+        arguments_value.each { |key, value| arguments_value[key] = fix_argument_arrays(value) }
+      end
+      
+      if arguments_value.kind_of? Array then
+        result = {}
+        arguments_value.each_with_index { |item, index| result["item#{index}"] = fix_argument_arrays(item) }
+        arguments_value = result
+      end
+      
+      arguments_value
+    end
 
     # Issue an HTTP request to call the given method from the SoftLayer API with
     # the parameters and arguments given.
@@ -274,7 +309,6 @@ module SoftLayer
     # This is intended to be used in the internal
     # processing of method_missing and need not be called directly.
     def call_softlayer_api_with_params(method_name, parameters, args, &block)
-      
       additional_headers = {};
 
       if(parameters && parameters.server_object_id)        
@@ -285,26 +319,27 @@ module SoftLayer
         object_mask = SoftLayer::ObjectMask.new()
         object_mask.subproperties = parameters.server_object_mask
 
-        additional_headers = additional_headers.merge({ "tns:SoftLayer_ObjectMask" => { "mask" => object_mask.to_sl_object_mask } })
+        additional_headers.merge!({ "tns:SoftLayer_ObjectMask" => { "mask" => object_mask.to_sl_object_mask } })
       end
 
       if (parameters && parameters.server_result_limit)
-        additional_headers = additional_headers.merge("tns:resultLimit" => { "offset" => (parameters.server_result_offset || 0), "limit" => parameters.server_result_limit })
+        additional_headers.merge!("tns:resultLimit" => { "offset" => (parameters.server_result_offset || 0), "limit" => parameters.server_result_limit })
       end
 
+      # convert the arguments array into a SOAP array structure and stuff that in as the message
+      call_arguments = { :message => fix_argument_arrays(args) }
+      
+      # if there were any additional soap headers that were added as part of this call,
+      # add those in too.
+      if(additional_headers && !additional_headers.empty?)
+        call_arguments.merge!(:soap_header => additional_headers)
+      end
+
+      # convert the camel-case method name to a underscore based symbol
       soap_symbol = method_name.to_s.sl_camelcase_to_underscore.to_sym
 
-      if(additional_headers && !additional_headers.empty?)
-        args << {:soap_header => additional_headers };
-      end
-      
-      soap_result = @_soap_service.call(soap_symbol, *args)
-  
-      soap_return_value = soap_result.body["#{method_name}Response"]["#{method_name}Return"]
-      
-      if soap_return_value.has_key? "@SOAP_ENC:arrayType" then
-        soap_return_value = soap_return_value["item"]
-      end
+      soap_result = @_soap_service.call(soap_symbol, call_arguments)  
+      soap_return_value = fix_soap_arrays(soap_result.body["#{method_name}Response"]["#{method_name}Return"]) 
 
       return soap_return_value
     end
