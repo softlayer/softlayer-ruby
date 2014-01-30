@@ -35,7 +35,7 @@ require 'rubygems'
 require 'savon'
 
 module SoftLayer
-  VERSION = "2.0.0"  # version history at the bottom of the file.
+  VERSION = "2.0.0"  # version history in the CHANGELOG.textile file at the root of the source
 
   # The base URL of the SoftLayer API's REST-like endpoints available to the public internet.
   API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/soap/v3/'
@@ -63,27 +63,4 @@ end # module SoftLayer
 #
 # History:
 #
-# 1.0 - 1.0.1 - Initial release.  There was some confusion over getting the gem
-# posted up to rubygems.org and the 1.0.1 release came about because of that
-# confusion.  There should be no real functionality differences there.
-#
-# 1.0.2 - We have some API routines that start with 'get' but expect arguments
-# anyway.  The code now uses HTTP POST to send requests for which the user
-# has provided arguments regardless of the name of the routine.
-#
-# 1.0.3 - Added a request filter to add result limits to request.  Submitted by
-# JN.  Thanks!
-#
-# 1.0.4 - Fixed a bug where the result_limit and result_offset object filters were just not working.
-#
-# 1.0.5 - Fixed a bug where empty hashes and empty arrays would not generate meaningful object masks
-#
-# 1.0.6 - Make all API calls with either a GET or a POST as the HTTP verb.
-#
-# 1.0.7 - Calls to the "getObject" method of any service should not take parameters.  The gem now
-# warns if you make this type of call and ignores the parameters. This prevents
-# SoftLayer_Virtual_Guest::getObject from accidentally creating (billable) CCI instances.
-#
-# 2.0 - Switched the Ruby API client to use the SOAP interface using the Savon web services gem
-#     - Result limits are now specified using result_limit(offset,limit).  The result_offset API filter has been removed.
-#     - Object masks are now sent to the server in the "Extended Object Mask" format.
+# The history has been moved to the CHANGELOG.textile file in the source directory

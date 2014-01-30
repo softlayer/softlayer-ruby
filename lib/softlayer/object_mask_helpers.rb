@@ -21,6 +21,12 @@
 #
 
 class Hash
+  
+  # Returns a string representing the object mask content represented by the
+  # Hash.  The keys are expected to be strings.  Values that are strings convert 
+  # into "dotted" pairs. For example, {"ticket" => "lastUpdate"} would translate 
+  # to "ticket.lastUpdate".  Values that are hashes or arrays become bracketed
+  # expressions.  {"ticket" => ["id", "lastUpdate"] } would become "ticket[id,lastupdate]"
   def to_sl_object_mask()
     key_strings = [];
 
@@ -50,6 +56,9 @@ class Hash
 end
 
 class Array
+  # Returns a string representing the object mask content represented by the
+  # Array. Each value in the array is converted to it's object mask eqivalent
+  # and 
   def to_sl_object_mask()
     return "" if self.empty?
     map { |item| item.to_sl_object_mask() }.flatten.join(",")
@@ -57,12 +66,37 @@ class Array
 end
 
 class String
+  # Returns a string representing the object mask content represented by the
+  # String. Strings are simply represented as copies of themselves.  We make
+  # a copy in case the original String is modified somewhere along the way
   def to_sl_object_mask()
     return clone()
   end
 end
 
 module SoftLayer
+  # An ObjectMaskProperty is a class which helps to represent more complex 
+  # Object Mask expressions that include the type associated with the mask.
+  #
+  # For example, if you are working through the SoftLayer_Account and asking
+  # for all the Hardware servers on the account, and if you wish to ask
+  # for the metricTrackingObjectId of the servers, you might try:
+  #
+  # account_service = SoftLayer::Service.new("SoftLayer_Account")
+  # account_service.object_mask("id", "metricTrackingObjectId").getHardware()
+  #
+  # However, because the result of getHardware is a list of entities in the
+  # SoftLayer_Hardware service and entities in that service do not have 
+  # metricTrackingObjectIds, this call will fail.
+  #
+  # Instead, you need to add an object mask property to the mask that 
+  # indicates that the metricTrackingObjectId is found in the SoftLayer_Hardware_Server
+  # service. Such a thing might look like:
+  #
+  # tracking_id_property = SoftLayer::ObjectMaskProperty.new("metricTrackingObjectId")
+  # tracking_id_property.type = "SoftLayer_Hardware_Server"
+  # account_service.object_mask("id", tracking_id_property).getHardware() # asssumes account_service as above
+  #
   class ObjectMaskProperty
     attr_reader :name
     attr_accessor :type
@@ -98,6 +132,16 @@ module SoftLayer
     end
   end
   
+  # This class is largely a utility and implementation detail used when forwarding
+  # an object mask to the server.  It acts as an ObjectMaskProperty with the
+  # name "mask".  When a string is generated from this the result will be either
+  # a simple mask (like "mask.some_property") or a compound mask of the form:
+  # "mask[mask_property_structure]"
+  #
+  # Code using the client is unlikely to have to use this class unless you
+  # are relying on the softlayer_api gem object mask helpers to generate masks
+  # and then sending the mask to the server yourself.
+  #
   class ObjectMask < ObjectMaskProperty
     def initialize()
       @name = "mask"
