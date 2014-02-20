@@ -26,3 +26,6 @@ require 'softlayer/APIParameterFilter'
 
 require 'softlayer/Client'
 require 'softlayer/Service'
+
+# model classes
+require 'softlayer/Account'

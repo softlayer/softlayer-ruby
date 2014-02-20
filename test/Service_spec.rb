@@ -163,3 +163,64 @@ describe SoftLayer::Service, "Creating option proxies" do
     masked_proxy.server_object_mask.should eql(["fish", "cow", "duck"])
   end
 end
+
+describe SoftLayer::Service, "getting related services" do
+  it "should clone most of the service properties" do
+    test_account_name = "testuser"
+    test_api_key = "DEADBEEFBADF00D"
+    test_endpoint_url = "http://fakeendpoint.softlayer.com"
+    test_soap_options = { :swimming => :not_allowed }
+
+    sample_service = SoftLayer::Service.new("SoftLayer_Account",
+      :username => test_account_name, 
+      :api_key => test_api_key, 
+      :endpoint_url => test_endpoint_url,
+      :savon_client_options => test_soap_options)
+      
+    related_service = sample_service.related_service_named("SoftLayer_Hardware")
+    related_service.service_name.should eq("SoftLayer_Hardware")
+    related_service.username.should eq(test_account_name)
+    related_service.api_key.should eq(test_api_key)
+    related_service.endpoint_url.should eq(test_endpoint_url)
+    related_service.instance_eval("@savon_options").should eq(test_soap_options)    
+  end
+
+  it "should allow options to override the cloned info" do
+    test_account_name = "testuser"
+    test_api_key = "DEADBEEFBADF00D"
+    test_endpoint_url = "http://fakeendpoint.softlayer.com"
+    test_soap_options = { :swimming => :not_allowed }
+
+    sample_service = SoftLayer::Service.new("SoftLayer_Account",
+      :username => test_account_name, 
+      :api_key => test_api_key, 
+      :endpoint_url => test_endpoint_url,
+      :savon_client_options => test_soap_options)
+
+    related_service = sample_service.related_service_named("SoftLayer_Hardware", :username => test_account_name.reverse)
+    related_service.username.should eq(test_account_name.reverse)
+    related_service.api_key.should eq(test_api_key)
+    related_service.endpoint_url.should eq(test_endpoint_url)
+    related_service.instance_eval("@savon_options").should eq(test_soap_options)    
+
+    related_service = sample_service.related_service_named("SoftLayer_Hardware", :api_key => test_api_key.reverse)
+    related_service.username.should eq(test_account_name)
+    related_service.api_key.should eq(test_api_key.reverse)
+    related_service.endpoint_url.should eq(test_endpoint_url)
+    related_service.instance_eval("@savon_options").should eq(test_soap_options)    
+
+    related_service = sample_service.related_service_named("SoftLayer_Hardware", :endpoint_url => test_endpoint_url.reverse)
+    related_service.username.should eq(test_account_name)
+    related_service.api_key.should eq(test_api_key)
+    related_service.endpoint_url.should eq(test_endpoint_url.reverse)
+    related_service.instance_eval("@savon_options").should eq(test_soap_options)    
+
+    other_options = { :uke_playing => :encouraged}
+    related_service = sample_service.related_service_named("SoftLayer_Hardware", :savon_client_options => other_options)
+    related_service.username.should eq(test_account_name)
+    related_service.api_key.should eq(test_api_key)
+    related_service.endpoint_url.should eq(test_endpoint_url)
+    related_service.instance_eval("@savon_options").should eq(other_options)    
+  end
+
+end

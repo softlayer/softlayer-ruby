@@ -114,10 +114,24 @@ using either client.service_named('<service_name_here>') or client['<service_nam
 
         @client = SoftLayer::Client.new(client_options)
       end
-
       # this has proven to be very helpful during debugging.  It helps prevent infinite recursion
       # when you don't get a method call just right
       @method_missing_call_depth = 0 if $DEBUG
+    end
+
+    # returns a related service with the given service name.  The related service
+    # will use the same authentication and savon client options as this service
+    # unless they are specifically overridden in the options dictionary
+    def related_service_named(service_name, options={})      
+      base_options = {
+        :username => self.username,
+        :api_key => self.api_key,
+        :endpoint_url => self.endpoint_url
+      }
+
+      base_options[:savon_client_options] = @savon_options if @savon_options
+
+      self.class.new service_name, base_options.merge(options)
     end
 
     # Use this as part of a method call chain to identify a particular
@@ -296,7 +310,6 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       end
       
       @xmlrpc_client
-    end
-    
+    end    
   end # Service class
 end # module SoftLayer
