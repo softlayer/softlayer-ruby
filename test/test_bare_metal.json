@@ -1,0 +1,64 @@
+[{
+	"accountId": "99999",
+	"bareMetalInstanceFlag": 1,
+	"domain": "example.pqz",
+	"fullyQualifiedDomainName": "test_server_1.example.pqz",
+	"hardwareStatusId": 5,
+	"hostname": "test_server_1",
+	"id": "124437",
+	"manufacturerSerialNumber": "c4a2554a50567f0c13e951eaf56a06",
+	"notes": "Test notes.",
+	"serialNumber": "SL1696570",
+	"serviceProviderId": 1,
+	"serviceProviderResourceId": 186908,
+	"hardwareStatus": {
+		"id": 5,
+		"status": "ACTIVE"
+	},
+	"networkManagementIpAddress": "0.88.0.24",
+	"primaryBackendIpAddress": "0.88.0.23",
+	"primaryIpAddress": "0.23.0.198",
+	"privateIpAddress": "0.88.0.23"
+}, {
+	"accountId": "99999",
+	"bareMetalInstanceFlag": 0,
+	"domain": "example.pqz",
+	"fullyQualifiedDomainName": "test_server_2.example.pqz",
+	"hardwareStatusId": 5,
+	"hostname": "test_server_2",
+	"id": "161282",
+	"manufacturerSerialNumber": "1d41493be0db259bb59e4ba31b3f74",
+	"serialNumber": "SL1861192",
+	"serviceProviderId": 1,
+	"serviceProviderResourceId": 125195,
+	"globalIdentifier": "85450b0a-d86d-4144-8b4e-1918ef5061bb",
+	"hardwareStatus": {
+		"id": 5,
+		"status": "ACTIVE"
+	},
+	"networkManagementIpAddress": "0.54.0.67",
+	"primaryBackendIpAddress": "0.54.0.66",
+	"primaryIpAddress": "0.23.0.2",
+	"privateIpAddress": "0.54.0.66"
+}, {
+	"accountId": "99999",
+	"bareMetalInstanceFlag": 0,
+	"domain": "example.pqz",
+	"fullyQualifiedDomainName": "test_server_3.example.pqz",
+	"hardwareStatusId": 5,
+	"hostname": "test_server_3",
+	"id": "116771",
+	"manufacturerSerialNumber": "2f4ea9bdb51c378b5019efc6e03740",
+	"serialNumber": "SL1110013",
+	"serviceProviderId": 1,
+	"serviceProviderResourceId": 84576,
+	"globalIdentifier": "04192495-5228-439d-a014-d2a15a059023",
+	"hardwareStatus": {
+		"id": 5,
+		"status": "ACTIVE"
+	},
+	"networkManagementIpAddress": "0.54.0.73",
+	"primaryBackendIpAddress": "0.54.0.72",
+	"primaryIpAddress": "0.23.0.6",
+	"privateIpAddress": "0.54.0.72"
+}]

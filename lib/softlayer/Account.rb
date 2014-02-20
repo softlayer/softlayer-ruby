@@ -1,6 +1,10 @@
+require 'rubygems'
+require 'json'
+
 module SoftLayer
-  class Account
+  class Account < SoftLayer::ModelBase
     attr_reader :account_id
+    attr_reader :bare_metal_servers, :virtual_servers, :servers
 
     # Retrieve the default account object from the given service.
     # This should be a SoftLayer::Service with the service id of 
@@ -11,28 +15,13 @@ module SoftLayer
     #
     def self.default_account(account_service)
       network_hash = account_service.getObject()
-      new(network_hash)
+      new(account_service, network_hash)
     end
     
-    # Initializes an Account from the given hash. Presumably this
-    # hash was returned by a network service.
-    #
-    # The has is expected to include an object ID in a key that has
-    # either the string "id" or the symbol :id. If the hash does
-    # not include that key, then an ArgumentError exception is thrown.
-    #
-    # In typical usage, you should not have to create instances of
-    # this class directly... instead you should use the class method
-    # default_account to obtain an account object from the SoftLayer_Account
-    # service.
-    #
-    def initialize(network_hash)
-      raise ArgumentError, "Accounts must be created with a network hash" if network_hash.nil?
-
-      # convert all the keys in the incomming hash to symbols but keep their values
-      @sl_hash = network_hash.inject({}) { |new_value, pair| new_value[pair[0].to_sym] = pair[1]; new_value }
-      
-      raise ArgumentError, "Network hash must include an :id" if !@sl_hash.has_key?(:id)
+    def initialize(softlayer_service, network_hash = {})
+      super softlayer_service, network_hash
+      @bare_metal_servers = nil
+      @virtual_servers = nil
     end
     
     # the account_id field comes from the hash
@@ -40,36 +29,48 @@ module SoftLayer
       value = @sl_hash[:id]
     end
     
-    # When calling "puts" with an object that defines method_missing, the
-    # system will try to coerce the object to an array.  We override to_ary
-    # to indicate that that coersion is not meaninful.
-    def to_ary
-      nil
+    def servers
+      return self.bare_metal_servers + self.virtual_servers
     end
 
-    # We define respond_to? as a companion to our method_missing and the fact
-    # that we look like we create accessors for all the items in the hash
-    def respond_to?(method_symbol)
-      return (@sl_hash && @sl_hash.has_key?(method_symbol)) || super
+    # def update_bare_metal_servers?
+    #   elapsed_time = @last_bare_metal_servers_update - Time.now()
+    #   return elapsed_time > bare_metal_servers_refresh_interval;
+    # end
+    # 
+    # def updated_bare_metal_servers
+    #   hardware_service = self.softlayer_service.related_service_named("SoftLayer_Hardware")
+    #   bare_metal_data = self.softlayer_service.getHardware()
+    # 
+    #   bare_metal_data.collect { |server_data| BareMetalServer.new(hardware_service, server_data) }
+    # end
+    # 
+    # def bare_metal_servers
+    #   if update_bare_metal_servers?
+    #     @bare_metal_servers = updated_bare_metal_servers
+    #   end
+    # 
+    #   return @bare_metal_servers
+    # end
+
+    def bare_metal_servers
+      self.update_servers
+      return @bare_metal_servers
     end
-    
-    # We redefine method_missing to make our object respond to
-    # requests for values that are "hidden" in the SoftLayer data
-    # fields hash (@sl_hash).  For example, if the hash contains the 
-    # field "firstName", then you should be able to call
-    # "myObject.firstName" and get back that value from the hash.
-    def method_missing(method_symbol, *args, &block)
-      # Only consider method calls with no arguments and no blocks
-      if(@sl_hash && args.empty? && !block)        
-        # if the method's name can be found in our sl_hash return the value from there
-        if @sl_hash.has_key? method_symbol
-          return @sl_hash[method_symbol]
-        else
-          super
-        end
-      else
-        super
-      end
+
+    def virtual_servers
+      self.update_servers
+      return @virtual_servers
+    end
+
+    def update_servers
+      hardware_service = self.softlayer_service.related_service_named("SoftLayer_Hardware")
+      bare_metal_data = self.softlayer_service.getHardware()
+      @bare_metal_servers = bare_metal_data.collect { |server_data| BareMetalServer.new(hardware_service, server_data) }
+
+      virtual_guest_service = self.softlayer_service.related_service_named("SoftLayer_Virtual_Guest")
+      virtual_server_data = self.softlayer_service.getVirtualGuests()
+      @virtual_servers = virtual_server_data.collect { |server_data| VirtualServer.new(virtual_guest_service, server_data) }
     end
   end
 end

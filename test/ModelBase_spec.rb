@@ -20,14 +20,31 @@
 # THE SOFTWARE.
 #
 
-require 'softlayer/base'
-require 'softlayer/object_mask_helpers'
-require 'softlayer/APIParameterFilter'
+$LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
-require 'softlayer/Client'
-require 'softlayer/Service'
+require 'rubygems'
+require 'softlayer_api'
+require 'rspec'
 
-# model classes
-require 'softlayer/ModelBase'
-require 'softlayer/Account'
-require 'softlayer/Server'
+
+describe SoftLayer::ModelBase do
+  it "should reject hashes without id" do
+    expect { SoftLayer::ModelBase.new(nil, {}) }.to raise_error(ArgumentError)
+    expect { SoftLayer::ModelBase.new(nil, {:id => "someID"}) }.to_not raise_error(ArgumentError)
+  end
+  
+  it "should reject nil hashes" do
+    expect { SoftLayer::ModelBase.new(nil, nil) }.to raise_error(ArgumentError)
+  end
+  
+  it "return values from its hash as methods" do
+    test_model = SoftLayer::ModelBase.new(nil, { :id => nil, :kangaroo => "Fun"});
+    test_model.kangaroo.should == "Fun"
+  end
+  
+  it "should return nil from to_ary" do
+    test_model = SoftLayer::ModelBase.new(nil, { :id => "" })
+    test_model.should respond_to(:to_ary)
+    test_model.to_ary.should be_nil
+  end
+end
