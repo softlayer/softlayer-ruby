@@ -30,7 +30,7 @@ require 'rspec'
 describe SoftLayer::ModelBase do
   it "should reject hashes without id" do
     expect { SoftLayer::ModelBase.new(nil, {}) }.to raise_error(ArgumentError)
-    expect { SoftLayer::ModelBase.new(nil, {:id => "someID"}) }.to_not raise_error(ArgumentError)
+    expect { SoftLayer::ModelBase.new(nil, {:id => "someID"}) }.not_to raise_error
   end
   
   it "should reject nil hashes" do

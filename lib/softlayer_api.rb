@@ -29,5 +29,6 @@ require 'softlayer/Service'
 
 # model classes
 require 'softlayer/ModelBase'
+require 'softlayer/ModelResource'
 require 'softlayer/Account'
 require 'softlayer/Server'
