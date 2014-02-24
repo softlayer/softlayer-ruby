@@ -39,23 +39,8 @@ softlayer_api_gem = Gem::Specification.new do |s|
   s.files = FileList["README.textile", "LICENSE.textile", "lib/**/*.rb", "test/**/*.rb", "examples/**/*.rb"]
   s.require_path = "lib"
   s.has_rdoc = true
-  s.add_runtime_dependency 'json', '~> 1.5', '>= 1.5.2'
+  s.add_runtime_dependency 'savon', '~> 2.0', '>= 2.3.3'
   s.license = %q{MIT}
-end
-
-softlayer_api_jruby_gem = Gem::Specification.new do |s|
-  s.platform  =   Gem::Platform::RUBY
-  s.name = %q{softlayer_api_jruby}
-  s.version = SoftLayer::VERSION
-  s.author = "SoftLayer Development Team"
-  s.email = %q{sldn@softlayer.com}
-  s.homepage = %q{http://sldn.softlayer.com/}
-  s.summary = %q{Library for accessing the SoftLayer portal API through JRuby}
-  s.description = %q{The softlayer_api_jruby gem offers a convenient mechanism for invoking the services of the SoftLayer API from JRuby.}
-  s.files = FileList["README.textile", "LICENSE.textile", "lib/**/*.rb", "test/**/*.rb", "examples/**/*.rb"]
-  s.require_path = "lib"
-  s.has_rdoc = true
-  s.add_dependency("json-jruby")
 end
 
 Gem::PackageTask.new(softlayer_api_gem) do |pkg|

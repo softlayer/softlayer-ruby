@@ -21,7 +21,6 @@
 #
 
 class Hash
-  
   # Returns a string representing the object mask content represented by the
   # Hash.  The keys are expected to be strings.  Values that are strings convert 
   # into "dotted" pairs. For example, {"ticket" => "lastUpdate"} would translate 
