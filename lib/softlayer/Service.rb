@@ -105,7 +105,13 @@ using either client.service_named('<service_name_here>') or client['<service_nam
         # Collect the keys relevant to client creation and pass them on to construct
         # the client
         client_keys = [:username, :api_key, :endpoint_url]
-        client_options = options.select { |key, value| client_keys.include? key }      
+        client_options = options.inject({}) do |new_hash, pair| 
+          if client_keys.include? pair[0]
+            new_hash[pair[0]] = pair[1]
+            new_hash
+          end
+        end
+
         if client && !options.empty?
           raise SoftlayerAPIException.new("Attempting to construct a service both with a client, and with client initialization options.  Only one or the other should be provided")
         end
