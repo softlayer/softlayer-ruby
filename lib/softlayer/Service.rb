@@ -45,86 +45,83 @@ module SoftLayer
 
   # = SoftLayer API Service
   #
-  # Instances of this class represent services in the SoftLayer API.
+  # Instances of this class are the runtime representation of 
+  # services in the SoftLayer API. They handle communication with
+  # the SoftLayer servers.
+  # 
+  # You typically should not need to create services directly.
+  # instead, you should be creating a client and then using it to 
+  # obtain individual services.  For example:
   #
-  # You create a service with the name of one of the SoftLayer services
-  # (documented on the http://sldn.softlayer.com web site).  Once created
-  # you can use the service to make method calls to the SoftLayer API.
+  # client = SoftLayer::Client.new(:username => "Joe", :api_key=>"feeddeadbeefbadfood...")
+  # account_service = client.service_named("Account") # returns the SoftLayer_Account service
+  # account_service = client['Account'] # Exactly the same as above
   #
-  # A typical use might look something like
+  # For backward compatibility, a service can be constructed by passing 
+  # client initialization options, however if you do so you will need to
+  # prepend the "SoftLayer_" on the front of the service name.  For Example:
   #
-  #   account_service = SoftLayer::Service("SoftLayer_Account", :username=>"<your user name here>" :api_key=>"<your api key here>")
+  #   account_service = SoftLayer::Service("SoftLayer_Account", 
+  #     :username=>"<your user name here>" 
+  #     :api_key=>"<your api key here>")
   #
-  # then to invoke a method simply call the service:
+  # A service communicates with the SoftLayer API through the 
+  # Savon client gem.  You may pass options to the Savon client 
+  # using the option named :savon_client_options.  The value of this 
+  # key is expected to be a hash of options (for example,
+  # :savon_client_options => { :log => true}).
+  #
+  # Once you have a service, you can invoke methods in the service like this:
   #
   #   account_service.getOpenTickets
   #   => {... lots of information here representing the list of open tickets ...}
   #
   class Service
-
-    # A username passed as authentication for each request. Cannot be emtpy or nil.
-    attr_accessor :username
-
-    # An API key passed as part of the authentication of each request. Cannot be emtpy or nil.
-    attr_accessor :api_key
-    
     # The name of the service that this object calls. Cannot be emtpy or nil.
-    attr_accessor :service_name
-
-    # The base URL for requests that are passed to the server. Cannot be emtpy or nil.
-    attr_accessor :endpoint_url
+    attr_reader :service_name
+    attr_reader :client
   
-    # Initialize an instance of the Client class. You pass in the service name
-    # and optionally hash arguments specifying how the client should access the
-    # SoftLayer API.
-    #
-    # The following symbols can be used as hash arguments to pass options to the constructor:
-    # - <tt>:username</tt> - a non-empty string providing the username to use for requests to the service
-    # - <tt>:api_key</tt> - a non-empty string providing the api key to use for requests to the service
-    # - <tt>:endpoint_url</tt> - a non-empty string providing the endpoint URL to use for requests to the service
-    # - <tt>:savon_client_options</tt> - A hash of options that are passed to the savon SOAP client created for the service
-    #
-    # If any of the options above are missing then the constructor will try to use the corresponding
-    # global variable declared in the SoftLayer Module:
-    # - <tt>$SL_API_USERNAME</tt>
-    # - <tt>$SL_API_KEY</tt>
-    # - <tt>$SL_API_BASE_URL</tt>
-    #
     def initialize(service_name, options = {})
       raise SoftLayerAPIException.new("Please provide a service name") if service_name.nil? || service_name.empty?
 
-      self.service_name = service_name;
+      # remember the service name
+      @service_name = service_name;
 
-      # pick up the username from the options, the global, or assume no username
-      self.username = options[:username] || $SL_API_USERNAME || ""
-      
-      # do a similar thing for the api key
-      self.api_key = options[:api_key] || $SL_API_KEY || ""
-  
-      # and the endpoint url
-      self.endpoint_url = options[:endpoint_url] || $SL_API_BASE_URL || API_PUBLIC_ENDPOINT
-      
-      # Create the SOAP client object that will be used for calls to this service
-      savon_options = {
-				:wsdl => (@endpoint_url + @service_name + '?wsdl'),
-        :convert_request_keys_to => :none,
-        :convert_response_tags_to => :none,
-        :log => $DEBUG || false,
-				:soap_header => {'tns:authenticate' => { 'username' => @username, "apiKey" => @api_key } }
-      }
+      # if the options hash already has a client
+      # go ahead and use it
+      if options.has_key? :client
+        @client = options[:client]
+      else
+        # Accepting client initialization options here
+        # is a backward-compatibility feature.
+        
+        if $DEBUG
+          $stderr.puts %q{ 
+Creating services with Client initialization options is deprecated and may be removed 
+in a future release.  Please change your code to create a client and obtain a service 
+using either client.service_named('<service_name_here>') or client['<service_name_here>']}
+        end
+        
+        # Collect the keys relevant to client creation and pass them on to construct
+        # the client
+        client_keys = [:username, :api_key, :endpoint_url]
+        client_options = options.select { |key, value| client_keys.include? key }      
+        if client && !options.empty?
+          raise SoftlayerAPIException.new("Attempting to construct a service both with a client, and with client initialization options.  Only one or the other should be provided")
+        end
 
-      # if the caller provided any savon options, put them into the client options hash
-      if(options[:savon_client_options]) then
-        savon_options = savon_options.merge(options[:savon_client_options])
+        @client = SoftLayer::Client.new(client_options)
       end
 
-      @_soap_service = Savon.client(savon_options);
+
+      # construct the savon soap object used by this service
+      construct_soap_service(options[:savon_client_options])
 
       # this has proven to be very helpful during debugging.  It helps prevent infinite recursion
       # when you don't get a method call just right
       @method_missing_call_depth = 0 if $DEBUG
     end
-  
+
     # Use this as part of a method call chain to identify a particular
     # object as the target of the request. The parameter is the SoftLayer
     # object identifier you are interested in. For example, this call
@@ -291,23 +288,32 @@ module SoftLayer
 
       return soap_return_value
     end
-
-    # Change the username. The username cannot be nil or the empty string.
-    def username= (name)
-      raise SoftLayerAPIException.new("Please provide a username") if name.nil? || name.empty?
-      @username = name.strip
+    
+    def to_ary
+      nil
     end
+    
+    private
+    
+    def construct_soap_service(user_savon_options)
+      # Create the SOAP client object that will be used for calls to this service
+      savon_options = {
+				:wsdl => (@client.endpoint_url + @service_name + '?wsdl'),
+        :convert_request_keys_to => :none,
+        :convert_response_tags_to => :none,
+        :log => $DEBUG || false,
+				:soap_header => {'tns:authenticate' => 
+          { 'username' => @client.username, 
+            "apiKey" => @client.api_key } }
+      }
 
-    # Change the api_key. It cannot be nil or the empty string.
-    def api_key= (new_key)
-      raise SoftLayerAPIException.new("Please provide an api_key") if new_key.nil? || new_key.empty?
-      @api_key = new_key.strip
-    end
+      # if the caller provided any savon options, put them into the client options hash
+      if user_savon_options then
+        savon_options = savon_options.merge(user_savon_options)
+      end
 
-    # Change the endpoint_url. It cannot be nil or the empty string.
-    def endpoint_url= (new_url)
-      raise SoftLayerAPIException.new("The endpoint url cannot be nil or empty") if new_url.nil? || new_url.empty?
-      @endpoint_url = new_url.strip
+      @_soap_service = Savon.client(savon_options);
     end
+    
   end # Service class
 end # module SoftLayer

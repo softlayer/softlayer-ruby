@@ -27,20 +27,20 @@ require 'softlayer_api'
 require 'rspec'
 
 describe SoftLayer::APIParameterFilter, "#object_with_id" do
-  it "should intitialize with empty parameter values" do
+  it "initializes with empty properties" do
     filter = SoftLayer::APIParameterFilter.new
     filter.server_object_id.should be_nil
     filter.server_object_mask.should be_nil
   end
 
-  it "should store its value in server_object_id when called " do
+  it "stores its value in server_object_id when called " do
     filter = SoftLayer::APIParameterFilter.new
     result = filter.object_with_id(12345)
     result.server_object_id.should eql(12345)
     result.parameters.should eql({:server_object_id => 12345})
   end
 
-  it "should allow call chaining with object_mask " do
+  it "allows call chaining with object_mask " do
     filter = SoftLayer::APIParameterFilter.new
     result = filter.object_with_id(12345).object_mask("fish", "cow", "duck")
     result.server_object_id.should == 12345
@@ -49,13 +49,13 @@ describe SoftLayer::APIParameterFilter, "#object_with_id" do
 end
 
 describe SoftLayer::APIParameterFilter, "#object_mask" do
-  it "should store its value in server_object_mask when called" do
+  it "stores its value in server_object_mask when called" do
     filter = SoftLayer::APIParameterFilter.new
     result = filter.object_mask("fish", "cow", "duck")
     result.server_object_mask.should == ["fish", "cow", "duck"]
   end
 
-  it "should allow call chaining with object_with_id" do
+  it "allows call chaining with object_with_id" do
     filter = SoftLayer::APIParameterFilter.new
     result = filter.object_mask("fish", "cow", "duck").object_with_id(12345)
     result.server_object_id.should == 12345
@@ -64,7 +64,7 @@ describe SoftLayer::APIParameterFilter, "#object_mask" do
 end
 
 describe SoftLayer::APIParameterFilter, "#method_missing" do
-  it "should invoke call_softlayer_api_with_params(method_name, self, args, &block) on it's target with itself and the method_missing parameters" do
+  it "invokes call_softlayer_api_with_params(method_name, self, args, &block) on it's target with itself and the method_missing parameters" do
     filter = SoftLayer::APIParameterFilter.new.object_mask("fish", "cow", "duck").object_with_id(12345)
 
     target = double("method_missing_target")

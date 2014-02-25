@@ -28,96 +28,96 @@ require 'rspec'
 require 'rspec/autorun'
 
 describe String, "#to_sl_object_mask" do
-  it "should echo back a string" do
+  it "converts to the string itself" do
     "blah".to_sl_object_mask.should eql("blah")
   end
 
-  it "should return the empty string if given the empty string" do
+  it "echos the empty string" do
     "".to_sl_object_mask.should eql("")
   end
 end
 
 describe Array,"#to_sl_object_mask" do
-  it "should return and empty string if run on an empty array" do
+  it "converts an empty array to the empty string" do
     [].to_sl_object_mask.should eql("")
   end
 
-  it "should handle simple arrays" do
+  it "handles simple arrays" do
     ["foo", "bar", "baz"].to_sl_object_mask().should eql("foo,bar,baz")
   end
   
-  it "should flatten any arrays inside of itself" do
+  it "flattens inner arrays to simple lists" do
     ["foo", ["bar", "baz"]].to_sl_object_mask().should eql("foo,bar,baz")
   end
 end
 
 describe Hash, "#to_sl_object_mask" do
-  it "should return an empty string if run on an empty hash" do
+  it "returns the empty string for an empty hash" do
       {}.to_sl_object_mask.should eql("")
   end
   
-  it "should return a dot expression for a simple string value" do
+  it "constructs a dot expression for a simple string value" do
     {"foo" => "foobar"}.to_sl_object_mask.should eql("foo.foobar")
   end
   
-  it "should return a bracket expression for an array value" do
+  it "builds a bracket expression with array values" do
     {"foo" => ["one", "two", "three"]}.to_sl_object_mask.should eql("foo[one,two,three]")
   end
   
-  it "should handle nested hashes" do
+  it "builds bracket expressions for nested hashes" do
     {"foo" => {"sub" => "resub"}}.to_sl_object_mask.should eql("foo[sub.resub]")
   end
 
-  it "should resolve the mapped values" do
+  it "resolves simple inner values to simple dot expressions" do
     {"top" => [ "middle1", {"middle2" => "end"}]}.to_sl_object_mask.should eql("top[middle1,middle2.end]")
   end
   
-  it "should handle a complex hash object mask with an inner empty hash" do
+  it "accepts an inner empty hash and returns a mask" do
     { "ipAddress" => { "ipAddress" => {}}}.to_sl_object_mask.should eql("ipAddress[ipAddress]")
   end  
 end
 
 describe SoftLayer::ObjectMaskProperty, "#initialize" do
-  it "should initialize with a name" do
+  it "sets the name of the property if given" do
     mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
     mask_property.name.should eql("simple_name")
   end
 
-  it "should raise argument error if given an nil name" do
+  it "rejects nil as a property name" do
     expect { SoftLayer::ObjectMaskProperty.new(nil) }.to raise_error(ArgumentError)
   end
   
-  it "should raise argument error if given an empty name" do
+  it "rejects empty strings for property names" do
     expect { SoftLayer::ObjectMaskProperty.new("") }.to raise_error(ArgumentError)
   end
 end
 
 describe SoftLayer::ObjectMaskProperty, "#to_sl_object_mask" do
-  it "should convert simple mask properties to string" do
+  it "converts a simple property to a string" do
     mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
     mask_property.to_sl_object_mask.should eql("simple_name")
   end
 
-  it "should convert mask properties with a type" do
+  it "puts parenthesis expressions in for property types" do
     mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
     mask_property.type = "property_type"
     mask_property.to_sl_object_mask.should eql("simple_name(property_type)")
   end
   
-  it "should convert mask properties with simple subproperties" do
+  it "converts simple sub-properties into a dot expression" do
     mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
     mask_property.type = "property_type"
     mask_property.subproperties = "subproperty"
     mask_property.to_sl_object_mask.should eql("simple_name(property_type).subproperty")
   end
   
-  it "should allow Array subproperties" do
+  it "returns bracket expressions for array subproperties" do
     mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
     mask_property.subproperties = ["one", "two", "three"]
     mask_property.to_sl_object_mask.should eql("simple_name[one,two,three]")
   end
   
-  it "should allow Hash subproperties" do
+  it "accepts subproperties using a hash" do
     mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
     mask_property.subproperties = { "foo" => "subfoo" }
     mask_property.to_sl_object_mask.should eql("simple_name[foo.subfoo]")

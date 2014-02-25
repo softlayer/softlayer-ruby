@@ -43,6 +43,7 @@ describe SoftLayer::Service, "#new" do
   it "should reject a nil or empty service name" do
     expect {service = SoftLayer::Service.new(nil)}.to raise_error
     expect {service = SoftLayer::Service.new("")}.to raise_error
+    expect {service = SoftLayer::Service.new('')}.to raise_error
   end
 
   it "should remember service name passed in" do
@@ -50,145 +51,15 @@ describe SoftLayer::Service, "#new" do
     service.service_name.should == "SoftLayer_Account"
   end
 
-  it "should pickup default username" do
-    $SL_API_USERNAME = "sample"
+  it "should construct a client from it's parametes" do
     service = SoftLayer::Service.new("SoftLayer_Account")
-    service.username.should == "sample"
+    service.client.should_not be_nil
+    service.client.username.should eq("some_default_username")
+    service.client.api_key.should eq("some_default_api_key")
+    service.client.endpoint_url.should eq(SoftLayer::API_PUBLIC_ENDPOINT)
   end
-
-  it "should accept a username in options" do
-    $SL_API_USERNAME = "sample"
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => 'fred')
-    service.username.should == "fred"
-  end
-
-  it "should pickup default api key" do
-    $SL_API_KEY = "sample"
-    service = SoftLayer::Service.new("SoftLayer_Account")
-    service.api_key.should == "sample"
-  end
-
-  it "should accept an api key in options" do
-    $SL_API_KEY = "sample"
-    service = SoftLayer::Service.new("SoftLayer_Account", :api_key => 'fred')
-    service.api_key.should == "fred"
-  end
-
-  it "should fail if username is empty" do
-    expect do
-      $SL_API_USERNAME = ""
-      $SL_API_KEY = "sample"
-
-      service = SoftLayer::Service.new("SoftLayer_Account")
-    end.to raise_error
-
-    expect do
-      $SL_API_USERNAME = "good_username"
-      $SL_API_KEY = "sample"
-
-      service = SoftLayer::Service.new("SoftLayer_Account", :username => "")
-    end.to raise_error
-  end
-
-  it "should fail if username is nil" do
-    expect do
-      $SL_API_USERNAME = nil
-      service = SoftLayer::Service.new("SoftLayer_Account", :api_key => "sample")
-    end.to raise_error
-
-    expect do
-      $SL_API_KEY = "sample"
-      service = SoftLayer::Service.new("SoftLayer_Account", :username => nil, :api_key => "sample")
-    end.to raise_error
-  end
-
-  it "should fail if api_key is empty" do
-    expect do
-      $SL_API_USERNAME = "good_username"
-      $SL_API_KEY = ""
-
-      service = SoftLayer::Service.new("SoftLayer_Account")
-    end.to raise_error
-
-    expect do
-      $SL_API_USERNAME = "good_username"
-      $SL_API_KEY = "good_api_key"
-
-      service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => "")
-    end.to raise_error
-  end
-
-  it "should fail if api_key is nil" do
-    expect do
-      $SL_API_KEY = nil
-      service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample")
-    end.to raise_error
-
-    expect do
-      $SL_API_KEY = nil
-      service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => nil)
-    end.to raise_error
-  end
-
-  it "should pickup default base url" do
-    $SL_API_BASE_URL = nil
-    service = SoftLayer::Service.new("SoftLayer_Account")
-    service.endpoint_url.should == SoftLayer::API_PUBLIC_ENDPOINT
-  end
-
-  it "should get base URL from globals" do
-    $SL_API_BASE_URL = "http://someendpoint.softlayer.com/from/globals"
-    service = SoftLayer::Service.new("SoftLayer_Account")
-    service.endpoint_url.should == "http://someendpoint.softlayer.com/from/globals"
-  end
-
-  it "should accept a base url through options" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :endpoint_url => "http://someendpoint.softlayer.com")
-    service.endpoint_url.should == "http://someendpoint.softlayer.com"
-  end
+  
 end #describe SoftLayer#new
-
-describe SoftLayer::Service, "#username=" do
-  it "should not allow you to set a nil or empty username" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => "sample")
-    expect {service.username = ""}.to raise_error
-    expect {service.username = nil}.to raise_error
-  end
-
-  it "should strip whitespace" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => "sample")
-    service.username = "    whitespace   "
-    service.username.should == "whitespace"
-  end
-end  #describe SoftLayer#username=
-
-describe SoftLayer::Service, "#api_key=" do
-  it "should not allow you to set a nil or empty api_key" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => "sample")
-    expect {service.api_key = ""}.to raise_error
-    expect {service.api_key = nil}.to raise_error
-  end
-
-  it "should strip whitespace" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => "sample")
-    service.api_key = "    fred  "
-    service.api_key.should == "fred"
-  end
-end  #describe SoftLayer#api_key=
-
-describe SoftLayer::Service, "#endpoint_url=" do
-  it "should not allow you to set a nil or empty endpoint_url" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => "sample", :endpoint_url => "http://someendpoint.softlayer.com")
-    expect {service.endpoint_url = ""}.to raise_error
-    expect {service.endpoint_url = nil}.to raise_error
-  end
-
-  it "should strip whitespace" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => "sample", :endpoint_url => "http://someendpoint.softlayer.com")
-    service.endpoint_url = "    http://someendpoint.softlayer.com  "
-    service.endpoint_url.should == "http://someendpoint.softlayer.com"
-  end
-end  #describe SoftLayer#endpoint_url=
 
 describe SoftLayer::Service, "#object_with_id" do
   it "pass object ids to call_softlayer_api_with_params" do
