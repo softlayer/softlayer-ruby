@@ -37,63 +37,63 @@ describe SoftLayer::Client do
   
   it 'accepts a user name from the global variable' do
     $SL_API_USERNAME = 'sample'
-    client = SoftLayer::Client.new(:api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org')
+    client = SoftLayer::Client.new(:api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
     client.username.should == 'sample'
   end
 
   it 'accepts a username in options' do
     $SL_API_USERNAME = 'sample'
-    client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org')
+    client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
     client.username.should == 'fake_user'
   end
 
   it 'accepts an api key from the global variable' do
     $SL_API_KEY = 'sample'
-    client = SoftLayer::Client.new(:username => 'fake_user', :endpoint_url => 'http://fakeurl.org')
+    client = SoftLayer::Client.new(:username => 'fake_user', :endpoint_url => 'http://fakeurl.org/')
     client.api_key.should == 'sample'
   end
 
   it 'accepts an api key in options' do
     $SL_API_KEY = 'sample'
-    client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org')
+    client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
     client.api_key.should == 'fake_key'
   end
 
   it 'raises an error if passed an empty user name' do
     expect do
       $SL_API_USERNAME = ''
-      client = SoftLayer::Client.new(:api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org')
+      client = SoftLayer::Client.new(:api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
     end.to raise_error
 
     expect do
       $SL_API_USERNAME = 'good_username'
       $SL_API_KEY = 'sample'
-      client = SoftLayer::Client.new(:username => '', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org')
+      client = SoftLayer::Client.new(:username => '', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
     end.to raise_error
   end
 
   it 'fails if the user name is nil' do
     expect do
       $SL_API_USERNAME = nil
-      client = SoftLayer::Client.new(:api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org')
+      client = SoftLayer::Client.new(:api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
     end.to raise_error
   end
 
   it 'fails if the api_key is empty' do
     expect do
       $SL_API_KEY = ''
-      client = SoftLayer::Client.new(:username => 'fake_user', :endpoint_url => 'http://fakeurl.org')
+      client = SoftLayer::Client.new(:username => 'fake_user', :endpoint_url => 'http://fakeurl.org/')
     end.to raise_error
 
     expect do
-      client = SoftLayer::Client.new(:username => 'fake_user', :api_key => '', :endpoint_url => 'http://fakeurl.org')
+      client = SoftLayer::Client.new(:username => 'fake_user', :api_key => '', :endpoint_url => 'http://fakeurl.org/')
     end.to raise_error
   end
 
   it 'fails if the api_key is nil' do
     expect do
       $SL_API_KEY = nil
-      client = SoftLayer::Client.new(:username => 'fake_user', :endpoint_url => 'http://fakeurl.org')
+      client = SoftLayer::Client.new(:username => 'fake_user', :endpoint_url => 'http://fakeurl.org/')
     end.to raise_error
   end
 
@@ -111,13 +111,13 @@ describe SoftLayer::Client do
 
   it 'allows the default endpoint to be overriden by options' do
     $SL_API_BASE_URL = 'http://this/wont/be/used'
-    client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org')
-    client.endpoint_url.should == 'http://fakeurl.org'
+    client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
+    client.endpoint_url.should == 'http://fakeurl.org/'
   end
   
   describe "obtaining services" do
     let(:test_client) {
-      SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org')
+      SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
     }
     
     it "should have a service_named method" do

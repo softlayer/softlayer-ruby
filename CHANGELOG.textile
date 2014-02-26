@@ -1,6 +1,6 @@
 *2.0*
-* Switched the Ruby API client from the SoftLayer REST API to the SoftLayer SOAP API. SOAP is handled with the "Savon":http://savonrb.com Heavy metal SOAP client.
-* Result limits are now specified using @result_limit(offset,limit)@.  
+* Switched the Ruby API client from the SoftLayer REST API to the SoftLayer XMLRPC API. 
+* Result limits are now specified using @result_limit(offset,limit)@.
 The @result_offset@ API filter has been removed.
 * Object masks are now sent to the server in the "Extended Object Mask":http://sldn.softlayer.com/article/Object-Masks format.  This may require you to change some of your existing object masks.
 
