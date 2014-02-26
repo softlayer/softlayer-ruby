@@ -73,6 +73,12 @@ class String
   end
 end
 
+class Symbol
+  def to_sl_object_mask()
+    self.to_s.to_sl_object_mask()
+  end
+end
+
 module SoftLayer
   # An ObjectMaskProperty is a class which helps to represent more complex 
   # Object Mask expressions that include the type associated with the mask.

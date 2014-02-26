@@ -38,8 +38,7 @@ softlayer_api_gem = Gem::Specification.new do |s|
   s.description = %q{The softlayer_api gem offers a convenient mechanism for invoking the services of the SoftLayer API from Ruby.}
   s.files = FileList["README.textile", "LICENSE.textile", "lib/**/*.rb", "test/**/*.rb", "examples/**/*.rb"]
   s.require_path = "lib"
-  s.has_rdoc = true
-  s.add_runtime_dependency 'savon', '~> 2.0', '>= 2.3.3'
+  s.has_rdoc = false
   s.license = %q{MIT}
 end
 

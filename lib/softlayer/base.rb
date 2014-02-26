@@ -32,16 +32,15 @@
 #
 
 require 'rubygems'
-require 'savon'
 
 module SoftLayer
   VERSION = "2.0.0"  # version history in the CHANGELOG.textile file at the root of the source
 
   # The base URL of the SoftLayer API's REST-like endpoints available to the public internet.
-  API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/soap/v3/'
+  API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/xmlrpc/v3/'
 
   # The base URL of the SoftLayer API's REST-like endpoints available through SoftLayer's private network
-  API_PRIVATE_ENDPOINT = 'https://api.service.softlayer.com/soap/v3/'
+  API_PRIVATE_ENDPOINT = 'https://api.service.softlayer.com/xmlrpc/v3/'
 
   #
   # These globals can be used to simplify client creation

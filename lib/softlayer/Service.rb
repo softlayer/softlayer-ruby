@@ -20,8 +20,7 @@
 # THE SOFTWARE.
 #
 
-require 'rubygems'
-require 'savon'
+require 'xmlrpc/client'
 
 class String
   # This code was taken from ActiveSupport in Rails and modified just a bit to remove
@@ -65,11 +64,8 @@ module SoftLayer
   #     :username=>"<your user name here>" 
   #     :api_key=>"<your api key here>")
   #
-  # A service communicates with the SoftLayer API through the 
-  # Savon client gem.  You may pass options to the Savon client 
-  # using the option named :savon_client_options.  The value of this 
-  # key is expected to be a hash of options (for example,
-  # :savon_client_options => { :log => true}).
+  # A service communicates with the SoftLayer API through the the XMLRPC
+  # interface using Ruby's built in XMLRPC classes
   #
   # Once you have a service, you can invoke methods in the service like this:
   #
@@ -118,10 +114,6 @@ using either client.service_named('<service_name_here>') or client['<service_nam
 
         @client = SoftLayer::Client.new(client_options)
       end
-
-
-      # construct the savon soap object used by this service
-      construct_soap_service(options[:savon_client_options])
 
       # this has proven to be very helpful during debugging.  It helps prevent infinite recursion
       # when you don't get a method call just right
@@ -245,54 +237,48 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       additional_headers = {};
 
       if(parameters && parameters.server_object_id)        
-        additional_headers = {"tns:#{@service_name}InitParameters" => { "id" => parameters.server_object_id}}
+        additional_headers = {"#{@service_name}InitParameters" => { "id" => parameters.server_object_id}}
       end
 
       if(parameters && parameters.server_object_mask)
         object_mask = SoftLayer::ObjectMask.new()
         object_mask.subproperties = parameters.server_object_mask
 
-        additional_headers.merge!({ "tns:SoftLayer_ObjectMask" => { "mask" => object_mask.to_sl_object_mask } })
+        additional_headers.merge!({ "SoftLayer_ObjectMask" => { "mask" => object_mask.to_sl_object_mask } })
       end
 
       if (parameters && parameters.server_result_limit)
-        additional_headers.merge!("tns:resultLimit" => { "offset" => (parameters.server_result_offset || 0), "limit" => parameters.server_result_limit })
+        additional_headers.merge!("resultLimit" => { "limit" => parameters.server_result_limit, "offset" => (parameters.server_result_offset || 0) })
       end
       
       # This is a workaround for a potential problem that arises from mis-using the
-      # API.  If you call SoftLayer_Virtual_Guest and you call the getObject method
+      # API. If you call SoftLayer_Virtual_Guest and you call the getObject method
       # but pass a virtual guest as a parameter, what happens is the getObject method
       # is called through an HTTP POST verb and the API creates a new CCI that is a copy
       # of the one you passed in.
       #
       # The counter-intuitive creation of a new CCI is unexpected and, even worse,
-      # is something you can be billed for.  To prevent that, we ignore the request
+      # is something you can be billed for. To prevent that, we ignore the request
       # body on a "getObject" call and print out a warning.
       if (method_name == :getObject) && (nil != args) && (!args.empty?) then
         $stderr.puts "Warning - The getObject method takes no parameters. The parameters you have provided will be ignored."
         args = nil
       end
-
-      # convert the arguments array into a SOAP array structure and stuff that in as the message\
-      if(args && !args.empty?)
-        call_arguments = { :message => fix_argument_arrays(args) }
-      else
-        call_arguments = {}
-      end
       
-      # if there were any additional soap headers that were added as part of this call,
-      # add those in too.
-      if(additional_headers && !additional_headers.empty?)
-        call_arguments.merge!(:soap_header => additional_headers)
+      authentication_headers = self.client.authentication_headers
+      
+      call_headers = {
+        "headers" => additional_headers.merge(authentication_headers)
+      }
+      
+      begin
+        call_value = xmlrpc_client.call(method_name.to_s, call_headers)
+      rescue XMLRPC::FaultException => e
+        puts "A XMLRPC Fault was returned #{e}" if $DEBUG
+        call_value = nil
       end
 
-      # convert the camel-case method name to a underscore based symbol
-      soap_symbol = method_name.to_s.sl_camelcase_to_underscore.to_sym
-
-      soap_result = @_soap_service.call(soap_symbol, call_arguments)  
-      soap_return_value = fix_soap_arrays(soap_result.body["#{method_name}Response"]["#{method_name}Return"]) 
-
-      return soap_return_value
+      return call_value
     end
     
     def to_ary
@@ -301,24 +287,15 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     
     private
     
-    def construct_soap_service(user_savon_options)
-      # Create the SOAP client object that will be used for calls to this service
-      savon_options = {
-				:wsdl => (@client.endpoint_url + @service_name + '?wsdl'),
-        :convert_request_keys_to => :none,
-        :convert_response_tags_to => :none,
-        :log => $DEBUG || false,
-				:soap_header => {'tns:authenticate' => 
-          { 'username' => @client.username, 
-            "apiKey" => @client.api_key } }
-      }
+    def xmlrpc_client()
+      if !@xmlrpc_client
+        @xmlrpc_client = XMLRPC::Client.new2(URI.join(@client.endpoint_url,@service_name))
+        @xmlrpc_client.http_header_extra = { "accept-encoding" => "identity" }
 
-      # if the caller provided any savon options, put them into the client options hash
-      if user_savon_options then
-        savon_options = savon_options.merge(user_savon_options)
+        @xmlrpc_client.http.set_debug_output($stderr) if $DEBUG
       end
-
-      @_soap_service = Savon.client(savon_options);
+      
+      @xmlrpc_client
     end
     
   end # Service class

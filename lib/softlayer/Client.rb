@@ -34,6 +34,16 @@ module SoftLayer
       raise "A SoftLayer Clietn requires an enpoint URL" if !@endpoint_url || @endpoint_url.empty?
     end
 
+    # return a hash of the authentication headers for the client
+    def authentication_headers 
+      {
+        "authenticate" => {
+          "username" => @username,
+          "apiKey" => @api_key
+        }
+      }
+    end
+    
     # Returns a service with the given name.
     #
     # If a service has already been created by this client that same service
@@ -79,4 +89,3 @@ module SoftLayer
     end
   end
 end
-
