@@ -24,19 +24,21 @@ require 'rubygems'
 require 'softlayer_api'
 require 'pp'
 
-ticket_service = SoftLayer::Service.new("SoftLayer_Ticket",
+softlayer_client = SoftLayer::Client.new(  
   :username => "joecustomer",              # enter your username here
-  :api_key => "feeddeadbeefbadf00d...")    # enter your api key here
+  :api_key => "feeddeadbeefbadf00d..."     # enter your api key here
+  )
 
 begin
-  ticket_ref = ticket_service.object_with_id(1683973)
+  ticket_service = softlayer_client.service_named("Ticket");
+  ticket_ref = ticket_service.object_with_id(8172109)
 
   ticket = ticket_ref.object_mask({"updates" => ["entry", "createDate"]},
                                   "assignedUserId",
                                   {"attachedHardware" => "datacenter"}).getObject
   pp ticket
 rescue Exception => exception
-	puts "Unable to retrieve the ticket"
+  puts "Unable to retrieve the ticket"
 end
 
 # update the ticket
@@ -44,5 +46,5 @@ begin
   updates = ticket_ref.addUpdate({"entry" => "An update from the Ruby client!"})
   puts "Update ticket 123456. The new update's id is #{updates[0]['id']}"
 rescue Exception => exception
-	puts "Unable to update the ticket: #{exception}"
+  puts "Unable to update the ticket: #{exception}"
 end

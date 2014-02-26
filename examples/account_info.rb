@@ -24,30 +24,16 @@ require 'rubygems'
 require 'softlayer_api'
 require 'pp'
 
-# We're creating more than one service so we'll use the globals to establish
-# the username and API key.
-$SL_API_USERNAME = "joecustomer"         # enter your username here
-$SL_API_KEY = "feeddeadbeefbadf00d..."   # enter your api key here
-
 begin
-  # use an account service to get the account ID of my account
-  account_service = SoftLayer::Service.new("SoftLayer_Account")
-  my_account_id = account_service.getCurrentUser['id']
-
-  # Use a ticket service to create a standard support ticket, assigned to me.
-  ticket_service = SoftLayer::Service.new("SoftLayer_Ticket")
-  new_ticket = ticket_service.createStandardTicket(
-                  {
-                    "assignedUserId" => my_account_id,
-                    "subjectId" => 1022,
-                    "notifyUserOnUpdateFlag" => true
-                  },
-                  "This is a test ticket created from a Ruby client")
-
-  puts "Created a new ticket : #{new_ticket['id']} - #{new_ticket['title']}"
-
-  # add an update to the newly created ticket.
-  pp ticket_service.object_with_id(new_ticket['id']).edit(nil, "This is a ticket update sent from the Ruby library")
+  softlayer_client = SoftLayer::Client.new(  
+  	:username => "joecustomer"              # enter your username here
+  	:api_key => "feeddeadbeefbadf00d..."   # enter your api key here
+  )
+    
+	# use an account service to get a list of the open tickets and print their IDs and titles
+	account_service = softlayer_client['Account'];
+	account = account_service.getObject
+	pp account
 rescue Exception => exception
-  $stderr.puts "An exception occurred while trying to complete the SoftLayer API calls #{exception}"
+	puts "Unable to retrieve account information: #{exception}"
 end

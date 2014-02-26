@@ -272,7 +272,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       }
       
       begin
-        call_value = xmlrpc_client.call(method_name.to_s, call_headers)
+        call_value = xmlrpc_client.call(method_name.to_s, call_headers, *args)
       rescue XMLRPC::FaultException => e
         puts "A XMLRPC Fault was returned #{e}" if $DEBUG
         call_value = nil
