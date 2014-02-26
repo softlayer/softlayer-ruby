@@ -123,15 +123,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     # will use the same authentication and savon client options as this service
     # unless they are specifically overridden in the options dictionary
     def related_service_named(service_name, options={})      
-      base_options = {
-        :username => self.username,
-        :api_key => self.api_key,
-        :endpoint_url => self.endpoint_url
-      }
-
-      base_options[:savon_client_options] = @savon_options if @savon_options
-
-      self.class.new service_name, base_options.merge(options)
+      @client.service_named(service_name)
     end
 
     # Use this as part of a method call chain to identify a particular
