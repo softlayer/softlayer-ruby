@@ -4,21 +4,19 @@ The SoftLayer API Client for Ruby is a library for connecting to and calling the
 
 h2. Overview
 
-The client invokes methods in the API using a REST inspired URL scheme. HTTP calls are handled using the Net::HTTP classes that are part of the Ruby core library.
+The client invokes methods in the API using XML-RPC as a transport mechanism. XML-RPC is handled using XMLRPC classes from the Ruby core library.
 
-To make calls to the Ruby API through the client you will create an instance of the @SoftLayer::Service@ class, optionally identifying an API endpoint, and providing authentication information in the form of a username and API key. You then make calls to the SoftLayer API by calling methods on the Service object. Results of those calls are communicated from the server to the client as JSON objects and then decoded and returned to you as standard Ruby objects.
+To make calls to the Ruby API through the client you will create an instance of the @SoftLayer::Client@ class, optionally identifying an API endpoint, and providing authentication information in the form of a username and API key. From the client you can obtain various @SoftLayer::Service@ instances and use them to invoke the methods of the API. Results of those calls are communicated from the server to the client as XML, then decoded and returned to you as standard Ruby objects like Hashes, Arrays, and Strings.
 
-Source code for the most up to date version of this library can be found on the "SoftLayer github public repositories":http://github.com/softlayer/. The latest library should also be available as a Ruby gem. (see "Installation":#installation below)
+Source code for daily builds of this Gem can be found on the "SoftLayer github public repositories":http://github.com/softlayer/. The latest release version of the Gem is available from the Ruby gem system. (see "Installation":#installation below)
 
-Should you encounter problems with the client, please contact us on the "SoftLayer forums":http://forums.softlayer.com/ or open a support ticket in the SoftLayer customer portal.
+Should you encounter problems with the client, please contact us in the "SoftLayer Developer Network forums":http://forums.softlayer.com/forum/softlayer-developer-network or open a support ticket in the SoftLayer customer portal.
 
 h2. Requirements
 
-The Ruby client has been tested using a wide variety of Ruby implementations using both Ruby 1.8 and Ruby 1.9.
+The Ruby client has been tested using a wide variety of Ruby implementations including Ruby version 1.8.7. 1.9.2, 2.0, and 2.1. It has also been tested on JRuby running in 1.8 and 1.9 mode.
 
-This gem relies on the JSON library which, at the time of this writing, is called simply @json@ for most Ruby implementations and @json-jruby@ for JRuby.  Correspondingly we have created a @softlayer_api@ gem and a @softlayer_api_jruby@ gem to account for the difference.
-
-A network connection is required, and a valid SoftLayer API username and key are required to call the SoftLayer API. A connection to the SoftLayer private network is required to connect to SoftLayer's private network API endpoints.
+A network connection is required, and a valid SoftLayer API username and api key are required to call the SoftLayer API. A connection to the SoftLayer private network is required to connect to SoftLayer's private network API endpoints.
 
 h2(#installation). Installation
 
@@ -30,9 +28,7 @@ installs the gem and makes it available to Ruby scripts. Where the gem is instal
 
 h2. Usage
 
-To begin using the Ruby client, you will have to create an instance of the @SoftLayer::Service@ class for each the "API Services":http://sldn.softlayer.com/reference/services that your code will call. To create the instance, you will have to provide information that the library will use to authenticate your account with the API servers.
-
-Once you have created a service object, you will use that service object to call methods in the SoftLayer API.
+To begin using the Ruby client, you will have to create an instance of the @SoftLayer::Client@. From the Client you must obtain @SoftLayer::Service@ objects corresponding to each of the "API Services":http://sldn.softlayer.com/reference/services that your code wants to call. To create the client instance, you will have to provide information that the library will use to authenticate your account with the API servers.
 
 h3. Authentication
 
@@ -52,8 +48,8 @@ If you are going to create a lot of different @Service@ objects and they are all
 In addition to the globals, the @SoftLayer@ namespace defines two constants representing the endpoints for the SoftLayer API on the private and public networks:
 
 table{position:relative;left:2em;width:80%}.
-|{vertical-align:baseline;width:35%}.@API_PUBLIC_ENDPOINT@|A constant containing the base address for the public network REST inspired endpoint of the SoftLayer API - @https://api.softlayer.com/rest/v3/@|
-|{vertical-align:baseline}.@API_PRIVATE_ENDPOINT@|A constant containing the base address for the private network REST inspired endpoint of the SoftLayer API - @https://api.service.softlayer.com/rest/v3/@|
+|{vertical-align:baseline;width:35%}.@API_PUBLIC_ENDPOINT@|A constant containing the base address for the public network REST inspired endpoint of the SoftLayer API - @https://api.softlayer.com/soao/v3/@|
+|{vertical-align:baseline}.@API_PRIVATE_ENDPOINT@|A constant containing the base address for the private network REST inspired endpoint of the SoftLayer API - @https://api.service.softlayer.com/soap/v3/@|
 
 For more information about the two networks see "Choosing_the_Public_or_Private_Network":http://sldn.softlayer.com/article/The_SoftLayer_API#Choosing_the_Public_or_Private_Network. You can change the default endpoint URL by setting the global variable @$SL_API_BASE_URL@ to either of these two values.
 
@@ -62,14 +58,15 @@ Here is an example of using these globals to create a service:
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">$SL_API_USERNAME = "joeusername";
 $SL_API_KEY = "omitted_for_brevity"
 
-account_service = SoftLayer::Service.new("SoftLayer_Account")
+client = SoftLayer::Client.new()
+account_service = client.service_named("Account")
 </code></pre>
 
 Note that the endpoint URL is not specified. The default endpoint URL is set to the @API_PUBLIC_ENDPOINT@
 
 h4. Providing authentication information through the Constructor
 
-You can provide the authentication information needed by a @Service@ object as hash arguments in the constructor. The keys used in the hash arguments are symbols whose values should be strings:
+You can provide the authentication information needed by a @Client@ object as hash arguments in the constructor. The keys used in the hash arguments are symbols whose values should be strings:
 
 table{position:relative;left:2em;width:80%}.
 |{vertical-align:baseline;width:30%}.@:username@|The username used to authenticate with the server.|
@@ -78,10 +75,11 @@ table{position:relative;left:2em;width:80%}.
 
 Here is an example, analogous to the one for global variables, which provides the username and API key as hash arguments. This example also changes the endpoint with the @:endpoint_url@ symbol so that the service will use the API on the SoftLayer Private Network:
 
-<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">account_service = SoftLayer::Service.new("SoftLayer_Account",
-    :username => "joeusername",
+<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">
+client = SoftLayer::Client.new(:username => "joeusername",
     :api_key => "omitted_for_brevity",
     :endpoint_url => API_PRIVATE_ENDPOINT)
+account_service = client.service_named("Account")
 </code></pre>
 
 h3. Calling Service Methods
@@ -91,10 +89,13 @@ With an instance of @SoftLayer::Service@ in hand, you can call the methods provi
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">open_tickets = account_service.getOpenTickets
 </code></pre>
 
-If the method requires arguments, you can supply them as arguments to the method you're calling on the service object. The arguments should be arguments that can be encoded using the JSON encoder provided by the @json@ gem.  Generally this means your argument should be hashes, arrays, strings, numbers, booleans, or nil.  Here is an example of calling the @createStandardTicket@ method on a ticket service:
+If the method requires arguments, you can supply them as arguments to the method you're calling on the service object. The arguments should be arguments that XML-RPC can encode into XML. Generally this means your argument should be hashes, arrays, strings, numbers, booleans, or nil. 
+
+Here is an example of calling the @createStandardTicket@ method on a ticket service.  This example also uses the "bracket" syntax on a client @client['<service-name>']@ to obtain the service object:
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">#authentication information will be found in the global variables
-ticket_service = SoftLayer::Service.new("SoftLayer_Ticket")
+client = SoftLayer::Client.new()
+ticket_service = client['Ticket']
 new_ticket = ticket_service.createStandardTicket(
 {
     "assignedUserId" => my_account_id,
@@ -106,12 +107,12 @@ new_ticket = ticket_service.createStandardTicket(
 
 h4. Identifying Particular Objects
 
-Some method calls in the SoftLayer API are made on particular objects, rather than on the services themselves.  These objects, however, are always obtained by a service.  To call a method on a particular object you can chain a call to @object_with_id@ onto the service that provides the object in question. @object_with_id@ takes one argument, the object id of the object you are interested in.  For example, if you were interested in getting the Ticket with a ticket id of 123456 you could so so by calling:
+Some method calls in the SoftLayer API are made on particular objects, rather than on the services themselves. These objects, however, are always obtained by a service. To call a method on a particular object you can chain a call to @object_with_id@ onto the service that provides the object in question. @object_with_id@ takes one argument, the object id of the object you are interested in. For example, if you were interested in getting the Ticket with a ticket id of 123456 you could so so by calling:
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">ticket_of_interest = ticket_service.object_with_id(123456).getObject
 </code></pre>
 
-The @object_with_id@ call returns an object that you can use as a reference to a particular object through the service.  This allows you to reuse that object multiple times without having to repeatedly tack @object_with_id@ on to all your requests. For example, if you want to find a ticket with the id 98765 and add an update to it if it's assigned to user 123456, you might write code like this:
+The @object_with_id@ call returns an object that you can use as a reference to a particular object through the service. This allows you to reuse that object multiple times without having to repeatedly tack @object_with_id@ on to all your requests. For example, if you want to find a ticket with the id 98765 and add an update to it if it's assigned to user 123456, you might write code like this:
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">begin
     ticket_ref = ticket_service.object_with_id(98765)
@@ -132,9 +133,9 @@ If you wish to limit the volume of information that the server returns about a p
 
 The arguments to object_mask can be strings, arrays, or hashes. The Strings provide the names of properties you are interested in and the hash and array elements allow you to structure your mask much as the properties themselves are structured.
 
-To look at some examples, consider the following object from the server.  It has four properties and an entity, and id, a title, a createDate (giving the date it was create), a modifyDate (the date it was last modified), and an assignedUser entity.
+To look at some examples, consider the following object from the server. It has four properties and an entity, and id, a title, a createDate (giving the date it was create), a modifyDate (the date it was last modified), and an assignedUser entity.
 
-The assignedUser entity has three properties, id, username, and health.
+The @assignedUser@ entity has three properties, @id@, @username@, and @health@.
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">{
     "id"=>1736473,
@@ -149,7 +150,7 @@ The assignedUser entity has three properties, id, username, and health.
 }
 </code></pre>
 
-If we were making a request to the server to retrieve this object, or an array of such objects, we might want to limit the response so that it contains just the id fields:
+If we were making a request to the server to retrieve this object, or an array of such objects, we might want to limit the response so that it contains just the @id@ fields:
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">an_api_service.object_mask("id").getObject
 => {"id"=>1736473}
@@ -167,14 +168,14 @@ or it can include them in an array:
 => {"id"=>1736473, "createDate"=>"2010-04-22T00:12:36-05:00"}
 </code></pre>
 
-If we ask for the assignedUser we get back that entire entity:
+If we ask for the @assignedUser@ we get back that entire entity:
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">an_api_service.object_mask("assignedUser").getObject
 => {"assignedUser"=> {"id"=>14, "username"=>"AlfredQHacker", "health"=>"Fantastic"}}
 </code></pre>
 
 However, we may not be interested in the entire assigned user entity, we may
-want to get just the id of the assigned user. To do that we pass a hash argument to @object_mask@.  The has follows the hierarchical nature of the properties
+want to get just the id of the assigned user. To do that we pass a hash argument to @object_mask@. The has follows the hierarchical nature of the properties
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">an_api_service.object_mask({"assignedUser" => "id"}).getObject # using a hash to access the property hierarchy
 => {"assignedUser"=>{"id"=>14}}
@@ -192,22 +193,23 @@ You may add calls to both @object_mask@ and @object_with_id@, but only one call 
 
 h2. Examples
 
-Here are some examples that demonstrate using the SoftLayer API Ruby Client. The authentication information, of course, is left as an exercise for the reader.  The first example uses the @getObject@ method of the "SoftLayer_Account":http://sldn.softlayer.com/reference/services service:
+Here are some examples that demonstrate using the SoftLayer API Ruby Client. The authentication information, of course, is left as an exercise for the reader. The first example uses the @getObject@ method of the "SoftLayer_Account":http://sldn.softlayer.com/reference/services service:
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">require 'rubygems'
 require 'softlayer_api'
 require 'pp'
 
 begin
-    # use an account service to get a list of the open tickets and print their IDs and titles
-    account_service = SoftLayer::Service.new("SoftLayer_Account",
+  # use an account service to get a list of the open tickets and print their IDs and titles
+  client = SoftLayer::Client.new(
     :username => "joecustomer",             # enter your username here
     :api_key => "feeddeadbeefbadf00d...")   # enter your api key here
 
-    account = account_service.getObject
-    pp account
+  account_service = client['Account']
+  account = account_service.getObject
+  pp account
 rescue Exception => exception
-    puts "Unable to retrieve account information: #{exception}"
+  puts "Unable to retrieve account information: #{exception}"
 end
 </code></pre>
 
@@ -218,33 +220,38 @@ that references a ticket with a particular ID and reuses that reference later to
 require 'softlayer_api'
 require 'pp'
 
-ticket_service = SoftLayer::Service.new("SoftLayer_Ticket",
-    :username => "joecustomer",              # enter your username here
-    :api_key => "feeddeadbeefbadf00d...")    # enter your api key here
+client = SoftLayer::Client.new()
+  :username => "joecustomer",              # enter your username here
+  :api_key => "feeddeadbeefbadf00d...")    # enter your api key here
+	
+ticket_service = client.service_named('Ticket')
 
 begin
-    ticket_ref = ticket_service.object_with_id(123456)
+  # this creates an alias to the ticket service bound to the ticket with the id 123456
+  ticket_ref = ticket_service.object_with_id(123456) # you'll have to substitute your own ticket ID
 
-    ticket = ticket_ref.object_mask({"updates" => ["entry", "createDate"]},
-                                    "assignedUserId",
-                                    {"attachedHardware" => "datacenter"}).getObject
-    pp ticket
+  ticket = ticket_ref.object_mask({"updates" => ["entry", "createDate"]},
+                                   "assignedUserId",
+                                   {"attachedHardware" => "datacenter"}).getObject
+  pp ticket
 rescue Exception => exception
-	puts "Unable to retrieve the ticket"
+  puts "Unable to retrieve the ticket"
 end
 
 # update the ticket
 begin
-    updates = ticket_ref.addUpdate({"entry" => "An update from the Ruby client!"})
-    puts "Update ticket 123456. The new update's id is #{updates[0]['id']}"
+  updates = ticket_ref.addUpdate({"entry" => "An update from the Ruby client!"})
+  puts "Update ticket 123456. The new update's id is #{updates[0]['id']}"
 rescue Exception => exception
-    puts "Unable to update the ticket: #{exception}"
+  puts "Unable to update the ticket: #{exception}"
 end
 </code></pre>
 
 h2. Author
 
 This software is written by the SoftLayer Development Team <"sldn@softlayer.com":mailto:sldn@softlayer.com>.
+
+Please join us in the "SoftLayer Developer Network forums":http://forums.softlayer.com/forum/softlayer-developer-network
 
 h2. Copyright
 
