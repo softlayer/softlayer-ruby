@@ -9,30 +9,29 @@ module SoftLayer
       # the name of the resource this definition is for
       attr_reader :resource_name
 
-      # How often should the resource be re-loaded (expressed in seconds)
-      attr_reader :refresh_interval
-
       # The block to call in order to update the resource.  The
       # return value of this block should be the new value of the
-      # resource.  The block should take one argument, that argument
-      # is the owner of the resource.
+      # resource.
       attr_reader :update_block
+
+      # The block to call to see if the resource needs to be updated.
+      attr_reader :should_update_block
 
       def initialize(resource_name)
         raise ArgumentError if resource_name.nil?
         raise ArgumentError if resource_name.to_s.empty?
 
         @resource_name = resource_name;
-        @refresh_interval = 0
         @update_block = Proc.new { nil; };
+        @should_update_block = Proc.new { true; }
       end
 
-      def refresh_every (num_seconds)
-        @refresh_interval = num_seconds;
+      def should_update_if (&block)
+        @should_update_block = block
       end
 
-      def update (&block)
-        @update_block = block;
+      def to_update (&block)
+        @update_block = block
       end
     end
 
@@ -51,31 +50,23 @@ module SoftLayer
         # called on which will get the value of the resource.
         getter_name = resource_name.to_sym
         value_instance_variable = "@#{resource_name}".to_sym
-        updated_instance_variable = "@#{resource_name}_updated".to_sym
-        updated_method_name = "updated_#{resource_name}"
+        update_symbol = "update_#{resource_name}!".to_sym
+        should_update_symbol = "should_update_#{resource_name}?".to_sym
 
         define_method(getter_name) do |*args|
           force_update = args[0] || false
 
-          # set the updated instance variable to antiquity if it hasn't been defined yet
-          instance_variable_set(updated_instance_variable, Time.at(0)) if !instance_variable_defined?(updated_instance_variable)
-
-          # grab the resource definition and see if enough time has passed that
-          # we should update the resource value (or update it force_update is true)
-          resource_definition = self.class.softlayer_resource_definition(resource_name)
-          last_update = instance_variable_get(updated_instance_variable)
-
-          if force_update || ((Time.now - last_update) > resource_definition.refresh_interval)
-            instance_variable_set(value_instance_variable, __send__(updated_method_name.to_sym))
-            instance_variable_set(updated_instance_variable, Time.now)
+          if force_update || __send__(should_update_symbol)
+            instance_variable_set(value_instance_variable, __send__(update_symbol))
           end
-          
+
           instance_variable_get(value_instance_variable)
         end
-        
-        # define a method called "updated_<resource_name>" which calls the update block
-        # from the resource definition
-        define_method(updated_method_name, &resource_definition.update_block)
+
+        # define a method called "update_<resource_name>!" which calls the update block
+        # stored in the resource definition
+        define_method(update_symbol, &resource_definition.update_block)
+        define_method(should_update_symbol, &resource_definition.should_update_block)
       end
 
       def softlayer_resource_definition(resource_name)

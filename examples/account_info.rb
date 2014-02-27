@@ -25,11 +25,11 @@ require 'softlayer_api'
 require 'pp'
 
 begin
-  softlayer_client = SoftLayer::Client.new(  
+  softlayer_client = SoftLayer::Client.new(
   	:username => "joecustomer"              # enter your username here
   	:api_key => "feeddeadbeefbadf00d..."   # enter your api key here
   )
-    
+
 	# use an account service to get a list of the open tickets and print their IDs and titles
 	account_service = softlayer_client['Account'];
 	account = account_service.getObject

@@ -9,16 +9,27 @@ module SoftLayer
     attr_reader :servers
 
     softlayer_resource :bare_metal_servers do |bare_metal|
-      bare_metal.refresh_every 5 * 60
-      bare_metal.update do
+      bare_metal.should_update_if do
+        @last_bare_metal_update ||= Time.at(0)
+        (Time.now - @last_bare_metal_update) > 5 * 60  # update every 5 minutes
+      end
+
+      bare_metal.to_update do
+        @last_bare_metal_update = Time.now
+
         bare_metal_data = self.softlayer_client['Account'].getHardware()
         bare_metal_data.collect { |server_data| BareMetalServer.new(self.softlayer_client, server_data) }
       end
     end
 
     softlayer_resource :virtual_servers do |virtual_servers|
-      virtual_servers.refresh_every 5 * 60
-      virtual_servers.update do
+      virtual_servers.should_update_if do
+        @last_virtual_server_update ||= Time.at(0)
+        (Time.now - @last_virtual_server_update) > 5 * 60  # update every 5 minutes
+      end
+
+      virtual_servers.to_update do
+        @last_virtual_server_update = Time.now
         virtual_server_data = self.softlayer_client['Account'].getVirtualGuests()
         virtual_server_data.collect { |server_data| VirtualServer.new(self.softlayer_client, server_data) }
       end

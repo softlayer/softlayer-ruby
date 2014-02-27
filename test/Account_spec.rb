@@ -39,7 +39,7 @@ describe SoftLayer::Account do
     another_test_acct = SoftLayer::Account.new(nil, :id => "232279", "firstName" => "kangaroo")
     test_account.account_id.should eq("232279")
   end
-    
+
   it "should allow the user to get the default account for a service" do
     test_client = double("mockClient")
     allow(test_client).to receive(:[]) do |service_name|
@@ -60,7 +60,7 @@ describe SoftLayer::Account do
     test_account.id.should eq("232279")
     test_account.firstName.should eq("kangaroo")
   end
-  
+
   describe "relationship to servers" do
     before do
       FAKE_ACCOUNT_DATA = JSON.parse(File.read(File.join(File.dirname(__FILE__), "test_account.json")))
@@ -71,9 +71,9 @@ describe SoftLayer::Account do
       allow(@mock_client).to receive(:[]) do |service_name|
         service_name.should == "Account"
 
-        mock_service = SoftLayer::Service.new("SoftLayer_Account", :username => "fakeuser", :api_key => "fake_api_key", :endpoint_url => "don'teventhinkaboutit")        
-        mock_service.stub(:getObject).and_return(FAKE_ACCOUNT_DATA)      
-        mock_service.stub(:getHardware).and_return(FAKE_BARE_METAL_DATA)      
+        mock_service = SoftLayer::Service.new("SoftLayer_Account", :username => "fakeuser", :api_key => "fake_api_key", :endpoint_url => "don'teventhinkaboutit")
+        mock_service.stub(:getObject).and_return(FAKE_ACCOUNT_DATA)
+        mock_service.stub(:getHardware).and_return(FAKE_BARE_METAL_DATA)
         mock_service.stub(:getVirtualGuests).and_return(FAKE_VIRTUAL_SERVER_DATA)
         mock_service.stub(:call_softlayer_api_with_params)
 
@@ -84,10 +84,10 @@ describe SoftLayer::Account do
 
     it "should respond to a request for servers" do
       test_account = SoftLayer::Account.account_for_client(@mock_client)
-      
+
       test_account.should respond_to(:servers)
       test_account.should_not respond_to(:servers=)
-      
+
       servers = test_account.servers
       servers.length.should eq(6)
     end

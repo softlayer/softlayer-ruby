@@ -33,7 +33,7 @@ describe SoftLayer::ModelBase do
       expect { SoftLayer::ModelBase.new(nil, {}) }.to raise_error(ArgumentError)
       expect { SoftLayer::ModelBase.new(nil, {:id => "someID"}) }.not_to raise_error
     end
-  
+
     it "rejects nil hashes" do
       expect { SoftLayer::ModelBase.new(nil, nil) }.to raise_error(ArgumentError)
     end
@@ -49,11 +49,11 @@ describe SoftLayer::ModelBase do
     test_model = SoftLayer::ModelBase.new(nil, { :id => "12345", :kangaroo => "Fun"});
     test_model.kangaroo.should == "Fun"
   end
-  
+
   it "returns nil from to_ary" do
     test_model = SoftLayer::ModelBase.new(nil, { :id => "12345" })
     test_model.should respond_to(:to_ary)
     test_model.to_ary.should be_nil
   end
-  
+
 end

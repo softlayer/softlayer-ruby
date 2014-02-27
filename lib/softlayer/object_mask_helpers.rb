@@ -22,8 +22,8 @@
 
 class Hash
   # Returns a string representing the object mask content represented by the
-  # Hash.  The keys are expected to be strings.  Values that are strings convert 
-  # into "dotted" pairs. For example, {"ticket" => "lastUpdate"} would translate 
+  # Hash.  The keys are expected to be strings.  Values that are strings convert
+  # into "dotted" pairs. For example, {"ticket" => "lastUpdate"} would translate
   # to "ticket.lastUpdate".  Values that are hashes or arrays become bracketed
   # expressions.  {"ticket" => ["id", "lastUpdate"] } would become "ticket[id,lastupdate]"
   def to_sl_object_mask()
@@ -31,22 +31,22 @@ class Hash
 
     each do |key, value|
       string_for_key = key.to_sl_object_mask
-      
+
       if(nil == value)
         return ""
       end
-      
+
       if value.kind_of? String then
         string_for_key = "#{string_for_key}.#{value.to_sl_object_mask}"
       end
-      
+
       if value.kind_of?(Array) || value.kind_of?(Hash) then
         value_string = value.to_sl_object_mask
         if value_string && !value_string.empty?
           string_for_key = "#{string_for_key}[#{value.to_sl_object_mask}]"
         end
       end
-      
+
       key_strings.push(string_for_key)
     end
 
@@ -57,7 +57,7 @@ end
 class Array
   # Returns a string representing the object mask content represented by the
   # Array. Each value in the array is converted to it's object mask eqivalent
-  # and 
+  # and
   def to_sl_object_mask()
     return "" if self.empty?
     map { |item| item.to_sl_object_mask() }.flatten.join(",")
@@ -80,7 +80,7 @@ class Symbol
 end
 
 module SoftLayer
-  # An ObjectMaskProperty is a class which helps to represent more complex 
+  # An ObjectMaskProperty is a class which helps to represent more complex
   # Object Mask expressions that include the type associated with the mask.
   #
   # For example, if you are working through the SoftLayer_Account and asking
@@ -91,10 +91,10 @@ module SoftLayer
   # account_service.object_mask("id", "metricTrackingObjectId").getHardware()
   #
   # However, because the result of getHardware is a list of entities in the
-  # SoftLayer_Hardware service and entities in that service do not have 
+  # SoftLayer_Hardware service and entities in that service do not have
   # metricTrackingObjectIds, this call will fail.
   #
-  # Instead, you need to add an object mask property to the mask that 
+  # Instead, you need to add an object mask property to the mask that
   # indicates that the metricTrackingObjectId is found in the SoftLayer_Hardware_Server
   # service. Such a thing might look like:
   #
@@ -111,32 +111,32 @@ module SoftLayer
       raise(ArgumentError, "property name cannot be empty or nil") if property_name.nil? || property_name.empty?
       @name = property_name.clone
     end
-    
+
     def to_sl_object_mask()
       object_mask_string = self.name.clone
-      
+
       if self.type then
         object_mask_string = object_mask_string + "(#{self.type})"
       end
-      
+
       if self.subproperties then
         subproperty_string = "";
 
         if self.subproperties.kind_of?(String) then
           subproperty_string = ".#{subproperties}"
         end
-        
+
         if self.subproperties.kind_of?(Array) || self.subproperties.kind_of?(Hash) then
           subproperty_string = "[#{self.subproperties.to_sl_object_mask}]"
         end
-        
+
         object_mask_string = object_mask_string + subproperty_string
       end
-      
+
       object_mask_string
     end
   end
-  
+
   # This class is largely a utility and implementation detail used when forwarding
   # an object mask to the server.  It acts as an ObjectMaskProperty with the
   # name "mask".  When a string is generated from this the result will be either

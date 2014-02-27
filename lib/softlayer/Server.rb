@@ -6,7 +6,7 @@ module SoftLayer
     def BareMetalServer.find_servers(softlayer_service, options)
       if options.has_key? :tags
       end
-      
+
     end
   end
 

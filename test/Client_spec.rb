@@ -34,7 +34,7 @@ describe SoftLayer::Client do
     $SL_API_KEY = nil
     $SL_API_BASE_URL = nil
   end
-  
+
   it 'accepts a user name from the global variable' do
     $SL_API_USERNAME = 'sample'
     client = SoftLayer::Client.new(:api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
@@ -114,39 +114,39 @@ describe SoftLayer::Client do
     client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
     client.endpoint_url.should == 'http://fakeurl.org/'
   end
-  
+
   describe "obtaining services" do
     let(:test_client) {
       SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
     }
-    
+
     it "should have a service_named method" do
       test_client.should respond_to(:service_named)
     end
-    
+
     it "should reject empty or nil service names" do
       expect { test_client.service_named('') }.to raise_error
       expect { test_client.service_named(nil) }.to raise_error
     end
-    
+
     it "should be able to construct a service" do
       test_service = test_client.service_named('Account')
       test_service.should_not be_nil
       test_service.service_name.should == "SoftLayer_Account"
       test_service.client.should be(test_client)
     end
-    
+
     it "allows bracket dereferences as an alternate service syntax" do
       test_service = test_client['Account']
       test_service.should_not be_nil
       test_service.service_name.should == "SoftLayer_Account"
       test_service.client.should be(test_client)
     end
-    
+
     it "returns the same service repeatedly when asked more than once" do
       first_account_service = test_client['Account']
       second_account_service = test_client.service_named('Account')
-      
+
       first_account_service.should be(second_account_service)
     end
   end

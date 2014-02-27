@@ -69,17 +69,27 @@ describe SoftLayer::ModelResource do
     it "adds a resource getter to instances" do
       sample_instance = TestClass.new()
       sample_instance.should respond_to(:test_resource)
-      
+
       sample_instance.test_resource.should be_nil
     end
+
+    it "adds a predicate to check for updates" do
+      sample_instance = TestClass.new()
+      sample_instance.should respond_to(:should_update_test_resource?)
+    end
+
+    it "adds a method to perform updates" do
+      sample_instance = TestClass.new()
+      sample_instance.should respond_to(:update_test_resource!)
+    end
   end
-  
+
   describe "a simple resource definition" do
     before do
       class TestClass
         include SoftLayer::ModelResource
         softlayer_resource(:test_resource) do |rsrc|
-          rsrc.update do
+          rsrc.to_update do
             method_in_test_class_instance_context
             "Value update accomplished!"
           end
@@ -89,13 +99,13 @@ describe SoftLayer::ModelResource do
         end
       end # TestClass
     end
-    
+
     it "should obtain an updated value when called" do
       sample_instance = TestClass.new
 
       sample_instance.instance_variable_defined?(:@test_resource).should be_false
 
-      sample_instance.should_receive(:method_in_test_class_instance_context)      
+      sample_instance.should_receive(:method_in_test_class_instance_context)
       sample_instance.test_resource.should == "Value update accomplished!"
       sample_instance.instance_variable_defined?(:@test_resource).should be_true
       sample_instance.instance_variable_get(:@test_resource).should == "Value update accomplished!"
@@ -107,15 +117,19 @@ describe SoftLayer::ModelResource do
       class TestClass
         include SoftLayer::ModelResource
         softlayer_resource(:test_resource) do |rsrc|
-          rsrc.refresh_every 0.5  # refresh every second
-          rsrc.update do
-            puts "updating test resource"
+          rsrc.should_update_if do
+            @last_test_resource_update ||= Time.at(0)
+            (Time.now - @last_test_resource_update) > 0.5 # update once a second
+          end
+
+          rsrc.to_update do
+            @last_test_resource_update = Time.now
             Time.now
           end
         end
       end # TestClass
     end
-    
+
     it "should obtain an updated value when called" do
       sample_instance = TestClass.new
       last_update = sample_instance.test_resource
@@ -139,18 +153,17 @@ describe SoftLayer::ModelResource do
 
     it "has valid initial values" do
       test_definition.resource_name.should be(:test_resource)
-      test_definition.refresh_interval.should == 0
       test_definition.update_block.should_not be_nil
     end
 
     it "allows DSL syntax" do
-      test_definition.refresh_every(5 * 60)
-      test_definition.update do
+      test_definition.should_update_if { "Yea!" }
+      test_definition.to_update do
         "test_resource value!"
       end
 
-      test_definition.refresh_interval.should == 5 * 60
       test_definition.update_block.call.should == "test_resource value!"
+      test_definition.should_update_block.call.should == "Yea!"
     end
   end
 end

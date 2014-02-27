@@ -58,7 +58,7 @@ describe SoftLayer::Service, "#new" do
     service.client.api_key.should eq("some_default_api_key")
     service.client.endpoint_url.should eq(SoftLayer::API_PUBLIC_ENDPOINT)
   end
-  
+
 end #describe SoftLayer#new
 
 describe SoftLayer::Service, "#object_with_id" do
@@ -171,8 +171,8 @@ describe SoftLayer::Service, "getting related services" do
     test_endpoint_url = "http://fakeendpoint.softlayer.com"
     test_soap_options = { :swimming => :not_allowed }
 
-    softlayer_client = SoftLayer::Client.new(:username => test_account_name, 
-      :api_key => test_api_key, 
+    softlayer_client = SoftLayer::Client.new(:username => test_account_name,
+      :api_key => test_api_key,
       :endpoint_url => test_endpoint_url)
 
     sample_service = softlayer_client.service_named("Account")

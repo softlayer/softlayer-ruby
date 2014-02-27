@@ -35,7 +35,7 @@ module SoftLayer
     end
 
     # return a hash of the authentication headers for the client
-    def authentication_headers 
+    def authentication_headers
       {
         "authenticate" => {
           "username" => @username,
@@ -43,11 +43,11 @@ module SoftLayer
         }
       }
     end
-    
+
     # Returns a service with the given name.
     #
     # If a service has already been created by this client that same service
-    # will be returned each time it is called for by name. Otherwise the system 
+    # will be returned each time it is called for by name. Otherwise the system
     # will try to construct a new service object and return that.
     #
     #
@@ -56,12 +56,12 @@ module SoftLayer
     # Service, the service_options will be ignored.
     #
     # If the service_name provided does not start with 'SoftLayer__' that prefix
-    # will be added 
+    # will be added
     # en
     def service_named(service_name, service_options = {})
-      # strip whitespace from service_name and 
+      # strip whitespace from service_name and
       # ensure that it start with "SoftLayer_".
-      # 
+      #
       # if it does not, then add it
       service_name.strip!
       if service_name && !service_name.empty?
@@ -78,7 +78,7 @@ module SoftLayer
         # override my default options with the ones passed in
         full_options.merge! service_options
 
-        @services[service_name] = SoftLayer::Service.new(service_name, full_options)      
+        @services[service_name] = SoftLayer::Service.new(service_name, full_options)
       end
 
       @services[service_name]
