@@ -20,7 +20,7 @@ module SoftLayer
 
       def initialize(resource_name)
         raise ArgumentError if resource_name.nil?
-        raise ArgumentError if resource_name.empty?
+        raise ArgumentError if resource_name.to_s.empty?
 
         @resource_name = resource_name;
         @refresh_interval = 0
@@ -54,7 +54,9 @@ module SoftLayer
         updated_instance_variable = "@#{resource_name}_updated".to_sym
         updated_method_name = "updated_#{resource_name}"
 
-        define_method(getter_name) do |force_update = false|
+        define_method(getter_name) do |*args|
+          force_update = args[0] || false
+
           # set the updated instance variable to antiquity if it hasn't been defined yet
           instance_variable_set(updated_instance_variable, Time.at(0)) if !instance_variable_defined?(updated_instance_variable)
 

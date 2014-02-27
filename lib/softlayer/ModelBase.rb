@@ -14,6 +14,16 @@ module SoftLayer
     def to_ary
       return nil
     end
+
+    # This is defined for the benefit of 1.8.7 where "#id" used to 
+    # return the same thing as object_id
+    def id
+      if @sl_hash.has_key? :id
+        @sl_hash[:id]
+      else
+        super
+      end
+    end
     
     def method_missing(method_symbol, *args, &block)
       if(@sl_hash && 0 == args.length && !block)
