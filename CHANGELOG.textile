@@ -1,11 +1,11 @@
 *2.0*
 * Switched the Ruby API client to use XML-RPC when calling the SoftLayer API rather than using the REST-like interface.
-* Result limits are now specified using @result_limit(offset,limit)@.  
+* Result limits are now specified using @result_limit(offset,limit)@.
 The @result_offset@ API filter has been removed.
 * Object masks are now sent to the server in the "Extended Object Mask":http://sldn.softlayer.com/article/Object-Masks format.  This may require you to change some of your existing object masks.
 * Changed the mechanism for obtaining services to include the Client class.  This makes the Ruby API very similar to the API presented by the Python bindings.  The old mechanism for obtaining services still works but you will receive deprecation warnings in debug mode.
 
-*1.0.7* 
+*1.0.7*
 * Calls to the @getObject@ method of any service should not take parameters.  The gem now warns if you make this type of call and ignores the parameters. This prevents @SoftLayer_Virtual_Guest::getObject@ from accidentally creating (billable) CCI instances.
 
 *1.0.6*
