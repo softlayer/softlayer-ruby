@@ -300,7 +300,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     
     def xmlrpc_client()
       if !@xmlrpc_client
-        @xmlrpc_client = XMLRPC::Client.new2(URI.join(@client.endpoint_url,@service_name))
+        @xmlrpc_client = XMLRPC::Client.new2(URI.join(@client.endpoint_url,@service_name).to_s)
         @xmlrpc_client.http_header_extra = { "accept-encoding" => "identity" }
 
         @xmlrpc_client.http.set_debug_output($stderr) if $DEBUG
