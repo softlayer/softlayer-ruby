@@ -1,14 +1,15 @@
 module SoftLayer
   class ModelBase
-    attr_reader :softlayer_service
+    attr_reader :softlayer_client
 
-    def initialize(softlayer_service, network_hash)
+    def initialize(softlayer_client, network_hash)
       raise ArgumentError, "A hash is required" if nil == network_hash
       
-      @softlayer_service = softlayer_service
+      @softlayer_client = softlayer_client
       @sl_hash = network_hash.inject({}) { | new_hash, pair | new_hash[pair[0].to_sym] = pair[1]; new_hash }
       
       raise ArgumentError, "The hash must have an id" unless @sl_hash.has_key?(:id)
+      raise ArgumentError, "id must be non-nil and non-empty" unless @sl_hash[:id] && !@sl_hash.to_s.empty?
     end
     
     def to_ary

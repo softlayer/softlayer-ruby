@@ -10,7 +10,7 @@ module SoftLayer
   #
   # If any of the options above are missing then the constructor will try to use the corresponding
   # global variable declared in the SoftLayer Module:
-  # - <tt>$SL_API_USERNAME</tt>
+  # - <tt>$SL_API_USERNAME</tt<tt>></tt>24
   # - <tt>$SL_API_KEY</tt>
   # - <tt>$SL_API_BASE_URL</tt>
   #

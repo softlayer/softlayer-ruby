@@ -22,17 +22,22 @@
 
 require 'xmlrpc/client'
 
-class String
-  # This code was taken from ActiveSupport in Rails and modified just a bit to remove
-  # parts that would handle non-english text.  The odd name is there specifically to
-  # prevent collisions with other methods
-  def sl_camelcase_to_underscore
-    word = self.dup
-    word.gsub!(/([A-Z\d]+)([A-Z][a-z])/,'\1_\2')
-    word.gsub!(/([a-z\d])([A-Z])/,'\1_\2')
-    word.tr!("-", "_")
-    word.downcase!
-    word
+# The XML-RPC spec calls for the "faultCode" in faults to be an integer
+# but the SoftLayer XML-RPC API can return strings as the "faultCode"
+#
+# We monkey patch the module method XMLRPC::FaultException::Convert::fault
+# so that it does pretty much what the default does without checking
+# to ensure that the faultCode is an integer
+module XMLRPC::Convert
+  def self.fault(hash)
+    if hash.kind_of? Hash and hash.size == 2 and
+      hash.has_key? "faultCode" and hash.has_key? "faultString" and
+      (hash["faultCode"].kind_of?(Integer) || hash["faultCode"].kind_of?(String)) and hash["faultString"].kind_of? String
+
+      XMLRPC::FaultException.new(hash["faultCode"], hash["faultString"])
+    else
+      super
+    end    
   end
 end
 
@@ -281,7 +286,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
         call_value = xmlrpc_client.call(method_name.to_s, call_headers, *args)
       rescue XMLRPC::FaultException => e
         puts "A XMLRPC Fault was returned #{e}" if $DEBUG
-        call_value = nil
+        raise
       end
 
       return call_value

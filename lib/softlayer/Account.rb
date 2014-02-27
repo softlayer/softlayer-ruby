@@ -11,18 +11,16 @@ module SoftLayer
     softlayer_resource :bare_metal_servers do |bare_metal|
       bare_metal.refresh_every 5 * 60
       bare_metal.update do
-        bare_metal_data = self.softlayer_service.getHardware()
-        hardware_service = softlayer_service.related_service_named("SoftLayer_Hardware")
-        bare_metal_data.collect { |server_data| BareMetalServer.new(hardware_service, server_data) }
+        bare_metal_data = self.softlayer_client['Account'].getHardware()
+        bare_metal_data.collect { |server_data| BareMetalServer.new(self.softlayer_client, server_data) }
       end
     end
 
     softlayer_resource :virtual_servers do |virtual_servers|
       virtual_servers.refresh_every 5 * 60
       virtual_servers.update do
-        virtual_server_data = self.softlayer_service.getVirtualGuests()
-        virtual_guest_service = softlayer_service.related_service_named("SoftLayer_Virtual_Guest")
-        virtual_server_data.collect { |server_data| VirtualServer.new(virtual_guest_service, server_data) }
+        virtual_server_data = self.softlayer_client['Account'].getVirtualGuests()
+        virtual_server_data.collect { |server_data| VirtualServer.new(self.softlayer_client, server_data) }
       end
     end
 
@@ -31,17 +29,12 @@ module SoftLayer
     # SoftLayer_Account.
     #
     # account_service = SoftLayer::Service.new("SoftLayer_Account")
-    # account = SoftLayer::Account.default_account(account_service)
+    # account = SoftLayer::Account.account_for_client(account_service)
     #
-    def self.default_account(account_service)
+    def self.account_for_client(softlayer_client)
+      account_service = softlayer_client['Account']
       network_hash = account_service.getObject()
-      new(account_service, network_hash)
-    end
-
-    def initialize(softlayer_service, network_hash = {})
-      super softlayer_service, network_hash
-      @bare_metal_servers = nil
-      @virtual_servers = nil
+      new(softlayer_client, network_hash)
     end
 
     # the account_id field comes from the hash
@@ -49,6 +42,7 @@ module SoftLayer
       value = @sl_hash[:id]
     end
 
+    # return a list combining the virtual servers and bare metal servers in a single list
     def servers
       return self.bare_metal_servers + self.virtual_servers
     end

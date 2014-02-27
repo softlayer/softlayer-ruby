@@ -41,12 +41,21 @@ describe SoftLayer::Account do
   end
     
   it "should allow the user to get the default account for a service" do
-    test_service = double("sl service mock")
-    test_service.stub("getObject").and_return("id" => "232279", "firstName" => "kangaroo")
+    test_client = double("mockClient")
+    allow(test_client).to receive(:[]) do |service_name|
+      service_name.should == "Account"
 
-    test_account = SoftLayer::Account.default_account(test_service)
+      test_service = double("mockService")
+      allow(test_service).to receive(:getObject) do
+        { "id" => "232279", "firstName" => "kangaroo" }
+      end
 
-    test_account.softlayer_service.should eq(test_service)
+      puts "returning test service ${test_service}"
+      test_service
+    end
+
+    test_account = SoftLayer::Account.account_for_client(test_client)
+    test_account.softlayer_client.should eq(test_client)
     test_account.account_id.should eq("232279")
     test_account.id.should eq("232279")
     test_account.firstName.should eq("kangaroo")
@@ -58,15 +67,23 @@ describe SoftLayer::Account do
       FAKE_BARE_METAL_DATA = JSON.parse(File.read(File.join(File.dirname(__FILE__), "test_bare_metal.json")))
       FAKE_VIRTUAL_SERVER_DATA = JSON.parse(File.read(File.join(File.dirname(__FILE__), "test_virtual_servers.json")))
 
-      @mock_service = SoftLayer::Service.new("SoftLayer_Account", :username => "fakeuser", :api_key => "fake_api_key", :endpoint_url => "don'teventhinkaboutit")        
-      @mock_service.stub(:getObject).and_return(FAKE_ACCOUNT_DATA)      
-      @mock_service.stub(:getHardware).and_return(FAKE_BARE_METAL_DATA)      
-      @mock_service.stub(:getVirtualGuests).and_return(FAKE_VIRTUAL_SERVER_DATA)
-      @mock_service.stub(:call_softlayer_api_with_params)
+      @mock_client = double("mockClient")
+      allow(@mock_client).to receive(:[]) do |service_name|
+        service_name.should == "Account"
+
+        mock_service = SoftLayer::Service.new("SoftLayer_Account", :username => "fakeuser", :api_key => "fake_api_key", :endpoint_url => "don'teventhinkaboutit")        
+        mock_service.stub(:getObject).and_return(FAKE_ACCOUNT_DATA)      
+        mock_service.stub(:getHardware).and_return(FAKE_BARE_METAL_DATA)      
+        mock_service.stub(:getVirtualGuests).and_return(FAKE_VIRTUAL_SERVER_DATA)
+        mock_service.stub(:call_softlayer_api_with_params)
+
+        mock_service
+      end
+
     end
 
     it "should respond to a request for servers" do
-      test_account = SoftLayer::Account.default_account(@mock_service)
+      test_account = SoftLayer::Account.account_for_client(@mock_client)
       
       test_account.should respond_to(:servers)
       test_account.should_not respond_to(:servers=)

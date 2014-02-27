@@ -24,36 +24,15 @@ $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
 require 'rubygems'
 require 'softlayer_api'
-require 'rspec'
 
+describe XMLRPC::Convert,"::fault" do
+  it "converts faults with faultCodes that are strings to FaultException objects" do
+    fault_hash = { "faultCode" => "The SLAPI returns strings where it shouldn't", "faultString" => "This is the actual fault"}
 
-describe SoftLayer::ModelBase do
-  describe "#initialize" do
-    it "rejects hashes without an id" do
-      expect { SoftLayer::ModelBase.new(nil, {}) }.to raise_error(ArgumentError)
-      expect { SoftLayer::ModelBase.new(nil, {:id => "someID"}) }.not_to raise_error
-    end
-  
-    it "rejects nil hashes" do
-      expect { SoftLayer::ModelBase.new(nil, nil) }.to raise_error(ArgumentError)
-    end
-
-    it "remembers its first argument as the client" do
-      mock_client = double("Mock SoftLayer Client")
-      test_model = SoftLayer::ModelBase.new(mock_client, { :id => "12345"});
-      test_model.softlayer_client.should be(mock_client)
-    end
+    expect { XMLRPC::Convert.fault(fault_hash) }.not_to raise_error
+    exception = XMLRPC::Convert.fault(fault_hash)
+    exception.should be_kind_of(XMLRPC::FaultException)
+    exception.faultCode.should eq(fault_hash["faultCode"])
+    exception.faultString.should eq(fault_hash["faultString"])
   end
-
-  it "treats keys in its hash as methods returning the value of the key" do
-    test_model = SoftLayer::ModelBase.new(nil, { :id => "12345", :kangaroo => "Fun"});
-    test_model.kangaroo.should == "Fun"
-  end
-  
-  it "returns nil from to_ary" do
-    test_model = SoftLayer::ModelBase.new(nil, { :id => "12345" })
-    test_model.should respond_to(:to_ary)
-    test_model.to_ary.should be_nil
-  end
-  
 end
