@@ -89,7 +89,7 @@ With an instance of @SoftLayer::Service@ in hand, you can call the methods provi
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">open_tickets = account_service.getOpenTickets
 </code></pre>
 
-If the method requires arguments, you can supply them as arguments to the method you're calling on the service object. The arguments should be arguments that XML-RPC can encode into XML. Generally this means your argument should be hashes, arrays, strings, numbers, booleans, or nil. 
+If the method requires arguments, you can supply them as arguments to the method you're calling on the service object. The arguments should be arguments that XML-RPC can encode into XML. Generally this means your argument should be hashes, arrays, strings, numbers, booleans, or nil.
 
 Here is an example of calling the @createStandardTicket@ method on a ticket service.  This example also uses the "bracket" syntax on a client @client['<service-name>']@ to obtain the service object:
 
@@ -223,7 +223,7 @@ require 'pp'
 client = SoftLayer::Client.new()
   :username => "joecustomer",              # enter your username here
   :api_key => "feeddeadbeefbadf00d...")    # enter your api key here
-	
+
 ticket_service = client.service_named('Ticket')
 
 begin

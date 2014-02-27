@@ -163,3 +163,21 @@ describe SoftLayer::Service, "Creating option proxies" do
     masked_proxy.server_object_mask.should eql(["fish", "cow", "duck"])
   end
 end
+
+describe SoftLayer::Service, "getting related services" do
+  it "can provide related services" do
+    test_account_name = "testuser"
+    test_api_key = "DEADBEEFBADF00D"
+    test_endpoint_url = "http://fakeendpoint.softlayer.com"
+    test_soap_options = { :swimming => :not_allowed }
+
+    softlayer_client = SoftLayer::Client.new(:username => test_account_name, 
+      :api_key => test_api_key, 
+      :endpoint_url => test_endpoint_url)
+
+    sample_service = softlayer_client.service_named("Account")
+    related_service = sample_service.related_service_named("SoftLayer_Hardware")
+    related_service.service_name.should eq("SoftLayer_Hardware")
+    related_service.client.should be(softlayer_client)
+  end
+end
