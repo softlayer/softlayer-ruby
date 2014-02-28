@@ -37,36 +37,36 @@ module XMLRPC::Convert
       XMLRPC::FaultException.new(hash["faultCode"], hash["faultString"])
     else
       super
-    end    
+    end
   end
 end
 
 module SoftLayer
-  # A subclass of Exception with nothing new provided.  This simply provides
+  # A subclass of Exception with nothing new provided. This simply provides
   # a unique type for exceptions from the SoftLayer API
   class SoftLayerAPIException < RuntimeError
   end
 
   # = SoftLayer API Service
   #
-  # Instances of this class are the runtime representation of 
+  # Instances of this class are the runtime representation of
   # services in the SoftLayer API. They handle communication with
   # the SoftLayer servers.
-  # 
+  #
   # You typically should not need to create services directly.
-  # instead, you should be creating a client and then using it to 
-  # obtain individual services.  For example:
+  # instead, you should be creating a client and then using it to
+  # obtain individual services. For example:
   #
   # client = SoftLayer::Client.new(:username => "Joe", :api_key=>"feeddeadbeefbadfood...")
   # account_service = client.service_named("Account") # returns the SoftLayer_Account service
   # account_service = client['Account'] # Exactly the same as above
   #
-  # For backward compatibility, a service can be constructed by passing 
+  # For backward compatibility, a service can be constructed by passing
   # client initialization options, however if you do so you will need to
-  # prepend the "SoftLayer_" on the front of the service name.  For Example:
+  # prepend the "SoftLayer_" on the front of the service name. For Example:
   #
-  #   account_service = SoftLayer::Service("SoftLayer_Account", 
-  #     :username=>"<your user name here>" 
+  #   account_service = SoftLayer::Service("SoftLayer_Account",
+  #     :username=>"<your user name here>"
   #     :api_key=>"<your api key here>")
   #
   # A service communicates with the SoftLayer API through the the XMLRPC
@@ -81,7 +81,7 @@ module SoftLayer
     # The name of the service that this object calls. Cannot be emtpy or nil.
     attr_reader :service_name
     attr_reader :client
-  
+
     def initialize(service_name, options = {})
       raise SoftLayerAPIException.new("Please provide a service name") if service_name.nil? || service_name.empty?
 
@@ -95,18 +95,18 @@ module SoftLayer
       else
         # Accepting client initialization options here
         # is a backward-compatibility feature.
-        
+
         if $DEBUG
-          $stderr.puts %q{ 
-Creating services with Client initialization options is deprecated and may be removed 
-in a future release.  Please change your code to create a client and obtain a service 
+          $stderr.puts %q{
+Creating services with Client initialization options is deprecated and may be removed
+in a future release. Please change your code to create a client and obtain a service
 using either client.service_named('<service_name_here>') or client['<service_name_here>']}
         end
-        
+
         # Collect the keys relevant to client creation and pass them on to construct
         # the client
         client_keys = [:username, :api_key, :endpoint_url]
-        client_options = options.inject({}) do |new_hash, pair| 
+        client_options = options.inject({}) do |new_hash, pair|
           if client_keys.include? pair[0]
             new_hash[pair[0]] = pair[1]
             new_hash
@@ -114,20 +114,20 @@ using either client.service_named('<service_name_here>') or client['<service_nam
         end
 
         if client && !options.empty?
-          raise SoftlayerAPIException.new("Attempting to construct a service both with a client, and with client initialization options.  Only one or the other should be provided")
+          raise SoftlayerAPIException.new("Attempting to construct a service both with a client, and with client initialization options. Only one or the other should be provided")
         end
 
         @client = SoftLayer::Client.new(client_options)
       end
-      # this has proven to be very helpful during debugging.  It helps prevent infinite recursion
+
+      # this has proven to be very helpful during debugging. It helps prevent infinite recursion
       # when you don't get a method call just right
       @method_missing_call_depth = 0 if $DEBUG
     end
 
-    # returns a related service with the given service name.  The related service
-    # will use the same authentication and savon client options as this service
-    # unless they are specifically overridden in the options dictionary
-    def related_service_named(service_name, options={})      
+    # Returns a related service with the given service name. The related service
+    # will use the same client as this service
+    def related_service_named(service_name)
       @client.service_named(service_name)
     end
 
@@ -164,16 +164,27 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       return proxy.object_mask(*args)
     end
 
+    # Use this as part of a method call chain to reduce the number
+    # of results returned from the server. For example, if the server has a list
+    # of 100 entities and you only want 5 of them, you can get the first five
+    # by using result_limit(0,5).  Then for the next 5 you would use
+    # result_limit(5,5), then result_limit(10,5) etc.
     def result_limit(offset, limit)
       proxy = APIParameterFilter.new
       proxy.target = self
       return proxy.result_limit(offset, limit)
     end
-    
+
+    # Add an object filter to the request.
+    def object_filter(filter)
+      proxy = APIParameterFilter.new
+      proxy.target = self
+      return proxy.object_filter(filter)
+    end
+
     # This is the primary mechanism by which requests are made. If you call
     # the service with a method it doesn't understand, it will send a call to
     # the endpoint for a method of the same name.
-    #
     def method_missing(method_name, *args, &block)
       # During development, if you end up with a stray name in some
       # code, you can end up in an infinite recursive loop as method_missing
@@ -199,39 +210,6 @@ using either client.service_named('<service_name_here>') or client['<service_nam
 
       return result
     end
-    
-    # When SOAP returns an array it actually returns a structure with information about the type
-    # of the array included.  What this does is recursively traverse a response and replaces
-    # all these structures with their actual array values.
-    def fix_soap_arrays(response_value)
-      if response_value.kind_of? Hash 
-        if response_value.has_key?("@SOAP_ENC:arrayType") && response_value.has_key?("item") then
-          response_value = response_value["item"]
-        else
-          response_value.each { |key, value| response_value[key] = fix_soap_arrays(value) }
-        end
-      end
-
-      if response_value.kind_of? Array then
-        response_value.each_with_index { | value, index | response_value[index] = fix_soap_arrays(value) }
-      end
-      
-      response_value
-    end
-    
-    def fix_argument_arrays(arguments_value)
-      if arguments_value.kind_of? Hash then
-        arguments_value.each { |key, value| arguments_value[key] = fix_argument_arrays(value) }
-      end
-      
-      if arguments_value.kind_of? Array then
-        result = {}
-        arguments_value.each_with_index { |item, index| result["item#{index}"] = fix_argument_arrays(item) }
-        arguments_value = result
-      end
-      
-      arguments_value
-    end
 
     # Issue an HTTP request to call the given method from the SoftLayer API with
     # the parameters and arguments given.
@@ -247,21 +225,28 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     def call_softlayer_api_with_params(method_name, parameters, args, &block)
       additional_headers = {};
 
-      if(parameters && parameters.server_object_id)        
-        additional_headers = {"#{@service_name}InitParameters" => { "id" => parameters.server_object_id}}
+      # Add an object id to the headers.
+      if parameters && parameters.server_object_id
+        additional_headers.merge!("#{@service_name}InitParameters" => { "id" => parameters.server_object_id })
       end
 
-      if(parameters && parameters.server_object_mask)
+      if parameters && parameters.server_object_filter
+        additional_headers.merge!("#{@service_name}ObjectFilter" => parameters.server_object_filter)
+      end
+
+      # Object masks go into the headers too.
+      if parameters && parameters.server_object_mask
         object_mask = SoftLayer::ObjectMask.new()
         object_mask.subproperties = parameters.server_object_mask
 
-        additional_headers.merge!({ "SoftLayer_ObjectMask" => { "mask" => object_mask.to_sl_object_mask } })
+        additional_headers.merge!("SoftLayer_ObjectMask" => { "mask" => object_mask.to_sl_object_mask })
       end
 
+      # Result limits go into the headers
       if (parameters && parameters.server_result_limit)
         additional_headers.merge!("resultLimit" => { "limit" => parameters.server_result_limit, "offset" => (parameters.server_result_offset || 0) })
       end
-      
+
       # This is a workaround for a potential problem that arises from mis-using the
       # API. If you call SoftLayer_Virtual_Guest and you call the getObject method
       # but pass a virtual guest as a parameter, what happens is the getObject method
@@ -275,13 +260,16 @@ using either client.service_named('<service_name_here>') or client['<service_nam
         $stderr.puts "Warning - The getObject method takes no parameters. The parameters you have provided will be ignored."
         args = nil
       end
-      
+
+      # The client knows about authentication, so ask him for the auth headers
       authentication_headers = self.client.authentication_headers
-      
+
+      # Collect all the different header pieces into a single hash that
+      # will become the first argument to the call.
       call_headers = {
         "headers" => additional_headers.merge(authentication_headers)
       }
-      
+
       begin
         call_value = xmlrpc_client.call(method_name.to_s, call_headers, *args)
       rescue XMLRPC::FaultException => e
@@ -291,22 +279,28 @@ using either client.service_named('<service_name_here>') or client['<service_nam
 
       return call_value
     end
-    
+
+    # If this is not defined for Service, then when you print a service object
+    # the code will try to convert it to an array and end up calling method_missing
+    #
+    # We define this here to prevent odd calls to the Softlayer API
     def to_ary
       nil
     end
-    
+
     private
-    
+
     def xmlrpc_client()
       if !@xmlrpc_client
         @xmlrpc_client = XMLRPC::Client.new2(URI.join(@client.endpoint_url,@service_name).to_s)
+
+        # this is a workaround for a bug in later versions of the XML-RPC client in Ruby Core.
         @xmlrpc_client.http_header_extra = { "accept-encoding" => "identity" }
 
         @xmlrpc_client.http.set_debug_output($stderr) if $DEBUG
       end
-      
+
       @xmlrpc_client
-    end    
+    end
   end # Service class
 end # module SoftLayer

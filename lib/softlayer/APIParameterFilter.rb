@@ -32,6 +32,8 @@ class APIParameterFilter
   #
   # ticket_service.object_with_id(12345).getObject
   def object_with_id(value)
+    # we create a new object in case the user wants to store off the
+    # filter chain and reuse it later
     merged_object = APIParameterFilter.new;
     merged_object.target = self.target
     merged_object.parameters = @parameters.merge({ :server_object_id => value })
@@ -44,25 +46,45 @@ class APIParameterFilter
   #
   # account_service.object_mask(id).getOpenTickets
   def object_mask(*args)
+    raise ArgumentError, "Object mask expects mask properties" if args.empty? || (1 == args.count && !args[0])
+
+    # we create a new object in case the user wants to store off the
+    # filter chain and reuse it later
     merged_object = APIParameterFilter.new;
     merged_object.target = self.target
-    merged_object.parameters = @parameters.merge({ :object_mask => args }) if args && !args.empty?
+    merged_object.parameters = @parameters.merge({ :object_mask => args })
     merged_object
   end
 
   # Adds a result limit which helps you page through a long list of entities
   # 
   # The offset is the index of the first item you wish to have returned
-  # The limit explains how many items you wish the call to return.
+  # The limit describes how many items you wish the call to return.
   #
   # For example, if you wanted to get five open tickets from the account
   # starting with the tenth item in the open tickets list you might call
   #
   # account_service.result_limit(10, 5).getOpenTickets
   def result_limit(offset, limit)
+    # we create a new object in case the user wants to store off the
+    # filter chain and reuse it later
     merged_object = APIParameterFilter.new;
     merged_object.target = self.target
     merged_object.parameters = @parameters.merge({ :result_offset => offset, :result_limit => limit })
+    merged_object
+  end
+
+  # Adds an object_filter to the result.  An Object Filter allows you
+  # to specify criteria which are used to filter the results returned
+  # by the server.
+  def object_filter(filter)
+    raise ArgumentError, "Object mask expects mask properties" if filter.nil?
+
+    # we create a new object in case the user wants to store off the
+    # filter chain and reuse it later
+    merged_object = APIParameterFilter.new;
+    merged_object.target = self.target
+    merged_object.parameters = @parameters.merge({:object_filter => filter})
     merged_object
   end
 
@@ -90,6 +112,10 @@ class APIParameterFilter
     self.parameters[:result_offset]
   end
 
+  def server_object_filter
+    self.parameters[:object_filter]
+  end
+  
   # This allows the filters to be used at the end of a long chain of calls that ends
   # at a service.
   def method_missing(method_name, *args, &block)      
