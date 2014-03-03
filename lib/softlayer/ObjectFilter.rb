@@ -94,7 +94,7 @@ module SoftLayer
     end
 
     def contains_exactly(value)
-      ObjectFilterOperation.new('!~', value)
+      ObjectFilterOperation.new('~', value)
     end
     
     def does_not_contain(value)
@@ -143,7 +143,7 @@ module SoftLayer
       # calling the block.  We warn in debug mode if you override a
       # query that was passed directly with the value from a block.
       if block
-        $stderr.puts "The query from the block passed to ObjectFilter.build will override the query passed as a parameter" if $DEBUG && query
+        $stderr.puts "The query from the block passed to ObjectFilter:build will override the query passed as a parameter" if $DEBUG && query
         block_handler = ObjectFilterBlockHandler.new
         query = block_handler.instance_eval &block
       end
