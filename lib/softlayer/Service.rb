@@ -225,10 +225,9 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     def call_softlayer_api_with_params(method_name, parameters, args, &block)
       additional_headers = {};
 
-      # Add an object id to the headers.
-      if parameters && parameters.server_object_id
-        additional_headers.merge!("#{@service_name}InitParameters" => { "id" => parameters.server_object_id })
-      end
+      # The client knows about authentication, so ask him for the auth headers
+      authentication_headers = self.client.authentication_headers
+      additional_headers.merge!(authentication_headers)
 
       if parameters && parameters.server_object_filter
         additional_headers.merge!("#{@service_name}ObjectFilter" => parameters.server_object_filter)
@@ -247,6 +246,12 @@ using either client.service_named('<service_name_here>') or client['<service_nam
         additional_headers.merge!("resultLimit" => { "limit" => parameters.server_result_limit, "offset" => (parameters.server_result_offset || 0) })
       end
 
+      # Add an object id to the headers.
+      if parameters && parameters.server_object_id
+        additional_headers.merge!("#{@service_name}InitParameters" => { "id" => parameters.server_object_id })
+      end
+
+
       # This is a workaround for a potential problem that arises from mis-using the
       # API. If you call SoftLayer_Virtual_Guest and you call the getObject method
       # but pass a virtual guest as a parameter, what happens is the getObject method
@@ -261,13 +266,10 @@ using either client.service_named('<service_name_here>') or client['<service_nam
         args = nil
       end
 
-      # The client knows about authentication, so ask him for the auth headers
-      authentication_headers = self.client.authentication_headers
-
       # Collect all the different header pieces into a single hash that
       # will become the first argument to the call.
       call_headers = {
-        "headers" => additional_headers.merge(authentication_headers)
+        "headers" => additional_headers
       }
 
       begin
@@ -297,7 +299,17 @@ using either client.service_named('<service_name_here>') or client['<service_nam
         # this is a workaround for a bug in later versions of the XML-RPC client in Ruby Core.
         @xmlrpc_client.http_header_extra = { "accept-encoding" => "identity" }
 
-        @xmlrpc_client.http.set_debug_output($stderr) if $DEBUG
+        if $DEBUG
+          if !@xmlrpc_client.respond_to?(:http)
+            class << @xmlrpc_client
+              def http
+                return @http
+              end
+            end
+
+            @xmlrpc_client.http.set_debug_output($stderr)
+          end
+        end # $DEBUG
       end
 
       @xmlrpc_client

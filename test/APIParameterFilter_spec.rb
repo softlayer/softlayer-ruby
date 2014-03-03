@@ -28,8 +28,8 @@ require 'rspec'
 
 describe SoftLayer::APIParameterFilter do
   let(:filter) {filter = SoftLayer::APIParameterFilter.new}
-  
-  describe "#object_with_id" do  
+
+  describe "#object_with_id" do
     it "initializes with empty properties" do
       filter.server_object_id.should be_nil
       filter.server_object_mask.should be_nil
@@ -56,7 +56,7 @@ describe SoftLayer::APIParameterFilter do
     it "rejects nil object masks" do
       expect { filter.object_mask(nil) }.to raise_error
     end
-  
+
     it "stores its value in server_object_mask when called" do
       result = filter.object_mask("fish", "cow", "duck")
       result.server_object_mask.should == ["fish", "cow", "duck"]
@@ -69,7 +69,7 @@ describe SoftLayer::APIParameterFilter do
     end
   end
 
-  describe "#object_filter" do  
+  describe "#object_filter" do
     it "rejects nil filters" do
       expect { filter.object_filter(nil) }.to raise_error
     end
@@ -77,7 +77,7 @@ describe SoftLayer::APIParameterFilter do
     it "stores its value in server_object_filter when called" do
       test_filter = SoftLayer::ObjectFilter.new()
       test_filter["fish"] = "cow"
-      
+
       result = filter.object_filter(test_filter)
       result.server_object_filter.should == {"fish" => "cow"}
     end

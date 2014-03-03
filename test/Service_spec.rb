@@ -145,19 +145,19 @@ describe SoftLayer::Service do
   end
 
   describe "#object_filter" do
-    let (:object_filter) do 
+    let (:object_filter) do
       object_filter = SoftLayer::ObjectFilter.new()
       object_filter["key"] = "value"
       object_filter
     end
-    
+
     it "constructs a parameter filter with the given ObjectFilter" do
       parameter_filter = service.object_filter(object_filter)
       parameter_filter.should_not be_nil
       parameter_filter.target.should == service
       parameter_filter.server_object_filter.should == object_filter
     end
-    
+
     it "passes an object filter through to an API call" do
       service.should_receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter),[]) do |method_name, parameters, args|
         parameters.server_object_filter.should == object_filter

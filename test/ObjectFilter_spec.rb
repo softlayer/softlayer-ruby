@@ -31,48 +31,48 @@ describe SoftLayer::ObjectFilter do
     test_filter = SoftLayer::ObjectFilter.new()
     test_filter.should eq({})
   end
-  
+
   it "adds empty object filter sub-elements for unknown keys" do
     test_filter = SoftLayer::ObjectFilter.new()
     value = test_filter["foo"]
-    
+
     value.should_not be_nil
     value.should eq({})
     value.should be_kind_of(SoftLayer::ObjectFilter)
   end
-  
+
   describe ":build" do
     it "builds object filters from a key path and query string" do
       object_filter = SoftLayer::ObjectFilter.build("hardware.domain", '*riak*');
-      object_filter.should == { 
+      object_filter.should == {
         "hardware" => {
           "domain" => {
             'operation' => '*= riak'
           }}}
     end
-    
+
     it "builds object filters from a key path and a hash" do
       object_filter = SoftLayer::ObjectFilter.build("hardware.domain", {'bogus' => 'but fun'});
-      object_filter.should == { 
+      object_filter.should == {
         "hardware" => {
           "domain" => {
             'bogus' => 'but fun'
           }}}
     end
-    
+
     it "builds object filters from a key path and am ObjectFilterOperation" do
       filter_operation = SoftLayer::ObjectFilterOperation.new('~', 'wwdc')
       object_filter = SoftLayer::ObjectFilter.build("hardware.domain", filter_operation);
-      object_filter.should == { 
+      object_filter.should == {
         "hardware" => {
           "domain" => {
             'operation' => '~ wwdc'
             }}}
     end
-  
+
     it "builds object filters from a key path and block" do
       object_filter = SoftLayer::ObjectFilter.build("hardware.domain") { contains 'riak' };
-      object_filter.should == { 
+      object_filter.should == {
         "hardware" => {
           "domain" => {
             'operation' => '*= riak'
@@ -80,10 +80,11 @@ describe SoftLayer::ObjectFilter do
         }
       }
     end
-  end  
-  
-  describe ":query_to_filter_operation" do  
+  end
+
+  describe ":query_to_filter_operation" do
     it "translates sample strings into valid operation structures" do
+      SoftLayer::ObjectFilter.query_to_filter_operation('3').should == {'operation' => 3 }
       SoftLayer::ObjectFilter.query_to_filter_operation('value').should == {'operation' => "_= value" }
       SoftLayer::ObjectFilter.query_to_filter_operation('value*').should == {'operation' => "^= value" }
       SoftLayer::ObjectFilter.query_to_filter_operation('*value').should == {'operation' => "$= value" }
@@ -99,5 +100,40 @@ describe SoftLayer::ObjectFilter do
       SoftLayer::ObjectFilter.query_to_filter_operation('_= value').should == {'operation' => "_= value" }
       SoftLayer::ObjectFilter.query_to_filter_operation('!~ value').should == {'operation' => "!~ value" }
     end
+  end
+
+  describe ":build operations translate to correct operators" do
+    object_filter = SoftLayer::ObjectFilter.build("domain") { contains 'value  ' }
+    object_filter.should == { "domain" => { 'operation' => "*= value"} }
+
+    object_filter = SoftLayer::ObjectFilter.build("domain") { begins_with '  value' }
+    object_filter.should == { "domain" => { 'operation' => "^= value"} }
+
+    object_filter = SoftLayer::ObjectFilter.build("domain") { ends_with ' value' }
+    object_filter.should == { "domain" => { 'operation' => "$= value"} }
+
+    object_filter = SoftLayer::ObjectFilter.build("domain") { is 'value ' }
+    object_filter.should == { "domain" => { 'operation' => "_= value"} }
+
+    object_filter = SoftLayer::ObjectFilter.build("domain") { is_not ' value' }
+    object_filter.should == { "domain" => { 'operation' => "!= value"} }
+
+    object_filter = SoftLayer::ObjectFilter.build("domain") { is_greater_than 'value ' }
+    object_filter.should == { "domain" => { 'operation' => "> value"} }
+
+    object_filter = SoftLayer::ObjectFilter.build("domain") { is_less_than ' value' }
+    object_filter.should == { "domain" => { 'operation' => "< value"} }
+
+    object_filter = SoftLayer::ObjectFilter.build("domain") { is_greater_or_equal_to ' value' }
+    object_filter.should == { "domain" => { 'operation' => ">= value"} }
+
+    object_filter = SoftLayer::ObjectFilter.build("domain") { is_less_or_equal_to 'value ' }
+    object_filter.should == { "domain" => { 'operation' => "<= value"} }
+
+    object_filter = SoftLayer::ObjectFilter.build("domain") { contains_exactly ' value' }
+    object_filter.should == { "domain" => { 'operation' => "~ value"} }
+
+    object_filter = SoftLayer::ObjectFilter.build("domain") { does_not_contain ' value' }
+    object_filter.should == { "domain" => { 'operation' => "!~ value"} }
   end
 end

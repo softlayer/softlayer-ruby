@@ -24,7 +24,7 @@ require 'rubygems'
 require 'softlayer_api'
 require 'pp'
 
-softlayer_client = SoftLayer::Client.new(  
+softlayer_client = SoftLayer::Client.new(
   :username => "joecustomer",              # enter your username here
   :api_key => "feeddeadbeefbadf00d..."     # enter your api key here
   )

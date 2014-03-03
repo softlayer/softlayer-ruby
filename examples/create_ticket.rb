@@ -46,7 +46,7 @@ begin
                     "notifyUserOnUpdateFlag" => true
                   },
                   "This is a test ticket created from a Ruby client")
-  
+
   puts "Created a new ticket : #{new_ticket['id']} - #{new_ticket['title']}"
 
   # add an update to the newly created ticket.
