@@ -25,7 +25,7 @@ module SoftLayer
     '*=',   # Contains (ignoring case)
     '^=',   # Begins with (ignoring case)
     '$=',   # Ends with (ignoring_case)
-    '_=',   # Matches exactly (ignoring case)
+    '_=',   # Matches (ignoring case)
     '!=',   # Is not Equal To (case sensitive)
     '<=',   # Less than or Equal To (case sensitive)
     '>=',   # Greater than or Equal To (case sensitive)
@@ -179,23 +179,6 @@ module SoftLayer
     # Filter operation is an operator follwed by the value used in the comparison.
     # e.g.
     #     "*= smaug"
-    #
-    # uses the "case insensitive contains" operator, '*=' and the value 'smaug'.
-    #
-    # The case insensitive operators are:
-    #   '*=',   # Contains
-    #   '^=',   # Begins with
-    #   '$=',   # Ends with
-    #   '_=',   # Matches exactly (ignoring case)
-    #
-    # The case sensitive operators are:
-    #   '~',    # Contains
-    #   '!~',   # Does not Contain
-    #   '!=',   # Is not Equal To
-    #   '<=',   # Less than or Equal To
-    #   '>=',   # Greater than or Equal To
-    #   '<',    # Less Than
-    #   '>'     # Greater Than
     #
     # The query language also accepts some aliases using asterisks
     # in a regular-expression-like way.  Those aliases look like:

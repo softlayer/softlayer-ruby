@@ -73,7 +73,7 @@ describe SoftLayer::Client do
   it 'fails if the user name is nil' do
     expect do
       $SL_API_USERNAME = nil
-      client = SoftLayer::Client.new(:api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
+      client = SoftLayer::Client.new(:username => nil, :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
     end.to raise_error
   end
 
@@ -91,7 +91,7 @@ describe SoftLayer::Client do
   it 'fails if the api_key is nil' do
     expect do
       $SL_API_KEY = nil
-      client = SoftLayer::Client.new(:username => 'fake_user', :endpoint_url => 'http://fakeurl.org/')
+      client = SoftLayer::Client.new(:username => 'fake_user', :endpoint_url => 'http://fakeurl.org/', :api_key => nil)
     end.to raise_error
   end
 
