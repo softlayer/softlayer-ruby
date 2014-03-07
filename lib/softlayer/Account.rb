@@ -101,5 +101,64 @@ module SoftLayer
       bare_metal_data = service.getHardware()
       bare_metal_data.collect { |server_data| BareMetalServer.new(self.softlayer_client, server_data) }
     end
+
+    def find_virtual_servers!(options_hash = {})
+      if(!options_hash.has_key? :object_mask)
+        object_mask = VirtualServer.defaultObject_mask
+      else
+        object_mask = options_hash[:object_mask]
+      end
+
+      object_filter = {}
+
+      option_to_filter_path = {
+        :cpus => "virtualGuests.maxCpu",
+        :memory => "virtualGuests.maxMemory",
+        :hostname => "virtualGuests.hostname",
+        :domain => "virtualGuests.domain",
+        :local_disk => "virtualGuests.localDiskFlag",
+        :datacenter => "virtualGuests.datacenter.name",
+        :nic_speed => "virtualGuests.networkComponents.maxSpeed",
+        :public_ip => "virtualGuests.primaryIpAddress",
+        :private_ip => "virtualGuests.primaryBackendIpAddress"
+      }
+
+      # For each of the options in teh option_to_filter_path map, if the options hash includes
+      # that particular option, add a clause to the object filter that filters for the matching
+      # value
+      option_to_filter_path.each do |option, filter_path|
+        object_filter.merge!(SoftLayer::ObjectFilter.build(filter_path, options_hash[option])) if options_hash.has_key?(option)
+      end
+
+      # Tags get a much more complex object filter operation so we handle them separately      
+      if options_hash.has_key?(:tags)
+        object_filter.merge!(SoftLayer::ObjectFilter.build("hardware.tagReferences.tag.name", { 
+          'operation' => 'in', 
+          'options' => [{ 
+            'name' => 'data', 
+            'value' => options_hash[:tags] 
+            }] 
+          } ));
+      end
+
+      service = self.softlayer_client['Account']
+      service = service.object_mask(object_mask) if object_mask && !object_mask.empty?
+      service = service.object_filter(object_filter) if object_filter && !object_filter.empty?
+      
+      case
+      when options_hash[:hourly] && options_hash[:monthly]
+        virtual_server_data = service.getVirtualGuests()
+      when options_hash[:hourly]
+        virtual_server_data = service.getHourlyVirtualGuests()
+      when options_hash[:monthly]
+        virtual_server_data = service.getMonthlyVirtualGuests()
+      else
+        virtual_server_data = service.getVirtualGuests()
+      end
+
+      virtual_server_data = service.getVirtualGuests()
+      virtual_server_data.collect { |server_data| VirtualServer.new(self.softlayer_client, server_data) }
+    end
+
   end
 end
