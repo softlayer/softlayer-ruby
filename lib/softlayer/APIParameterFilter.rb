@@ -115,7 +115,7 @@ class APIParameterFilter
   def server_object_filter
     self.parameters[:object_filter]
   end
-  
+
   # This allows the filters to be used at the end of a long chain of calls that ends
   # at a service.
   def method_missing(method_name, *args, &block)

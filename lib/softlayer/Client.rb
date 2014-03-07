@@ -20,14 +20,16 @@ module SoftLayer
     def initialize(options = {})
       @services = { }
 
+      settings = Config.client_settings(options)
+
       # pick up the username from the options, the global, or assume no username
-      @username = options[:username] || $SL_API_USERNAME || ""
+      @username = settings[:username] || ""
 
       # do a similar thing for the api key
-      @api_key = options[:api_key] || $SL_API_KEY || ""
+      @api_key = settings[:api_key] || ""
 
       # and the endpoint url
-      @endpoint_url = options[:endpoint_url] || $SL_API_BASE_URL || API_PUBLIC_ENDPOINT || ""
+      @endpoint_url = settings[:endpoint_url] || API_PUBLIC_ENDPOINT
 
       raise "A SoftLayer Client requires a username" if !@username || @username.empty?
       raise "A SoftLayer Client requires an api_key" if !@api_key || @api_key.empty?

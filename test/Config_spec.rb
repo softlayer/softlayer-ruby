@@ -20,37 +20,17 @@
 # THE SOFTWARE.
 #
 
-$LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__)))
+$LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
 require 'rubygems'
-require 'rubygems/package_task'
-require 'lib/softlayer/base'
-require 'rspec/core/rake_task'
+require 'softlayer_api'
+require 'rspec'
 
-softlayer_api_gem = Gem::Specification.new do |s|
-  s.platform  =   Gem::Platform::RUBY
-  s.name = %q{softlayer_api}
-  s.version = SoftLayer::VERSION
-  s.author = "SoftLayer Development Team"
-  s.email = %q{sldn@softlayer.com}
-  s.homepage = %q{http://sldn.softlayer.com/}
-  s.summary = %q{Library for accessing the SoftLayer portal API}
-  s.description = %q{The softlayer_api gem offers a convenient mechanism for invoking the services of the SoftLayer API from Ruby.}
-  s.files = FileList["README.textile", "LICENSE.textile", "lib/**/*.rb", "test/**/*.rb", "examples/**/*.rb"]
-  s.require_path = "lib"
-  s.has_rdoc = false
-  s.license = %q{MIT}
-  s.add_runtime_dependency('configparser', '~> 0.1.1')
-end
+describe SoftLayer::Config do
+	it "retrieves config information from environment variables" do
+		ENV.store("SL_USERNAME", "PoohBear")
+		ENV.store("SL_API_KEY", "DEADBEEFBADF00D")
 
-Gem::PackageTask.new(softlayer_api_gem) do |pkg|
-end
-
-RSpec::Core::RakeTask.new do |tester|
-	$DEBUG = 1
-	tester.pattern = 'test/*.rb'
-	tester.rspec_opts = ["-c", "-f nested"]
-end
-
-task :default => [:spec] do
+		SoftLayer::Config.environment_settings.should == { :username => "PoohBear", :api_key => "DEADBEEFBADF00D" }
+	end
 end
