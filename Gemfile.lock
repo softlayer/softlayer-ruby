@@ -18,7 +18,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  json
   configparser (~> 0.1.2)
+  json
   rake
   rspec

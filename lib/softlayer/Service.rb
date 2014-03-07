@@ -10,7 +10,6 @@
 #
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -306,9 +305,9 @@ using either client.service_named('<service_name_here>') or client['<service_nam
                 return @http
               end
             end
-
-            @xmlrpc_client.http.set_debug_output($stderr)
           end
+
+          @xmlrpc_client.http.set_debug_output($stderr)
         end # $DEBUG
       end
 

@@ -1,4 +1,3 @@
-#
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -145,7 +144,7 @@ module SoftLayer
       if block
         $stderr.puts "The query from the block passed to ObjectFilter:build will override the query passed as a parameter" if $DEBUG && query
         block_handler = ObjectFilterBlockHandler.new
-        query = block_handler.instance_eval &block
+        query = block_handler.instance_eval(&block)
       end
 
       # If we have a query, we assign it's value to the last key
