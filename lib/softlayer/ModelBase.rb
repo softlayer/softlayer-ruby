@@ -26,6 +26,18 @@ module SoftLayer
       end
     end
 
+    def respond_to?(method_symbol)
+      if @sl_hash
+        if @sl_hash.has_key? method_symbol
+          true
+        else
+          super
+        end
+      else
+        super
+      end
+    end
+
     def method_missing(method_symbol, *args, &block)
       if(@sl_hash && 0 == args.length && !block)
         if @sl_hash.has_key? method_symbol

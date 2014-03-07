@@ -121,7 +121,13 @@ class APIParameterFilter
   def method_missing(method_name, *args, &block)
     puts "SoftLayer::APIParameterFilter#method_missing called #{method_name}, #{args.inspect}" if $DEBUG
 
-    return @target.call_softlayer_api_with_params(method_name, self, args, &block)
+    if(!block && method_name.to_s.match(/[[:alnum:]]+/))
+      result = @target.call_softlayer_api_with_params(method_name, self, args)
+    else
+      result = super
+    end
+
+    result
   end
 end
 

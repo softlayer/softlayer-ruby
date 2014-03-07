@@ -75,11 +75,11 @@ describe SoftLayer::Account do
         mock_service.stub(:getObject).and_return(FAKE_ACCOUNT_DATA)
         mock_service.stub(:getHardware).and_return(FAKE_BARE_METAL_DATA)
         mock_service.stub(:getVirtualGuests).and_return(FAKE_VIRTUAL_SERVER_DATA)
+        mock_service.stub(:object_mask).and_return(mock_service)
         mock_service.stub(:call_softlayer_api_with_params)
 
         mock_service
       end
-
     end
 
     it "should respond to a request for servers" do

@@ -113,13 +113,11 @@ module SoftLayer
     end
 
     def to_sl_object_mask()
-      object_mask_string = ""
+      object_mask_string = self.name.clone
 
       if self.type then
-        object_mask_string = "mask(#{self.type})["
+        object_mask_string += "(#{self.type})"
       end
-
-      object_mask_string = object_mask_string + self.name.clone
 
       if self.subproperties then
         subproperty_string = "";
@@ -133,10 +131,6 @@ module SoftLayer
         end
 
         object_mask_string = object_mask_string + subproperty_string
-      end
-
-      if self.type then
-        object_mask_string = object_mask_string + "]"
       end
 
       object_mask_string

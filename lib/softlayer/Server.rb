@@ -1,15 +1,36 @@
 module SoftLayer
   class Server  < SoftLayer::ModelBase
-  end
+    def self.default_object_mask
+      [ 'id', 
+        'globalIdentifier',
+        'notes',
+        'hostname', 
+        'domain',
+        'fullyQualifiedDomainName',
+        'datacenter',
+        'primaryIpAddress',
+        'primaryBackendIpAddress',
+        { 'operatingSystem' => {
+           'softwareLicense.softwareDescription' => ['manufacturer', 'name', 'version','referenceCode'],
+           'passwords' => ['username','password'] } },
+       'privateNetworkOnlyFlag',
+       'userData',
+       'datacenter',
+       'networkComponents.primarySubnet[id, netmask, broadcastAddress, networkIdentifier, gateway]',
+       'billingItem.recurringFee',
+       'hourlyBillingFlag',
+       'tagReferences[id,tag[name,id]]',
+       'networkVlans[id,vlanNumber,networkSpace]',
+       'postInstallScriptUri' ]
+     end
 
-  class BareMetalServer < Server
-    def BareMetalServer.find_servers(softlayer_service, options)
-      if options.has_key? :tags
+     def to_s
+      result = super
+      if respond_to?(:hostname) then
+        result.sub!('>', ", #{hostname}>")
       end
-
+      result
     end
   end
 
-  class VirtualServer < Server
-  end
-end
+end # SoftLayer module

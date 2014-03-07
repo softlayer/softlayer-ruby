@@ -14,7 +14,7 @@ module SoftLayer
       bare_metal.to_update do
         @last_bare_metal_update = Time.now
 
-        bare_metal_data = self.softlayer_client['Account'].getHardware()
+        bare_metal_data = self.softlayer_client['Account'].object_mask(BareMetalServer.default_object_mask).getHardware()
         bare_metal_data.collect { |server_data| BareMetalServer.new(self.softlayer_client, server_data) }
       end
     end
@@ -27,7 +27,7 @@ module SoftLayer
 
       virtual_servers.to_update do
         @last_virtual_server_update = Time.now
-        virtual_server_data = self.softlayer_client['Account'].getVirtualGuests()
+        virtual_server_data = self.softlayer_client['Account'].object_mask(VirtualServer.default_object_mask).getVirtualGuests()
         virtual_server_data.collect { |server_data| VirtualServer.new(self.softlayer_client, server_data) }
       end
     end
