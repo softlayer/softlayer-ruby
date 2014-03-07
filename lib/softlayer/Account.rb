@@ -58,29 +58,32 @@ module SoftLayer
     # makes a network request and returns the servers matching a given set of criteria
     def find_bare_metal_servers!(options_hash = {})
       if(!options_hash.has_key? :object_mask)
-        active_transaction_property = ObjectMaskProperty.new("activeTransaction")
-        active_transaction_property.subproperties = [ "id", { "transactionStatus" => [ "friendlyName", "name" ] } ]
-        active_transaction_property.type = "SoftLayer_Hardware_Server"
-        object_mask = [
-          'id',
-          'hostname',
-          'domain',
-          'hardwareStatusId',
-          'globalIdentifier',
-          'fullyQualifiedDomainName',
-          'processorPhysicalCoreAmount',
-          'memoryCapacity',
-          'primaryBackendIpAddress',
-          'primaryIpAddress',
-          'datacenter',
-          active_transaction_property
-          ]
+        object_mask = BareMetalServer.defaultObject_mask
       else
         object_mask = options_hash[:object_mask]
       end
 
       object_filter = {}
 
+      option_to_filter_path = {
+        :cpus => "hardware.processorPhysicalCoreAmount",
+        :memory => "hardware.memoryCapacity",
+        :hostname => "hardware.hostname",
+        :domain => "hardware.domain",
+        :datacenter => "hardware.datacenter.name",
+        :nic_speed => "hardware.networkComponents.maxSpeed",
+        :public_ip => "hardware.primaryIpAddress",
+        :private_ip => "hardware.primaryBackendIpAddress"
+      }
+
+      # For each of the options in teh option_to_filter_path map, if the options hash includes
+      # that particular option, add a clause to the object filter that filters for the matching
+      # value
+      option_to_filter_path.each do |option, filter_path|
+        object_filter.merge!(SoftLayer::ObjectFilter.build(filter_path, options_hash[option])) if options_hash.has_key?(option)
+      end
+
+      # Tags get a much more complex object filter operation so we handle them separately      
       if options_hash.has_key?(:tags)
         object_filter.merge!(SoftLayer::ObjectFilter.build("hardware.tagReferences.tag.name", { 
           'operation' => 'in', 
@@ -89,38 +92,6 @@ module SoftLayer
             'value' => options_hash[:tags] 
             }] 
           } ));
-      end
-
-      if options_hash.has_key?(:cpus)
-        object_filter.merge!(SoftLayer::ObjectFilter.build("hardware.processorPhysicalCoreAmount", options_hash[:cpus]))
-      end
-
-      if options_hash.has_key?(:memory)
-        object_filter.merge!(SoftLayer::ObjectFilter.build("hardware.memoryCapacity", options_hash[:memoryCapacity]))
-      end
-
-      if options_hash.has_key?(:hostname)
-        object_filter.merge!(SoftLayer::ObjectFilter.build("hardware.hostname", options_hash[:hostname]))
-      end
-
-      if options_hash.has_key?(:domain)
-        object_filter.merge!(SoftLayer::ObjectFilter.build("hardware.domain", options_hash[:domain]))
-      end
-
-      if options_hash.has_key?(:datacenter)
-        object_filter.merge!(SoftLayer::ObjectFilter.build("hardware.datacenter.name", options_hash[:datacenter]))
-      end
-
-      if options_hash.has_key?(:nic_speed)
-        object_filter.merge!(SoftLayer::ObjectFilter.build("hardware.networkComponents.maxSpeed", options_hash[:nic_speed]))
-      end
-
-      if options_hash.has_key?(:public_ip)
-        object_filter.merge!(SoftLayer::ObjectFilter.build("hardware.primaryIpAddress", options_hash[:public_ip]))
-      end
-
-      if options_hash.has_key?(:private_ip)
-        object_filter.merge!(SoftLayer::ObjectFilter.build("hardware.primaryBackendIpAddress", options_hash[:private_ip]))
       end
 
       service = self.softlayer_client['Account']
