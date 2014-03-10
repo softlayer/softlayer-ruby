@@ -28,16 +28,27 @@ require 'softlayer_api'
 require 'rspec'
 require 'json'
 
+require 'shared_server'
+
+
 describe SoftLayer::VirtualServer do
-	it "identifies with the SoftLayer_Virtual_Guest service" do
+	let(:sample_server) {
 		mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "DEADBEEFBADF00D")
 		allow(mock_client).to receive(:[]) do |service_name|
 			service = mock_client.service_named(service_name)
+			allow(service).to receive(:object_with_id).and_return(service)
 			service.stub(:call_softlayer_api_with_params)
 			service
 		end
 
-		sample_server = SoftLayer::VirtualServer.new(mock_client, { "id" => 12345 })
+		SoftLayer::VirtualServer.new(mock_client, { "id" => 12345 })		
+	}
+
+	it "identifies with the SoftLayer_Virtual_Guest service" do
 		sample_server.service.service_name.should == "SoftLayer_Virtual_Guest"
+	end
+
+	it_behaves_like "server with port speed" do
+		let (:server) { sample_server }
 	end
 end

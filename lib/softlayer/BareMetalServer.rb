@@ -5,16 +5,6 @@ module SoftLayer
       return softlayer_client["Hardware"]
     end
 
-    def change_port_speed!(new_speed, public = true)
-      if public
-        softlayer_client["Hardware"].object_with_id(self.id).setPublicNetworkInterfaceSpeed(new_speed)
-      else
-        softlayer_client["Hardware"].object_with_id(self.id).setPrivateNetworkInterfaceSpeed(new_speed)
-      end
-
-      self
-    end
-
     def self.default_object_mask
       sub_mask = ObjectMaskProperty.new("mask")
       sub_mask.type = "SoftLayer_Hardware_Server"
