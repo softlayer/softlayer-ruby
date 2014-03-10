@@ -46,10 +46,9 @@ end
 Gem::PackageTask.new(softlayer_api_gem) do |pkg|
 end
 
-RSpec::Core::RakeTask.new do |tester|
+RSpec::Core::RakeTask.new(:spec) do |t|
 	$DEBUG = 1
-	tester.pattern = 'test/*.rb'
-	tester.rspec_opts = ["-c", "-f nested"]
+	t.rspec_opts = ["-c"]
 end
 
 task :default => [:spec] do
