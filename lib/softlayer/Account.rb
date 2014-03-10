@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'json'
 
 module SoftLayer
   class Account < SoftLayer::ModelBase

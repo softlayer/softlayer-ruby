@@ -25,7 +25,6 @@ $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 require 'rubygems'
 require 'softlayer_api'
 require 'rspec'
-require 'rspec/autorun'
 
 describe String, "#to_sl_object_mask" do
   it "converts to the string itself" do

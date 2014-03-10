@@ -25,11 +25,12 @@ $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 require 'rubygems'
 require 'softlayer_api'
 require 'rspec'
-require 'json'
+
+require 'spec_helper'
 
 describe SoftLayer::Ticket do
 	it "retrieves ticket subjects from API once" do
-    fakeTicketSubjects = JSON.parse(File.read(File.join(File.dirname(__FILE__), "ticket_subjects.json")))
+    fakeTicketSubjects = fixture_from_json("ticket_subjects")
 
 	  mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key=> 'fakekey')
       allow(mock_client).to receive(:[]) do |service_name|

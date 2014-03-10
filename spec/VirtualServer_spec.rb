@@ -21,15 +21,12 @@
 #
 
 $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
-$LOAD_PATH << File.dirname(__FILE__)
 
 require 'rubygems'
 require 'softlayer_api'
 require 'rspec'
-require 'json'
 
 require 'shared_server'
-
 
 describe SoftLayer::VirtualServer do
 	let(:sample_server) {

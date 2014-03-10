@@ -25,7 +25,8 @@ $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 require 'rubygems'
 require 'softlayer_api'
 require 'rspec'
-require 'json'
+
+require 'spec_helper'
 
 describe SoftLayer::Account do
 	it "should exist" do
@@ -62,9 +63,9 @@ describe SoftLayer::Account do
 
   describe "relationship to servers" do
     before do
-      FAKE_ACCOUNT_DATA = JSON.parse(File.read(File.join(File.dirname(__FILE__), "test_account.json")))
-      FAKE_BARE_METAL_DATA = JSON.parse(File.read(File.join(File.dirname(__FILE__), "test_bare_metal.json")))
-      FAKE_VIRTUAL_SERVER_DATA = JSON.parse(File.read(File.join(File.dirname(__FILE__), "test_virtual_servers.json")))
+      fixture_account_data = fixture_from_json("test_account")
+      fixture_bare_metal_data = fixture_from_json("test_bare_metal.json")
+      fixture_virtual_server_data = fixture_from_json("test_virtual_servers")
 
       @mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
       allow(@mock_client).to receive(:[]) do |service_name|
@@ -72,10 +73,10 @@ describe SoftLayer::Account do
 
         if !@mock_service
           @mock_service = SoftLayer::Service.new("SoftLayer_Account", :client => @mock_client)
-          allow(@mock_service).to receive(:getObject).and_return(FAKE_ACCOUNT_DATA)
+          allow(@mock_service).to receive(:getObject).and_return(fixture_account_data)
 
-          expect(@mock_service).to receive(:getHardware).and_return(FAKE_BARE_METAL_DATA)
-          expect(@mock_service).to receive(:getVirtualGuests).and_return(FAKE_VIRTUAL_SERVER_DATA)
+          expect(@mock_service).to receive(:getHardware).and_return(fixture_bare_metal_data)
+          expect(@mock_service).to receive(:getVirtualGuests).and_return(fixture_virtual_server_data)
           allow(@mock_service).to receive(:object_mask).and_return(@mock_service)
 
           # if we've stubbed everything out correctly... we shouldn't actually be calling the API
@@ -99,9 +100,9 @@ describe SoftLayer::Account do
 
   describe "fetching tickets" do
     before do
-      fixture_account_data = JSON.parse(File.read(File.join(File.dirname(__FILE__), "test_account.json")))
-      fixture_open_tickets = JSON.parse(File.read(File.join(File.dirname(__FILE__), "test_tickets.json")))
-      fixture_closed_tickets = JSON.parse(File.read(File.join(File.dirname(__FILE__), "test_tickets.json")))
+      fixture_account_data = fixture_from_json("test_account")
+      fixture_open_tickets = fixture_from_json("test_tickets")
+      fixture_closed_tickets = fixture_from_json("test_tickets.json")
 
       @mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
       allow(@mock_client).to receive(:[]) do |service_name|
