@@ -88,7 +88,7 @@ class APIParameterFilter
     merged_object
   end
 
-  # A utility method that returns the server object ID (if any) stored 
+  # A utility method that returns the server object ID (if any) stored
   # in this parameter set.
   def server_object_id
     self.parameters[:server_object_id]

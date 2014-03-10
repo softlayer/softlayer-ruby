@@ -1,10 +1,10 @@
 module SoftLayer
   class Server  < SoftLayer::ModelBase
     def self.default_object_mask
-      [ 'id', 
+      [ 'id',
         'globalIdentifier',
         'notes',
-        'hostname', 
+        'hostname',
         'domain',
         'fullyQualifiedDomainName',
         'datacenter',

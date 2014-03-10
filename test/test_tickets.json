@@ -106,7 +106,8 @@
         "id": 12349,
         "lastEditDate": "2013-07-31T14:42:34-06:00",
         "newUpdatesFlag": false,
-        "serverAdministrationFlag": 1,
+        "serverAdministrationFlag": 1
+        ,
         "serviceProvider": {
             "description": "Infrastructure as a Service including Dedicated, Virtualized, and Cloud Hosting",
             "id": 1,

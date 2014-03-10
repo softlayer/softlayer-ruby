@@ -33,8 +33,8 @@ describe SoftLayer::Ticket do
 
 	  mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key=> 'fakekey')
       allow(mock_client).to receive(:[]) do |service_name|
-        service_name.should == "Ticket_Subject" 
-      
+        service_name.should == "Ticket_Subject"
+
         mock_service = SoftLayer::Service.new("SoftLayer_Ticket_Subject", :client => mock_client)
         expect(mock_service).to receive(:getAllObjects).once.and_return(fakeTicketSubjects)
         expect(mock_service).to_not receive(:call_softlayer_api_with_params)

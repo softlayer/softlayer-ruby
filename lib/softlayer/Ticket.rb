@@ -29,7 +29,7 @@ module SoftLayer
 	      if options.has_key?(:object_mask)
 	        object_mask = options[:object_mask]
 	      else
-	        object_mask = default_object_mask()        
+	        object_mask = default_object_mask()
 	      end
 
 	      ticket_data = softlayer_client["Ticket"].object_with_id(server_id).object_mask(object_mask).getObject()

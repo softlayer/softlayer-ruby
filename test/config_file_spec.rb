@@ -29,10 +29,10 @@ begin
 rescue LoadError => load_err
   has_config = false
 end
-  
+
 
 describe "SoftLayer config file parsing", :if => has_config do
   it "should parse the softlayer file out of the home directory" do
   end
 end
-  
+

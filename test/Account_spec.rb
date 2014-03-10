@@ -134,5 +134,5 @@ describe SoftLayer::Account do
       tickets = test_account.tickets
     end
   end
-  
+
 end
