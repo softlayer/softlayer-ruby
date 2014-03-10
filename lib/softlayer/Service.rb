@@ -202,7 +202,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       # if we're in debug mode, we put out a little helpful information
       puts "SoftLayer::Service#method_missing called #{method_name}, #{args.inspect}" if $DEBUG
 
-      if(!block && method_name.to_s.match(/[[:alnum:]]+/))
+      if(!block && method_name.match(/[[:alnum:]]+/))
         result = call_softlayer_api_with_params(method_name, nil, args);
       else
         result = super

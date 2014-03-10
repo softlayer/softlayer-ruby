@@ -1,0 +1,122 @@
+[
+    {
+        "assignedUser": {
+            "firstName": "Jonathan",
+            "lastName": "Doe",
+            "username": "slfakeuser"
+        },
+        "awaitingUserResponseFlag": false,
+        "createDate": "2013-07-11T12:52:57-06:00",
+        "id": 12345,
+        "lastEditDate": "2013-07-11T12:53:59-06:00",
+        "newUpdatesFlag": false,
+        "serverAdministrationFlag": 0,
+        "serviceProvider": {
+            "description": "Infrastructure as a Service including Dedicated, Virtualized, and Cloud Hosting",
+            "id": 1,
+            "keyName": "SOFTLAYER",
+            "name": "SoftLayer Technologies, Inc."
+        },
+        "serviceProviderResourceId": 7129684,
+        "status": {
+            "id": 1001
+        },
+        "title": "What's in a title anyway?  Tickets are exciting!"
+    },
+    {
+        "assignedUser": {
+            "firstName": "Stephen",
+            "lastName": "Everyman",
+            "username": "SLEveryman"
+        },
+        "awaitingUserResponseFlag": false,
+        "createDate": "2013-07-12T16:48:35-06:00",
+        "id": 12346,
+        "lastEditDate": "2013-07-12T17:16:05-06:00",
+        "newUpdatesFlag": false,
+        "serverAdministrationFlag": 0,
+        "serviceProvider": {
+            "description": "Infrastructure as a Service including Dedicated, Virtualized, and Cloud Hosting",
+            "id": 1,
+            "keyName": "SOFTLAYER",
+            "name": "SoftLayer Technologies, Inc."
+        },
+        "serviceProviderResourceId": 7135016,
+        "status": {
+            "id": 1001
+        },
+        "title": "A fake title used in the place of a real title"
+    },
+    {
+        "assignedUser": {
+            "firstName": "Joe",
+            "lastName": "Kool",
+            "username": "sljcool"
+        },
+        "awaitingUserResponseFlag": false,
+        "createDate": "2013-07-25T07:38:07-06:00",
+        "id": 12347,
+        "lastEditDate": "2013-07-25T08:25:25-06:00",
+        "newUpdatesFlag": false,
+        "serverAdministrationFlag": 0,
+        "serviceProvider": {
+            "description": "Infrastructure as a Service including Dedicated, Virtualized, and Cloud Hosting",
+            "id": 1,
+            "keyName": "SOFTLAYER",
+            "name": "SoftLayer Technologies, Inc."
+        },
+        "serviceProviderResourceId": 7194676,
+        "status": {
+            "id": 1001
+        },
+        "title": "A riveting ticket that you can't put down"
+    },
+    {
+        "assignedUser": {
+            "firstName": "Joe",
+            "lastName": "Kool",
+            "username": "sljcool"
+        },
+        "awaitingUserResponseFlag": false,
+        "createDate": "2013-07-30T09:51:44-06:00",
+        "id": 12348,
+        "lastEditDate": "2013-07-30T09:56:04-06:00",
+        "newUpdatesFlag": false,
+        "serverAdministrationFlag": 0,
+        "serviceProvider": {
+            "description": "Infrastructure as a Service including Dedicated, Virtualized, and Cloud Hosting",
+            "id": 1,
+            "keyName": "SOFTLAYER",
+            "name": "SoftLayer Technologies, Inc."
+        },
+        "serviceProviderResourceId": 7236607,
+        "status": {
+            "id": 1001
+        },
+        "title": "A moderately interesting ticket"
+    },
+    {
+        "assignedUser": {
+            "firstName": "Ralf",
+            "lastName": "Cramden",
+            "username": "slsomeguy"
+        },
+        "awaitingUserResponseFlag": false,
+        "createDate": "2013-07-31T14:34:50-06:00",
+        "id": 12349,
+        "lastEditDate": "2013-07-31T14:42:34-06:00",
+        "newUpdatesFlag": false,
+        "serverAdministrationFlag": 1,
+        "serviceProvider": {
+            "description": "Infrastructure as a Service including Dedicated, Virtualized, and Cloud Hosting",
+            "id": 1,
+            "keyName": "SOFTLAYER",
+            "name": "SoftLayer Technologies, Inc."
+        },
+        "serviceProviderResourceId": 7243384,
+        "status": {
+            "id": 1001
+        },
+        "title": "A really boring ticket that you don't care about"
+    }
+]

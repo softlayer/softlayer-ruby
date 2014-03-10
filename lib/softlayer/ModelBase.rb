@@ -16,7 +16,7 @@ module SoftLayer
       return nil
     end
 
-    # This is defined for the benefit of 1.8.7 where "#id" used to
+    # This is defined for the benefit of Ruby 1.8.7 where "#id" used to
     # return the same thing as object_id
     def id
       if @sl_hash.has_key? :id
