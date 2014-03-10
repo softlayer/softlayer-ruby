@@ -10,7 +10,6 @@
 #
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,6 +20,7 @@
 #
 
 require 'xmlrpc/client'
+require 'zlib'
 
 # The XML-RPC spec calls for the "faultCode" in faults to be an integer
 # but the SoftLayer XML-RPC API can return strings as the "faultCode"
@@ -202,7 +202,11 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       # if we're in debug mode, we put out a little helpful information
       puts "SoftLayer::Service#method_missing called #{method_name}, #{args.inspect}" if $DEBUG
 
-      result = call_softlayer_api_with_params(method_name, nil, args, &block);
+      if(!block && method_name.match(/[[:alnum:]]+/))
+        result = call_softlayer_api_with_params(method_name, nil, args);
+      else
+        result = super
+      end
 
       if($DEBUG)
         @method_missing_call_depth -= 1
@@ -222,7 +226,8 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     #
     # This is intended to be used in the internal
     # processing of method_missing and need not be called directly.
-    def call_softlayer_api_with_params(method_name, parameters, args, &block)
+    def call_softlayer_api_with_params(method_name, parameters, args)
+
       additional_headers = {};
 
       # The client knows about authentication, so ask him for the auth headers
@@ -297,7 +302,8 @@ using either client.service_named('<service_name_here>') or client['<service_nam
         @xmlrpc_client = XMLRPC::Client.new2(URI.join(@client.endpoint_url,@service_name).to_s)
 
         # this is a workaround for a bug in later versions of the XML-RPC client in Ruby Core.
-        @xmlrpc_client.http_header_extra = { "accept-encoding" => "identity" }
+        # see https://bugs.ruby-lang.org/issues/8182
+        @xmlrpc_client.http_header_extra = { "Accept-Encoding" => "identity" }
 
         if $DEBUG
           if !@xmlrpc_client.respond_to?(:http)
@@ -306,9 +312,9 @@ using either client.service_named('<service_name_here>') or client['<service_nam
                 return @http
               end
             end
-
-            @xmlrpc_client.http.set_debug_output($stderr)
           end
+
+          @xmlrpc_client.http.set_debug_output($stderr)
         end # $DEBUG
       end
 
