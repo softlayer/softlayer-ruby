@@ -16,7 +16,7 @@ module SoftLayer
         'networkManagementIpAddress',
         'networkComponents[id, status, speed, maxSpeed, name, ipmiMacAddress, ipmiIpAddress, macAddress, primaryIpAddress, port, primarySubnet]',
         'activeTransaction[id, transactionStatus[friendlyName,name]]',
-        'hardwareChassis[id,name]']
+        'hardwareChassis[id, name]']
       super + [sub_mask]
     end
 

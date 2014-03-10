@@ -46,13 +46,31 @@ module SoftLayer
         @resource_definitions ||= {};
         @resource_definitions[resource_name] = resource_definition;
 
-        # define an instance method of the class this is being
+
+        # define a method called "update_<resource_name>!" which calls the update block
+        # stored in the resource definition
+        update_symbol = "update_#{resource_name}!".to_sym
+        define_method(update_symbol, &resource_definition.update_block)
+
+        # define a method called "should_update_<resource_name>?" which calls the
+        # should update block stored in the resource definition
+        should_update_symbol = "should_update_#{resource_name}?".to_sym
+        define_method(should_update_symbol, &resource_definition.should_update_block)
+
+                # define an instance method of the class this is being
         # called on which will get the value of the resource.
+        # 
+        # The getter will take one argument "force_update" which
+        # is treated as boolean value.  If true, then the getter will
+        # force the resource to update (by using it's "to_update") block.
+        #
+        # If the force variable is false, or not given, then the 
+        # getter will call the "should update" block to find out if the
+        # resource needs to be updated.
+        #
         getter_name = resource_name.to_sym
         value_instance_variable = "@#{resource_name}".to_sym
-        update_symbol = "update_#{resource_name}!".to_sym
-        should_update_symbol = "should_update_#{resource_name}?".to_sym
-
+        
         define_method(getter_name) do |*args|
           force_update = args[0] || false
 
@@ -63,10 +81,6 @@ module SoftLayer
           instance_variable_get(value_instance_variable)
         end
 
-        # define a method called "update_<resource_name>!" which calls the update block
-        # stored in the resource definition
-        define_method(update_symbol, &resource_definition.update_block)
-        define_method(should_update_symbol, &resource_definition.should_update_block)
       end
 
       def softlayer_resource_definition(resource_name)

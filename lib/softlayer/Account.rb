@@ -4,6 +4,10 @@ module SoftLayer
   class Account < SoftLayer::ModelBase
     include ::SoftLayer::ModelResource
 
+    ##
+    # The bare metal (or Hardware) servers associated with the
+    # account.  Unless you force these to update, they will be refreshed every
+    # five minutes.
     softlayer_resource :bare_metal_servers do |bare_metal|
       bare_metal.should_update_if do
         @last_bare_metal_update ||= Time.at(0)
@@ -16,6 +20,10 @@ module SoftLayer
       end
     end
 
+    ##
+    # The virtual servers (aka. CCIs or Virtual_Guests) associated with the
+    # account.  Unless you force these to update, they will be refreshed every
+    # five minutes.
     softlayer_resource :virtual_servers do |virtual_servers|
       virtual_servers.should_update_if do
         @last_virtual_server_update ||= Time.at(0)
@@ -30,7 +38,7 @@ module SoftLayer
 
     ##
     # The tickets resource consists of all open tickets, and tickets closed
-    # "recently"
+    # "recently".  These refresh every 5 minutes
     softlayer_resource :tickets do |tickets|
       tickets.should_update_if do
         @last_ticket_update ||= Time.at(0)
