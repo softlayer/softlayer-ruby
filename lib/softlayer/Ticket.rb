@@ -1,5 +1,12 @@
 module SoftLayer
 	class Ticket < SoftLayer::ModelBase
+		##
+		# Add an update to this ticket.
+		#
+		def update!(body = nil)
+			softlayer_client["Ticket"].object_with_id(self.id).edit(@sl_hash, body)
+		end
+
 		def self.default_object_mask
 			[
 				'id',							# This is an internal ticket ID, not the one usually seen in the portal
@@ -35,6 +42,23 @@ module SoftLayer
 	      ticket_data = softlayer_client["Ticket"].object_with_id(server_id).object_mask(object_mask).getObject()
 
 	      return new(softlayer_client, ticket_data)
+	    end
+
+	    def self.create_ticket!(softlayer_client, title=nil, body=nil, subject_id=nil, user_id=nil)
+	    	if(nil == user_id)
+	    		current_user = softlayer_client["Account"].object_mask("id").getCurrentUser()
+	    		user_id = current_user["id"]
+	    	end
+
+	    	new_ticket = {
+	            'subjectId' => subject_id,
+	            'contents' => body,
+	            'assignedUserId' => user_id,
+	            'title' => title
+        	}
+
+        	ticket_data = softlayer_client["Ticket"].createStandardTicket(new_ticket, body)
+        	return new(softlayer_client, ticket_data)
 	    end
 	end
 end

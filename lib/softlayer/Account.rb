@@ -34,7 +34,6 @@ module SoftLayer
     # "recently"
     softlayer_resource :tickets do |tickets|
       tickets.should_update_if do
-        puts "Checking to see if I should update tickets"
         @last_ticket_update ||= Time.at(0)
         (Time.now - @last_ticket_update) > 5 * 60 #update every 5 minutes
       end

@@ -1,5 +1,10 @@
 module SoftLayer
   class VirtualServer < Server
+
+    def service
+      return softlayer_client["Virtual_Guest"]
+    end
+
     def self.default_object_mask
       sub_mask = ObjectMaskProperty.new("mask")
       sub_mask.type = "SoftLayer_Virtual_Guest"
@@ -25,7 +30,7 @@ module SoftLayer
     ##
     # Retrive the virtual server with the given server ID from the API
     #
-    def self.virtual_server_with_id!(softlayer_client, server_id, options = {})
+    def self.server_with_id!(softlayer_client, server_id, options = {})
       if options.has_key?(:object_mask)
         object_mask = options[:object_mask]
       else

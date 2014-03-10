@@ -49,8 +49,7 @@ describe SoftLayer::Account do
       allow(test_service).to receive(:getObject) do
         { "id" => "232279", "firstName" => "kangaroo" }
       end
-
-      puts "returning test service ${test_service}"
+      
       test_service
     end
 
