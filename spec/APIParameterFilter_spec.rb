@@ -84,7 +84,7 @@ describe SoftLayer::APIParameterFilter do
   end
 
   describe "#method_missing" do
-    it "invokes call_softlayer_api_with_params(method_name, self, args, &block) on it's target with itself and the method_missing parameters" do
+    it "invokes call_softlayer_api_with_params(method_name, self, args, &block) on its target with itself and the method_missing parameters" do
       filter = SoftLayer::APIParameterFilter.new.object_mask("fish", "cow", "duck").object_with_id(12345)
 
       target = double("method_missing_target")

@@ -1,6 +1,5 @@
 module SoftLayer
   class Server  < SoftLayer::ModelBase
-
     def initialize(softlayer_client, network_hash)
       if self.class == Server
         raise RuntimeError, "The Server class is an abstract base class and should not be instantiated directly"
@@ -19,11 +18,17 @@ module SoftLayer
     end
     
     ##
+    # reload the details of this server from the SoftLayer API
+    def refresh_details
+      @sl_hash = service.object_mask(self.class.default_object_mask).object_with_id(self.id).getObject()
+    end
+
+    ##
     # Change the port speed of the server
     #
     # new_speed should be 0, 10, 100, or 1000
     #
-    def change_port_speed!(new_speed, public = true)
+    def change_port_speed(new_speed, public = true)
       if public
         service.object_with_id(self.id).setPublicNetworkInterfaceSpeed(new_speed)
       else

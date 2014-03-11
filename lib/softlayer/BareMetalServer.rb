@@ -1,6 +1,16 @@
 module SoftLayer
   class BareMetalServer < Server
 
+    ##
+    # Sends a ticket asking that a server be cancelled (i.e. shutdown and
+    # removed from the account). The cancellation_reason parameter should
+    # be a key from the hash returned by BareMetalServer::cancellation_reasons
+    # You may add your own, more specific reasons for cancelling a server in the
+    # comments parameter.
+    #
+    def cancel!(cancellation_reason = 'unneeded', comment = '')
+    end
+
     def service
       return softlayer_client["Hardware"]
     end
@@ -20,10 +30,31 @@ module SoftLayer
       super + [sub_mask]
     end
 
+    ## 
+    # When cancelling a server, you must provide a parameter which is the "cancellation reason".
+    # The API expects very specific values for that parameter.  To simplify the API we 
+    # have reduced those reasons down to simple key words and this method returns
+    # a hash mapping from the key word to the string that the API expects.
+    #
+    def self.cancellation_reasons
+      {
+        'unneeded' => 'No longer needed',
+        'closing' => 'Business closing down',
+        'cost' => 'Server / Upgrade Costs',
+        'migrate_larger' => 'Migrating to larger server',
+        'migrate_smaller' => 'Migrating to smaller server',
+        'datacenter' => 'Migrating to a different SoftLayer datacenter',
+        'performance' => 'Network performance / latency',
+        'support' => 'Support response / timing',
+        'sales' => 'Sales process / upgrades',
+        'moving' => 'Moving to competitor',
+      }
+    end
+
     ##
     # Retrive the bare metal server with the given server ID from the
     # SoftLayer API
-    def self.server_with_id!(softlayer_client, server_id, options = {})
+    def self.server_with_id(softlayer_client, server_id, options = {})
       if options.has_key?(:object_mask)
         object_mask = options[:object_mask]
       else
@@ -51,7 +82,7 @@ module SoftLayer
     # Additionally you may provide options related to the request itself:
     # *  :object_mask (string, hash, or array) - The object mask of properties you wish to receive for the items returned If not provided, the result will use the default object mask
     #    :result_limit (hash with :limit, and :offset keys) - Limit the scope of results returned.
-    def self.find_servers!(softlayer_client, options_hash = {})
+    def self.find_servers(softlayer_client, options_hash = {})
       if(!options_hash.has_key? :object_mask)
         object_mask = BareMetalServer.defaultObject_mask
       else

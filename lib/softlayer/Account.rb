@@ -16,7 +16,7 @@ module SoftLayer
 
       bare_metal.to_update do
         @last_bare_metal_update = Time.now
-        BareMetalServer.find_servers!(self.softlayer_client, :object_mask => BareMetalServer.default_object_mask)
+        BareMetalServer.find_servers(self.softlayer_client, :object_mask => BareMetalServer.default_object_mask)
       end
     end
 
@@ -32,7 +32,7 @@ module SoftLayer
 
       virtual_servers.to_update do
         @last_virtual_server_update = Time.now
-        VirtualServer.find_servers!(self.softlayer_client, :object_mask => VirtualServer.default_object_mask)
+        VirtualServer.find_servers(self.softlayer_client, :object_mask => VirtualServer.default_object_mask)
       end
     end
 
@@ -59,12 +59,8 @@ module SoftLayer
     end
 
     ##
-    # Retrieve the default account object from the given service.
-    # This should be a SoftLayer::Service with the service id of
-    # SoftLayer_Account.
-    #
-    # account_service = SoftLayer::Service.new("SoftLayer_Account")
-    # account = SoftLayer::Account.account_for_client(account_service)
+    # Using the login credentials in the client, retrieve
+    # the account associated with those credentials.
     #
     def self.account_for_client(softlayer_client)
       account_service = softlayer_client['Account']
@@ -72,12 +68,15 @@ module SoftLayer
       new(softlayer_client, network_hash)
     end
 
-    # the account_id field comes from the hash
+    ##
+    # The +account_id+ property is simply an alias for the SLDN id of the account object.
     def account_id
       @sl_hash[:id]
     end
 
-    # return a list combining the virtual servers and bare metal servers in a single list
+    ##
+    # Get a list of the servers for the account.  The list returned
+    # includes both bare metal and virtual servers
     def servers
       return self.bare_metal_servers + self.virtual_servers
     end

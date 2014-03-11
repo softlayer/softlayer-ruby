@@ -3,8 +3,12 @@ module SoftLayer
 		##
 		# Add an update to this ticket.
 		#
-		def update!(body = nil)
+		def update(body = nil)
 			softlayer_client["Ticket"].object_with_id(self.id).edit(@sl_hash, body)
+		end
+
+		def refresh_details
+			@sl_hash = softlayer_client["Ticket"].object_mask(self.class.default_object_mask).object_with_id(self.id).getObject()
 		end
 
 		def self.default_object_mask
@@ -24,7 +28,7 @@ module SoftLayer
 			]
 		end
 
-		def self.ticket_subjects!(softlayer_client)
+		def self.ticket_subjects(softlayer_client)
 			@ticket_subjects ||= nil
 			if !@ticket_subjects
 				@ticket_subjects = softlayer_client['Ticket_Subject'].getAllObjects();
@@ -32,7 +36,7 @@ module SoftLayer
 			@ticket_subjects
 		end
 
-		def self.ticket_with_id!(softlayer_client, ticket_id, options = {})
+		def self.ticket_with_id(softlayer_client, ticket_id, options = {})
 	      if options.has_key?(:object_mask)
 	        object_mask = options[:object_mask]
 	      else
@@ -44,7 +48,7 @@ module SoftLayer
 	      return new(softlayer_client, ticket_data)
 	    end
 
-	    def self.create_ticket!(softlayer_client, title=nil, body=nil, subject_id=nil, user_id=nil)
+	    def self.create_ticket(softlayer_client, title=nil, body=nil, subject_id=nil, user_id=nil)
 	    	if(nil == user_id)
 	    		current_user = softlayer_client["Account"].object_mask("id").getCurrentUser()
 	    		user_id = current_user["id"]

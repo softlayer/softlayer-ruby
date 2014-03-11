@@ -106,10 +106,12 @@ module SoftLayer
   # at that key that is itself an object filter.  So if you
   # start with an empty object filter and ask for object_filter["foo"]
   # then foo will be +added+ to the object and the value of that
-  # key will be an Object Filter ({ "foo" => {} })
+  # key will be an Object Filter <tt>{ "foo" => {} }</tt>
   #
-  # This allows you to create object filters by chaining [] calls:
-  # object_filter["foo"]["bar"]["baz"] = 3 yields {"foo" => { "bar" => {"baz" => 3}}}
+  # This allows you to create object filters by chaining +[]+ calls:
+  #   object_filter["foo"]["bar"]["baz"] = 3 
+  # yields 
+  #   {"foo" => { "bar" => {"baz" => 3}}}
   #
   class ObjectFilter < Hash
     # The default initialize for a hash is overridden
@@ -147,7 +149,7 @@ module SoftLayer
         query = block_handler.instance_eval(&block)
       end
 
-      # If we have a query, we assign it's value to the last key
+      # If we have a query, we assign its value to the last key
       # otherwise, we build an emtpy filter at the bottom
       if query
         case

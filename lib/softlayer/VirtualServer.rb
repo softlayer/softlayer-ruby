@@ -30,7 +30,7 @@ module SoftLayer
     ##
     # Retrive the virtual server with the given server ID from the API
     #
-    def self.server_with_id!(softlayer_client, server_id, options = {})
+    def self.server_with_id(softlayer_client, server_id, options = {})
       if options.has_key?(:object_mask)
         object_mask = options[:object_mask]
       else
@@ -61,7 +61,7 @@ module SoftLayer
     # Additionally you may provide options related to the request itself:
     # *  :object_mask (string, hash, or array) - The object mask of properties you wish to receive for the items returned If not provided, the result will use the default object mask
     #    :result_limit (hash with :limit, and :offset keys) - Limit the scope of results returned.
-    def self.find_servers!(softlayer_client, options_hash = {})
+    def self.find_servers(softlayer_client, options_hash = {})
       if(!options_hash.has_key? :object_mask)
         object_mask = VirtualServer.defaultObject_mask
       else

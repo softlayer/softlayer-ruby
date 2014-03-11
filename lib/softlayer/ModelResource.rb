@@ -57,12 +57,12 @@ module SoftLayer
         should_update_symbol = "should_update_#{resource_name}?".to_sym
         define_method(should_update_symbol, &resource_definition.should_update_block)
 
-                # define an instance method of the class this is being
+        # define an instance method of the class this is being
         # called on which will get the value of the resource.
         # 
         # The getter will take one argument "force_update" which
         # is treated as boolean value.  If true, then the getter will
-        # force the resource to update (by using it's "to_update") block.
+        # force the resource to update (by using its "to_update") block.
         #
         # If the force variable is false, or not given, then the 
         # getter will call the "should update" block to find out if the

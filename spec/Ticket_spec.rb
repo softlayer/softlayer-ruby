@@ -43,10 +43,10 @@ describe SoftLayer::Ticket do
         mock_service
       end
 
-      SoftLayer::Ticket.ticket_subjects!(mock_client).should be(fakeTicketSubjects)
+      SoftLayer::Ticket.ticket_subjects(mock_client).should be(fakeTicketSubjects)
 
       # call for the subjects again which should NOT re-request them from the client
       # (so :getAllObjects on the service should not be called again)
-      SoftLayer::Ticket.ticket_subjects!(mock_client).should be(fakeTicketSubjects)
+      SoftLayer::Ticket.ticket_subjects(mock_client).should be(fakeTicketSubjects)
 	end
 end

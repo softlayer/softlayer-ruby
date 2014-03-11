@@ -26,6 +26,7 @@ require 'rubygems'
 require 'rubygems/package_task'
 require 'lib/softlayer/base'
 require 'rspec/core/rake_task'
+require 'yard'
 
 softlayer_api_gem = Gem::Specification.new do |s|
   s.platform  =   Gem::Platform::RUBY
@@ -46,6 +47,10 @@ end
 Gem::PackageTask.new(softlayer_api_gem) do |pkg|
 end
 
+YARD::Rake::YardocTask.new do |yard_task|
+	yard_task.files = ["lib/**/*.rb"]
+end
+  
 RSpec::Core::RakeTask.new(:spec) do |t|
 	$DEBUG = 1
 	t.rspec_opts = ["-c"]
