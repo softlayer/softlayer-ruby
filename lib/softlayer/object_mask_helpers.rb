@@ -116,7 +116,7 @@ module SoftLayer
       object_mask_string = self.name.clone
 
       if self.type then
-        object_mask_string = object_mask_string + "(#{self.type})"
+        object_mask_string += "(#{self.type})"
       end
 
       if self.subproperties then

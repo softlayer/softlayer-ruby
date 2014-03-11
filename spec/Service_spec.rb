@@ -25,7 +25,6 @@ $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 require 'rubygems'
 require 'softlayer_api'
 require 'rspec'
-require 'rspec/autorun'
 
 describe SoftLayer::Service, "#new" do
   describe "#new" do
