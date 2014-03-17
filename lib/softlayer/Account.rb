@@ -16,7 +16,7 @@ module SoftLayer
 
       bare_metal.to_update do
         @last_bare_metal_update = Time.now
-        BareMetalServer.find_servers(self.softlayer_client, :object_mask => BareMetalServer.default_object_mask)
+        BareMetalServer.find_servers(self.softlayer_client)
       end
     end
 
@@ -32,7 +32,7 @@ module SoftLayer
 
       virtual_servers.to_update do
         @last_virtual_server_update = Time.now
-        VirtualServer.find_servers(self.softlayer_client, :object_mask => VirtualServer.default_object_mask)
+        VirtualServer.find_servers(self.softlayer_client)
       end
     end
 

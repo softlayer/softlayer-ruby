@@ -63,7 +63,7 @@ module SoftLayer
     #    :result_limit (hash with :limit, and :offset keys) - Limit the scope of results returned.
     def self.find_servers(softlayer_client, options_hash = {})
       if(!options_hash.has_key? :object_mask)
-        object_mask = VirtualServer.defaultObject_mask
+        object_mask = VirtualServer.default_object_mask
       else
         object_mask = options_hash[:object_mask]
       end

@@ -1,4 +1,3 @@
-#
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -227,7 +226,6 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     # This is intended to be used in the internal
     # processing of method_missing and need not be called directly.
     def call_softlayer_api_with_params(method_name, parameters, args)
-
       additional_headers = {};
 
       # The client knows about authentication, so ask him for the auth headers

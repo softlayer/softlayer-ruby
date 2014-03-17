@@ -48,6 +48,10 @@ describe Array,"#to_sl_object_mask" do
   it "flattens inner arrays to simple lists" do
     ["foo", ["bar", "baz"]].to_sl_object_mask().should eql("foo,bar,baz")
   end
+
+  it "handles nils in the array" do
+    ["foo", nil, "bar"].to_sl_object_mask().should eql("foo,bar")
+  end
 end
 
 describe Hash, "#to_sl_object_mask" do

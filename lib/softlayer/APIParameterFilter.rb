@@ -3,7 +3,7 @@ module SoftLayer
 # An APIParameterFilter is an intermediary object that understands how
 # to accept the other API parameter filters and carry their values to
 # method_missing in Service. Instances of this class are created
-# internally by the Service in it's handling of a method call and you
+# internally by the Service in its handling of a method call and you
 # should not have to create instances of this class directly.
 #
 # Instead, to use an API filter, you add a filter method to the call

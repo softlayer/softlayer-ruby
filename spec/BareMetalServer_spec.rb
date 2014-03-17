@@ -48,4 +48,19 @@ describe SoftLayer::BareMetalServer do
 	it_behaves_like "server with port speed" do
 		let (:server) { sample_server }
 	end
+
+	it "can be cancelled" do 
+		mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "DEADBEEFBADF00D")
+		allow(mock_client).to receive(:[]) do |service_name|
+			service_name.should == "Ticket"
+
+			service = mock_client.service_named(service_name)
+			expect(service).to receive(:createCancelServerTicket).with(12345, 'Migrating to larger server', 'moving on up!', true, 'HARDWARE')
+			service.stub(:call_softlayer_api_with_params)
+			service
+		end
+
+		fake_server = SoftLayer::BareMetalServer.new(mock_client, { "id" => 12345 })
+		fake_server.cancel!(:migrate_larger, 'moving on up!' )
+	end
 end

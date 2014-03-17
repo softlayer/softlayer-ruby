@@ -68,7 +68,7 @@ class Array
   # Array. Each value in the array is converted to its object mask equivalent
   def to_sl_object_mask()
     return "" if self.empty?
-    map { |item| item.to_sl_object_mask() }.flatten.join(",")
+    map { |item| item ? item.to_sl_object_mask() : nil }.compact.flatten.join(",")
   end
 end
 

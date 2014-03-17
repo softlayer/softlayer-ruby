@@ -1,6 +1,14 @@
 module SoftLayer
   class BareMetalServer < Server
 
+    def bare_metal_instance?
+      if @sl_hash.has_key?(:bareMetalInstanceFlag)
+        self.bareMetalInstanceFlag != 0
+      else
+        false
+      end
+    end
+
     ##
     # Sends a ticket asking that a server be cancelled (i.e. shutdown and
     # removed from the account). The cancellation_reason parameter should
@@ -8,7 +16,15 @@ module SoftLayer
     # You may add your own, more specific reasons for cancelling a server in the
     # comments parameter.
     #
-    def cancel!(cancellation_reason = 'unneeded', comment = '')
+    def cancel!(reason = :unneeded, comment = '')    
+      if !bare_metal_instance? then
+        cancellation_reasons = self.class.cancellation_reasons()
+        cancel_reason = cancellation_reasons[reason] || cancellation_reasons[:unneeded]
+        softlayer_client["Ticket"].createCancelServerTicket(self.id, cancel_reason, comment, true, 'HARDWARE')
+      else
+        # This is a bare metal instance
+        softlayer_client['Billing_Item'].object_with_id(self.billingItem['id']).cancelService()
+      end
     end
 
     def service
@@ -19,6 +35,7 @@ module SoftLayer
       sub_mask = ObjectMaskProperty.new("mask")
       sub_mask.type = "SoftLayer_Hardware_Server"
       sub_mask.subproperties = [
+        'bareMetalInstanceFlag',
         'provisionDate',
         'hardwareStatus',
         'memoryCapacity',
@@ -33,21 +50,21 @@ module SoftLayer
     ## 
     # When cancelling a server, you must provide a parameter which is the "cancellation reason".
     # The API expects very specific values for that parameter.  To simplify the API we 
-    # have reduced those reasons down to simple key words and this method returns
-    # a hash mapping from the key word to the string that the API expects.
+    # have reduced those reasons down to symbols and this method returns
+    # a hash mapping from the symbol to the string that the API expects.
     #
     def self.cancellation_reasons
       {
-        'unneeded' => 'No longer needed',
-        'closing' => 'Business closing down',
-        'cost' => 'Server / Upgrade Costs',
-        'migrate_larger' => 'Migrating to larger server',
-        'migrate_smaller' => 'Migrating to smaller server',
-        'datacenter' => 'Migrating to a different SoftLayer datacenter',
-        'performance' => 'Network performance / latency',
-        'support' => 'Support response / timing',
-        'sales' => 'Sales process / upgrades',
-        'moving' => 'Moving to competitor',
+        :unneeded => 'No longer needed',
+        :closing => 'Business closing down',
+        :cost => 'Server / Upgrade Costs',
+        :migrate_larger => 'Migrating to larger server',
+        :migrate_smaller => 'Migrating to smaller server',
+        :datacenter => 'Migrating to a different SoftLayer datacenter',
+        :performance => 'Network performance / latency',
+        :support => 'Support response / timing',
+        :sales => 'Sales process / upgrades',
+        :moving => 'Moving to competitor',
       }
     end
 
@@ -84,7 +101,7 @@ module SoftLayer
     #    :result_limit (hash with :limit, and :offset keys) - Limit the scope of results returned.
     def self.find_servers(softlayer_client, options_hash = {})
       if(!options_hash.has_key? :object_mask)
-        object_mask = BareMetalServer.defaultObject_mask
+        object_mask = BareMetalServer.default_object_mask
       else
         object_mask = options_hash[:object_mask]
       end
@@ -120,8 +137,10 @@ module SoftLayer
           } ));
       end
 
+      required_properties_mask = ['id', 'bareMetalInstanceFlag', 'billingItem.id']
+
       service = softlayer_client['Account']
-      service = service.object_mask(object_mask) if object_mask && !object_mask.empty?
+      service = service.object_mask([object_mask, required_properties_mask])
       service = service.object_filter(object_filter) if object_filter && !object_filter.empty?
 
       if options_hash.has_key?(:result_limit)
