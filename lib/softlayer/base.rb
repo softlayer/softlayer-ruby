@@ -32,7 +32,7 @@
 #
 
 module SoftLayer
-  VERSION = "1.0.7"  # version history at the bottom of the file.
+  VERSION = "1.0.8"  # version history at the bottom of the file.
 
   # The base URL of the SoftLayer API's REST-like endpoints available to the public internet.
   API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/rest/v3/'
@@ -80,3 +80,7 @@ end # module SoftLayer
 # 1.0.7 - Calls to the "getObject" method of any service should not take parameters.  The gem now
 # warns if you make this type of call and ignores the parameters. This prevents
 # SoftLayer_Virtual_Guest::getObject from accidentally creating (billable) CCI instances.
+#
+# 1.0.8 - Set a default User-Agent string to be sent with all requests to SoftLayer API.  Provide interface to
+# set a custom User-Agent string.
+#
