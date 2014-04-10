@@ -286,16 +286,17 @@ describe SoftLayer::Service, "#object_mask" do
   end
 end
 
-describe SoftLayer::Service, "#user_agent_header" do
+describe SoftLayer::Service, "@user_agent" do
   it "should return a default value if not set" do
     service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    service.user_agent_header.should_not be_empty
+    service.user_agent.should_not be_empty
   end
 
-  it "should persist a set value after being set" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    service.user_agent_header("foobar").should === {"User-Agent"=>"foobar"}
-    service.user_agent_header.should === {"User-Agent"=>"foobar"}
+  it "should return a set value after being set" do
+    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah", :user_agent => "foobar")
+    service.user_agent.should === {"User-Agent"=>"foobar"}
+    service.user_agent = "bazbang"
+    service.user_agent.should === {"User-Agent"=>"bazbang"}
   end
 end
 
