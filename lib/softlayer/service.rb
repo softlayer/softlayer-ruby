@@ -98,7 +98,6 @@ module SoftLayer
       self.parameters[:result_offset]
     end
 
-
     def method_missing(method_name, *args, &block)
       return @target.call_softlayer_api_with_params(method_name, self, args, &block)
     end
@@ -168,6 +167,19 @@ module SoftLayer
       end
     end #initalize
 
+    # User this to set or get a user agent string for this API client.
+    #
+    # user_agent_string()
+    # => "SoftLayer API Ruby Client #{SoftLayer::Version}"
+    #
+    # user_agent_string('agentName using this gem vX.Y.Z')
+    # => "agentName using this gem vX.Y.Z"
+    #
+    def user_agent_header(set=nil)
+      @user_agent_header = set unless set.nil?
+      @user_agent_header ||= "SoftLayer API Ruby Client #{SoftLayer::VERSION}"
+      {"User-Agent" => @user_agent_header}
+    end
 
     # Use this as part of a method call chain to identify a particular
     # object as the target of the request. The parameter is the SoftLayer
@@ -327,9 +339,9 @@ module SoftLayer
       end
 
       if request_body && !request_body.empty?
-            url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
+            url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header.merge(self.user_agent_header))
       else
-          	url_request = Net::HTTP::Get.new(method_url.request_uri())
+          	url_request = Net::HTTP::Get.new(method_url.request_uri(), self.user_agent_header)
       end
 
       # This warning should be obsolete as we should be using POST if the user
@@ -456,3 +468,4 @@ module SoftLayer
     end
   end # class Service
 end # module SoftLayer
+
