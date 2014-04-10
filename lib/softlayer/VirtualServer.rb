@@ -1,10 +1,22 @@
 module SoftLayer
   class VirtualServer < Server
 
+    ##
+    # Cancel this virtual server immediately and delete all its data.
+    #
+    def cancel!
+      self.service.object_with_id(self.id).deleteObject()
+    end
+    
+    ##
+    # Returns the SoftLayer Service used to work with instances of this class.  For Virtual Servers that is +SoftLayer_Virtual_Guest+
     def service
       return softlayer_client["Virtual_Guest"]
     end
 
+    ##
+    # Returns the default object mask used when fetching servers from the API when an 
+    # explicit object mask is not provided.
     def self.default_object_mask
       sub_mask = ObjectMaskProperty.new("mask")
       sub_mask.type = "SoftLayer_Virtual_Guest"
@@ -43,24 +55,26 @@ module SoftLayer
     end
 
     ##
-    # retrieve a list of virtual servers from the account
+    # Retrieve a list of virtual servers from the account.
+    #
     # You may filter the list returned by adding options:
-    # * :hourly (boolean) - Include servers billed hourly in the list
-    #   :monthly (boolean) - Include servers billed monthly in the list
-    #   :tags (array) - an array of strings representing tags to search for on the instances
-    #   :cpus (int) - return virtual servers with the given number of (virtual) CPUs
-    #   :memory (int) - return servers with at least the given amount of memory
-    #   :hostname (string) - return servers whose hostnames match the query string given (see ObjectFilter::query_to_filter_operation)
-    #   :domain (string) - filter servers to those whose domain matches the query string given (see ObjectFilter::query_to_filter_operation)
-    #   :local_disk (boolean) - include servers that do, or do not, have local disk storage
-    #   :datacenter (string) - find servers whose data center name matches the query string given (see ObjectFilter::query_to_filter_operation)
-    #   :nic_speed (int) - include servers with the given nic speed (in MBPS)
-    #   :public_ip (string) - return servers whose public IP address matches the query string given (see ObjectFilter::query_to_filter_operation)
-    #   :private_ip (string) - same as :public_ip, but for private IP addresses
+    # * <b>+:hourly+</b> (boolean) - Include servers billed hourly in the list
+    # * <b>+:monthly+</b> (boolean) - Include servers billed monthly in the list
+    # * <b>+:tags+</b> (array) - an array of strings representing tags to search for on the instances
+    # * <b>+:cpus+</b> (int) - return virtual servers with the given number of (virtual) CPUs
+    # * <b>+:memory+</b> (int) - return servers with at least the given amount of memory
+    # * <b>+:hostname+</b> (string) - return servers whose hostnames match the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:domain+</b> (string) - filter servers to those whose domain matches the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:local_disk+</b> (boolean) - include servers that do, or do not, have local disk storage
+    # * <b>+:datacenter+</b> (string) - find servers whose data center name matches the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:nic_speed+</b> (int) - include servers with the given nic speed (in MBPS)
+    # * <b>+:public_ip+</b> (string) - return servers whose public IP address matches the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:private_ip+</b> (string) - same as :public_ip, but for private IP addresses
     #
     # Additionally you may provide options related to the request itself:
-    # *  :object_mask (string, hash, or array) - The object mask of properties you wish to receive for the items returned If not provided, the result will use the default object mask
-    #    :result_limit (hash with :limit, and :offset keys) - Limit the scope of results returned.
+    # * <b>+:object_mask+</b> (string, hash, or array) - The object mask of properties you wish to receive for the items returned If not provided, the result will use the default object mask
+    # * <b>+:result_limit+</b> (hash with :limit, and :offset keys) - Limit the scope of results returned.
+    #
     def self.find_servers(softlayer_client, options_hash = {})
       if(!options_hash.has_key? :object_mask)
         object_mask = VirtualServer.default_object_mask
@@ -100,8 +114,11 @@ module SoftLayer
           } ));
       end
 
+
+      required_properties_mask = ['id']
+
       service = softlayer_client['Account']
-      service = service.object_mask(object_mask) if object_mask && !object_mask.empty?
+      service = service.object_mask([object_mask, required_properties_mask])
       service = service.object_filter(object_filter) if object_filter && !object_filter.empty?
 
       if options_hash.has_key?(:result_limit)

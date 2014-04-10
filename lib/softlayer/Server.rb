@@ -1,5 +1,12 @@
 module SoftLayer
   class Server  < SoftLayer::ModelBase
+    ##
+    # Construct a server from the given client using the network data found in +network_hash+
+    #
+    # Most users should not have to call this method directly. Instead you should access the
+    # servers property of an Account object, or use methods like find_servers in the +BareMetalServer+
+    # and +VirtualServer+ classes.
+    #
     def initialize(softlayer_client, network_hash)
       if self.class == Server
         raise RuntimeError, "The Server class is an abstract base class and should not be instantiated directly"
@@ -9,16 +16,18 @@ module SoftLayer
     end
 
     ##
-    # service returns the service responsible for handling the given 
+    # Returns the service responsible for handling the given 
     # server.  In the base class (this one) the server is abstract
     # but subclasses implement this to return the appropriate service
     # from their client.
+    #
+    # @abstract
     def service
       raise RuntimeError, "this method is an abstract method in the Server base class"
     end
     
     ##
-    # reload the details of this server from the SoftLayer API
+    # Reload the details of this server from the SoftLayer API
     def refresh_details
       @sl_hash = service.object_mask(self.class.default_object_mask).object_with_id(self.id).getObject()
     end
@@ -26,7 +35,9 @@ module SoftLayer
     ##
     # Change the port speed of the server
     #
-    # new_speed should be 0, 10, 100, or 1000
+    # +new_speed+ should be 0, 10, 100, or 1000
+    # set +public+ to +false+ in order to change the primary private 
+    # network interface instead of the primary public one.
     #
     def change_port_speed(new_speed, public = true)
       if public
@@ -39,8 +50,7 @@ module SoftLayer
     end
 
     def self.default_object_mask
-      [ 'id',
-        'globalIdentifier',
+      [ 'globalIdentifier',
         'notes',
         'hostname',
         'domain',

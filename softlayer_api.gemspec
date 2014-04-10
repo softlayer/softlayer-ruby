@@ -21,22 +21,22 @@
 #
 
 $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__)))
+require 'lib/softlayer/base'
 
-require 'rubygems'
-require 'bundler/gem_tasks'
-require 'rspec/core/rake_task'
-require 'yard'
+Gem::Specification.new do |s|
+  s.name = %q{softlayer_api}
+  s.version = SoftLayer::VERSION
+  s.author = "SoftLayer Development Team"
+  s.email = %q{sldn@softlayer.com}
+  s.description = %q{The softlayer_api gem offers a convenient mechanism for invoking the services of the SoftLayer API from Ruby.}
+  s.summary = %q{Library for accessing the SoftLayer portal API}
+  s.homepage = %q{http://sldn.softlayer.com/}
+  s.license = %q{MIT}
 
-YARD::Rake::YardocTask.new do |yard_task|
-	yard_task.files = ["lib/**/*.rb"]
-end
-  
-RSpec::Core::RakeTask.new(:spec) do |t|
-	$DEBUG = 1
-	t.rspec_opts = ["-c"]
-end
+  s.files = Dir["README.textile", "LICENSE.textile", "lib/**/*.rb", "test/**/*.rb", "examples/**/*.rb"]
+  s.require_paths = ["lib"]
 
-task :gem => :build
-
-task :default => [:spec] do
+  s.has_rdoc = true
+  s.add_runtime_dependency 'json', '~> 1.8', '>= 1.8.1'
+  s.add_development_dependency 'rake'
 end

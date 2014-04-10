@@ -1,6 +1,8 @@
 module SoftLayer
   class BareMetalServer < Server
 
+    ##
+    # Returns true if this +BareMetalServer+ is actually a Bare Metal Instance
     def bare_metal_instance?
       if @sl_hash.has_key?(:bareMetalInstanceFlag)
         self.bareMetalInstanceFlag != 0
@@ -11,10 +13,12 @@ module SoftLayer
 
     ##
     # Sends a ticket asking that a server be cancelled (i.e. shutdown and
-    # removed from the account). The cancellation_reason parameter should
-    # be a key from the hash returned by BareMetalServer::cancellation_reasons
+    # removed from the account). 
+    # The +cancellation_reason+ parameter should be a key from the hash returned 
+    # by +BareMetalServer::cancellation_reasons+.
+    #
     # You may add your own, more specific reasons for cancelling a server in the
-    # comments parameter.
+    # +comments+ parameter.
     #
     def cancel!(reason = :unneeded, comment = '')    
       if !bare_metal_instance? then
@@ -27,10 +31,15 @@ module SoftLayer
       end
     end
 
+    ##
+    # Returns the SoftLayer Service used to work with instances of this class.  For Bare Metal Servers that is +SoftLayer_Hardware+
     def service
       return softlayer_client["Hardware"]
     end
 
+    ##
+    # Returns the default object mask used when fetching servers from the API when an 
+    # explicit object mask is not provided.
     def self.default_object_mask
       sub_mask = ObjectMaskProperty.new("mask")
       sub_mask.type = "SoftLayer_Hardware_Server"
@@ -48,6 +57,8 @@ module SoftLayer
     end
 
     ## 
+    # Returns a list of the cancellation reasons to use when cancelling a server.
+    #
     # When cancelling a server, you must provide a parameter which is the "cancellation reason".
     # The API expects very specific values for that parameter.  To simplify the API we 
     # have reduced those reasons down to symbols and this method returns
@@ -84,21 +95,25 @@ module SoftLayer
     end
 
     ##
-    # retrieve a list of Hardware, or "bare metal" servers from the account
+    # Retrieve a list of Hardware, or "bare metal" servers from the account.
+    #
     # You may filter the list returned by adding options:
-    # * :tags (array) - an array of strings representing tags to search for on the instances
-    #   :cpus (int) - return servers with the given number of (virtual) CPUs
-    #   :memory (int) - return servers with at least the given amount of memory (in Gigabytes)
-    #   :hostname (string) - return servers whose hostnames match the query string given (see ObjectFilter::query_to_filter_operation)
-    #   :domain (string) - filter servers to those whose domain matches the query string given (see ObjectFilter::query_to_filter_operation)
-    #   :datacenter (string) - find servers whose data center name matches the query string given (see ObjectFilter::query_to_filter_operation)
-    #   :nic_speed (int) - include servers with the given nic speed (in MBPS)
-    #   :public_ip (string) - return servers whose public IP address matches the query string given (see ObjectFilter::query_to_filter_operation)
-    #   :private_ip (string) - same as :public_ip, but for private IP addresses
+    #
+    # * <b>+:tags+</b> (array) - an array of strings representing tags to search for on the instances
+    # * <b>+:cpus+</b> (int) - return servers with the given number of (virtual) CPUs
+    # * <b>+:memory+</b> (int) - return servers with at least the given amount of memory (in Gigabytes)
+    # * <b>+:hostname+</b> (string) - return servers whose hostnames match the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:domain+</b> (string) - filter servers to those whose domain matches the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:datacenter+</b> (string) - find servers whose data center name matches the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:nic_speed+</b> (int) - include servers with the given nic speed (in MBPS)
+    # * <b>+:public_ip+</b> (string) - return servers whose public IP address matches the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:private_ip+</b> (string) - same as :public_ip, but for private IP addresses
     #
     # Additionally you may provide options related to the request itself:
-    # *  :object_mask (string, hash, or array) - The object mask of properties you wish to receive for the items returned If not provided, the result will use the default object mask
-    #    :result_limit (hash with :limit, and :offset keys) - Limit the scope of results returned.
+    #
+    # * <b>+:object_mask+</b> (string, hash, or array) - The object mask of properties you wish to receive for the items returned If not provided, the result will use the default object mask
+    # * <b>+:result_limit+</b> (hash with :limit, and :offset keys) - Limit the scope of results returned.
+    #
     def self.find_servers(softlayer_client, options_hash = {})
       if(!options_hash.has_key? :object_mask)
         object_mask = BareMetalServer.default_object_mask
