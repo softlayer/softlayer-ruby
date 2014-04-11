@@ -286,6 +286,20 @@ describe SoftLayer::Service, "#object_mask" do
   end
 end
 
+describe SoftLayer::Service, "@user_agent" do
+  it "should return a default value if not set" do
+    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
+    service.user_agent.should_not be_empty
+  end
+
+  it "should return a set value after being set" do
+    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah", :user_agent => "foobar")
+    service.user_agent.should === {"User-Agent"=>"foobar"}
+    service.user_agent = "bazbang"
+    service.user_agent.should === {"User-Agent"=>"bazbang"}
+  end
+end
+
 describe SoftLayer::Service, "#result_limit" do
   it "should return an APIParameterFilter with itself as the target" do
     service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")

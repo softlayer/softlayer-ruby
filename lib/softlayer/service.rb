@@ -98,7 +98,6 @@ module SoftLayer
       self.parameters[:result_offset]
     end
 
-
     def method_missing(method_name, *args, &block)
       return @target.call_softlayer_api_with_params(method_name, self, args, &block)
     end
@@ -134,6 +133,9 @@ module SoftLayer
     # The base URL for requests that are passed to the server. Cannot be emtpy or nil.
     attr_accessor :endpoint_url
 
+    # The User-Agent header sent to SoftLayer API.
+    attr_accessor :user_agent
+
     # Initialize an instance of the Client class. You pass in the service name
     # and optionally hash arguments specifying how the client should access the
     # SoftLayer API.
@@ -163,11 +165,17 @@ module SoftLayer
       # public endpoint
       self.endpoint_url = options[:endpoint_url] || $SL_API_BASE_URL || API_PUBLIC_ENDPOINT
 
+      @user_agent = {"User-Agent" => options[:user_agent] || "SoftLayer API Ruby Client #{SoftLayer::VERSION}"}
+
       if($DEBUG)
         @method_missing_call_depth = 0
       end
     end #initalize
 
+    # Use this to set the user agent string for this API client.
+    def user_agent=(set)
+      self.user_agent['User-Agent'] = set
+    end
 
     # Use this as part of a method call chain to identify a particular
     # object as the target of the request. The parameter is the SoftLayer
@@ -327,9 +335,9 @@ module SoftLayer
       end
 
       if request_body && !request_body.empty?
-            url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header)
+            url_request = Net::HTTP::Post.new(method_url.request_uri(), content_type_header.merge(self.user_agent))
       else
-          	url_request = Net::HTTP::Get.new(method_url.request_uri())
+          	url_request = Net::HTTP::Get.new(method_url.request_uri(), self.user_agent)
       end
 
       # This warning should be obsolete as we should be using POST if the user
@@ -456,3 +464,4 @@ module SoftLayer
     end
   end # class Service
 end # module SoftLayer
+
