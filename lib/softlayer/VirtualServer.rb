@@ -49,7 +49,12 @@ module SoftLayer
         object_mask = default_object_mask()
       end
 
-      server_data = softlayer_client["Virtual_Guest"].object_with_id(server_id).object_mask(object_mask).getObject()
+      required_properties_mask = ['id']
+      
+      service = softlayer_client["Virtual_Guest"]
+      service = service.object_mask([object_mask, required_properties_mask])
+
+      server_data = service.object_with_id(server_id).getObject()
 
       return VirtualServer.new(softlayer_client, server_data)
     end
@@ -113,7 +118,6 @@ module SoftLayer
             }]
           } ));
       end
-
 
       required_properties_mask = ['id']
 

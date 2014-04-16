@@ -89,7 +89,12 @@ module SoftLayer
         object_mask = default_object_mask()
       end
 
-      server_data = softlayer_client["Hardware"].object_with_id(server_id).object_mask(object_mask).getObject()
+      required_properties_mask = ['id', 'bareMetalInstanceFlag', 'billingItem.id']
+
+      service = softlayer_client["Hardware"]
+      service = service.object_mask([object_mask, required_properties_mask])
+
+      server_data = service.object_with_id(server_id).getObject()
 
       return BareMetalServer.new(softlayer_client, server_data)
     end

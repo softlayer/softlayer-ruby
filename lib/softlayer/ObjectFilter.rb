@@ -1,3 +1,4 @@
+<<<<<<< Local Changes
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -101,7 +102,7 @@ module SoftLayer
     end
   end
 
-  # an ObjectFilter is a hash that, when asked to provide
+  # An ObjectFilter is a hash that, when asked to provide
   # an value for an unknown key, will create a sub element
   # at that key that is itself an object filter.  So if you
   # start with an empty object filter and ask for object_filter["foo"]
@@ -224,4 +225,5 @@ module SoftLayer
     end # query_to_filter_operation
 
   end # ObjectFilter
-end # SoftLayer
+end # SoftLayer=======
+>>>>>>> External Changes
