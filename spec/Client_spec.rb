@@ -113,6 +113,23 @@ describe SoftLayer::Client do
     client.endpoint_url.should == 'http://fakeurl.org/'
   end
 
+  it 'has a read/write user_agent property' do
+    client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
+    client.should respond_to(:user_agent)
+    client.should respond_to(:user_agent=)
+  end
+  
+  it 'has a reasonable default user agent string' do
+    client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
+    client.user_agent.should == "softlayer_api gem/#{SoftLayer::VERSION} (Ruby #{RUBY_PLATFORM}/#{RUBY_VERSION})"
+  end
+
+  it 'should allow the user agent to change' do
+    client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
+    client.user_agent = "Some Random User Agent"
+    client.user_agent.should == "Some Random User Agent"
+  end
+
   describe "obtaining services" do
     let(:test_client) {
       SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')

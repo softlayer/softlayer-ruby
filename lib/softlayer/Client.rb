@@ -15,7 +15,17 @@ module SoftLayer
   # - <tt>$SL_API_BASE_URL</tt>
   #
   class Client
-    attr_reader :username, :api_key, :endpoint_url;
+    # A username passed as authentication for each request. Cannot be emtpy or nil.
+    attr_reader :username
+    
+    # An API key passed as part of the authentication of each request. Cannot be emtpy or nil.
+    attr_reader :api_key
+    
+    # The base URL for requests that are passed to the server. Cannot be emtpy or nil.
+    attr_reader :endpoint_url
+
+    # A string passsed as the value for the User-Agent header when requests are sent to SoftLayer API.
+    attr_accessor :user_agent
 
     def initialize(options = {})
       @services = { }
@@ -30,6 +40,8 @@ module SoftLayer
 
       # and the endpoint url
       @endpoint_url = settings[:endpoint_url] || API_PUBLIC_ENDPOINT
+      
+      @user_agent = settings[:user_agent] || "softlayer_api gem/#{SoftLayer::VERSION} (Ruby #{RUBY_PLATFORM}/#{RUBY_VERSION})"
 
       raise "A SoftLayer Client requires a username" if !@username || @username.empty?
       raise "A SoftLayer Client requires an api_key" if !@api_key || @api_key.empty?
