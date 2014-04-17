@@ -1,4 +1,3 @@
-<<<<<<< Local Changes
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -225,5 +224,4 @@ module SoftLayer
     end # query_to_filter_operation
 
   end # ObjectFilter
-end # SoftLayer=======
->>>>>>> External Changes
+end # SoftLayer
