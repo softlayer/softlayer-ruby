@@ -41,6 +41,16 @@ module XMLRPC::Convert
   end
 end
 
+# The XMLRPC client uses a fixed user agent string, but we want to
+# supply our own, so we add a method to XMLRPC::Client that lets
+# us change it.
+class XMLRPC::Client
+  def self.set_user_agent(new_agent)
+    remove_const(:USER_AGENT) if const_defined?(:USER_AGENT)
+    const_set(:USER_AGENT, new_agent)
+  end
+end
+
 module SoftLayer
   # A subclass of Exception with nothing new provided. This simply provides
   # a unique type for exceptions from the SoftLayer API
@@ -227,7 +237,6 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     # This is intended to be used in the internal
     # processing of method_missing and need not be called directly.
     def call_softlayer_api_with_params(method_name, parameters, args)
-
       additional_headers = {};
 
       # The client knows about authentication, so ask him for the auth headers
@@ -303,7 +312,10 @@ using either client.service_named('<service_name_here>') or client['<service_nam
 
         # this is a workaround for a bug in later versions of the XML-RPC client in Ruby Core.
         # see https://bugs.ruby-lang.org/issues/8182
-        @xmlrpc_client.http_header_extra = { "Accept-Encoding" => "identity" }
+        @xmlrpc_client.http_header_extra = { 
+          "Accept-Encoding" => "identity", 
+          "User-Agent" => @client.user_agent 
+        }
 
         if $DEBUG
           if !@xmlrpc_client.respond_to?(:http)
