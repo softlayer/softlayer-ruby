@@ -1,21 +1,21 @@
 
 module SoftLayer
-# An APIParameterFilter is an intermediary object that understands how
+# An <tt>APIParameterFilter</tt> is an intermediary object that understands how
 # to accept the other API parameter filters and carry their values to
-# method_missing in Service. Instances of this class are created
-# internally by the Service in it's handling of a method call and you
+# <tt>method_missing</tt> in <tt>Service</tt>. Instances of this class are created
+# internally by the <tt>Service</tt> in its handling of a method call and you
 # should not have to create instances of this class directly.
 #
 # Instead, to use an API filter, you add a filter method to the call
-# chain when you call a method through a SoftLayer::Service
+# chain when you call a method through a <tt>SoftLayer::Service</tt>
 #
-# For example, given a SoftLayer::Service instance called "account_service"
+# For example, given a <tt>SoftLayer::Service</tt> instance called <tt>account_service</tt>
 # you could take advantage of the API filter that identifies a particular
-# object known to that service using the 'object_with_id" method :
+# object known to that service using the <tt>object_with_id</tt> method :
 #
 #     account_service.object_with_id(91234).getSomeAttribute
 #
-# The invocation of object_with_id will cause an instance of this
+# The invocation of <tt>object_with_id</tt> will cause an instance of this
 # class to be instantiated with the service as its target.
 #
 class APIParameterFilter

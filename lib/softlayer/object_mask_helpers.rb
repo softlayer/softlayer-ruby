@@ -20,12 +20,13 @@
 # THE SOFTWARE.
 #
 
+# Ruby Hash Class
 class Hash
   # Returns a string representing the object mask content represented by the
   # Hash.  The keys are expected to be strings.  Values that are strings convert
-  # into "dotted" pairs. For example, {"ticket" => "lastUpdate"} would translate
-  # to "ticket.lastUpdate".  Values that are hashes or arrays become bracketed
-  # expressions.  {"ticket" => ["id", "lastUpdate"] } would become "ticket[id,lastupdate]"
+  # into "dotted" pairs. For example, <tt>{"ticket" => "lastUpdate"}</tt> would translate
+  # to <tt>ticket.lastUpdate</tt>.  Values that are hashes or arrays become bracketed
+  # expressions.  <tt>{"ticket" => ["id", "lastUpdate"] }</tt> would become <tt>ticket[id,lastupdate]</tt>
   def to_sl_object_mask()
     key_strings = [];
 
@@ -54,6 +55,7 @@ class Hash
   end
 end
 
+# Ruby Array Class
 class Array
   # Returns a string representing the object mask content represented by the
   # Array. Each value in the array is converted to it's object mask eqivalent
@@ -64,6 +66,7 @@ class Array
   end
 end
 
+# Ruby String Class
 class String
   # Returns a string representing the object mask content represented by the
   # String. Strings are simply represented as copies of themselves.  We make
@@ -73,6 +76,7 @@ class String
   end
 end
 
+# Ruby Symbol Class
 class Symbol
   def to_sl_object_mask()
     self.to_s.to_sl_object_mask()
@@ -83,24 +87,24 @@ module SoftLayer
   # An ObjectMaskProperty is a class which helps to represent more complex
   # Object Mask expressions that include the type associated with the mask.
   #
-  # For example, if you are working through the SoftLayer_Account and asking
+  # For example, if you are working through the <tt>SoftLayer_Account</tt> and asking
   # for all the Hardware servers on the account, and if you wish to ask
-  # for the metricTrackingObjectId of the servers, you might try:
+  # for the <tt>metricTrackingObjectId</tt> of the servers, you might try:
   #
-  # account_service = SoftLayer::Service.new("SoftLayer_Account")
-  # account_service.object_mask("id", "metricTrackingObjectId").getHardware()
+  #     account_service = SoftLayer::Service.new("SoftLayer_Account")
+  #     account_service.object_mask("id", "metricTrackingObjectId").getHardware()
   #
-  # However, because the result of getHardware is a list of entities in the
-  # SoftLayer_Hardware service and entities in that service do not have
-  # metricTrackingObjectIds, this call will fail.
+  # However, because the result of <tt>getHardware</tt> is a list of entities in the
+  # <tt>SoftLayer_Hardware</tt> service and entities in that service do not have
+  # <tt>metricTrackingObjectIds</tt>, this call will fail.
   #
   # Instead, you need to add an object mask property to the mask that
-  # indicates that the metricTrackingObjectId is found in the SoftLayer_Hardware_Server
+  # indicates that the <tt>metricTrackingObjectId</tt> is found in the <tt>SoftLayer_Hardware_Server</tt>
   # service. Such a thing might look like:
   #
-  # tracking_id_property = SoftLayer::ObjectMaskProperty.new("metricTrackingObjectId")
-  # tracking_id_property.type = "SoftLayer_Hardware_Server"
-  # account_service.object_mask("id", tracking_id_property).getHardware() # asssumes account_service as above
+  #     tracking_id_property = SoftLayer::ObjectMaskProperty.new("metricTrackingObjectId")
+  #     tracking_id_property.type = "SoftLayer_Hardware_Server"
+  #     account_service.object_mask("id", tracking_id_property).getHardware() # asssumes account_service as above
   #
   class ObjectMaskProperty
     attr_reader :name
@@ -140,8 +144,8 @@ module SoftLayer
   # This class is largely a utility and implementation detail used when forwarding
   # an object mask to the server.  It acts as an ObjectMaskProperty with the
   # name "mask".  When a string is generated from this the result will be either
-  # a simple mask (like "mask.some_property") or a compound mask of the form:
-  # "mask[mask_property_structure]"
+  # a simple mask (like <tt>mask.some_property</tt>) or a compound mask of the form:
+  # <tt>mask[mask_property_structure]</tt>
   #
   # Code using the client is unlikely to have to use this class unless you
   # are relying on the softlayer_api gem object mask helpers to generate masks

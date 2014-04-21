@@ -67,25 +67,25 @@ module SoftLayer
   # instead, you should be creating a client and then using it to
   # obtain individual services. For example:
   #
-  # client = SoftLayer::Client.new(:username => "Joe", :api_key=>"feeddeadbeefbadfood...")
-  # account_service = client.service_named("Account") # returns the SoftLayer_Account service
-  # account_service = client['Account'] # Exactly the same as above
+  #     client = SoftLayer::Client.new(:username => "Joe", :api_key=>"feeddeadbeefbadfood...")
+  #     account_service = client.service_named("Account") # returns the SoftLayer_Account service
+  #     account_service = client['Account'] # Exactly the same as above
   #
   # For backward compatibility, a service can be constructed by passing
   # client initialization options, however if you do so you will need to
   # prepend the "SoftLayer_" on the front of the service name. For Example:
   #
-  #   account_service = SoftLayer::Service("SoftLayer_Account",
+  #     account_service = SoftLayer::Service("SoftLayer_Account",
   #     :username=>"<your user name here>"
   #     :api_key=>"<your api key here>")
   #
-  # A service communicates with the SoftLayer API through the the XMLRPC
-  # interface using Ruby's built in XMLRPC classes
+  # A service communicates with the SoftLayer API through the the XML-RPC
+  # interface using Ruby's built in classes
   #
   # Once you have a service, you can invoke methods in the service like this:
   #
-  #   account_service.getOpenTickets
-  #   => {... lots of information here representing the list of open tickets ...}
+  #     account_service.getOpenTickets
+  #     => {... lots of information here representing the list of open tickets ...}
   #
   class Service
     # The name of the service that this object calls. Cannot be emtpy or nil.
