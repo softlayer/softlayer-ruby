@@ -72,7 +72,6 @@ class Array
   end
 end
 
-
 ##
 # Softlayer Extensions to the String class to support using strings to create
 # object masks
@@ -84,7 +83,6 @@ class String
     return clone()
   end
 end
-
 
 ##
 # Softlayer Extensions to the Symbol class to support using symbols to create
@@ -99,9 +97,9 @@ module SoftLayer
   # An ObjectMaskProperty is a class which helps to represent more complex
   # Object Mask expressions that include the type associated with the mask.
   #
-  # For example, if you are working through the SoftLayer_Account and asking
+  # For example, if you are working through the <tt>SoftLayer_Account</tt> and asking
   # for all the Hardware servers on the account, and if you wish to ask
-  # for the metricTrackingObjectId of the servers, you might try:
+  # for the <tt>metricTrackingObjectId</tt> of the servers, you might try:
   #
   #   account_service = SoftLayer::Service.new("SoftLayer_Account")
   #   account_service.object_mask("id", "metricTrackingObjectId").getHardware()

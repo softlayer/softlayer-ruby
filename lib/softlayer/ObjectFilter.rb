@@ -1,3 +1,4 @@
+#
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -34,6 +35,7 @@ module SoftLayer
     '!~'    # Does not Contain (case sensitive)
   ]
 
+  # A class whose instances represent an Object Filter operation.
   class ObjectFilterOperation
     attr_reader :operator
     attr_reader :value
@@ -51,6 +53,8 @@ module SoftLayer
     end
   end
 
+  # Routines that are valid within the block provided to a call to
+  # ObjectFilter.build.
   class ObjectFilterBlockHandler
     # contains wihout considering case
     def contains(value)
@@ -104,7 +108,7 @@ module SoftLayer
   # An ObjectFilter is a hash that, when asked to provide
   # an value for an unknown key, will create a sub element
   # at that key that is itself an object filter.  So if you
-  # start with an empty object filter and ask for object_filter["foo"]
+  # start with an empty object filter and ask for <tt>object_filter["foo"]</tt>
   # then foo will be +added+ to the object and the value of that
   # key will be an Object Filter <tt>{ "foo" => {} }</tt>
   #
@@ -123,6 +127,9 @@ module SoftLayer
       end
     end
 
+    # Builds an object filter with the given key path, a dot separated list of property keys.
+    # The filter itself can be provided as a query string (in the query parameter)
+    # or by providing a block that calls routines in the ObjectFilterBlockHandler class.
     def self.build(key_path, query = nil, &block)
       raise ArgumentError, "The key path to build cannot be empty" if !key_path
 

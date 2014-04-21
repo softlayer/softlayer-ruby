@@ -10,7 +10,7 @@ module SoftLayer
   #
   # If any of the options above are missing then the constructor will try to use the corresponding
   # global variable declared in the SoftLayer Module:
-  # - <tt>$SL_API_USERNAME</tt<tt>></tt>24
+  # - <tt>$SL_API_USERNAME</tt>
   # - <tt>$SL_API_KEY</tt>
   # - <tt>$SL_API_BASE_URL</tt>
   #
@@ -71,7 +71,6 @@ module SoftLayer
     #
     # If the service_name provided does not start with 'SoftLayer__' that prefix
     # will be added
-    # en
     def service_named(service_name, service_options = {})
       # strip whitespace from service_name and
       # ensure that it start with "SoftLayer_".

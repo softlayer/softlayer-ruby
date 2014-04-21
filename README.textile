@@ -2,6 +2,12 @@ h1=. SoftLayer API Client for Ruby
 
 The SoftLayer API Client for Ruby is a library for connecting to and calling the routines of "The SoftLayer API":http://sldn.softlayer.com/article/The_SoftLayer_API from the "Ruby":http://www.ruby-lang.org programming language.
 
+<div id="note" style="margin: 1em; padding: 1em; background-color: #fcfcfc; border: 1px solid black">
+	*Important Note*
+	
+	Version 2.0 of the gem may require you change your existing scripts. Please see "What's New":#whats_new for details.
+</div>
+
 h2. Overview
 
 The client invokes methods in the API using XML-RPC as a transport mechanism. XML-RPC is handled using XMLRPC classes from the Ruby core library.
@@ -17,6 +23,52 @@ h2. Requirements
 The Ruby client has been tested using a wide variety of Ruby implementations including Ruby version 1.8.7. 1.9.2, 2.0, and 2.1. It has also been tested on JRuby running in 1.8 and 1.9 mode.
 
 A network connection is required, and a valid SoftLayer API username and api key are required to call the SoftLayer API. A connection to the SoftLayer private network is required to connect to SoftLayer's private network API endpoints.
+
+h2(#whats_new). What's New
+
+Version 2.0 of the softlayer_api gem changes the protocol used to communicate with the SoftLayer API from REST to XML-RPC. This change should not require any changes to existing scripts. However there are two more changes which may require changes to scripts.  First, Object Masks are now sent to the server using the "Extended Object Mask Format":http://sldn.softlayer.com/article/Object-Masks. Secondly, the software also changes the syntax for specifying result limits.
+
+h3. XML-RPC
+
+When sending requests to the server, an API client may use SOAP:http://sldn.softlayer.com/article/SOAP, XML-RPC:http://sldn.softlayer.com/article/XML-RPC, or REST:http://sldn.softlayer.com/article/REST. Previous versions of the SoftLayer API Gem used the REST to communicate with the server. This version uses XML-RPC. Adopting the XML-RPC transport mechanism allows the Gem to take adavantage of features of the API, most notalby Object Filters, that are not available through the REST interface.
+
+h3. Extended Object Masks
+
+The SoftLayer API Gem now sends object masks to the API server using the Extended Object Mask format. This may require you to change existing scripts to retrieve the same information. For example, in prior versions of the Gem, one could retrieve the @metricTrackingObjectId@ for a hardware server by using an object mask with that property to an object managed by the @SoftLayer_Hardware@ service:
+
+<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">hardware_service = SoftLayer::Service.new('SoftLayer_Hardware')
+hardware_record = $softlayer_hardware.object_with_id(123456).object_mask("metricTrackingObjectId").getObject()
+</code></pre>
+
+In this version of the Gem, however, this will return an error:
+
+<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">Property 'metricTrackingObjectId' not valid for 'SoftLayer_Hardware'.
+</code></pre>
+
+This error comes up because the @metricTrackingObjectId@ property belongs to the @SoftLayer_Hardware_Server@ service, not @SoftLayer_Hardware@.
+
+To make this request work in the 2.0 Gem, you must create a object mask property that instructs the gem which service to look in for the property. This code creates a Extended Object Mask with the type included and avoids the error:
+
+<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">metric_tracking_property = SoftLayer::ObjectMask.new()
+metric_tracking_property.type = "SoftLayer_Hardware_Server"
+metric_tracking_property.subproperties = "metricTrackingObjectId"
+
+starting_hardware = hardware_service.object_with_id(186908).object_mask(metric_tracking_property).getObject()
+</code></pre>
+
+If you find that some of your object masks are no longer working, check the SLDN web site and carefully examine which service provides the properties you are requesting.  Use typed object masks to explicitly retrieve the properties from the correct service.
+
+h3. Result Limits
+
+In previous versions of the SoftLayer API Gem, result limits were specified using two API filters:
+
+<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">account_service.result_offset(3).result_limit(5).getOpenTickets  # this is the "old way" of specifying a result limit
+</code></pre>
+
+These two API filters have been combined into a single result limits filter:
+
+<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">account_service.result_limit(3, 5).getOpenTickets # this is the "new way" of supplying a result limit
+</code></pre>
 
 h2(#installation). Installation
 
@@ -36,14 +88,14 @@ That instance will have to know your "API authentication information":http://sld
 
 h4. Providing authentication in a config file
 
-The Ruby client will look for a configuration file that can provide the username and api_key for requests.  A sample configuraiton file looks like this:
+The Ruby client will look for a configuration file that can provide the username and api_key for requests. A sample configuraiton file looks like this:
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">[softlayer]
 username = joeusername
 api_key = DEADBEEFBADF00D
 </code></pre>
 
-It is important that the config file declare the section "softlayer".  The keys accepted in that section are @username@, @api_key@, and @endpoint_url@.  You will have to provide an explicit endpoint url, for example, if you want to use the SoftLayer private network API endpoint.
+It is important that the config file declare the section "softlayer". The keys accepted in that section are @username@, @api_key@, and @endpoint_url@. You will have to provide an explicit endpoint url, for example, if you want to use the SoftLayer private network API endpoint.
 
 The client will look for configuration files in your home directory under the name ".softlayer" or in the directory @/etc/softlayer.conf@
 
@@ -103,7 +155,7 @@ With an instance of @SoftLayer::Service@ in hand, you can call the methods provi
 
 If the method requires arguments, you can supply them as arguments to the method you're calling on the service object. The arguments should be arguments that XML-RPC can encode into XML. Generally this means your argument should be hashes, arrays, strings, numbers, booleans, or nil.
 
-Here is an example of calling the @createStandardTicket@ method on a ticket service.  This example also uses the "bracket" syntax on a client @client['<service-name>']@ to obtain the service object:
+Here is an example of calling the @createStandardTicket@ method on a ticket service. This example also uses the "bracket" syntax on a client @client['<service-name>']@ to obtain the service object:
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">#authentication information will be found in the global variables
 client = SoftLayer::Client.new()

@@ -20,19 +20,16 @@
 # THE SOFTWARE.
 #
 
-# The SoftLayer Module
-#
+require 'rubygems'
+
 # This module is used to provide a namespace for SoftLayer code.  It also declares a number of
 # global variables:
 # - <tt>$SL_API_USERNAME</tt> - The default username passed by clients to the server for authentication.
 #   Set this if you want to use the same username for all clients and don't want to have to specify it when the client is created
 # - <tt>$SL_API_KEY</tt> - The default API key passed by clients to the server for authentication.
 #   Set this if you want to use the same api for all clients and don't want to have to specify it when the client is created
-# - <tt>$SL_API_BASE_URL</tt>- The default URL used to access the SoftLayer API. This defaults to the value of SoftLayer::API_PUBLIC_ENDPOINT
+# - <tt>$SL_API_BASE_URL</tt>- The default URL used to access the SoftLayer API. This defaults to the value of <tt>SoftLayer::API_PUBLIC_ENDPOINT</tt>
 #
-
-require 'rubygems'
-
 module SoftLayer
   VERSION = "2.0.0"  # version history in the CHANGELOG.textile file at the root of the source
 
