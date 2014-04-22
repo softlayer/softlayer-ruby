@@ -67,12 +67,12 @@ module SoftLayer
     # * <b>+:monthly+</b> (boolean) - Include servers billed monthly in the list
     # * <b>+:tags+</b> (array) - an array of strings representing tags to search for on the instances
     # * <b>+:cpus+</b> (int) - return virtual servers with the given number of (virtual) CPUs
-    # * <b>+:memory+</b> (int) - return servers with at least the given amount of memory
+    # * <b>+:memory+</b> (int) - return servers with at least the given amount of memory (in MB. e.g. 4096 = 4GB)
     # * <b>+:hostname+</b> (string) - return servers whose hostnames match the query string given (see ObjectFilter::query_to_filter_operation)
     # * <b>+:domain+</b> (string) - filter servers to those whose domain matches the query string given (see ObjectFilter::query_to_filter_operation)
     # * <b>+:local_disk+</b> (boolean) - include servers that do, or do not, have local disk storage
-    # * <b>+:datacenter+</b> (string) - find servers whose data center name matches the query string given (see ObjectFilter::query_to_filter_operation)
-    # * <b>+:nic_speed+</b> (int) - include servers with the given nic speed (in MBPS)
+    # * <b>+:datacenter+</b> (string) - find servers whose short data center name (e.g. dal05, sjc01) matches the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:nic_speed+</b> (int) - include servers with the given nic speed (in MBPS, usually 10, 100, or 1000)
     # * <b>+:public_ip+</b> (string) - return servers whose public IP address matches the query string given (see ObjectFilter::query_to_filter_operation)
     # * <b>+:private_ip+</b> (string) - same as :public_ip, but for private IP addresses
     #
@@ -100,6 +100,10 @@ module SoftLayer
         :public_ip => "virtualGuests.primaryIpAddress",
         :private_ip => "virtualGuests.primaryBackendIpAddress"
       }
+      
+      if options_hash.has_key?(:local_disk) then
+        options_hash[:local_disk] = options_hash[:local_disk] ? 1 : 0
+      end
 
       # For each of the options in the option_to_filter_path map, if the options hash includes
       # that particular option, add a clause to the object filter that filters for the matching
@@ -110,7 +114,7 @@ module SoftLayer
 
       # Tags get a much more complex object filter operation so we handle them separately
       if options_hash.has_key?(:tags)
-        object_filter.merge!(SoftLayer::ObjectFilter.build("hardware.tagReferences.tag.name", {
+        object_filter.merge!(SoftLayer::ObjectFilter.build("virtualGuests.tagReferences.tag.name", {
           'operation' => 'in',
           'options' => [{
             'name' => 'data',

@@ -39,7 +39,7 @@ module SoftLayer
 			result
 		end
 
-		FILE_LOCATIONS = ['/etc/softlayer.conf', '~/.softlayer']
+		FILE_LOCATIONS = ['/etc/softlayer.conf', '~/.softlayer', './.softlayer']
 
 		def Config.file_settings(*additional_files)
 			result = {}
