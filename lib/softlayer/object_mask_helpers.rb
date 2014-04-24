@@ -37,7 +37,7 @@ class Hash
         return ""
       end
 
-      if value.kind_of? String then
+      if value.kind_of?(String) || value.kind_of?(Symbol) then
         string_for_key = "#{string_for_key}.#{value.to_sl_object_mask}"
       end
 
@@ -52,14 +52,13 @@ class Hash
     end
 
     return key_strings.join(",")
-  end
+  end  
 end
 
 # Ruby Array Class
 class Array
   # Returns a string representing the object mask content represented by the
-  # Array. Each value in the array is converted to it's object mask eqivalent
-  # and
+  # Array. Each value in the array is converted to its object mask eqivalent
   def to_sl_object_mask()
     return "" if self.empty?
     map { |item| item.to_sl_object_mask() }.flatten.join(",")
@@ -74,6 +73,36 @@ class String
   def to_sl_object_mask()
     return clone()
   end
+  
+  # returns true if the string appears to represent the root property
+  # of an object mask.  This doesn't parse the mask entirely, but 
+  # requires that it begins with "mask" and contains only valid
+  # object mask characters.
+  def sl_root_property?
+    (self.strip =~ /\Amask[\[\]\(\)a-z0-9_\.\s\,]+\z/i) == 0
+  end
+  
+  # returns true if the string appears to represent a root property
+  # set of an object mask.  This breaks out the individual components
+  # of the "array-like" portion of the string and checks to see that
+  # each represents a root property
+  def sl_root_property_set?
+    is_property_set = false
+
+    match_data = self.strip.match(/\[(.*)\]/m)
+    if match_data
+      content = match_data[1].split(',').collect{ |part| part.strip }
+      
+      if content.count > 0
+        is_property_set = content.inject(true) do |is_property_set, content_item|
+          is_property_set && content_item.sl_root_property?
+        end
+      end
+    end
+
+    is_property_set
+  end
+  
 end
 
 # Ruby Symbol Class
@@ -83,77 +112,9 @@ class Symbol
   end
 end
 
-module SoftLayer
-  # An ObjectMaskProperty is a class which helps to represent more complex
-  # Object Mask expressions that include the type associated with the mask.
-  #
-  # For example, if you are working through the <tt>SoftLayer_Account</tt> and asking
-  # for all the Hardware servers on the account, and if you wish to ask
-  # for the <tt>metricTrackingObjectId</tt> of the servers, you might try:
-  #
-  #     account_service = SoftLayer::Service.new("SoftLayer_Account")
-  #     account_service.object_mask("id", "metricTrackingObjectId").getHardware()
-  #
-  # However, because the result of <tt>getHardware</tt> is a list of entities in the
-  # <tt>SoftLayer_Hardware</tt> service and entities in that service do not have
-  # <tt>metricTrackingObjectIds</tt>, this call will fail.
-  #
-  # Instead, you need to add an object mask property to the mask that
-  # indicates that the <tt>metricTrackingObjectId</tt> is found in the <tt>SoftLayer_Hardware_Server</tt>
-  # service. Such a thing might look like:
-  #
-  #     tracking_id_property = SoftLayer::ObjectMaskProperty.new("metricTrackingObjectId")
-  #     tracking_id_property.type = "SoftLayer_Hardware_Server"
-  #     account_service.object_mask("id", tracking_id_property).getHardware() # asssumes account_service as above
-  #
-  class ObjectMaskProperty
-    attr_reader :name
-    attr_accessor :type
-    attr_accessor :subproperties
-
-    def initialize(property_name)
-      raise(ArgumentError, "property name cannot be empty or nil") if property_name.nil? || property_name.empty?
-      @name = property_name.clone
-    end
-
-    def to_sl_object_mask()
-      object_mask_string = self.name.clone
-
-      if self.type then
-        object_mask_string += "(#{self.type})"
-      end
-
-      if self.subproperties then
-        subproperty_string = "";
-
-        if self.subproperties.kind_of?(String) then
-          subproperty_string = ".#{subproperties}"
-        end
-
-        if self.subproperties.kind_of?(Array) || self.subproperties.kind_of?(Hash) then
-          subproperty_string = "[#{self.subproperties.to_sl_object_mask}]"
-        end
-
-        object_mask_string = object_mask_string + subproperty_string
-      end
-
-      object_mask_string
-    end
-  end
-
-  # This class is largely a utility and implementation detail used when forwarding
-  # an object mask to the server.  It acts as an ObjectMaskProperty with the
-  # name "mask".  When a string is generated from this the result will be either
-  # a simple mask (like <tt>mask.some_property</tt>) or a compound mask of the form:
-  # <tt>mask[mask_property_structure]</tt>
-  #
-  # Code using the client is unlikely to have to use this class unless you
-  # are relying on the softlayer_api gem object mask helpers to generate masks
-  # and then sending the mask to the server yourself.
-  #
-  class ObjectMask < ObjectMaskProperty
-    def initialize()
-      @name = "mask"
-    end
-  end
+# Checks a string to see if it is a well-formatted 
+# Object Mask string.  At the moment this is a pretty 
+# primitive test.
+def validate_mask_string(mask_string)
+  ((mask_string =~ /\Amask/) == 0) || ((mask_string =~ /\A\[/) == 0)
 end

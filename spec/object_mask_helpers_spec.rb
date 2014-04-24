@@ -34,6 +34,48 @@ describe String, "#to_sl_object_mask" do
   it "echos the empty string" do
     "".to_sl_object_mask.should eql("")
   end
+  
+  describe "#represents_sl_root_property?" do 
+    it "rejects bogus strings" do
+      "".sl_root_property?.should be_false
+      "foo".sl_root_property?.should be_false
+    end
+  
+    it "accepts good strings" do
+      " mask.foo".sl_root_property?.should be_true
+      " mask.foo\n".sl_root_property?.should be_true
+      "mask[property1,property2.subproperty]".sl_root_property?.should be_true
+      "mask(sometype)[prpoerty1, property2.subproperty]".sl_root_property?.should be_true
+    end  
+  end
+  
+  describe "#sl_root_property_set?" do
+    it "rejects strings that don't start and end with brackets" do
+      "".sl_root_property_set?.should be_false
+      "[".sl_root_property_set?.should be_false
+      "[mask.aProperty".sl_root_property_set?.should be_false
+      "mask.aProperty]".sl_root_property_set?.should be_false
+    end
+
+    it "rejects an empty set" do
+      "[]".sl_root_property_set?.should be_false
+    end
+
+    it "accepts a simple property set" do
+      "[mask.simple]".sl_root_property_set?.should be_true
+    end
+
+    it "accepts a compound property set" do
+      "[mask.simple,mask.alsoSimple]".sl_root_property_set?.should be_true
+    end
+
+    it "allows whitespace between properties" do
+      "[mask.simple, mask.alsoSimple]".sl_root_property_set?.should be_true
+      "[mask.simple,\tmask.alsoSimple]".sl_root_property_set?.should be_true
+      "[mask.simple,\nmask.alsoSimple]".sl_root_property_set?.should be_true
+    end
+
+  end
 end
 
 describe Array,"#to_sl_object_mask" do
@@ -73,52 +115,5 @@ describe Hash, "#to_sl_object_mask" do
 
   it "accepts an inner empty hash and returns a mask" do
     { "ipAddress" => { "ipAddress" => {}}}.to_sl_object_mask.should eql("ipAddress[ipAddress]")
-  end
-end
-
-describe SoftLayer::ObjectMaskProperty, "#initialize" do
-  it "sets the name of the property if given" do
-    mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
-    mask_property.name.should eql("simple_name")
-  end
-
-  it "rejects nil as a property name" do
-    expect { SoftLayer::ObjectMaskProperty.new(nil) }.to raise_error(ArgumentError)
-  end
-
-  it "rejects empty strings for property names" do
-    expect { SoftLayer::ObjectMaskProperty.new("") }.to raise_error(ArgumentError)
-  end
-end
-
-describe SoftLayer::ObjectMaskProperty, "#to_sl_object_mask" do
-  it "converts a simple property to a string" do
-    mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
-    mask_property.to_sl_object_mask.should eql("simple_name")
-  end
-
-  it "puts parenthesis expressions in for property types" do
-    mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
-    mask_property.type = "property_type"
-    mask_property.to_sl_object_mask.should eql("simple_name(property_type)")
-  end
-
-  it "converts simple sub-properties into a dot expression" do
-    mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
-    mask_property.type = "property_type"
-    mask_property.subproperties = "subproperty"
-    mask_property.to_sl_object_mask.should eql("simple_name(property_type).subproperty")
-  end
-
-  it "returns bracket expressions for array subproperties" do
-    mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
-    mask_property.subproperties = ["one", "two", "three"]
-    mask_property.to_sl_object_mask.should eql("simple_name[one,two,three]")
-  end
-
-  it "accepts subproperties using a hash" do
-    mask_property = SoftLayer::ObjectMaskProperty.new("simple_name")
-    mask_property.subproperties = { "foo" => "subfoo" }
-    mask_property.to_sl_object_mask.should eql("simple_name[foo.subfoo]")
   end
 end

@@ -40,19 +40,37 @@ class APIParameterFilter
     merged_object
   end
 
-  # Adds an objectMask to a call so that the amount of information returned will be
-  # limited.  For example, if you wanted to get the ids of all the open tickets
-  # for an accoun you might use:
+  # Use this as part of a method call chain to add an object mask to
+  # the request. The arguments to object mask should be well formed
+  # Extended Object Mask strings:
   #
-  # account_service.object_mask(id).getOpenTickets
+  #   ticket_service.object_mask(
+  #     "mask[createDate, modifyDate]", 
+  #     "mask(SoftLayer_Some_Type).aProperty").getObject
+  #
+  # The object_mask becomes part of the request sent to the server
+  #
   def object_mask(*args)
-    raise ArgumentError, "Object mask expects mask properties" if args.empty? || (1 == args.count && !args[0])
+    raise ArgumentError, "object_mask expects well-formatted root object mask strings" if args.empty? || (1 == args.count && !args[0])
+    raise ArgumentError, "object_mask expects well-formatted root object mask strings" if args.find { |arg| !(arg.kind_of?(String)) }
+    raise ArgumentError, "object_mask expects well-formatted root object mask strings" if args.find { |arg| !(arg.sl_root_property_set?) && !(arg.sl_root_property?) }
+
+    object_mask = args.inject(@parameters[:object_mask] || []) do |collected_items, argument|
+      match_data = argument.match(/\A\[(.*)\]\z/m)
+      if match_data 
+        collected_items = collected_items + match_data[1].split(',').collect {|mask_element| mask_element.strip }
+      else
+        collected_items.push(argument)
+      end
+
+      collected_items
+    end
 
     # we create a new object in case the user wants to store off the
     # filter chain and reuse it later
     merged_object = APIParameterFilter.new;
     merged_object.target = self.target
-    merged_object.parameters = @parameters.merge({ :object_mask => args })
+    merged_object.parameters = @parameters.merge({ :object_mask => object_mask })
     merged_object
   end
 

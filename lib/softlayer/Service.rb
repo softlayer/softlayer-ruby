@@ -156,16 +156,12 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     end
 
     # Use this as part of a method call chain to add an object mask to
-    # the request.The arguments to object mask should be the strings
-    # that are the keys of the mask:
+    # the request. The arguments to object mask should be well formed
+    # Extended Object Mask strings:
     #
-    #   ticket_service.object_mask("createDate", "modifyDate").getObject
+    #   ticket_service.object_mask("mask[ticket.createDate, ticket.modifyDate]", "mask(SoftLayer_Some_Type).aProperty").getObject
     #
-    # Before being used, the string passed will be url-encoded by this
-    # routine. (i.e. there is no need to url-encode the strings beforehand)
-    #
-    # As an implementation detail, the object_mask becomes part of the
-    # query on the url sent to the API server
+    # The object_mask becomes part of the request sent to the server
     #
     def object_mask(*args)
       proxy = APIParameterFilter.new
@@ -248,11 +244,11 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       end
 
       # Object masks go into the headers too.
-      if parameters && parameters.server_object_mask
-        object_mask = SoftLayer::ObjectMask.new()
-        object_mask.subproperties = parameters.server_object_mask
+      if parameters && parameters.server_object_mask && parameters.server_object_mask.count != 0
+        object_mask = parameters.server_object_mask
+        object_mask_string = object_mask.count == 1 ? object_mask[0] : "[#{object_mask.join(',')}]"
 
-        additional_headers.merge!("SoftLayer_ObjectMask" => { "mask" => object_mask.to_sl_object_mask })
+        additional_headers.merge!("SoftLayer_ObjectMask" => { "mask" => object_mask_string }) unless object_mask_string.empty?
       end
 
       # Result limits go into the headers
@@ -264,7 +260,6 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       if parameters && parameters.server_object_id
         additional_headers.merge!("#{@service_name}InitParameters" => { "id" => parameters.server_object_id })
       end
-
 
       # This is a workaround for a potential problem that arises from mis-using the
       # API. If you call SoftLayer_Virtual_Guest and you call the getObject method
