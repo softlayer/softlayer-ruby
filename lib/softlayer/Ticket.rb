@@ -7,8 +7,16 @@ module SoftLayer
 			softlayer_client["Ticket"].object_with_id(self.id).edit(@sl_hash, body)
 		end
 
-		def refresh_details
-			@sl_hash = softlayer_client["Ticket"].object_mask(self.class.default_object_mask).object_with_id(self.id).getObject()
+		def softlayer_properties(object_mask = nil)
+      service = softlayer_client["Ticket"]
+
+      if(object_mask)
+        service = service.object_mask(object_mask)
+      else 
+        service = service.object_mask(self.class.default_object_mask)
+      end
+
+      service.object_with_id(self.id).getObject()
 		end
 
 		def self.default_object_mask

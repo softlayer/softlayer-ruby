@@ -1,3 +1,17 @@
+shared_examples_for "server with mutable hostname" do
+	it "has a method to change the host name" do
+		server.should respond_to(:set_hostname!)
+	end
+  
+  it "rejects nil hostnames" do
+    expect { server.set_hostname!(nil) }.to  raise_error(ArgumentError)
+  end
+
+  it "rejects empty hostnames" do
+    expect { server.set_hostname!("") }.to raise_error(ArgumentError)
+  end
+end
+
 shared_examples_for "server with port speed" do
 	it "has a method to change port speed" do
 		server.should respond_to(:change_port_speed)

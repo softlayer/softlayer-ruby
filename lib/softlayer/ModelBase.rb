@@ -21,7 +21,17 @@ module SoftLayer
     #
     # This is only implemented in subclasses.
     #
-    def refresh_details
+    def refresh_details(object_mask = nil)
+      network_hash = self.softlayer_properties(object_mask)
+      @sl_hash = network_hash.inject({}) { | new_hash, pair | new_hash[pair[0].to_sym] = pair[1]; new_hash }
+    end
+    
+    ##
+    # Subclasses implement this method.  The implementation should
+    # make a request to the SoftLayer API and retrieve an up-to-date
+    # representation of this object expressed as a property hash.
+    def softlayer_properties(object_mask = nil)
+      raise RuntimeError.new("Abstract method softlayer_properties in ModelBase was called")
     end
 
     # This is defined for the benefit of Ruby 1.8.7 where "#id" used to

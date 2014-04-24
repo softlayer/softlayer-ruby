@@ -48,4 +48,8 @@ describe SoftLayer::VirtualServer do
 	it_behaves_like "server with port speed" do
 		let (:server) { sample_server }
 	end
+  
+  it_behaves_like "server with mutable hostname" do
+		let (:server) { sample_server }
+  end
 end

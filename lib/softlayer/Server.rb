@@ -28,8 +28,31 @@ module SoftLayer
     
     ##
     # Reload the details of this server from the SoftLayer API
-    def refresh_details
-      @sl_hash = service.object_mask(self.class.default_object_mask).object_with_id(self.id).getObject()
+    def softlayer_properties(object_mask = nil)
+      my_service = self.service
+      
+      if(object_mask)
+        my_service = my_service.object_mask(object_mask)
+      else
+        my_service = my_service.object_mask(self.class.default_object_mask)
+      end
+      
+      my_service.object_with_id(self.id).getObject()
+    end
+
+    ##
+    # Change the hostname of this server (permanently)
+    # Raises an ArgumentError if the new hostname is nil or empty
+    def set_hostname!(new_hostname)
+      raise ArgumentError.new("The new hostname cannot be nil") unless new_hostname
+      raise ArgumentError.new("The new hostname cannot be empty") if new_hostname.empty?
+
+      edit_template = {
+        "hostname" => new_hostname
+      }
+
+      puts @sl_hash
+      service.object_with_id(self.id).editObject(edit_template)
     end
 
     ##
