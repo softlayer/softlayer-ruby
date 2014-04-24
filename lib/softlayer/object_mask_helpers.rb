@@ -22,46 +22,59 @@
 
 # Ruby Hash Class
 class Hash
-  # Returns a string representing the object mask content represented by the
-  # Hash.  The keys are expected to be strings.  Values that are strings convert
-  # into "dotted" pairs. For example, <tt>{"ticket" => "lastUpdate"}</tt> would translate
-  # to <tt>ticket.lastUpdate</tt>.  Values that are hashes or arrays become bracketed
-  # expressions.  <tt>{"ticket" => ["id", "lastUpdate"] }</tt> would become <tt>ticket[id,lastupdate]</tt>
+  def __valid_root_property_key?(key_string)
+    return key_string == "mask" || (0 == (key_string =~ /\Amask\([a-z][a-z0-9_]*\)\z/i))
+  end
+  
   def to_sl_object_mask()
+    raise RuntimeError, "An object mask must contain properties" if empty?
+    raise RuntimeError, "An object mask must start with root properties" if keys().find { |key| !__valid_root_property_key?(key) }
+
+    key_strings = __sl_object_mask_properties_for_keys();
+    key_strings.count > 1 ? "[#{key_strings.join(',')}]" : "#{key_strings[0]}"
+  end
+  
+  def to_sl_object_mask_property()
+    key_strings = __sl_object_mask_properties_for_keys();
+    "#{key_strings.join(',')}"
+  end
+  
+  def __sl_object_mask_properties_for_keys
     key_strings = [];
 
     each do |key, value|
-      string_for_key = key.to_sl_object_mask
+      string_for_key = key.to_sl_object_mask_property
 
       if(nil == value)
         return ""
       end
 
       if value.kind_of?(String) || value.kind_of?(Symbol) then
-        string_for_key = "#{string_for_key}.#{value.to_sl_object_mask}"
+        string_for_key = "#{string_for_key}.#{value.to_sl_object_mask_property}"
       end
 
       if value.kind_of?(Array) || value.kind_of?(Hash) then
-        value_string = value.to_sl_object_mask
+        value_string = value.to_sl_object_mask_property
         if value_string && !value_string.empty?
-          string_for_key = "#{string_for_key}[#{value.to_sl_object_mask}]"
+          string_for_key = "#{string_for_key}[#{value_string}]"
         end
       end
 
       key_strings.push(string_for_key)
     end
-
-    return key_strings.join(",")
-  end  
+    
+    key_strings
+  end
 end
 
 # Ruby Array Class
 class Array
   # Returns a string representing the object mask content represented by the
   # Array. Each value in the array is converted to its object mask eqivalent
-  def to_sl_object_mask()
+  def to_sl_object_mask_property()
     return "" if self.empty?
-    map { |item| item.to_sl_object_mask() }.flatten.join(",")
+    property_content = map { |item| item.to_sl_object_mask_property() }.flatten.join(",")
+    "#{property_content}"
   end
 end
 
@@ -70,18 +83,18 @@ class String
   # Returns a string representing the object mask content represented by the
   # String. Strings are simply represented as copies of themselves.  We make
   # a copy in case the original String is modified somewhere along the way
-  def to_sl_object_mask()
-    return clone()
+  def to_sl_object_mask_property()
+    return self.strip
   end
-  
+
   # returns true if the string appears to represent the root property
-  # of an object mask.  This doesn't parse the mask entirely, but 
+  # of an object mask. This doesn't parse the mask entirely, but
   # requires that it begins with "mask" and contains only valid
   # object mask characters.
   def sl_root_property?
-    (self.strip =~ /\Amask[\[\]\(\)a-z0-9_\.\s\,]+\z/i) == 0
+    (self.to_sl_object_mask_property =~ /\Amask[\[\]\(\)a-z0-9_\.\s\,]+\z/i) == 0
   end
-  
+
   # returns true if the string appears to represent a root property
   # set of an object mask.  This breaks out the individual components
   # of the "array-like" portion of the string and checks to see that
@@ -101,8 +114,7 @@ class String
     end
 
     is_property_set
-  end
-  
+  end  
 end
 
 # Ruby Symbol Class
@@ -110,11 +122,4 @@ class Symbol
   def to_sl_object_mask()
     self.to_s.to_sl_object_mask()
   end
-end
-
-# Checks a string to see if it is a well-formatted 
-# Object Mask string.  At the moment this is a pretty 
-# primitive test.
-def validate_mask_string(mask_string)
-  ((mask_string =~ /\Amask/) == 0) || ((mask_string =~ /\A\[/) == 0)
 end
