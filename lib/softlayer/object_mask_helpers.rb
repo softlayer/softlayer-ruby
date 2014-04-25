@@ -31,7 +31,6 @@ class Hash
     raise RuntimeError, "An object mask must start with root properties" if keys().find { |key| !__valid_root_property_key?(key) }
 
     key_strings = __sl_object_mask_properties_for_keys();
-    puts "key_strings are #{key_strings.inspect}"
     key_strings.count > 1 ? "[#{key_strings.join(',')}]" : "#{key_strings[0]}"
   end
   
