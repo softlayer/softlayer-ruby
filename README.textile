@@ -10,7 +10,7 @@ The SoftLayer API Client for Ruby is a library for connecting to and calling the
 
 h2. Overview
 
-The client invokes methods in the API using XML-RPC as a transport mechanism. XML-RPC is handled using XMLRPC classes from the Ruby core library.
+The client invokes methods in the API using XML-RPC as a transport mechanism. XML-RPC is handled using @XMLRPC@ classes from the Ruby core library.
 
 To make calls to the Ruby API through the client you will create an instance of the @SoftLayer::Client@ class, optionally identifying an API endpoint, and providing authentication information in the form of a username and API key. From the client you can obtain various @SoftLayer::Service@ instances and use them to invoke the methods of the API. Results of those calls are communicated from the server to the client as XML, then decoded and returned to you as standard Ruby objects like Hashes, Arrays, and Strings.
 
@@ -26,13 +26,13 @@ A network connection is required, and a valid SoftLayer API username and api key
 
 h2(#whats_new). What's New
 
-Version 2.0 of the softlayer_api gem changes the protocol used to communicate with the SoftLayer API from REST to XML-RPC. This change should not require any changes to existing scripts. However there are two new behaviors which may require you to change existing scripts:
+Version 2.0 of the @softlayer_api@ gem changes the protocol used to communicate with the SoftLayer API from REST to XML-RPC. This change should not require any changes to existing scripts. However there are two new behaviors which may require you to change existing scripts:
 * Object Masks are now sent to the server using the "Extended Object Mask Format":http://sldn.softlayer.com/article/Object-Masks.
 * Result limits are now specified using a single call rather than requiring two
 
 h3. XML-RPC
 
-In the broad view of the SoftLayer API, when sending requests to the server, an API client may use SOAP:http://sldn.softlayer.com/article/SOAP, XML-RPC:http://sldn.softlayer.com/article/XML-RPC, or REST:http://sldn.softlayer.com/article/REST. Previous versions of the SoftLayer API Gem used REST to communicate with the server. This version uses XML-RPC. Adopting the XML-RPC transport mechanism allows the Gem to take adavantage of features of the API, most notalby Object Filters, that are not available through the REST interface.
+In the broad view of the SoftLayer API, when sending requests to the server, an API client may use "SOAP":http://sldn.softlayer.com/article/SOAP, "XML-RPC":http://sldn.softlayer.com/article/XML-RPC, or "REST":http://sldn.softlayer.com/article/REST. Previous versions of the SoftLayer API Gem used REST to communicate with the server. This version uses XML-RPC. Adopting the XML-RPC transport mechanism allows the Gem to take adavantage of features of the API that are not available through the REST interface.
 
 h3. Extended Object Masks
 
@@ -101,8 +101,8 @@ If you are going to create a lot of different @Service@ objects and they are all
 In addition to the globals, the @SoftLayer@ namespace defines two constants representing the endpoints for the SoftLayer API on the private and public networks:
 
 table{position:relative;left:2em;width:80%}.
-|{vertical-align:baseline;width:35%}.@API_PUBLIC_ENDPOINT@|A constant containing the base address for the public network REST inspired endpoint of the SoftLayer API - @https://api.softlayer.com/soao/v3/@|
-|{vertical-align:baseline}.@API_PRIVATE_ENDPOINT@|A constant containing the base address for the private network REST inspired endpoint of the SoftLayer API - @https://api.service.softlayer.com/soap/v3/@|
+|{vertical-align:baseline;width:35%}.@API_PUBLIC_ENDPOINT@|A constant containing the base address for the public network XML-RPC endpoint of the SoftLayer API - @https://api.softlayer.com/xmlrpc/v3/@|
+|{vertical-align:baseline}.@API_PRIVATE_ENDPOINT@|A constant containing the base address for the private network XML-RPC endpoint of the SoftLayer API - @https://api.service.softlayer.com/xmlrpc/v3/@|
 
 For more information about the two networks see "Choosing_the_Public_or_Private_Network":http://sldn.softlayer.com/article/The_SoftLayer_API#Choosing_the_Public_or_Private_Network. You can change the default endpoint URL by setting the global variable @$SL_API_BASE_URL@ to either of these two values.
 
@@ -179,7 +179,7 @@ end
 
 The code creates a variable named @ticket_ref@ which refers to ticket 98765 through the tickets_service. This @ticket_ref@ is used with an @object_mask@ to retrieve the ticket and, if the ticket meets the conditional requirement, that same @ticket_ref@ is reused to add an update to the ticket.
 
-h4. Adding an Objet Mask
+h4. Adding an Object Mask
 
 If you wish to limit the volume of information that the server returns about a particular object, you can use an Object Mask to indicate exactly which attributes you are interested in. To provide an Object Mask you simply insert a call to @object_mask@ in the call chain for the method you are invoking.
 
