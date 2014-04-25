@@ -264,10 +264,10 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       # This is a workaround for a potential problem that arises from mis-using the
       # API. If you call SoftLayer_Virtual_Guest and you call the getObject method
       # but pass a virtual guest as a parameter, what happens is the getObject method
-      # is called through an HTTP POST verb and the API creates a new CCI that is a copy
-      # of the one you passed in.
+      # is called through an HTTP POST verb and the API creates a new VirtualServer that 
+      # is a copy of the one you passed in.
       #
-      # The counter-intuitive creation of a new CCI is unexpected and, even worse,
+      # The counter-intuitive creation of a new Virtual Server is unexpected and, even worse,
       # is something you can be billed for. To prevent that, we ignore the request
       # body on a "getObject" call and print out a warning.
       if (method_name == :getObject) && (nil != args) && (!args.empty?) then

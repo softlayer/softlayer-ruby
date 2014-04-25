@@ -40,11 +40,12 @@ open_tickets.each { |ticket| puts "#{ticket['id']} - #{ticket['title']}" }
 # information known about it. We've already collected this information above,
 # but this will demonstrate using an object mask to filter the results from
 # the server.
-ticket_service = softlayer_client.service_named("Ticket")
+ticket_service = softlayer_client["Ticket"]
 open_tickets.each do |ticket|
   begin
-    pp ticket_service.object_with_id(ticket["id"]).object_mask( "id", "title", "createDate", "modifyDate", { "assignedUser" => ["id", "username", "email"] }).getObject
+    pp ticket_service.object_with_id(ticket["id"]).object_mask("mask[id,title,createDate,modifyDate,assignedUser[id,username,email]]").getObject
   rescue Exception => exception
-    puts "exception #{e}"
+    puts "exception #{exception}"
   end
 end
+

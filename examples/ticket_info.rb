@@ -33,9 +33,7 @@ begin
   ticket_service = softlayer_client.service_named("Ticket");
   ticket_ref = ticket_service.object_with_id(8172109)
 
-  ticket = ticket_ref.object_mask({"updates" => ["entry", "createDate"]},
-                                  "assignedUserId",
-                                  {"attachedHardware" => "datacenter"}).getObject
+  ticket = ticket_ref.object_mask("mask[updates[entry,createDate],assignedUserId,attachedHardware.datacenter]".getObject
   pp ticket
 rescue Exception => exception
   puts "Unable to retrieve the ticket"
