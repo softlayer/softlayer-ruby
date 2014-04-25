@@ -79,7 +79,7 @@ module SoftLayer
       #
       # if it does not, then add it
       service_name.strip!
-      if not service_name =~ /\ASoftLayer_/i
+      if not service_name =~ /\ASoftLayer_/
         service_name = "SoftLayer_#{service_name}"
       end
 
