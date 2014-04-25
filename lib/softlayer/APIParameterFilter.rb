@@ -16,14 +16,15 @@ module SoftLayer
 #     account_service.object_with_id(91234).getSomeAttribute
 #
 # The invocation of <tt>object_with_id</tt> will cause an instance of this
-# class to be instantiated with the service as its target.
+# class to be created with the service as its target.
 #
 class APIParameterFilter
-  attr_accessor :target
-  attr_accessor :parameters
+  attr_reader :target
+  attr_reader :parameters
 
-  def initialize
-    @parameters = {}
+  def initialize(target, starting_parameters = nil)
+    @target = target
+    @parameters = starting_parameters || {}
   end
 
   # Adds an API filter that narrows the scope of a call to an object with
@@ -34,26 +35,28 @@ class APIParameterFilter
   def object_with_id(value)
     # we create a new object in case the user wants to store off the
     # filter chain and reuse it later
-    merged_object = APIParameterFilter.new;
-    merged_object.target = self.target
-    merged_object.parameters = @parameters.merge({ :server_object_id => value })
-    merged_object
+    APIParameterFilter.new(self.target, @parameters.merge({ :server_object_id => value }))
   end
 
-  # Adds an objectMask to a call so that the amount of information returned will be
-  # limited.  For example, if you wanted to get the ids of all the open tickets
-  # for an accoun you might use:
+  # Use this as part of a method call chain to add an object mask to
+  # the request. The arguments to object mask should be well formed
+  # Extended Object Mask strings:
   #
-  # account_service.object_mask(id).getOpenTickets
+  #   ticket_service.object_mask(
+  #     "mask[createDate, modifyDate]",
+  #     "mask(SoftLayer_Some_Type).aProperty").getObject
+  #
+  # The object_mask becomes part of the request sent to the server
+  #
   def object_mask(*args)
-    raise ArgumentError, "Object mask expects mask properties" if args.empty? || (1 == args.count && !args[0])
+    raise ArgumentError, "object_mask expects well-formatted root object mask strings" if args.empty? || (1 == args.count && !args[0])
+    raise ArgumentError, "object_mask expects well-formatted root object mask strings" if args.find { |arg| !(arg.kind_of?(String)) }
+
+    object_mask = (@parameters[:object_mask] || []) + args
 
     # we create a new object in case the user wants to store off the
     # filter chain and reuse it later
-    merged_object = APIParameterFilter.new;
-    merged_object.target = self.target
-    merged_object.parameters = @parameters.merge({ :object_mask => args })
-    merged_object
+    APIParameterFilter.new(self.target, @parameters.merge({ :object_mask => object_mask }));
   end
 
   # Adds a result limit which helps you page through a long list of entities
@@ -68,10 +71,7 @@ class APIParameterFilter
   def result_limit(offset, limit)
     # we create a new object in case the user wants to store off the
     # filter chain and reuse it later
-    merged_object = APIParameterFilter.new;
-    merged_object.target = self.target
-    merged_object.parameters = @parameters.merge({ :result_offset => offset, :result_limit => limit })
-    merged_object
+    APIParameterFilter.new(self.target, @parameters.merge({ :result_offset => offset, :result_limit => limit }))
   end
 
   # Adds an object_filter to the result.  An Object Filter allows you
@@ -82,10 +82,7 @@ class APIParameterFilter
 
     # we create a new object in case the user wants to store off the
     # filter chain and reuse it later
-    merged_object = APIParameterFilter.new;
-    merged_object.target = self.target
-    merged_object.parameters = @parameters.merge({:object_filter => filter})
-    merged_object
+    APIParameterFilter.new(self.target, @parameters.merge({:object_filter => filter}));
   end
 
   # A utility method that returns the server object ID (if any) stored

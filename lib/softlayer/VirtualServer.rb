@@ -7,7 +7,7 @@ module SoftLayer
     def cancel!
       self.service.object_with_id(self.id).deleteObject()
     end
-    
+
     ##
     # Returns the SoftLayer Service used to work with instances of this class.  For Virtual Servers that is +SoftLayer_Virtual_Guest+
     def service
@@ -15,7 +15,7 @@ module SoftLayer
     end
 
     ##
-    # Returns the default object mask used when fetching servers from the API when an 
+    # Returns the default object mask used when fetching servers from the API when an
     # explicit object mask is not provided.
     def self.default_object_mask
       sub_mask = ObjectMaskProperty.new("mask")
@@ -50,7 +50,7 @@ module SoftLayer
       end
 
       required_properties_mask = ['id']
-      
+
       service = softlayer_client["Virtual_Guest"]
       service = service.object_mask([object_mask, required_properties_mask])
 
@@ -100,7 +100,7 @@ module SoftLayer
         :public_ip => "virtualGuests.primaryIpAddress",
         :private_ip => "virtualGuests.primaryBackendIpAddress"
       }
-      
+
       if options_hash.has_key?(:local_disk) then
         options_hash[:local_disk] = options_hash[:local_disk] ? 1 : 0
       end

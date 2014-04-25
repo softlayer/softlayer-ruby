@@ -2,7 +2,7 @@ shared_examples_for "server with mutable hostname" do
 	it "has a method to change the host name" do
 		server.should respond_to(:set_hostname!)
 	end
-  
+
   it "rejects nil hostnames" do
     expect { server.set_hostname!(nil) }.to  raise_error(ArgumentError)
   end

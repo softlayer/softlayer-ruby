@@ -59,18 +59,18 @@ module SoftLayer
 
         # define an instance method of the class this is being
         # called on which will get the value of the resource.
-        # 
+        #
         # The getter will take one argument "force_update" which
         # is treated as boolean value.  If true, then the getter will
         # force the resource to update (by using its "to_update") block.
         #
-        # If the force variable is false, or not given, then the 
+        # If the force variable is false, or not given, then the
         # getter will call the "should update" block to find out if the
         # resource needs to be updated.
         #
         getter_name = resource_name.to_sym
         value_instance_variable = "@#{resource_name}".to_sym
-        
+
         define_method(getter_name) do |*args|
           force_update = args[0] || false
 

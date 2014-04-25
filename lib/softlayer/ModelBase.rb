@@ -25,7 +25,7 @@ module SoftLayer
       network_hash = self.softlayer_properties(object_mask)
       @sl_hash = network_hash.inject({}) { | new_hash, pair | new_hash[pair[0].to_sym] = pair[1]; new_hash }
     end
-    
+
     ##
     # Subclasses implement this method.  The implementation should
     # make a request to the SoftLayer API and retrieve an up-to-date

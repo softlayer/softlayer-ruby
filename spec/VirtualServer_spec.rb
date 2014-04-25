@@ -38,7 +38,7 @@ describe SoftLayer::VirtualServer do
 			service
 		end
 
-		SoftLayer::VirtualServer.new(mock_client, { "id" => 12345 })		
+		SoftLayer::VirtualServer.new(mock_client, { "id" => 12345 })
 	}
 
 	it "identifies with the SoftLayer_Virtual_Guest service" do
@@ -48,7 +48,7 @@ describe SoftLayer::VirtualServer do
 	it_behaves_like "server with port speed" do
 		let (:server) { sample_server }
 	end
-  
+
   it_behaves_like "server with mutable hostname" do
 		let (:server) { sample_server }
   end

@@ -49,7 +49,7 @@ describe SoftLayer::BareMetalServer do
 		let (:server) { sample_server }
 	end
 
-	it "can be cancelled" do 
+	it "can be cancelled" do
 		mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "DEADBEEFBADF00D")
 		allow(mock_client).to receive(:[]) do |service_name|
 			service_name.should == "Ticket"

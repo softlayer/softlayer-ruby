@@ -12,7 +12,7 @@ module SoftLayer
 
       if(object_mask)
         service = service.object_mask(object_mask)
-      else 
+      else
         service = service.object_mask(self.class.default_object_mask)
       end
 
@@ -45,32 +45,32 @@ module SoftLayer
 		end
 
 		def self.ticket_with_id(softlayer_client, ticket_id, options = {})
-	      if options.has_key?(:object_mask)
-	        object_mask = options[:object_mask]
-	      else
-	        object_mask = default_object_mask()
-	      end
+      if options.has_key?(:object_mask)
+        object_mask = options[:object_mask]
+      else
+        object_mask = default_object_mask()
+      end
 
-	      ticket_data = softlayer_client["Ticket"].object_with_id(server_id).object_mask(object_mask).getObject()
+      ticket_data = softlayer_client["Ticket"].object_with_id(server_id).object_mask(object_mask).getObject()
 
-	      return new(softlayer_client, ticket_data)
-	    end
+      return new(softlayer_client, ticket_data)
+    end
 
-	    def self.create_ticket(softlayer_client, title=nil, body=nil, subject_id=nil, user_id=nil)
-	    	if(nil == user_id)
-	    		current_user = softlayer_client["Account"].object_mask("id").getCurrentUser()
-	    		user_id = current_user["id"]
-	    	end
+    def self.create_ticket(softlayer_client, title=nil, body=nil, subject_id=nil, user_id=nil)
+      if(nil == user_id)
+        current_user = softlayer_client["Account"].object_mask("id").getCurrentUser()
+        user_id = current_user["id"]
+      end
 
-	    	new_ticket = {
-	            'subjectId' => subject_id,
-	            'contents' => body,
-	            'assignedUserId' => user_id,
-	            'title' => title
-        	}
+      new_ticket = {
+        'subjectId' => subject_id,
+        'contents' => body,
+        'assignedUserId' => user_id,
+        'title' => title
+      }
 
-        	ticket_data = softlayer_client["Ticket"].createStandardTicket(new_ticket, body)
-        	return new(softlayer_client, ticket_data)
-	    end
+      ticket_data = softlayer_client["Ticket"].createStandardTicket(new_ticket, body)
+      return new(softlayer_client, ticket_data)
+    end
 	end
 end

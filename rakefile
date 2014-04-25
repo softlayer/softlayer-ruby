@@ -30,7 +30,7 @@ require 'yard'
 YARD::Rake::YardocTask.new do |yard_task|
 	yard_task.files = ["lib/**/*.rb"]
 end
-  
+
 RSpec::Core::RakeTask.new(:spec) do |t|
 	$DEBUG = 1
 	t.rspec_opts = ["-c"]

@@ -118,7 +118,7 @@ describe SoftLayer::Client do
     client.should respond_to(:user_agent)
     client.should respond_to(:user_agent=)
   end
-  
+
   it 'has a reasonable default user agent string' do
     client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
     client.user_agent.should == "softlayer_api gem/#{SoftLayer::VERSION} (Ruby #{RUBY_PLATFORM}/#{RUBY_VERSION})"

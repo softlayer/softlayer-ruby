@@ -2,15 +2,15 @@ h1=. SoftLayer API Client for Ruby
 
 The SoftLayer API Client for Ruby is a library for connecting to and calling the routines of "The SoftLayer API":http://sldn.softlayer.com/article/The_SoftLayer_API from the "Ruby":http://www.ruby-lang.org programming language.
 
-<div id="note" style="margin: 1em; padding: 1em; background-color: #fcfcfc; border: 1px solid black">
+<div id="note" style="margin: 1em; padding: 0.5em; background-color: #fcfcfc; border: 1px solid black">
 	*Important Note*
-	
+
 	Version 2.0 of the gem may require you change your existing scripts. Please see "What's New":#whats_new for details.
 </div>
 
 h2. Overview
 
-The client invokes methods in the API using XML-RPC as a transport mechanism. XML-RPC is handled using XMLRPC classes from the Ruby core library.
+The client invokes methods in the API using XML-RPC as a transport mechanism. XML-RPC is handled using @XMLRPC@ classes from the Ruby core library.
 
 To make calls to the Ruby API through the client you will create an instance of the @SoftLayer::Client@ class, optionally identifying an API endpoint, and providing authentication information in the form of a username and API key. From the client you can obtain various @SoftLayer::Service@ instances and use them to invoke the methods of the API. Results of those calls are communicated from the server to the client as XML, then decoded and returned to you as standard Ruby objects like Hashes, Arrays, and Strings.
 
@@ -26,37 +26,25 @@ A network connection is required, and a valid SoftLayer API username and api key
 
 h2(#whats_new). What's New
 
-Version 2.0 of the softlayer_api gem changes the protocol used to communicate with the SoftLayer API from REST to XML-RPC. This change should not require any changes to existing scripts. However there are two more changes which may require changes to scripts.  First, Object Masks are now sent to the server using the "Extended Object Mask Format":http://sldn.softlayer.com/article/Object-Masks. Secondly, the software also changes the syntax for specifying result limits.
+Version 2.0 of the @softlayer_api@ gem changes the protocol used to communicate with the SoftLayer API from REST to XML-RPC. This change should not require any changes to existing scripts. However there are two new behaviors which may require you to change existing scripts:
+* Object Masks are now sent to the server using the "Extended Object Mask Format":http://sldn.softlayer.com/article/Object-Masks.
+* Result limits are now specified using a single call rather than requiring two
 
 h3. XML-RPC
 
-When sending requests to the server, an API client may use SOAP:http://sldn.softlayer.com/article/SOAP, XML-RPC:http://sldn.softlayer.com/article/XML-RPC, or REST:http://sldn.softlayer.com/article/REST. Previous versions of the SoftLayer API Gem used the REST to communicate with the server. This version uses XML-RPC. Adopting the XML-RPC transport mechanism allows the Gem to take adavantage of features of the API, most notalby Object Filters, that are not available through the REST interface.
+In the broad view of the SoftLayer API, when sending requests to the server, an API client may use "SOAP":http://sldn.softlayer.com/article/SOAP, "XML-RPC":http://sldn.softlayer.com/article/XML-RPC, or "REST":http://sldn.softlayer.com/article/REST. Previous versions of the SoftLayer API Gem used REST to communicate with the server. This version uses XML-RPC. Adopting the XML-RPC transport mechanism allows the Gem to take adavantage of features of the API that are not available through the REST interface.
 
 h3. Extended Object Masks
 
-The SoftLayer API Gem now sends object masks to the API server using the Extended Object Mask format. This may require you to change existing scripts to retrieve the same information. For example, in prior versions of the Gem, one could retrieve the @metricTrackingObjectId@ for a hardware server by using an object mask with that property to an object managed by the @SoftLayer_Hardware@ service:
+In previous versions of the SoftLayer Gem the @object_mask@ call modifier accepted Ruby structres like Arrays and Hashes and would do its best to construct Object Masks from them. @object_mask@ now expects masks to be passed as strings in the "Object Mask":http://sldn.softlayer.com/article/Object-Masks format and passes them through to the API for processing. If you are using @object_mask@, you will probably have to change your existing scripts.
 
-<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">hardware_service = SoftLayer::Service.new('SoftLayer_Hardware')
-hardware_record = $softlayer_hardware.object_with_id(123456).object_mask("metricTrackingObjectId").getObject()
+The Gem extends the Ruby @Hash@ class with a method, @to_sl_object_mask@, which can help with the conversion between masks made of structured objects and the string format. This method, however, must be called explicitly. Here is an example of calling @to_sl_object_mask@:
+
+<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">mask_hash = { "mask" => ["id", {"assignedUser" => ["id", "username"]}, "createDate"],
+	"mask(SoftLayer_Hardware_Server)" => ["id", "bareMetalInstanceFlag"] }
+mask_string = mask_hash.to_sl_object_mask
+# mask_string is "[mask[id,assignedUser[id,username],createDate],mask(SoftLayer_Hardware_Server)[id,bareMetalInstanceFlag]]"
 </code></pre>
-
-In this version of the Gem, however, this will return an error:
-
-<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">Property 'metricTrackingObjectId' not valid for 'SoftLayer_Hardware'.
-</code></pre>
-
-This error comes up because the @metricTrackingObjectId@ property belongs to the @SoftLayer_Hardware_Server@ service, not @SoftLayer_Hardware@.
-
-To make this request work in the 2.0 Gem, you must create a object mask property that instructs the gem which service to look in for the property. This code creates a Extended Object Mask with the type included and avoids the error:
-
-<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">metric_tracking_property = SoftLayer::ObjectMask.new()
-metric_tracking_property.type = "SoftLayer_Hardware_Server"
-metric_tracking_property.subproperties = "metricTrackingObjectId"
-
-starting_hardware = hardware_service.object_with_id(186908).object_mask(metric_tracking_property).getObject()
-</code></pre>
-
-If you find that some of your object masks are no longer working, check the SLDN web site and carefully examine which service provides the properties you are requesting.  Use typed object masks to explicitly retrieve the properties from the correct service.
 
 h3. Result Limits
 
@@ -113,8 +101,8 @@ If you are going to create a lot of different @Service@ objects and they are all
 In addition to the globals, the @SoftLayer@ namespace defines two constants representing the endpoints for the SoftLayer API on the private and public networks:
 
 table{position:relative;left:2em;width:80%}.
-|{vertical-align:baseline;width:35%}.@API_PUBLIC_ENDPOINT@|A constant containing the base address for the public network REST inspired endpoint of the SoftLayer API - @https://api.softlayer.com/soao/v3/@|
-|{vertical-align:baseline}.@API_PRIVATE_ENDPOINT@|A constant containing the base address for the private network REST inspired endpoint of the SoftLayer API - @https://api.service.softlayer.com/soap/v3/@|
+|{vertical-align:baseline;width:35%}.@API_PUBLIC_ENDPOINT@|A constant containing the base address for the public network XML-RPC endpoint of the SoftLayer API - @https://api.softlayer.com/xmlrpc/v3/@|
+|{vertical-align:baseline}.@API_PRIVATE_ENDPOINT@|A constant containing the base address for the private network XML-RPC endpoint of the SoftLayer API - @https://api.service.softlayer.com/xmlrpc/v3/@|
 
 For more information about the two networks see "Choosing_the_Public_or_Private_Network":http://sldn.softlayer.com/article/The_SoftLayer_API#Choosing_the_Public_or_Private_Network. You can change the default endpoint URL by setting the global variable @$SL_API_BASE_URL@ to either of these two values.
 
@@ -180,7 +168,7 @@ The @object_with_id@ call returns an object that you can use as a reference to a
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">begin
     ticket_ref = ticket_service.object_with_id(98765)
-    ticket = ticket_ref.object_mask("assignedUserId").getObject
+    ticket = ticket_ref.object_mask("mask.assignedUserId").getObject
     if ticket['assignedUserId'] == 123456
         updates = ticket_ref.addUpdate({"entry" => "Get to work on these tickets!"})
     end
@@ -191,15 +179,13 @@ end
 
 The code creates a variable named @ticket_ref@ which refers to ticket 98765 through the tickets_service. This @ticket_ref@ is used with an @object_mask@ to retrieve the ticket and, if the ticket meets the conditional requirement, that same @ticket_ref@ is reused to add an update to the ticket.
 
-h4. Adding an object mask
+h4. Adding an Object Mask
 
-If you wish to limit the volume of information that the server returns about a particular object, you can use an object mask to indicate exactly which attributes you are interested in. To provide an object mask you simply insert a call to @object_mask@ in the call chain for the method you are invoking.
+If you wish to limit the volume of information that the server returns about a particular object, you can use an Object Mask to indicate exactly which attributes you are interested in. To provide an Object Mask you simply insert a call to @object_mask@ in the call chain for the method you are invoking.
 
-The arguments to object_mask can be strings, arrays, or hashes. The Strings provide the names of properties you are interested in and the hash and array elements allow you to structure your mask much as the properties themselves are structured.
+The arguments to @object_mask@ must strings. Each string should be a well defined Object Mask as defined in the "SLDN documentation":http://sldn.softlayer.com/article/Object-Masks.
 
-To look at some examples, consider the following object from the server. It has four properties and an entity, and id, a title, a createDate (giving the date it was create), a modifyDate (the date it was last modified), and an assignedUser entity.
-
-The @assignedUser@ entity has three properties, @id@, @username@, and @health@.
+To look at some examples, consider the following object from the server. It has four properties: @id@, @title@, @createDate@ and @modifyDate@.  It also has an entity, @assignedUser@. The @assignedUser@ entity has three properties: @id@, @username@, and @health@.
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">{
     "id"=>1736473,
@@ -211,49 +197,42 @@ The @assignedUser@ entity has three properties, @id@, @username@, and @health@.
         "username"=>"AlfredQHacker",
         "health"=>"Fantastic"
     },
-}
-</code></pre>
+}</code></pre>
 
 If we were making a request to the server to retrieve this object, or an array of such objects, we might want to limit the response so that it contains just the @id@ fields:
 
-<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">an_api_service.object_mask("id").getObject
+<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">an_api_service.object_mask("mask.id").getObject
 => {"id"=>1736473}
 </code></pre>
 
 If we want more than one property back from the server the call to @object_mask@ can identify multiple properties as separate argumnents:
 
-<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">an_api_service.object_mask("id", "createDate").getObject  # object_mask with multiple arguments
-=> {"id"=>1736473, "createDate"=>"2010-04-22T00:12:36-05:00"}
-</code></pre>
-
-or it can include them in an array:
-
-<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">an_api_service.object_mask(["id", "createDate"]).getObject # multiple mask items presented in an array
+<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">an_api_service.object_mask("mask[id,createDate]").getObject
 => {"id"=>1736473, "createDate"=>"2010-04-22T00:12:36-05:00"}
 </code></pre>
 
 If we ask for the @assignedUser@ we get back that entire entity:
 
-<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">an_api_service.object_mask("assignedUser").getObject
+<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">an_api_service.object_mask("mask.assignedUser").getObject
 => {"assignedUser"=> {"id"=>14, "username"=>"AlfredQHacker", "health"=>"Fantastic"}}
 </code></pre>
 
 However, we may not be interested in the entire assigned user entity, we may
-want to get just the id of the assigned user. To do that we pass a hash argument to @object_mask@. The has follows the hierarchical nature of the properties
+want to get just the id of the assigned user:
 
-<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">an_api_service.object_mask({"assignedUser" => "id"}).getObject # using a hash to access the property hierarchy
+<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">an_api_service.object_mask("mask[assignedUser.id]").getObject
 => {"assignedUser"=>{"id"=>14}}
 </code></pre>
 
-We can identify a particular set of attributes we are interested in by combining the array and hash forms:
+We can identify a particular set of attributes we are interested in by combining Object Mask forms:
 
-<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">an_api_service.object_mask({"assignedUser" => ["id", "health"]}).getObject # retrieving multiple properties
+<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">an_api_service.object_mask("mask[assignedUser[id,health]]").getObject # retrieving multiple properties
 => {"assignedUser"=>{"id"=>14, "health"=>"Fantastic"}}
 </code></pre>
 
-Object masks are sent to the server and applied on the server side. By carefully choosing an object mask, you can limit amount of information transferred from the server which may improve bandwidth and processing time.
+Object masks are sent to the server and applied on the server side.  Errors in the object mask format will lead to exceptions being thrown by the SoftLayer API. By carefully choosing an Object Mask, you can limit amount of information transferred from the server which may improve bandwidth and processing time.
 
-You may add calls to both @object_mask@ and @object_with_id@, but only one call to each should appear in any calling sequence.
+You @object_with_id@ should only be called once in any calling sequence. You may call @object_mask@ multiple times, but the server may generate a warning if the Object Masks ask for duplicate properties of some object.
 
 h2. Examples
 
@@ -278,7 +257,7 @@ end
 </code></pre>
 
 This second example retrieves some of the information in a support ticket then adds and update to that ticket. It uses an object_with_id to create an object
-that references a ticket with a particular ID and reuses that reference later to refer to the same ticket. It combines that reference with an object_mask to limit the amount of information transferred from the server.
+that references a ticket with a particular ID and reuses that reference later to refer to the same ticket. It combines that reference with an @object_mask@ to limit the amount of information transferred from the server.
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">require 'rubygems'
 require 'softlayer_api'
@@ -294,9 +273,7 @@ begin
   # this creates an alias to the ticket service bound to the ticket with the id 123456
   ticket_ref = ticket_service.object_with_id(123456) # you'll have to substitute your own ticket ID
 
-  ticket = ticket_ref.object_mask({"updates" => ["entry", "createDate"]},
-                                   "assignedUserId",
-                                   {"attachedHardware" => "datacenter"}).getObject
+  ticket = ticket_ref.object_mask("mask[updates[entry,createDate],assignedUserId,attachedHardware.datacenter]").getObject
   pp ticket
 rescue Exception => exception
   puts "Unable to retrieve the ticket"

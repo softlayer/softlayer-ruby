@@ -16,7 +16,7 @@ module SoftLayer
     end
 
     ##
-    # Returns the service responsible for handling the given 
+    # Returns the service responsible for handling the given
     # server.  In the base class (this one) the server is abstract
     # but subclasses implement this to return the appropriate service
     # from their client.
@@ -25,18 +25,18 @@ module SoftLayer
     def service
       raise RuntimeError, "this method is an abstract method in the Server base class"
     end
-    
+
     ##
     # Reload the details of this server from the SoftLayer API
     def softlayer_properties(object_mask = nil)
       my_service = self.service
-      
+
       if(object_mask)
         my_service = my_service.object_mask(object_mask)
       else
         my_service = my_service.object_mask(self.class.default_object_mask)
       end
-      
+
       my_service.object_with_id(self.id).getObject()
     end
 
@@ -59,7 +59,7 @@ module SoftLayer
     # Change the port speed of the server
     #
     # +new_speed+ should be 0, 10, 100, or 1000
-    # set +public+ to +false+ in order to change the primary private 
+    # set +public+ to +false+ in order to change the primary private
     # network interface instead of the primary public one.
     #
     def change_port_speed(new_speed, public = true)

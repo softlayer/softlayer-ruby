@@ -113,8 +113,8 @@ module SoftLayer
   # key will be an Object Filter <tt>{ "foo" => {} }</tt>
   #
   # This allows you to create object filters by chaining +[]+ calls:
-  #   object_filter["foo"]["bar"]["baz"] = 3 
-  # yields 
+  #   object_filter["foo"]["bar"]["baz"] = 3
+  # yields
   #   {"foo" => { "bar" => {"baz" => 3}}}
   #
   class ObjectFilter < Hash

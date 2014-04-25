@@ -13,14 +13,14 @@ module SoftLayer
 
     ##
     # Sends a ticket asking that a server be cancelled (i.e. shutdown and
-    # removed from the account). 
-    # The +cancellation_reason+ parameter should be a key from the hash returned 
+    # removed from the account).
+    # The +cancellation_reason+ parameter should be a key from the hash returned
     # by +BareMetalServer::cancellation_reasons+.
     #
     # You may add your own, more specific reasons for cancelling a server in the
     # +comments+ parameter.
     #
-    def cancel!(reason = :unneeded, comment = '')    
+    def cancel!(reason = :unneeded, comment = '')
       if !bare_metal_instance? then
         cancellation_reasons = self.class.cancellation_reasons()
         cancel_reason = cancellation_reasons[reason] || cancellation_reasons[:unneeded]
@@ -38,7 +38,7 @@ module SoftLayer
     end
 
     ##
-    # Returns the default object mask used when fetching servers from the API when an 
+    # Returns the default object mask used when fetching servers from the API when an
     # explicit object mask is not provided.
     def self.default_object_mask
       sub_mask = ObjectMaskProperty.new("mask")
@@ -56,11 +56,11 @@ module SoftLayer
       super + [sub_mask]
     end
 
-    ## 
+    ##
     # Returns a list of the cancellation reasons to use when cancelling a server.
     #
     # When cancelling a server, you must provide a parameter which is the "cancellation reason".
-    # The API expects very specific values for that parameter.  To simplify the API we 
+    # The API expects very specific values for that parameter.  To simplify the API we
     # have reduced those reasons down to symbols and this method returns
     # a hash mapping from the symbol to the string that the API expects.
     #

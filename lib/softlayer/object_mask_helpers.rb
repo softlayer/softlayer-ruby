@@ -24,39 +24,46 @@
 # Extensions to the hash class to support using them in constructing object
 # masks
 class Hash
-  # Returns a string representing the object mask content represented by the
-  # Hash.  The keys are expected to be strings.  
-  #
-  # Values that are strings convert into "dotted" pairs. For example, 
-  # +{"ticket" => "lastUpdate"}+ would translate to +ticket.lastUpdate+.
-  # 
-  # Values that are hashes or arrays become bracketed expressions. <tt>{"ticket" => ["id", "lastUpdate"] }</tt> 
-  # would become <tt>ticket[id,lastupdate]</tt>
+  def __valid_root_property_key?(key_string)
+    return key_string == "mask" || (0 == (key_string =~ /\Amask\([a-z][a-z0-9_]*\)\z/i))
+  end
+
   def to_sl_object_mask()
+    raise RuntimeError, "An object mask must contain properties" if empty?
+    raise RuntimeError, "An object mask must start with root properties" if keys().find { |key| !__valid_root_property_key?(key) }
+
+    key_strings = __sl_object_mask_properties_for_keys();
+    key_strings.count > 1 ? "[#{key_strings.join(',')}]" : "#{key_strings[0]}"
+  end
+
+  def to_sl_object_mask_property()
+    key_strings = __sl_object_mask_properties_for_keys();
+    "#{key_strings.join(',')}"
+  end
+
+  def __sl_object_mask_properties_for_keys
     key_strings = [];
 
     each do |key, value|
-      string_for_key = key.to_sl_object_mask
+      return "" if !value
 
-      if(nil == value)
-        return ""
-      end
+      string_for_key = key.to_sl_object_mask_property
 
-      if value.kind_of? String then
-        string_for_key = "#{string_for_key}.#{value.to_sl_object_mask}"
+      if value.kind_of?(String) || value.kind_of?(Symbol) then
+        string_for_key = "#{string_for_key}.#{value.to_sl_object_mask_property}"
       end
 
       if value.kind_of?(Array) || value.kind_of?(Hash) then
-        value_string = value.to_sl_object_mask
+        value_string = value.to_sl_object_mask_property
         if value_string && !value_string.empty?
-          string_for_key = "#{string_for_key}[#{value.to_sl_object_mask}]"
+          string_for_key = "#{string_for_key}[#{value_string}]"
         end
       end
 
       key_strings.push(string_for_key)
     end
 
-    return key_strings.join(",")
+    key_strings
   end
 end
 
@@ -65,10 +72,11 @@ end
 # object masks
 class Array
   # Returns a string representing the object mask content represented by the
-  # Array. Each value in the array is converted to its object mask equivalent
-  def to_sl_object_mask()
+  # Array. Each value in the array is converted to its object mask eqivalent
+  def to_sl_object_mask_property()
     return "" if self.empty?
-    map { |item| item ? item.to_sl_object_mask() : nil }.compact.flatten.join(",")
+    property_content = map { |item| item.to_sl_object_mask_property() }.flatten.join(",")
+    "#{property_content}"
   end
 end
 
@@ -79,8 +87,8 @@ class String
   # Returns a string representing the object mask content represented by the
   # String. Strings are simply represented as copies of themselves.  We make
   # a copy in case the original String is modified somewhere along the way
-  def to_sl_object_mask()
-    return clone()
+  def to_sl_object_mask_property()
+    return self.strip
   end
 end
 
@@ -90,85 +98,5 @@ end
 class Symbol
   def to_sl_object_mask()
     self.to_s.to_sl_object_mask()
-  end
-end
-
-module SoftLayer
-  # An ObjectMaskProperty is a class which helps to represent more complex
-  # Object Mask expressions that include the type associated with the mask.
-  #
-  # For example, if you are working through the <tt>SoftLayer_Account</tt> and asking
-  # for all the Hardware servers on the account, and if you wish to ask
-  # for the <tt>metricTrackingObjectId</tt> of the servers, you might try:
-  #
-  #   account_service = SoftLayer::Service.new("SoftLayer_Account")
-  #   account_service.object_mask("id", "metricTrackingObjectId").getHardware()
-  #
-  # However, because the result of +getHardware+ is a list of entities in the
-  # +SoftLayer_Hardware+ service and entities in that service do not have
-  # +metricTrackingObjectIds+, this call will fail.
-  #
-  # Instead, you need to add an object mask property to the mask that
-  # indicates that the +metricTrackingObjectId+ is found in the +SoftLayer_Hardware_Server+
-  # service. Such a thing might look like:
-  #
-  #   tracking_id_property = SoftLayer::ObjectMaskProperty.new("metricTrackingObjectId")
-  #   tracking_id_property.type = "SoftLayer_Hardware_Server"
-  #   account_service.object_mask("id", tracking_id_property).getHardware()
-  #
-  class ObjectMaskProperty
-    # The name of the property being defined
-    attr_reader :name
-
-    # An SLDN data type that the mask relates to (for example +SoftLayer_Ticket+, or +Softlayer_Hardware_Server+)
-    attr_accessor :type
-
-    # Any subproperties of this mask property
-    attr_accessor :subproperties
-
-    def initialize(property_name)
-      raise(ArgumentError, "property name cannot be empty or nil") if property_name.nil? || property_name.empty?
-      @name = property_name.clone
-    end
-
-    def to_sl_object_mask()
-      object_mask_string = self.name.clone
-
-      if self.type then
-        object_mask_string += "(#{self.type})"
-      end
-
-      if self.subproperties then
-        subproperty_string = "";
-
-        if self.subproperties.kind_of?(String) then
-          subproperty_string = ".#{subproperties}"
-        end
-
-        if self.subproperties.kind_of?(Array) || self.subproperties.kind_of?(Hash) then
-          subproperty_string = "[#{self.subproperties.to_sl_object_mask}]"
-        end
-
-        object_mask_string = object_mask_string + subproperty_string
-      end
-
-      object_mask_string
-    end
-  end
-
-  # This class is largely a utility and implementation detail used when forwarding
-  # an object mask to the server.  It acts as an +ObjectMaskProperty+ with the
-  # name "mask".  When a string is generated from this the result will be either
-  # a simple mask (like +mask.some_property+) or a compound mask of the form:
-  # <tt>mask[mask_property_structure]</tt>
-  #
-  # Code using the client is unlikely to have to use this class unless you
-  # are relying on the softlayer_api gem object mask helpers to generate masks
-  # and then sending the mask to the server yourself.
-  #
-  class ObjectMask < ObjectMaskProperty
-    def initialize()
-      super "mask"
-    end
   end
 end

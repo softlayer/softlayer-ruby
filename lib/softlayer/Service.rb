@@ -19,7 +19,6 @@
 #
 
 require 'xmlrpc/client'
-require 'zlib'
 
 # The XML-RPC spec calls for the "faultCode" in faults to be an integer
 # but the SoftLayer XML-RPC API can return strings as the "faultCode"
@@ -51,10 +50,6 @@ class XMLRPC::Client
 end
 
 module SoftLayer
-  # A subclass of Exception with nothing new provided. This simply provides
-  # a unique type for exceptions from the SoftLayer API
-  class SoftLayerAPIException < RuntimeError
-  end
 
   # = SoftLayer API Service
   #
@@ -92,14 +87,29 @@ module SoftLayer
     attr_reader :client
 
     def initialize(service_name, options = {})
-      raise SoftLayerAPIException.new("Please provide a service name") if service_name.nil? || service_name.empty?
+      raise ArgumentError,"Please provide a service name" if service_name.nil? || service_name.empty?
 
       # remember the service name
       @service_name = service_name;
 
+      # Collect the keys relevant to client creation and pass them on to construct
+      # the client if one is needed.
+      client_keys = [:username, :api_key, :endpoint_url]
+      client_options = options.inject({}) do |new_hash, pair|
+        if client_keys.include? pair[0]
+          new_hash[pair[0]] = pair[1]
+        end
+
+        new_hash
+      end
+
       # if the options hash already has a client
       # go ahead and use it
       if options.has_key? :client
+        if !client_options.empty?
+          raise RuntimeError, "Attempting to construct a service both with a client, and with client initialization options. Only one or the other should be provided."
+        end
+
         @client = options[:client]
       else
         # Accepting client initialization options here
@@ -110,20 +120,6 @@ module SoftLayer
 Creating services with Client initialization options is deprecated and may be removed
 in a future release. Please change your code to create a client and obtain a service
 using either client.service_named('<service_name_here>') or client['<service_name_here>']}
-        end
-
-        # Collect the keys relevant to client creation and pass them on to construct
-        # the client
-        client_keys = [:username, :api_key, :endpoint_url]
-        client_options = options.inject({}) do |new_hash, pair|
-          if client_keys.include? pair[0]
-            new_hash[pair[0]] = pair[1]
-            new_hash
-          end
-        end
-
-        if client && !options.empty?
-          raise SoftlayerAPIException.new("Attempting to construct a service both with a client, and with client initialization options. Only one or the other should be provided")
         end
 
         @client = SoftLayer::Client.new(client_options)
@@ -148,28 +144,20 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     #   ticket_service.object_with_id(35212).getObject
     #
     def object_with_id(object_of_interest)
-      proxy = APIParameterFilter.new
-      proxy.target = self
-
+      proxy = APIParameterFilter.new(self)
       return proxy.object_with_id(object_of_interest)
     end
 
     # Use this as part of a method call chain to add an object mask to
-    # the request.The arguments to object mask should be the strings
-    # that are the keys of the mask:
+    # the request. The arguments to object mask should be well formed
+    # Extended Object Mask strings:
     #
-    #   ticket_service.object_mask("createDate", "modifyDate").getObject
+    #   ticket_service.object_mask("mask[ticket.createDate, ticket.modifyDate]", "mask(SoftLayer_Some_Type).aProperty").getObject
     #
-    # Before being used, the string passed will be url-encoded by this
-    # routine. (i.e. there is no need to url-encode the strings beforehand)
-    #
-    # As an implementation detail, the object_mask becomes part of the
-    # query on the url sent to the API server
+    # The object_mask becomes part of the request sent to the server
     #
     def object_mask(*args)
-      proxy = APIParameterFilter.new
-      proxy.target = self
-
+      proxy = APIParameterFilter.new(self)
       return proxy.object_mask(*args)
     end
 
@@ -179,15 +167,13 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     # by using result_limit(0,5).  Then for the next 5 you would use
     # result_limit(5,5), then result_limit(10,5) etc.
     def result_limit(offset, limit)
-      proxy = APIParameterFilter.new
-      proxy.target = self
+      proxy = APIParameterFilter.new(self)
       return proxy.result_limit(offset, limit)
     end
 
     # Add an object filter to the request.
     def object_filter(filter)
-      proxy = APIParameterFilter.new
-      proxy.target = self
+      proxy = APIParameterFilter.new(self)
       return proxy.object_filter(filter)
     end
 
@@ -247,11 +233,11 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       end
 
       # Object masks go into the headers too.
-      if parameters && parameters.server_object_mask
-        object_mask = SoftLayer::ObjectMask.new()
-        object_mask.subproperties = parameters.server_object_mask
+      if parameters && parameters.server_object_mask && parameters.server_object_mask.count != 0
+        object_mask = parameters.server_object_mask
+        object_mask_string = object_mask.count == 1 ? object_mask[0] : "[#{object_mask.join(',')}]"
 
-        additional_headers.merge!("SoftLayer_ObjectMask" => { "mask" => object_mask.to_sl_object_mask })
+        additional_headers.merge!("SoftLayer_ObjectMask" => { "mask" => object_mask_string }) unless object_mask_string.empty?
       end
 
       # Result limits go into the headers
@@ -264,14 +250,13 @@ using either client.service_named('<service_name_here>') or client['<service_nam
         additional_headers.merge!("#{@service_name}InitParameters" => { "id" => parameters.server_object_id })
       end
 
-
       # This is a workaround for a potential problem that arises from mis-using the
       # API. If you call SoftLayer_Virtual_Guest and you call the getObject method
       # but pass a virtual guest as a parameter, what happens is the getObject method
-      # is called through an HTTP POST verb and the API creates a new CCI that is a copy
-      # of the one you passed in.
+      # is called through an HTTP POST verb and the API creates a new VirtualServer that
+      # is a copy of the one you passed in.
       #
-      # The counter-intuitive creation of a new CCI is unexpected and, even worse,
+      # The counter-intuitive creation of a new Virtual Server is unexpected and, even worse,
       # is something you can be billed for. To prevent that, we ignore the request
       # body on a "getObject" call and print out a warning.
       if (method_name == :getObject) && (nil != args) && (!args.empty?) then
@@ -311,9 +296,9 @@ using either client.service_named('<service_name_here>') or client['<service_nam
 
         # this is a workaround for a bug in later versions of the XML-RPC client in Ruby Core.
         # see https://bugs.ruby-lang.org/issues/8182
-        @xmlrpc_client.http_header_extra = { 
-          "Accept-Encoding" => "identity", 
-          "User-Agent" => @client.user_agent 
+        @xmlrpc_client.http_header_extra = {
+          "Accept-Encoding" => "identity",
+          "User-Agent" => @client.user_agent
         }
 
         if $DEBUG

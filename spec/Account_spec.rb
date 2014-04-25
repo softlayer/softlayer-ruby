@@ -50,7 +50,7 @@ describe SoftLayer::Account do
       allow(test_service).to receive(:getObject) do
         { "id" => "232279", "firstName" => "kangaroo" }
       end
-      
+
       test_service
     end
 
