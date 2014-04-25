@@ -56,20 +56,20 @@ describe SoftLayer::APIParameterFilter do
     it "rejects nil object masks" do
       expect { filter.object_mask(nil) }.to raise_error
     end
-    
+
     it "rejects calls that pass things other than strings" do
       expect { filter.object_mask(["anArray"]) }.to raise_error
       expect { filter.object_mask({"a" => "hash"}) }.to raise_error
       expect { filter.object_mask(Object.new) }.to raise_error
     end
-    
+
     it "accepts strings representing a property set" do
       masked_filter = nil
 
       expect { masked_filter = filter.object_mask("[mask.firstProperty, mask.secondProperty]") }.to_not raise_error
       masked_filter.server_object_mask.should == ["[mask.firstProperty, mask.secondProperty]"]
     end
-    
+
     it "stores its value in server_object_mask when called" do
       result = filter.object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]")
       result.server_object_mask.should == ["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"]
@@ -80,7 +80,7 @@ describe SoftLayer::APIParameterFilter do
       result.server_object_id.should == 12345
       result.server_object_mask.should == ["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"]
     end
-    
+
     it "allows call chaining with other object masks" do
       result = filter.object_mask("mask.fish").object_mask("mask[cow]").object_mask("mask(typed).duck").object_mask("mask(typed)[chicken]")
       result.server_object_mask.should == ["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"]

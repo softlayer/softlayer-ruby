@@ -16,7 +16,7 @@ module SoftLayer
 #     account_service.object_with_id(91234).getSomeAttribute
 #
 # The invocation of <tt>object_with_id</tt> will cause an instance of this
-# class to be instantiated with the service as its target.
+# class to be created with the service as its target.
 #
 class APIParameterFilter
   attr_reader :target
@@ -43,7 +43,7 @@ class APIParameterFilter
   # Extended Object Mask strings:
   #
   #   ticket_service.object_mask(
-  #     "mask[createDate, modifyDate]", 
+  #     "mask[createDate, modifyDate]",
   #     "mask(SoftLayer_Some_Type).aProperty").getObject
   #
   # The object_mask becomes part of the request sent to the server

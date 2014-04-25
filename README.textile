@@ -4,7 +4,7 @@ The SoftLayer API Client for Ruby is a library for connecting to and calling the
 
 <div id="note" style="margin: 1em; padding: 0.5em; background-color: #fcfcfc; border: 1px solid black">
 	*Important Note*
-	
+
 	Version 2.0 of the gem may require you change your existing scripts. Please see "What's New":#whats_new for details.
 </div>
 
@@ -40,10 +40,10 @@ In previous versions of the SoftLayer Gem the @object_mask@ call modifier accept
 
 The Gem extends the Ruby @Hash@ class with a method, @to_sl_object_mask@, which can help with the conversion between masks made of structured objects and the string format. This method, however, must be called explicitly. Here is an example of calling @to_sl_object_mask@:
 
-<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">mask_hash = { "mask" => ["id", {"assignedUser" => ["id", "username"]}, "createDate"], 
+<pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">mask_hash = { "mask" => ["id", {"assignedUser" => ["id", "username"]}, "createDate"],
 	"mask(SoftLayer_Hardware_Server)" => ["id", "bareMetalInstanceFlag"] }
 mask_string = mask_hash.to_sl_object_mask
-# mask_string is "[mask[id,assignedUser[id,username],createDate],mask(SoftLayer_Hardware_Server)[id,bareMetalInstanceFlag]]" 
+# mask_string is "[mask[id,assignedUser[id,username],createDate],mask(SoftLayer_Hardware_Server)[id,bareMetalInstanceFlag]]"
 </code></pre>
 
 h3. Result Limits

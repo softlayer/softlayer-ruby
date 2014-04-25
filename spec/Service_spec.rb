@@ -131,7 +131,7 @@ describe SoftLayer::Service do
       end
       ticket_proxy.getObject
     end
-    
+
     it "doesn't change an object_with_id proxy when used in a call chain with that proxy" do
       ticket_proxy = service.object_with_id(123456)
 
@@ -145,7 +145,7 @@ describe SoftLayer::Service do
     it "rejects improperly formatted masks" do
       expect { ticket_proxy = service.object_mask(["fish", "cow", "duck"]) }.to raise_error(ArgumentError)
       expect { ticket_proxy = service.object_mask({"fish" => "cow"}) }.to raise_error(ArgumentError)
-    end    
+    end
   end
 
   describe "#object_filter" do

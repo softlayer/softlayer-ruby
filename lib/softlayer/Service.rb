@@ -254,7 +254,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       # This is a workaround for a potential problem that arises from mis-using the
       # API. If you call SoftLayer_Virtual_Guest and you call the getObject method
       # but pass a virtual guest as a parameter, what happens is the getObject method
-      # is called through an HTTP POST verb and the API creates a new VirtualServer that 
+      # is called through an HTTP POST verb and the API creates a new VirtualServer that
       # is a copy of the one you passed in.
       #
       # The counter-intuitive creation of a new Virtual Server is unexpected and, even worse,
@@ -297,9 +297,9 @@ using either client.service_named('<service_name_here>') or client['<service_nam
 
         # this is a workaround for a bug in later versions of the XML-RPC client in Ruby Core.
         # see https://bugs.ruby-lang.org/issues/8182
-        @xmlrpc_client.http_header_extra = { 
-          "Accept-Encoding" => "identity", 
-          "User-Agent" => @client.user_agent 
+        @xmlrpc_client.http_header_extra = {
+          "Accept-Encoding" => "identity",
+          "User-Agent" => @client.user_agent
         }
 
         if $DEBUG

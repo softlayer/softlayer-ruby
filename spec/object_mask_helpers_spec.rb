@@ -36,7 +36,7 @@ describe String, "#to_sl_object_mask_property" do
 
   it "echos the empty string" do
     "".to_sl_object_mask_property.should eql("")
-  end  
+  end
 end
 
 describe Array,"#to_sl_object_mask_property" do
@@ -107,7 +107,7 @@ describe Hash, "#to_sl_object_mask" do
   it "converts masks with different roots" do
     object_mask = { "mask" => { "ipAddress" => {}},
       "mask(duck_type)" => {"webbed" => "feet"}}.to_sl_object_mask
-      
+
       ["[mask[ipAddress],mask(duck_type)[webbed.feet]]", "mask(duck_type)[webbed.feet],[mask[ipAddress]]"].find(object_mask).should be_true
   end
 end

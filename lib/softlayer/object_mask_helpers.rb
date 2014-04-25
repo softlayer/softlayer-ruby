@@ -25,7 +25,7 @@ class Hash
   def __valid_root_property_key?(key_string)
     return key_string == "mask" || (0 == (key_string =~ /\Amask\([a-z][a-z0-9_]*\)\z/i))
   end
-  
+
   def to_sl_object_mask()
     raise RuntimeError, "An object mask must contain properties" if empty?
     raise RuntimeError, "An object mask must start with root properties" if keys().find { |key| !__valid_root_property_key?(key) }
@@ -33,12 +33,12 @@ class Hash
     key_strings = __sl_object_mask_properties_for_keys();
     key_strings.count > 1 ? "[#{key_strings.join(',')}]" : "#{key_strings[0]}"
   end
-  
+
   def to_sl_object_mask_property()
     key_strings = __sl_object_mask_properties_for_keys();
     "#{key_strings.join(',')}"
   end
-  
+
   def __sl_object_mask_properties_for_keys
     key_strings = [];
 
