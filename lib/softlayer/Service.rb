@@ -20,7 +20,6 @@
 #
 
 require 'xmlrpc/client'
-require 'zlib'
 
 # The XML-RPC spec calls for the "faultCode" in faults to be an integer
 # but the SoftLayer XML-RPC API can return strings as the "faultCode"
@@ -94,9 +93,24 @@ module SoftLayer
       # remember the service name
       @service_name = service_name;
 
+      # Collect the keys relevant to client creation and pass them on to construct
+      # the client if one is needed.
+      client_keys = [:username, :api_key, :endpoint_url]
+      client_options = options.inject({}) do |new_hash, pair|
+        if client_keys.include? pair[0]
+          new_hash[pair[0]] = pair[1]
+        end
+
+        new_hash
+      end
+
       # if the options hash already has a client
       # go ahead and use it
       if options.has_key? :client
+        if !client_options.empty?
+          raise RuntimeError, "Attempting to construct a service both with a client, and with client initialization options. Only one or the other should be provided."
+        end
+
         @client = options[:client]
       else
         # Accepting client initialization options here
@@ -107,20 +121,6 @@ module SoftLayer
 Creating services with Client initialization options is deprecated and may be removed
 in a future release. Please change your code to create a client and obtain a service
 using either client.service_named('<service_name_here>') or client['<service_name_here>']}
-        end
-
-        # Collect the keys relevant to client creation and pass them on to construct
-        # the client
-        client_keys = [:username, :api_key, :endpoint_url]
-        client_options = options.inject({}) do |new_hash, pair|
-          if client_keys.include? pair[0]
-            new_hash[pair[0]] = pair[1]
-            new_hash
-          end
-        end
-
-        if client && !options.empty?
-          raise RuntimError, "Attempting to construct a service both with a client, and with client initialization options. Only one or the other should be provided"
         end
 
         @client = SoftLayer::Client.new(client_options)

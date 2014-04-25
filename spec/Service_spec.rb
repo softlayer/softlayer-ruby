@@ -59,11 +59,25 @@ describe SoftLayer::Service, "#new" do
       service.client.endpoint_url.should eq(SoftLayer::API_PUBLIC_ENDPOINT)
     end
 
+    it "construct a client with init parameters if given" do
+      service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
+      service.client.should_not be_nil
+      service.client.username.should eq("sample_username")
+      service.client.api_key.should eq("blah")
+      service.client.endpoint_url.should eq(SoftLayer::API_PUBLIC_ENDPOINT)
+    end
+
     it "accepts a client as an initialization parameter" do
       client = SoftLayer::Client.new() # authentication is taken from the globals
       service = SoftLayer::Service.new("SoftLayer_Account", :client => client)
       service.client.should be(client)
     end
+    
+    it "fails if both a client and client init options are provided" do
+      client = SoftLayer::Client.new() # authentication is taken from the globals
+      expect { SoftLayer::Service.new("SoftLayer_Account", :client => client, :username => "sample_username", :api_key => "blah") }.to raise_error(RuntimeError)
+    end
+    
   end #describe #new
 end
 
