@@ -86,35 +86,6 @@ class String
   def to_sl_object_mask_property()
     return self.strip
   end
-
-  # returns true if the string appears to represent the root property
-  # of an object mask. This doesn't parse the mask entirely, but
-  # requires that it begins with "mask" and contains only valid
-  # object mask characters.
-  def sl_root_property?
-    (self.to_sl_object_mask_property =~ /\Amask[\[\]\(\)a-z0-9_\.\s\,]+\z/i) == 0
-  end
-
-  # returns true if the string appears to represent a root property
-  # set of an object mask.  This breaks out the individual components
-  # of the "array-like" portion of the string and checks to see that
-  # each represents a root property
-  def sl_root_property_set?
-    is_property_set = false
-
-    match_data = self.strip.match(/\[(.*)\]/m)
-    if match_data
-      content = match_data[1].split(',').collect{ |part| part.strip }
-      
-      if content.count > 0
-        is_property_set = content.inject(true) do |is_property_set, content_item|
-          is_property_set && content_item.sl_root_property?
-        end
-      end
-    end
-
-    is_property_set
-  end  
 end
 
 # Ruby Symbol Class

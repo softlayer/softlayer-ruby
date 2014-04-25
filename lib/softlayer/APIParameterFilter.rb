@@ -53,18 +53,8 @@ class APIParameterFilter
   def object_mask(*args)
     raise ArgumentError, "object_mask expects well-formatted root object mask strings" if args.empty? || (1 == args.count && !args[0])
     raise ArgumentError, "object_mask expects well-formatted root object mask strings" if args.find { |arg| !(arg.kind_of?(String)) }
-    raise ArgumentError, "object_mask expects well-formatted root object mask strings" if args.find { |arg| !(arg.sl_root_property_set?) && !(arg.sl_root_property?) }
 
-    object_mask = args.inject(@parameters[:object_mask] || []) do |collected_items, argument|
-      match_data = argument.match(/\A\[(.*)\]\z/m)
-      if match_data 
-        collected_items = collected_items + match_data[1].split(',').collect {|mask_element| mask_element.strip }
-      else
-        collected_items.push(argument)
-      end
-
-      collected_items
-    end
+    object_mask = (@parameters[:object_mask] || []) + args
 
     # we create a new object in case the user wants to store off the
     # filter chain and reuse it later

@@ -36,48 +36,7 @@ describe String, "#to_sl_object_mask_property" do
 
   it "echos the empty string" do
     "".to_sl_object_mask_property.should eql("")
-  end
-  
-  describe "#represents_sl_root_property?" do 
-    it "rejects bogus strings" do
-      "".sl_root_property?.should be_false
-      "foo".sl_root_property?.should be_false
-    end
-  
-    it "accepts good strings" do
-      " mask.foo".sl_root_property?.should be_true
-      " mask.foo\n".sl_root_property?.should be_true
-      "mask[property1,property2.subproperty]".sl_root_property?.should be_true
-      "mask(sometype)[prpoerty1, property2.subproperty]".sl_root_property?.should be_true
-    end  
-  end
-  
-  describe "#sl_root_property_set?" do
-    it "rejects strings that don't start and end with brackets" do
-      "".sl_root_property_set?.should be_false
-      "[".sl_root_property_set?.should be_false
-      "[mask.aProperty".sl_root_property_set?.should be_false
-      "mask.aProperty]".sl_root_property_set?.should be_false
-    end
-
-    it "rejects an empty set" do
-      "[]".sl_root_property_set?.should be_false
-    end
-
-    it "accepts a simple property set" do
-      "[mask.simple]".sl_root_property_set?.should be_true
-    end
-
-    it "accepts a compound property set" do
-      "[mask.simple,mask.alsoSimple]".sl_root_property_set?.should be_true
-    end
-
-    it "allows whitespace between properties" do
-      "[mask.simple, mask.alsoSimple]".sl_root_property_set?.should be_true
-      "[mask.simple,\tmask.alsoSimple]".sl_root_property_set?.should be_true
-      "[mask.simple,\nmask.alsoSimple]".sl_root_property_set?.should be_true
-    end
-  end
+  end  
 end
 
 describe Array,"#to_sl_object_mask_property" do
@@ -146,7 +105,9 @@ describe Hash, "#to_sl_object_mask" do
   end
 
   it "converts masks with different roots" do
-    { "mask" => { "ipAddress" => {}},
-      "mask(duck_type)" => {"webbed" => "feet"}}.to_sl_object_mask.should eql("[mask[ipAddress],mask(duck_type)[webbed.feet]]")
+    object_mask = { "mask" => { "ipAddress" => {}},
+      "mask(duck_type)" => {"webbed" => "feet"}}.to_sl_object_mask
+      
+      ["[mask[ipAddress],mask(duck_type)[webbed.feet]]", "mask(duck_type)[webbed.feet],[mask[ipAddress]]"].find(object_mask).should be_true
   end
 end

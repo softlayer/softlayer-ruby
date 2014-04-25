@@ -67,13 +67,7 @@ describe SoftLayer::APIParameterFilter do
       masked_filter = nil
 
       expect { masked_filter = filter.object_mask("[mask.firstProperty, mask.secondProperty]") }.to_not raise_error
-      masked_filter.server_object_mask.should == ["mask.firstProperty", "mask.secondProperty"]
-    end
-
-    it "rejects object masks that are not based on the root" do
-      expect { filter.object_mask("fish", "cow", "duck") }.to raise_error(ArgumentError)
-      expect { filter.object_mask("[mask.isARootProperty, notARootProperty, alsoNotARootProperty]") }.to raise_error(ArgumentError)
-      expect { filter.object_mask("mask.fish", "mask[cow, platypus]", "[mask.duck, mask.chicken]")}.to_not raise_error
+      masked_filter.server_object_mask.should == ["[mask.firstProperty, mask.secondProperty]"]
     end
     
     it "stores its value in server_object_mask when called" do
