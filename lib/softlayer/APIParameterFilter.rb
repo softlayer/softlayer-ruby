@@ -19,11 +19,12 @@ module SoftLayer
 # class to be instantiated with the service as its target.
 #
 class APIParameterFilter
-  attr_accessor :target
-  attr_accessor :parameters
+  attr_reader :target
+  attr_reader :parameters
 
-  def initialize
-    @parameters = {}
+  def initialize(target, starting_parameters = nil)
+    @target = target
+    @parameters = starting_parameters || {}
   end
 
   # Adds an API filter that narrows the scope of a call to an object with
@@ -34,10 +35,7 @@ class APIParameterFilter
   def object_with_id(value)
     # we create a new object in case the user wants to store off the
     # filter chain and reuse it later
-    merged_object = APIParameterFilter.new;
-    merged_object.target = self.target
-    merged_object.parameters = @parameters.merge({ :server_object_id => value })
-    merged_object
+    APIParameterFilter.new(self.target, @parameters.merge({ :server_object_id => value }))
   end
 
   # Use this as part of a method call chain to add an object mask to
@@ -58,10 +56,7 @@ class APIParameterFilter
 
     # we create a new object in case the user wants to store off the
     # filter chain and reuse it later
-    merged_object = APIParameterFilter.new;
-    merged_object.target = self.target
-    merged_object.parameters = @parameters.merge({ :object_mask => object_mask })
-    merged_object
+    APIParameterFilter.new(self.target, @parameters.merge({ :object_mask => object_mask }));
   end
 
   # Adds a result limit which helps you page through a long list of entities
@@ -76,10 +71,7 @@ class APIParameterFilter
   def result_limit(offset, limit)
     # we create a new object in case the user wants to store off the
     # filter chain and reuse it later
-    merged_object = APIParameterFilter.new;
-    merged_object.target = self.target
-    merged_object.parameters = @parameters.merge({ :result_offset => offset, :result_limit => limit })
-    merged_object
+    APIParameterFilter.new(self.target, @parameters.merge({ :result_offset => offset, :result_limit => limit }))
   end
 
   # Adds an object_filter to the result.  An Object Filter allows you
@@ -90,10 +82,7 @@ class APIParameterFilter
 
     # we create a new object in case the user wants to store off the
     # filter chain and reuse it later
-    merged_object = APIParameterFilter.new;
-    merged_object.target = self.target
-    merged_object.parameters = @parameters.merge({:object_filter => filter})
-    merged_object
+    APIParameterFilter.new(self.target, @parameters.merge({:object_filter => filter}));
   end
 
   # A utility method that returns the server object ID (if any) stored

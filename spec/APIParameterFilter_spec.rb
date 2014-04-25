@@ -27,7 +27,7 @@ require 'softlayer_api'
 require 'rspec'
 
 describe SoftLayer::APIParameterFilter do
-  let(:filter) {filter = SoftLayer::APIParameterFilter.new}
+  let(:filter) {filter = SoftLayer::APIParameterFilter.new(nil)}
 
   describe "#object_with_id" do
     it "initializes with empty properties" do
@@ -103,16 +103,12 @@ describe SoftLayer::APIParameterFilter do
 
   describe "#method_missing" do
     it "invokes call_softlayer_api_with_params(method_name, self, args, &block) on it's target with itself and the method_missing parameters" do
-      filter = SoftLayer::APIParameterFilter.new.object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]").object_with_id(12345)
-
       target = double("method_missing_target")
-      target.should_receive(:call_softlayer_api_with_params).with(:getObject, filter, ["marshmallow"])
 
-      filter.target = target
+      filter = SoftLayer::APIParameterFilter.new(target).object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]").object_with_id(12345)
+      target.should_receive(:call_softlayer_api_with_params).with(:getObject, filter, ["marshmallow"])
 
       filter.getObject("marshmallow")
     end
   end
 end
-
-

@@ -52,10 +52,6 @@ class XMLRPC::Client
 end
 
 module SoftLayer
-  # A subclass of Exception with nothing new provided. This simply provides
-  # a unique type for exceptions from the SoftLayer API
-  class SoftLayerAPIException < RuntimeError
-  end
 
   # = SoftLayer API Service
   #
@@ -93,7 +89,7 @@ module SoftLayer
     attr_reader :client
 
     def initialize(service_name, options = {})
-      raise SoftLayerAPIException.new("Please provide a service name") if service_name.nil? || service_name.empty?
+      raise ArgumentError,"Please provide a service name" if service_name.nil? || service_name.empty?
 
       # remember the service name
       @service_name = service_name;
@@ -124,7 +120,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
         end
 
         if client && !options.empty?
-          raise SoftlayerAPIException.new("Attempting to construct a service both with a client, and with client initialization options. Only one or the other should be provided")
+          raise RuntimError, "Attempting to construct a service both with a client, and with client initialization options. Only one or the other should be provided"
         end
 
         @client = SoftLayer::Client.new(client_options)
@@ -149,9 +145,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     #   ticket_service.object_with_id(35212).getObject
     #
     def object_with_id(object_of_interest)
-      proxy = APIParameterFilter.new
-      proxy.target = self
-
+      proxy = APIParameterFilter.new(self)
       return proxy.object_with_id(object_of_interest)
     end
 
@@ -164,9 +158,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     # The object_mask becomes part of the request sent to the server
     #
     def object_mask(*args)
-      proxy = APIParameterFilter.new
-      proxy.target = self
-
+      proxy = APIParameterFilter.new(self)
       return proxy.object_mask(*args)
     end
 
@@ -176,15 +168,13 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     # by using result_limit(0,5).  Then for the next 5 you would use
     # result_limit(5,5), then result_limit(10,5) etc.
     def result_limit(offset, limit)
-      proxy = APIParameterFilter.new
-      proxy.target = self
+      proxy = APIParameterFilter.new(self)
       return proxy.result_limit(offset, limit)
     end
 
     # Add an object filter to the request.
     def object_filter(filter)
-      proxy = APIParameterFilter.new
-      proxy.target = self
+      proxy = APIParameterFilter.new(self)
       return proxy.object_filter(filter)
     end
 
