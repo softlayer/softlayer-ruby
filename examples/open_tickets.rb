@@ -48,4 +48,3 @@ open_tickets.each do |ticket|
     puts "exception #{exception}"
   end
 end
-

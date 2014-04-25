@@ -72,12 +72,12 @@ describe SoftLayer::Service, "#new" do
       service = SoftLayer::Service.new("SoftLayer_Account", :client => client)
       service.client.should be(client)
     end
-    
+
     it "fails if both a client and client init options are provided" do
       client = SoftLayer::Client.new() # authentication is taken from the globals
       expect { SoftLayer::Service.new("SoftLayer_Account", :client => client, :username => "sample_username", :api_key => "blah") }.to raise_error(RuntimeError)
     end
-    
+
   end #describe #new
 end
 
@@ -204,4 +204,3 @@ describe SoftLayer::Service do
     end
   end
 end #describe SoftLayer::Service
-
