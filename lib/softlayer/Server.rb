@@ -34,7 +34,7 @@ module SoftLayer
       if(object_mask)
         my_service = my_service.object_mask(object_mask)
       else
-        my_service = my_service.object_mask(self.class.default_object_mask)
+        my_service = my_service.object_mask(self.class.default_object_mask.to_sl_object_mask)
       end
 
       my_service.object_with_id(self.id).getObject()
@@ -73,27 +73,32 @@ module SoftLayer
     end
 
     def self.default_object_mask
-      [ 'globalIdentifier',
-        'notes',
-        'hostname',
-        'domain',
-        'fullyQualifiedDomainName',
-        'datacenter',
-        'primaryIpAddress',
-        'primaryBackendIpAddress',
-        { 'operatingSystem' => {
-           'softwareLicense.softwareDescription' => ['manufacturer', 'name', 'version','referenceCode'],
-           'passwords' => ['username','password'] } },
-       'privateNetworkOnlyFlag',
-       'userData',
-       'datacenter',
-       'networkComponents.primarySubnet[id, netmask, broadcastAddress, networkIdentifier, gateway]',
-       'billingItem.recurringFee',
-       'hourlyBillingFlag',
-       'tagReferences[id,tag[name,id]]',
-       'networkVlans[id,vlanNumber,networkSpace]',
-       'postInstallScriptUri' ]
-     end
+      { "mask" => [
+          'globalIdentifier',
+          'notes',
+          'hostname',
+          'domain',
+          'fullyQualifiedDomainName',
+          'datacenter',
+          'primaryIpAddress',
+          'primaryBackendIpAddress',
+          { 'operatingSystem' => {
+              'softwareLicense.softwareDescription' => ['manufacturer', 'name', 'version','referenceCode'],
+              'passwords' => ['username','password']
+            }
+          },
+          'privateNetworkOnlyFlag',
+          'userData',
+          'datacenter',
+          'networkComponents.primarySubnet[id, netmask, broadcastAddress, networkIdentifier, gateway]',
+          'billingItem.recurringFee',
+          'hourlyBillingFlag',
+          'tagReferences[id,tag[name,id]]',
+          'networkVlans[id,vlanNumber,networkSpace]',
+          'postInstallScriptUri'
+        ]
+      }
+    end
 
      def to_s
       result = super

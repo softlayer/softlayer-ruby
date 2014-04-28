@@ -41,19 +41,21 @@ module SoftLayer
     # Returns the default object mask used when fetching servers from the API when an
     # explicit object mask is not provided.
     def self.default_object_mask
-      sub_mask = ObjectMaskProperty.new("mask")
-      sub_mask.type = "SoftLayer_Hardware_Server"
-      sub_mask.subproperties = [
-        'bareMetalInstanceFlag',
-        'provisionDate',
-        'hardwareStatus',
-        'memoryCapacity',
-        'processorPhysicalCoreAmount',
-        'networkManagementIpAddress',
-        'networkComponents[id, status, speed, maxSpeed, name, ipmiMacAddress, ipmiIpAddress, macAddress, primaryIpAddress, port, primarySubnet]',
-        'activeTransaction[id, transactionStatus[friendlyName,name]]',
-        'hardwareChassis[id, name]']
-      super + [sub_mask]
+      sub_mask = {
+        "mask(SoftLayer_Hardware_Server)" => [
+          'bareMetalInstanceFlag',
+          'provisionDate',
+          'hardwareStatus',
+          'memoryCapacity',
+          'processorPhysicalCoreAmount',
+          'networkManagementIpAddress',
+          'networkComponents[id, status, speed, maxSpeed, name, ipmiMacAddress, ipmiIpAddress, macAddress, primaryIpAddress, port, primarySubnet]',
+          'activeTransaction[id, transactionStatus[friendlyName,name]]',
+          'hardwareChassis[id, name]'
+        ]
+      }
+
+      super.merge(sub_mask)
     end
 
     ##
@@ -86,7 +88,7 @@ module SoftLayer
       if options.has_key?(:object_mask)
         object_mask = options[:object_mask]
       else
-        object_mask = default_object_mask()
+        object_mask = default_object_mask.to_sl_object_mask
       end
 
       required_properties_mask = ['id', 'bareMetalInstanceFlag', 'billingItem.id']
@@ -121,7 +123,7 @@ module SoftLayer
     #
     def self.find_servers(softlayer_client, options_hash = {})
       if(!options_hash.has_key? :object_mask)
-        object_mask = BareMetalServer.default_object_mask
+        object_mask = BareMetalServer.default_object_mask.to_sl_object_mask
       else
         object_mask = options_hash[:object_mask]
       end
@@ -157,10 +159,11 @@ module SoftLayer
           } ));
       end
 
-      required_properties_mask = ['id', 'bareMetalInstanceFlag', 'billingItem.id']
+      required_properties_mask = "mask[id,bareMetalInstanceFlag,billingItem.id]"
 
       service = softlayer_client['Account']
-      service = service.object_mask([object_mask, required_properties_mask])
+      puts "#{object_mask},#{required_properties_mask}"
+      service = service.object_mask(object_mask, required_properties_mask)
       service = service.object_filter(object_filter) if object_filter && !object_filter.empty?
 
       if options_hash.has_key?(:result_limit)

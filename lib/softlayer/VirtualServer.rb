@@ -18,24 +18,26 @@ module SoftLayer
     # Returns the default object mask used when fetching servers from the API when an
     # explicit object mask is not provided.
     def self.default_object_mask
-      sub_mask = ObjectMaskProperty.new("mask")
-      sub_mask.type = "SoftLayer_Virtual_Guest"
-      sub_mask.subproperties = [
-       'createDate',
-       'modifyDate',
-       'provisionDate',
-       'dedicatedAccountHostOnlyFlag',
-       'lastKnownPowerState.name',
-       'powerState',
-       'status',
-       'maxCpu',
-       'maxMemory',
-       'activeTransaction[id, transactionStatus[friendlyName,name]]',
-       'networkComponents[id, status, speed, maxSpeed, name, macAddress, primaryIpAddress, port, primarySubnet]',
-       'lastOperatingSystemReload.id',
-       'blockDevices',
-       'blockDeviceTemplateGroup[id, name, globalIdentifier]' ]
-      super + [sub_mask]
+      sub_mask = {
+        "mask(SoftLayer_Virtual_Guest)" => [
+          'createDate',
+          'modifyDate',
+          'provisionDate',
+          'dedicatedAccountHostOnlyFlag',
+          'lastKnownPowerState.name',
+          'powerState',
+          'status',
+          'maxCpu',
+          'maxMemory',
+          'activeTransaction[id, transactionStatus[friendlyName,name]]',
+          'networkComponents[id, status, speed, maxSpeed, name, macAddress, primaryIpAddress, port, primarySubnet]',
+          'lastOperatingSystemReload.id',
+          'blockDevices',
+          'blockDeviceTemplateGroup[id, name, globalIdentifier]'
+        ]
+      }
+
+      super.merge(sub_mask)
     end #default_object_mask
 
 
@@ -46,7 +48,7 @@ module SoftLayer
       if options.has_key?(:object_mask)
         object_mask = options[:object_mask]
       else
-        object_mask = default_object_mask()
+        object_mask = default_object_mask.to_sl_object_mask
       end
 
       required_properties_mask = ['id']
@@ -82,7 +84,7 @@ module SoftLayer
     #
     def self.find_servers(softlayer_client, options_hash = {})
       if(!options_hash.has_key? :object_mask)
-        object_mask = VirtualServer.default_object_mask
+        object_mask = VirtualServer.default_object_mask.to_sl_object_mask
       else
         object_mask = options_hash[:object_mask]
       end

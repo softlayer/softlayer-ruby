@@ -53,7 +53,7 @@ describe Array,"#to_sl_object_mask_property" do
   end
 
   it "handles nils in the array" do
-    ["foo", nil, "bar"].to_sl_object_mask().should eql("foo,bar")
+    ["foo", nil, "bar"].to_sl_object_mask_property().should eql("foo,bar")
   end
 end
 

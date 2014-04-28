@@ -13,27 +13,29 @@ module SoftLayer
       if(object_mask)
         service = service.object_mask(object_mask)
       else
-        service = service.object_mask(self.class.default_object_mask)
+        service = service.object_mask(self.class.default_object_mask.to_sl_object_mask)
       end
 
       service.object_with_id(self.id).getObject()
 		end
 
 		def self.default_object_mask
-			[
-				'id',							# This is an internal ticket ID, not the one usually seen in the portal
-				'serviceProvider',
-				'serviceProviderResourceId', 	# This is the ticket ID usually seen in the portal
-				'title',
-				'subject',
-				{'assignedUser' => ['username', 'firstName', 'lastName'] },
-				'status.id',
-				'createDate',
-				'lastEditDate',
-				'newUpdatesFlag',
-				'awaitingUserResponseFlag',
-				'serverAdministrationFlag',
-			]
+      {
+        "mask" => [
+  				'id',							# This is an internal ticket ID, not the one usually seen in the portal
+  				'serviceProvider',
+  				'serviceProviderResourceId', 	# This is the ticket ID usually seen in the portal
+  				'title',
+  				'subject',
+  				{'assignedUser' => ['username', 'firstName', 'lastName'] },
+  				'status.id',
+  				'createDate',
+  				'lastEditDate',
+  				'newUpdatesFlag',
+  				'awaitingUserResponseFlag',
+  				'serverAdministrationFlag',
+  			]
+      }
 		end
 
 		def self.ticket_subjects(softlayer_client)
@@ -48,7 +50,7 @@ module SoftLayer
       if options.has_key?(:object_mask)
         object_mask = options[:object_mask]
       else
-        object_mask = default_object_mask()
+        object_mask = default_object_mask.to_sl_object_mask
       end
 
       ticket_data = softlayer_client["Ticket"].object_with_id(server_id).object_mask(object_mask).getObject()
