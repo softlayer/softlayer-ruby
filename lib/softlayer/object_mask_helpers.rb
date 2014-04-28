@@ -75,7 +75,7 @@ class Array
   # Array. Each value in the array is converted to its object mask eqivalent
   def to_sl_object_mask_property()
     return "" if self.empty?
-    property_content = map { |item| item.to_sl_object_mask_property() }.flatten.join(",")
+    property_content = map { |item| item ? item.to_sl_object_mask_property() : nil  }.compact.flatten.join(",")
     "#{property_content}"
   end
 end
