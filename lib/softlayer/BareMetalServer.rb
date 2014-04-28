@@ -162,7 +162,6 @@ module SoftLayer
       required_properties_mask = "mask[id,bareMetalInstanceFlag,billingItem.id]"
 
       service = softlayer_client['Account']
-      puts "#{object_mask},#{required_properties_mask}"
       service = service.object_mask(object_mask, required_properties_mask)
       service = service.object_filter(object_filter) if object_filter && !object_filter.empty?
 
