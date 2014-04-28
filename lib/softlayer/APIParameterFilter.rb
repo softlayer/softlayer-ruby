@@ -119,12 +119,10 @@ class APIParameterFilter
     puts "SoftLayer::APIParameterFilter#method_missing called #{method_name}, #{args.inspect}" if $DEBUG
 
     if(!block && method_name.to_s.match(/[[:alnum:]]+/))
-      result = @target.call_softlayer_api_with_params(method_name, self, args)
+      @target.call_softlayer_api_with_params(method_name, self, args)
     else
-      result = super
+      super
     end
-
-    result
   end
 end
 

@@ -28,7 +28,7 @@ module SoftLayer
 			result = {}
 			result[:username] =  $SL_API_USERNAME if $SL_API_USERNAME
 			result[:api_key] = $SL_API_KEY if $SL_API_KEY
-			result[:endpoint_url] = $SL_API_BASE_URL ? $SL_API_BASE_URL : API_PUBLIC_ENDPOINT
+			result[:endpoint_url] = $SL_API_BASE_URL || API_PUBLIC_ENDPOINT
 			result
 		end
 
