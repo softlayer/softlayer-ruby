@@ -49,10 +49,12 @@ class APIParameterFilter
   # The object_mask becomes part of the request sent to the server
   #
   def object_mask(*args)
-    raise ArgumentError, "object_mask expects well-formatted root object mask strings" if args.empty? || (1 == args.count && !args[0])
-    raise ArgumentError, "object_mask expects well-formatted root object mask strings" if args.find { |arg| !(arg.kind_of?(String)) }
+    raise ArgumentError, "object_mask expects object mask strings" if args.empty? || (1 == args.count && !args[0])
+    raise ArgumentError, "object_mask expects strings" if args.find{ |arg| !arg.kind_of?(String) }
 
-    object_mask = (@parameters[:object_mask] || []) + args
+    mask_parser = ObjectMaskParser.new()
+    object_masks = args.collect { |mask_string| mask_parser.parse(mask_string)}.flatten
+    object_mask = (@parameters[:object_mask] || []) + object_masks
 
     # we create a new object in case the user wants to store off the
     # filter chain and reuse it later
@@ -94,7 +96,26 @@ class APIParameterFilter
   # a utility method that returns the object mask (if any) stored
   # in this parameter set.
   def server_object_mask
-    self.parameters[:object_mask]
+    if parameters[:object_mask] && !parameters[:object_mask].empty?
+      reduced_masks = parameters[:object_mask].inject([]) do |merged_masks, object_mask|
+        mergeable_mask = merged_masks.find { |mask| mask.can_merge_with? object_mask }
+        if mergeable_mask
+          mergeable_mask.merge object_mask
+        else
+          merged_masks.push object_mask
+        end
+
+        merged_masks
+      end      
+      
+      if reduced_masks.count == 1
+        reduced_masks[0].to_s
+      else
+        "[#{reduced_masks.collect{|mask| mask.to_s}.join(',')}]"
+      end
+    else
+      nil
+    end
   end
 
   # a utility method that returns the starting index of the result limit (if any) stored

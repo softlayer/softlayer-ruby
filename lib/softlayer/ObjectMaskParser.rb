@@ -21,132 +21,127 @@
 #
 
 require "softlayer/ObjectMaskTokenizer"
+require "softlayer/ObjectMaskProperty"
 
-class ObjectMaskParserError < RuntimeError
-end
-
-class ObjectMaskProperty
-  attr_reader :name, :type
-  attr_accessor :children
-
-  def initialize(name, type = nil)
-    @name = name
-    @type = type
-  end
-end
-
-class ObjectMaskParser
-  attr_reader :stack
-
-  def initialize()
-    @stack = []
+module SoftLayer
+  class ObjectMaskParserError < RuntimeError
   end
 
-  def parse(mask_string)
-    @tokenizer = ObjectMaskTokenizer.new(mask_string)
+  class ObjectMaskParser
+    attr_reader :stack
 
-    token = @tokenizer.current_token
-    if token.type == :identifier
-      property = parse_property(@tokenizer)
-    elsif token.type == :property_set_start
-      property_set = parse_property_set(@tokenizer)
-    else
-      raise ObjectMaskParserError, "Object Mask must begin with a 'mask' root property, or a property set" + ObjectMaskToken.error_for_unexpected_token(token)
+    def initialize()
+      @stack = []
     end
 
-    if property && property.name != "mask"
-      raise ObjectMaskParserError, "Object Mask must begin with a 'mask' root property"
+    def parse(mask_string)
+      @tokenizer = ObjectMaskTokenizer.new(mask_string)
+
+      token = @tokenizer.current_token
+      if token.type == :identifier
+        property = parse_property(@tokenizer)
+      elsif token.type == :property_set_start
+        property_set = parse_property_set(@tokenizer)
+      else
+        raise ObjectMaskParserError, "A valid Object mask is a 'mask' root property, or a property set containing root properties" + ObjectMaskToken.error_for_unexpected_token(token)
+      end
+
+      recognize_token(@tokenizer, :eos, "Extraneous text after object mask: ")
+
+      if property && property.name != "mask"
+        raise ObjectMaskParserError, "Object Mask must begin with a 'mask' root property"
+      end
+
+      if property_set && property_set.find { |subproperty| subproperty.name != 'mask'}
+        raise ObjectMaskParserError, "A root property set must contain only root properties"
+      end
+
+      property || property_set
     end
 
-    if property_set && property_set.find { |subproperty| subproperty.name != 'mask'}
-      raise ObjectMaskParserError, "A root property set must contain only root properties"
+    def parse_property_set(tokenizer)
+      token = recognize_token(tokenizer, :property_set_start, "Expected '[': ")
+      property_sequence = parse_property_sequence(tokenizer)
+      token = recognize_token(tokenizer, :property_set_end, "Expected ']': ")
+      property_sequence
     end
 
-    property || property_set
-  end
+    def parse_property_sequence(tokenizer)
+      first_property = parse_property(tokenizer)
 
-  def parse_property_set(tokenizer)
-    token = recognize_token(tokenizer, :property_set_start, "Expected '[]': ")
-    property_sequence = parse_property_sequence(tokenizer)
-    token = recognize_token(tokenizer, :property_set_end, "Expected ']': ")
-    property_sequence
-  end
+      other_children = []
+      token = tokenizer.current_token
+      if(token.type.equal?(:property_set_separator))
+        # skip the separator
+        tokenizer.next_token
 
-  def parse_property_sequence(tokenizer)
-    first_property = parse_property(tokenizer)
+        # find another property
+        other_children = parse_property_sequence(tokenizer)
+      end
 
-    other_children = []
-    token = tokenizer.current_token
-    if(token.type.equal?(:property_set_separator))
-      # skip the separator
-      tokenizer.next_token
-
-      # find another property
-      other_children = parse_property_sequence(tokenizer)
+      return other_children.unshift(first_property)
     end
 
-    return other_children.unshift(first_property)
-  end
+    def parse_property (tokenizer)
+      property_name = nil
+      property_type = nil
+      property_children = nil
 
-  def parse_property (tokenizer)
-    property_name = nil
-    property_type = nil
-    property_children = nil
+      property_name = parse_property_name(tokenizer)
 
-    property_name = parse_property_name(tokenizer)
+      # look for a property type
+      property_type = nil
+      token = tokenizer.current_token
+      if(token.type.equal?(:property_type_start))
+        property_type = parse_property_type(tokenizer)
+      end
 
-    # look for a property type
-    property_type = nil
-    token = tokenizer.current_token
-    if(token.type.equal?(:property_type_start))
-      property_type = parse_property_type(tokenizer)
+      token = tokenizer.current_token
+      if(token.type.equal?(:property_child_separator))
+        property_children = [ parse_property_child(tokenizer) ]
+      elsif (token.type.equal?(:property_set_start))
+        property_children = parse_property_set(tokenizer)
+      end
+
+      new_property = ObjectMaskProperty.new(property_name, property_type)
+      new_property.add_children(property_children) if property_children
+
+      return new_property
     end
 
-    token = tokenizer.current_token
-    if(token.type.equal?(:property_child_separator))
-      property_children = [ parse_property_child(tokenizer) ]
-    elsif (token.type.equal?(:property_set_start))
-      property_children = parse_property_set(tokenizer)
+    def parse_property_child(tokenizer)
+      token = recognize_token(tokenizer, :property_child_separator, "Expected a '.': ")
+      parse_property(tokenizer)
     end
 
-    new_property = ObjectMaskProperty.new(property_name, property_type)
-    new_property.children = property_children
-    
-    return new_property
-  end
-  
-  def parse_property_child(tokenizer)
-    token = recognize_token(tokenizer, :property_child_separator, "Expected a '.': ")
-    parse_property(tokenizer)
-  end
-
-  def parse_property_name(tokenizer)
-    token = recognize_token(tokenizer, :identifier, "Expected a valid property type: ") { |token| token.valid_property_name? }
-    return token.value
-  end
-
-  def parse_property_type(tokenizer)
-    token = recognize_token(tokenizer, :property_type_start, "Expected '(': ")
-    property_type = parse_property_type_name(tokenizer)
-    token = recognize_token(tokenizer, :property_type_end, "Expected ')': ")
-    return property_type
-  end
-
-  def parse_property_type_name(tokenizer)
-    token = recognize_token(tokenizer, :identifier, "Expected a valid property type: ") { |token| token.valid_property_type? }
-    return token.value
-  end
-
-  def recognize_token(tokenizer, expected_type, error_string, &predicate)
-    token = tokenizer.current_token
-    if token.type.equal?(expected_type) && (!predicate || predicate.call(token))
-      tokenizer.next_token
-    else
-      raise ObjectMaskParserError, error_string + ObjectMaskToken.error_for_unexpected_token(token)
-      token = nil;
+    def parse_property_name(tokenizer)
+      token = recognize_token(tokenizer, :identifier, "Expected a valid property type: ") { |token| token.valid_property_name? }
+      return token.value
     end
 
-    return token
-  end
+    def parse_property_type(tokenizer)
+      token = recognize_token(tokenizer, :property_type_start, "Expected '(': ")
+      property_type = parse_property_type_name(tokenizer)
+      token = recognize_token(tokenizer, :property_type_end, "Expected ')': ")
+      return property_type
+    end
 
-end
+    def parse_property_type_name(tokenizer)
+      token = recognize_token(tokenizer, :identifier, "Expected a valid property type: ") { |token| token.valid_property_type? }
+      return token.value
+    end
+
+    def recognize_token(tokenizer, expected_type, error_string, &predicate)
+      token = tokenizer.current_token
+      if token.type.equal?(expected_type) && (!predicate || predicate.call(token))
+        tokenizer.next_token
+      else
+        raise ObjectMaskParserError, error_string + ObjectMaskToken.error_for_unexpected_token(token)
+        token = nil;
+      end
+
+      return token
+    end
+
+  end
+end # Module SoftLaye

@@ -53,37 +53,48 @@ module SoftLayer
     end
   end
 
-  # Routines that are valid within the block provided to a call to
-  # ObjectFilter.build.
+  # This class defines the routines that are valid within the block provided to a call to
+  # ObjectFilter.build. This allows you to create object filters like:
+  #
+  # object_filter = SoftLayer::ObjectFilter.build("hardware.memory") { is_greater_than(2) }
+  #
   class ObjectFilterBlockHandler
-    # contains wihout considering case
+    # Matches when the value is found within the field
+    # the search is not case sensitive
     def contains(value)
       ObjectFilterOperation.new('*=', value)
     end
 
-    # case insensitive begins with
+    # Matches when the value is found at the beginning of the
+    # field.  This search is not case sensitive
     def begins_with(value)
       ObjectFilterOperation.new('^=', value)
     end
 
-    # case insensitive ends with
+    # Matches when the value is found at the end of the
+    # field.  This search is not case sensitive
     def ends_with(value)
       ObjectFilterOperation.new('$=', value)
     end
 
-    # matches exactly (ignoring case)
+    # Matches when the value in the field is exactly equal to the
+    # given value.  This is a case-sensitive match
     def is(value)
       ObjectFilterOperation.new('_=', value)
     end
 
+    # Matches is the value in the field does not exactly equal
+    # the value passed in.
     def is_not(value)
       ObjectFilterOperation.new('!=', value)
     end
 
+    # Matches when the value in the field is greater than the given value
     def is_greater_than(value)
       ObjectFilterOperation.new('>', value)
     end
 
+    # Matches when the value in the field is less than the given value
     def is_less_than(value)
       ObjectFilterOperation.new('<', value)
     end
@@ -96,10 +107,14 @@ module SoftLayer
       ObjectFilterOperation.new('<=', value)
     end
 
+    # Matches when the value is found within the field
+    # the search _is_ case sensitive
     def contains_exactly(value)
       ObjectFilterOperation.new('~', value)
     end
 
+    # Matches when the value is not found within the field
+    # the search _is_ case sensitive
     def does_not_contain(value)
       ObjectFilterOperation.new('!~', value)
     end
@@ -107,14 +122,17 @@ module SoftLayer
 
   # An ObjectFilter is a hash that, when asked to provide
   # an value for an unknown key, will create a sub element
-  # at that key that is itself an object filter.  So if you
-  # start with an empty object filter and ask for <tt>object_filter["foo"]</tt>
-  # then foo will be +added+ to the object and the value of that
-  # key will be an Object Filter <tt>{ "foo" => {} }</tt>
+  # at that key which is, itself, an object filter.
+  # This allows you to build up object filters by chaining [] defeference
+  # operations.
   #
-  # This allows you to create object filters by chaining +[]+ calls:
+  # Starting empty object filter when you ask for <tt>object_filter["foo"]</tt>
+  # either the value at that hash location will be returned, or foo will be +added+ to the
+  # object and the value of that key will be an Object Filter <tt>{ "foo" => {} }</tt>
+  #
+  # By way of an example of chaining together +[]+ calls:
   #   object_filter["foo"]["bar"]["baz"] = 3
-  # yields
+  # yields an object filter like this:
   #   {"foo" => { "bar" => {"baz" => 3}}}
   #
   class ObjectFilter < Hash
