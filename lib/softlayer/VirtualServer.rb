@@ -125,10 +125,10 @@ module SoftLayer
           } ));
       end
 
-      required_properties_mask = ['id']
+      required_properties_mask = 'mask.id'
 
       service = softlayer_client['Account']
-      service = service.object_mask([object_mask, required_properties_mask])
+      service = service.object_mask(object_mask, required_properties_mask)
       service = service.object_filter(object_filter) if object_filter && !object_filter.empty?
 
       if options_hash.has_key?(:result_limit)

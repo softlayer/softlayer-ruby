@@ -47,6 +47,9 @@ class APIParameterFilter
   #     "mask(SoftLayer_Some_Type).aProperty").getObject
   #
   # The object_mask becomes part of the request sent to the server
+  # The object mask strings are parsed into ObjectMaskProperty trees
+  # and those trees are stored with the parameters.  The trees are
+  # converted to strings immediately before the mask is used in a call
   #
   def object_mask(*args)
     raise ArgumentError, "object_mask expects object mask strings" if args.empty? || (1 == args.count && !args[0])
@@ -97,6 +100,13 @@ class APIParameterFilter
   # in this parameter set.
   def server_object_mask
     if parameters[:object_mask] && !parameters[:object_mask].empty?
+      
+      # Reduce the masks found in this object to a minimal set
+      #
+      # The API treats that situation as an error (and throws an exception)
+      # we get around that by removing the duplicate from the mask that actually gets
+      # passed to the server.  As a side benefit, the mask we send to the server
+      # will be "optimal" without many extraneous characters
       reduced_masks = parameters[:object_mask].inject([]) do |merged_masks, object_mask|
         mergeable_mask = merged_masks.find { |mask| mask.can_merge_with? object_mask }
         if mergeable_mask

@@ -233,7 +233,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       end
 
       # Object masks go into the headers too.
-      if parameters && parameters.server_object_mask && parameters.server_object_mask.count != 0
+      if parameters && parameters.server_object_mask
         object_mask = parameters.server_object_mask
         additional_headers.merge!("SoftLayer_ObjectMask" => { "mask" => object_mask }) unless object_mask.empty?
       end
