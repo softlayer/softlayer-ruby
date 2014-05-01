@@ -128,7 +128,11 @@ module SoftLayer
         object_mask = options_hash[:object_mask]
       end
 
-      object_filter = {}
+      if(options_hash.has_key? :object_filter)
+        object_filter = options_hash[:object_filter]
+      else
+        object_filter = {}
+      end
 
       option_to_filter_path = {
         :cpus => "hardware.processorPhysicalCoreAmount",

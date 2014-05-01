@@ -100,7 +100,7 @@ class APIParameterFilter
   # in this parameter set.
   def server_object_mask
     if parameters[:object_mask] && !parameters[:object_mask].empty?
-      
+
       # Reduce the masks found in this object to a minimal set
       #
       # The API treats that situation as an error (and throws an exception)
@@ -116,8 +116,8 @@ class APIParameterFilter
         end
 
         merged_masks
-      end      
-      
+      end
+
       if reduced_masks.count == 1
         reduced_masks[0].to_s
       else

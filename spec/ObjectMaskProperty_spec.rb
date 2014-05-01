@@ -100,13 +100,13 @@ describe SoftLayer::ObjectMaskProperty do
     property2 = SoftLayer::ObjectMaskProperty.new("parent")
     second_child = SoftLayer::ObjectMaskProperty.new("child")
     second_subchild = SoftLayer::ObjectMaskProperty.new("second_subchild")
-    
+
     second_child.add_child(second_subchild)
     property2.add_child(second_child)
 
     property1.can_merge_with?(property2).should be_true
     property1.add_children(property2.children)
-    
+
     property1.children.count.should == 1
     child = property1.children[0]
     child.name.should == "child"

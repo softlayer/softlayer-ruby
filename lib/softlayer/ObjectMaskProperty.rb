@@ -30,10 +30,10 @@ module SoftLayer
       @type = type
       @children = []
     end
-    
+
     def to_s
       full_name = @name
-      
+
       if @type && !@type.empty?
         full_name += "(#{@type})"
       end
@@ -50,7 +50,7 @@ module SoftLayer
     def can_merge_with? (other_property)
       (self.name == other_property.name) && (self.type == other_property.type)
     end
-    
+
     def add_child(new_child)
       mergeable_child = @children.find { |existing_child| existing_child.can_merge_with? new_child }
       if mergeable_child
@@ -59,11 +59,11 @@ module SoftLayer
         @children.push new_child
       end
     end
-    
+
     def add_children(new_children)
       new_children.each { |new_child| add_child(new_child) }
     end
-    
+
     def merge(other_property)
       add_children other_property.children
     end

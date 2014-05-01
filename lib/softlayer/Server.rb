@@ -7,6 +7,7 @@ module SoftLayer
     # servers property of an Account object, or use methods like find_servers in the +BareMetalServer+
     # and +VirtualServer+ classes.
     #
+    # @abstract
     def initialize(softlayer_client, network_hash)
       if self.class == Server
         raise RuntimeError, "The Server class is an abstract base class and should not be instantiated directly"
@@ -23,11 +24,11 @@ module SoftLayer
     #
     # @abstract
     def service
-      raise RuntimeError, "this method is an abstract method in the Server base class"
+      raise RuntimeError, "This method is an abstract method in the Server base class"
     end
 
     ##
-    # Reload the details of this server from the SoftLayer API
+    # properties used when reloading this object from teh softlayer API
     def softlayer_properties(object_mask = nil)
       my_service = self.service
 
@@ -41,8 +42,28 @@ module SoftLayer
     end
 
     ##
-    # Change the hostname of this server (permanently)
+    # Change the notes of the server
+    # raises ArgumentError if you pass nil as the notes
+    def notes=(new_notes)
+      raise ArgumentError.new("The new notes cannot be nil") unless new_notes
+
+      edit_template = {
+        "notes" => new_notes
+      }
+
+      service.object_with_id(self.id).editObject(edit_template)
+    end
+
+    def user_metadata=(new_metadata)
+      raise ArgumentError.new("Cannot set user metadata to nil") unless new_metadata
+
+      service.object_with_id(self.id).setUserMetadata([new_metadata])
+    end
+
+    ##
+    # Change the hostname of this server
     # Raises an ArgumentError if the new hostname is nil or empty
+    #
     def set_hostname!(new_hostname)
       raise ArgumentError.new("The new hostname cannot be nil") unless new_hostname
       raise ArgumentError.new("The new hostname cannot be empty") if new_hostname.empty?
@@ -51,16 +72,35 @@ module SoftLayer
         "hostname" => new_hostname
       }
 
-      puts @sl_hash
       service.object_with_id(self.id).editObject(edit_template)
     end
 
     ##
-    # Change the port speed of the server
+    # Change the domain of this server
+    # Raises an ArgumentError if the new domain is nil or empty
+    # no further validation is done on the domain name
     #
-    # +new_speed+ should be 0, 10, 100, or 1000
-    # set +public+ to +false+ in order to change the primary private
-    # network interface instead of the primary public one.
+    def set_domain!(new_domain)
+      raise ArgumentError.new("The new hostname cannot be nil") unless new_domain
+      raise ArgumentError.new("The new hostname cannot be empty") if new_domain.empty?
+
+      edit_template = {
+        "domain" => new_domain
+      }
+
+      service.object_with_id(self.id).editObject(edit_template)
+    end
+
+    ##
+    # Change the current port speed of the server
+    #
+    # +new_speed+ should be 0, 10, 100, or 1000 and the actual
+    # speed of the port will be limited by the current maximum port
+    # speed for the server.
+    #
+    # Set +public+ to +false+ in order to change the speed of the
+    # primary private network interface instead of the primary
+    # public one.
     #
     def change_port_speed(new_speed, public = true)
       if public

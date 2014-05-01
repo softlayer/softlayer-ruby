@@ -22,19 +22,19 @@ module SoftLayer
 		def self.default_object_mask
       {
         "mask" => [
-  				'id',							# This is an internal ticket ID, not the one usually seen in the portal
-  				'serviceProvider',
-  				'serviceProviderResourceId', 	# This is the ticket ID usually seen in the portal
-  				'title',
-  				'subject',
-  				{'assignedUser' => ['username', 'firstName', 'lastName'] },
-  				'status.id',
-  				'createDate',
-  				'lastEditDate',
-  				'newUpdatesFlag',
-  				'awaitingUserResponseFlag',
-  				'serverAdministrationFlag',
-  			]
+          'id',							# This is an internal ticket ID, not the one usually seen in the portal
+          'serviceProvider',
+          'serviceProviderResourceId', 	# This is the ticket ID usually seen in the portal
+          'title',
+          'subject',
+          {'assignedUser' => ['username', 'firstName', 'lastName'] },
+          'status.id',
+          'createDate',
+          'lastEditDate',
+          'newUpdatesFlag',
+          'awaitingUserResponseFlag',
+          'serverAdministrationFlag',
+        ]
       }
 		end
 

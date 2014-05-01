@@ -51,10 +51,10 @@ module SoftLayer
         object_mask = default_object_mask.to_sl_object_mask
       end
 
-      required_properties_mask = ['id']
+      required_properties_mask = 'mask.id'
 
       service = softlayer_client["Virtual_Guest"]
-      service = service.object_mask([object_mask, required_properties_mask])
+      service = service.object_mask(object_mask, required_properties_mask)
 
       server_data = service.object_with_id(server_id).getObject()
 
