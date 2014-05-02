@@ -30,7 +30,9 @@ Version 2.0 of the @softlayer_api@ gem changes the protocol used to communicate 
 * Object Masks are now sent to the server using the "Extended Object Mask Format":http://sldn.softlayer.com/article/Object-Masks.
 * Result limits are now specified using a single call rather than requiring two
 
-Version 2.0 does not support Ruby 1.8.x
+The gem now allows you to specify your SoftLayer username and API key through a config file.  See "Providing authentication in a config file":#config_authorization for more information.
+
+The softlayer_api gem no longer supports Ruby 1.8.x
 
 h3. XML-RPC
 
@@ -76,7 +78,7 @@ h3. Authentication
 
 That instance will have to know your "API authentication information":http://sldn.softlayer.com/article/Authenticating_to_the_SoftLayer_API consisting of your account username and API key. In addition, you will have to select an endpoint, the web address the client will use to contact the SoftLayer API. You may provide this information in a configuration file, through global variables, or by passing them to the constructor.
 
-h4. Providing authentication in a config file
+h4(#config_authorization). Providing authentication in a config file
 
 The Ruby client will look for a configuration file that can provide the username and api_key for requests. A sample configuraiton file looks like this:
 
