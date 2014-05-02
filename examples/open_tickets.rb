@@ -24,30 +24,27 @@ require 'rubygems'
 require 'softlayer_api'
 require 'pp'
 
-# We're creating more than one service so we'll use the globals to establish
-# the username and API key.
 $SL_API_USERNAME = "joecustomer"         # enter your username here
 $SL_API_KEY = "feeddeadbeefbadf00d..."   # enter your api key here
 
-begin
-  # use an account service to get the account ID of my account
-  account_service = SoftLayer::Service.new("SoftLayer_Account")
-  my_account_id = account_service.getCurrentUser['id']
+softlayer_client = SoftLayer::Client.new()
 
-  # Use a ticket service to create a standard support ticket, assigned to me.
-  ticket_service = SoftLayer::Service.new("SoftLayer_Ticket")
-  new_ticket = ticket_service.createStandardTicket(
-                  {
-                    "assignedUserId" => my_account_id,
-                    "subjectId" => 1022,
-                    "notifyUserOnUpdateFlag" => true
-                  },
-                  "This is a test ticket created from a Ruby client")
+# use an account service to get a list of the open tickets and print their
+# IDs and titles
+account_service = softlayer_client.service_named("Account")
 
-  puts "Created a new ticket : #{new_ticket['id']} - #{new_ticket['title']}"
+open_tickets = account_service.getOpenTickets
+open_tickets.each { |ticket| puts "#{ticket['id']} - #{ticket['title']}" }
 
-  # add an update to the newly created ticket.
-  pp ticket_service.object_with_id(new_ticket['id']).edit(nil, "This is a ticket update sent from the Ruby library")
-rescue Exception => exception
-  $stderr.puts "An exception occurred while trying to complete the SoftLayer API calls #{exception}"
+# Now use the ticket service to get a each ticket (by ID) and a subset of the
+# information known about it. We've already collected this information above,
+# but this will demonstrate using an object mask to filter the results from
+# the server.
+ticket_service = softlayer_client["Ticket"]
+open_tickets.each do |ticket|
+  begin
+    pp ticket_service.object_with_id(ticket["id"]).object_mask("mask[id,title,createDate,modifyDate,assignedUser[id,username,email]]").getObject
+  rescue Exception => exception
+    puts "exception #{exception}"
+  end
 end

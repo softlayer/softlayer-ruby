@@ -20,18 +20,19 @@
 # THE SOFTWARE.
 #
 
+$LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
+
 require 'rubygems'
 require 'softlayer_api'
-require 'pp'
 
-begin
-	# use an account service to get a list of the open tickets and print their IDs and titles
-	account_service = SoftLayer::Service.new("SoftLayer_Account",
-  	:username => "joecustomer"              # enter your username here
-  	:api_key => "feeddeadbeefbadf00d...")   # enter your api key here
+describe XMLRPC::Convert,"::fault" do
+  it "converts faults with faultCodes that are strings to FaultException objects" do
+    fault_hash = { "faultCode" => "The SLAPI returns strings where it shouldn't", "faultString" => "This is the actual fault"}
 
-	account = account_service.getObject
-	pp account
-rescue Exception => exception
-	puts "Unable to retrieve account information: #{exception}"
+    expect { XMLRPC::Convert.fault(fault_hash) }.not_to raise_error
+    exception = XMLRPC::Convert.fault(fault_hash)
+    exception.should be_kind_of(XMLRPC::FaultException)
+    exception.faultCode.should eq(fault_hash["faultCode"])
+    exception.faultString.should eq(fault_hash["faultString"])
+  end
 end
