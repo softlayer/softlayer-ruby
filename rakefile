@@ -35,4 +35,3 @@ task :gem => :build
 
 task :default => [:spec] do
 end
-

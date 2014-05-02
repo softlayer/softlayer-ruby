@@ -25,347 +25,182 @@ $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 require 'rubygems'
 require 'softlayer_api'
 require 'rspec'
-require 'rspec/autorun'
 
 describe SoftLayer::Service, "#new" do
-  before(:each) do
-    $SL_API_USERNAME = "some_default_username"
-    $SL_API_KEY = "some_default_api_key"
-    $SL_API_BASE_URL = SoftLayer::API_PUBLIC_ENDPOINT
-  end
+  describe "#new" do
+    before(:each) do
+      $SL_API_USERNAME = "some_default_username"
+      $SL_API_KEY = "some_default_api_key"
+      $SL_API_BASE_URL = SoftLayer::API_PUBLIC_ENDPOINT
+    end
 
-  after(:each) do
-    $SL_API_USERNAME = nil
-    $SL_API_KEY = nil
-    $SL_API_BASE_URL = SoftLayer::API_PUBLIC_ENDPOINT
-  end
-
-  it "should reject a nil or empty service name" do
-    lambda() {service = SoftLayer::Service.new(nil)}.should raise_error
-    lambda() {service = SoftLayer::Service.new("")}.should raise_error
-  end
-
-  it "should remember service name passed in" do
-    service = SoftLayer::Service.new("SoftLayer_Account")
-    service.service_name.should == "SoftLayer_Account"
-  end
-
-  it "should pickup default username" do
-    $SL_API_USERNAME = "sample"
-    service = SoftLayer::Service.new("SoftLayer_Account")
-    service.username.should == "sample"
-  end
-
-  it "should accept a username in options" do
-    $SL_API_USERNAME = "sample"
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => 'fred')
-    service.username.should == "fred"
-  end
-
-  it "should pickup default api key" do
-    $SL_API_KEY = "sample"
-    service = SoftLayer::Service.new("SoftLayer_Account")
-    service.api_key.should == "sample"
-  end
-
-  it "should accept an api key in options" do
-    $SL_API_KEY = "sample"
-    service = SoftLayer::Service.new("SoftLayer_Account", :api_key => 'fred')
-    service.api_key.should == "fred"
-  end
-
-  it "should fail if username is empty" do
-    lambda() do
-      $SL_API_USERNAME = ""
-      $SL_API_KEY = "sample"
-
-      service = SoftLayer::Service.new("SoftLayer_Account")
-    end.should raise_error
-
-    lambda() do
-      $SL_API_USERNAME = "good_username"
-      $SL_API_KEY = "sample"
-
-      service = SoftLayer::Service.new("SoftLayer_Account", :username => "")
-    end.should raise_error
-  end
-
-  it "should fail if username is nil" do
-    lambda() do
+    after(:each) do
       $SL_API_USERNAME = nil
-      service = SoftLayer::Service.new("SoftLayer_Account", :api_key => "sample")
-    end.should raise_error
+      $SL_API_KEY = nil
+      $SL_API_BASE_URL = SoftLayer::API_PUBLIC_ENDPOINT
+    end
 
-    lambda() do
-      $SL_API_KEY = "sample"
-      service = SoftLayer::Service.new("SoftLayer_Account", :username => nil, :api_key => "sample")
-    end.should raise_error
-  end
+    it "rejects a nil or empty service name" do
+      expect {service = SoftLayer::Service.new(nil)}.to raise_error
+      expect {service = SoftLayer::Service.new("")}.to raise_error
+      expect {service = SoftLayer::Service.new('')}.to raise_error
+    end
 
-  it "should fail if api_key is empty" do
-    lambda() do
-      $SL_API_USERNAME = "good_username"
-      $SL_API_KEY = ""
-
+    it "assigns the service name for the service" do
       service = SoftLayer::Service.new("SoftLayer_Account")
-    end.should raise_error
+      service.service_name.should == "SoftLayer_Account"
+    end
 
-    lambda() do
-      $SL_API_USERNAME = "good_username"
-      $SL_API_KEY = "good_api_key"
+    it "construct a client, if none is given, from the API globals" do
+      service = SoftLayer::Service.new("SoftLayer_Account")
+      service.client.should_not be_nil
+      service.client.username.should eq("some_default_username")
+      service.client.api_key.should eq("some_default_api_key")
+      service.client.endpoint_url.should eq(SoftLayer::API_PUBLIC_ENDPOINT)
+    end
 
-      service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => "")
-    end.should raise_error
-  end
+    it "construct a client with init parameters if given" do
+      service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
+      service.client.should_not be_nil
+      service.client.username.should eq("sample_username")
+      service.client.api_key.should eq("blah")
+      service.client.endpoint_url.should eq(SoftLayer::API_PUBLIC_ENDPOINT)
+    end
 
-  it "should fail if api_key is nil" do
-    lambda() do
-      $SL_API_KEY = nil
-      service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample")
-    end.should raise_error
+    it "accepts a client as an initialization parameter" do
+      client = SoftLayer::Client.new() # authentication is taken from the globals
+      service = SoftLayer::Service.new("SoftLayer_Account", :client => client)
+      service.client.should be(client)
+    end
 
-    lambda() do
-      $SL_API_KEY = nil
-      service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => nil)
-    end.should raise_error
-  end
+    it "fails if both a client and client init options are provided" do
+      client = SoftLayer::Client.new() # authentication is taken from the globals
+      expect { SoftLayer::Service.new("SoftLayer_Account", :client => client, :username => "sample_username", :api_key => "blah") }.to raise_error(RuntimeError)
+    end
 
-  it "should pickup default base url" do
-    $SL_API_BASE_URL = nil
-    service = SoftLayer::Service.new("SoftLayer_Account")
-    service.endpoint_url.should == SoftLayer::API_PUBLIC_ENDPOINT
-  end
-
-  it "should get base URL from globals" do
-    $SL_API_BASE_URL = "http://someendpoint.softlayer.com/from/globals"
-    service = SoftLayer::Service.new("SoftLayer_Account")
-    service.endpoint_url.should == "http://someendpoint.softlayer.com/from/globals"
-  end
-
-  it "should accept a base url through options" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :endpoint_url => "http://someendpoint.softlayer.com")
-    service.endpoint_url.should == "http://someendpoint.softlayer.com"
-  end
-end #describe SoftLayer#new
-
-describe SoftLayer::Service, "#username=" do
-  it "should not allow you to set a nil or empty username" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => "sample")
-    lambda() {service.username = ""}.should raise_error
-    lambda() {service.username = nil}.should raise_error
-  end
-
-  it "should strip whitespace" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => "sample")
-    service.username = "    whitespace   "
-    service.username.should == "whitespace"
-  end
-end  #describe SoftLayer#username=
-
-describe SoftLayer::Service, "#api_key=" do
-  it "should not allow you to set a nil or empty api_key" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => "sample")
-    lambda() {service.api_key = ""}.should raise_error
-    lambda() {service.api_key = nil}.should raise_error
-  end
-
-  it "should strip whitespace" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => "sample")
-    service.api_key = "    fred  "
-    service.api_key.should == "fred"
-  end
-end  #describe SoftLayer#api_key=
-
-describe SoftLayer::Service, "#endpoint_url=" do
-  it "should not allow you to set a nil or empty endpoint_url" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => "sample", :endpoint_url => "http://someendpoint.softlayer.com")
-    lambda() {service.endpoint_url = ""}.should raise_error
-    lambda() {service.endpoint_url = nil}.should raise_error
-  end
-
-  it "should strip whitespace" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample", :api_key => "sample", :endpoint_url => "http://someendpoint.softlayer.com")
-    service.endpoint_url = "    http://someendpoint.softlayer.com  "
-    service.endpoint_url.should == "http://someendpoint.softlayer.com"
-  end
-end  #describe SoftLayer#endpoint_url=
-
-describe SoftLayer::Service, "#url_to_call_method" do
-  it "should concatenate the method to the base url" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-
-    # make sure we've picked up the default API key (can be wrong if one of the other tests is misbehaving)
-    service.endpoint_url.should == SoftLayer::API_PUBLIC_ENDPOINT
-
-    call_url = service.url_to_call_method("getOpenTickets", nil);
-    call_url.scheme.should == "https"
-    call_url.host.should == "api.softlayer.com"
-    call_url.path.should == "/rest/v3/SoftLayer_Account/getOpenTickets.json"
-  end  #describe SoftLayer#url_to_call_method=
+  end #describe #new
 end
 
-describe SoftLayer::Service, "#object_with_id" do
-  it "should add an object to the URL for a request " do
-      service = SoftLayer::Service.new("SoftLayer_Ticket", :username => "sample_username", :api_key => "blah")
-      service.should_receive(:issue_http_request).with(URI.parse("https://api.softlayer.com/rest/v3/SoftLayer_Ticket/12345/getObject.json"), an_instance_of(Net::HTTP::Get))
-      service.object_with_id(12345).getObject
-  end
-end
-
-describe SoftLayer::Service, "#missing_method" do
-  it "should translate unknown method into an api call" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    service.should_receive(:call_softlayer_api_with_params).with(:getOpenTickets, nil, ["marshmallow"])
-    response = service.getOpenTickets("marshmallow")
-  end
-end
-
-describe SoftLayer::Service, "#http_request_for_method" do
-  it "should only use HTTP GET for requests to the getObject method even if paramters are provided" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    request = service.http_request_for_method(:getObject, URI.parse("https://api.softlayer.com/rest/v3/SoftLayer_Ticket/12345/getObject.json"), '{"simple" : "object"}')
-    request.should be_a_kind_of(Net::HTTP::Get)
-    request.should_not be_a_kind_of(Net::HTTP::Post)
-  end
-end
-
-describe SoftLayer::Service, "#call_softlayer_api_with_params" do
-  it "should issue an HTTP request for the given method" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    service.should_receive(:issue_http_request).with(any_args())
-    service.call_softlayer_api_with_params(:getObject, nil, []);
+describe SoftLayer::Service do
+  let (:service) do
+    SoftLayer::Service.new("SoftLayer_Ticket", :username => "sample_username", :api_key => "blah")
   end
 
-  it "should include the object id in the url created" do
-    service = SoftLayer::Service.new("SoftLayer_Ticket", :username => "sample_username", :api_key => "blah")
-    service.should_receive(:issue_http_request).with(URI.parse("https://api.softlayer.com/rest/v3/SoftLayer_Ticket/12345/getObject.json"), an_instance_of(Net::HTTP::Get))
-    service.call_softlayer_api_with_params(:getObject, SoftLayer::APIParameterFilter.new.object_with_id(12345), []);
+  describe "#missing_method" do
+    it "translates unknown methods into api calls" do
+      service.should_receive(:call_softlayer_api_with_params).with(:getOpenTickets, nil, ["marshmallow"])
+      response = service.getOpenTickets("marshmallow")
+    end
   end
 
-  it "should include the object mask in the url created" do
-    expected_uri = "https://api.softlayer.com/rest/v3/SoftLayer_Account/getObject.json?objectMask=cow;duck;chicken;bull%20dog"
+  describe "#object_with_id" do
+    it "passes object ids to call_softlayer_api_with_params" do
+        service.should_receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter),[]) do | method_symbol, parameter_filter, other_args|
+          parameter_filter.server_object_id.should == 12345
+        end
+        service.object_with_id(12345).getObject
+    end
 
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    service.should_receive(:issue_http_request).with(URI.parse(expected_uri), an_instance_of(Net::HTTP::Get))
-    service.call_softlayer_api_with_params(:getObject, SoftLayer::APIParameterFilter.new.object_mask("cow  ", "  duck", "chicken", "bull dog"), []);
+    it "creates a proxy object with just the object_with_id option" do
+      ticket_proxy = service.object_with_id(123456)
+
+      ticket_proxy.server_object_id.should eql(123456)
+      service.should_receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter), []) do |method_selector, filter, arguments|
+        filter.should_not be_nil
+        filter.target.should == service
+        filter.server_object_id.should == 123456
+      end
+
+      ticket_proxy.getObject
+    end
+
+    it "doesn't change an object_mask proxy when used in a call chain with that proxy" do
+      masked_proxy = service.object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]")
+
+      service.should_receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter),[])
+      masked_proxy.object_with_id(123456).getObject
+
+      masked_proxy.server_object_id.should be_nil
+      masked_proxy.server_object_mask.should eql(["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"])
+    end
   end
 
-  it "should return the parsed JSON when completing successfully" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    service.should_receive(:issue_http_request).with(any_args()).and_return('{"successful":"Yipeee!", "array":[1,2,3], "bool":true}')
-    result = service.getObject
-    result.should == {"array"=>[1, 2, 3], "successful"=>"Yipeee!", "bool"=>true}
+  describe "#object_mask" do
+    it "constructs a parameter filter with the correct object mask" do
+      filter = service.object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]")
+
+      filter.should_not be_nil
+      filter.target.should === service
+      filter.server_object_mask.should == ["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"]
+    end
+
+    it "creates a proxy object that can pass an object mask to an API call" do
+      ticket_proxy = service.object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]")
+
+      ticket_proxy.server_object_mask.should eql(["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"])
+      service.should_receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter), []) do |method_selector, filter, arguments|
+        filter.should_not be_nil
+        filter.target.should == service
+        filter.server_object_mask.should == ["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"]
+      end
+      ticket_proxy.getObject
+    end
+
+    it "doesn't change an object_with_id proxy when used in a call chain with that proxy" do
+      ticket_proxy = service.object_with_id(123456)
+
+      service.should_receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter),[])
+      ticket_proxy.object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]").getObject
+
+      ticket_proxy.server_object_id.should eql(123456)
+      ticket_proxy.server_object_mask.should be_nil
+    end
+
+    it "rejects improperly formatted masks" do
+      expect { ticket_proxy = service.object_mask(["fish", "cow", "duck"]) }.to raise_error(ArgumentError)
+      expect { ticket_proxy = service.object_mask({"fish" => "cow"}) }.to raise_error(ArgumentError)
+    end
   end
 
-  it "should raise an exception when completing unsuccessfully" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    service.should_receive(:issue_http_request).with(any_args()).and_return('{"error":"Function (\"getSnargled\") is not a valid method for this service"}')
-    lambda{ result = service.getSnargled }.should raise_error
-  end
-end
+  describe "#object_filter" do
+    let (:object_filter) do
+      object_filter = SoftLayer::ObjectFilter.new()
+      object_filter["key"] = "value"
+      object_filter
+    end
 
-describe SoftLayer::Service, "#object_with_id" do
-  it "should return an APIParameterFilter with itself as the target" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    filter = service.object_with_id(12345)
+    it "constructs a parameter filter with the given ObjectFilter" do
+      parameter_filter = service.object_filter(object_filter)
+      parameter_filter.should_not be_nil
+      parameter_filter.target.should == service
+      parameter_filter.server_object_filter.should == object_filter
+    end
 
-    filter.should_not be_nil
-    filter.target.should === service
-    filter.server_object_id.should == 12345
-  end
-end
+    it "passes an object filter through to an API call" do
+      service.should_receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter),[]) do |method_name, parameters, args|
+        parameters.server_object_filter.should == object_filter
+      end
 
-describe SoftLayer::Service, "#object_mask" do
-  it "should return an APIParameterFilter with itself as the target" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    filter = service.object_mask("fish", "cow", "duck")
-
-    filter.should_not be_nil
-    filter.target.should === service
-    filter.server_object_mask.should == ["fish", "cow", "duck"]
-  end
-end
-
-describe SoftLayer::Service, "@user_agent" do
-  it "should return a default value if not set" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    service.user_agent.should_not be_empty
+      service.object_filter(object_filter).getObject
+    end
   end
 
-  it "should return a set value after being set" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah", :user_agent => "foobar")
-    service.user_agent.should === {"User-Agent"=>"foobar"}
-    service.user_agent = "bazbang"
-    service.user_agent.should === {"User-Agent"=>"bazbang"}
-  end
-end
+  describe "#result_limit" do
+    it "constructs a parameter filter with the correct result limit" do
+      filter = service.result_limit(10, 20)
 
-describe SoftLayer::Service, "#result_limit" do
-  it "should return an APIParameterFilter with itself as the target" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    filter = service.result_limit(10)
-
-    filter.should_not be_nil
-    filter.target.should === service
-    filter.server_result_limit.should == 10
-  end
-end
-
-describe SoftLayer::Service, "#result_offset" do
-  it "should return an APIParameterFilter with itself as the target" do
-    service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-    filter = service.result_offset(5)
-
-    filter.should_not be_nil
-    filter.target.should === service
-    filter.server_result_offset.should == 5
-  end
-end
-
-describe SoftLayer::Service, "#marshall_arguments_for_call" do
-  service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-  request_body = service.marshall_arguments_for_call(["first", 3, {"cow" => "chicken"}])
-  request_body.should == '{"parameters":["first",3,{"cow":"chicken"}]}'
-end
-
-describe SoftLayer::Service, " creating option proxies" do
-  it "should allow me to create a proxy object with just the object_with_id option" do
-    service = SoftLayer::Service.new("SoftLayer_Ticket", :username => "sample_username", :api_key => "blah")
-    ticket_proxy = service.object_with_id(123456)
-
-    ticket_proxy.server_object_id.should eql(123456)
-    service.should_receive(:call_softlayer_api_with_params).with(any_args())
-    ticket_proxy.getObject
+      filter.should_not be_nil
+      filter.target.should === service
+      filter.server_result_offset.should == 10
+      filter.server_result_limit.should == 20
+    end
   end
 
-  it "should allow me to create a proxy object with just the object_mask option" do
-    service = SoftLayer::Service.new("SoftLayer_Ticket", :username => "sample_username", :api_key => "blah")
-    ticket_proxy = service.object_mask("fish", "cow", "duck")
-
-    ticket_proxy.server_object_mask.should eql(["fish", "cow", "duck"])
-    service.should_receive(:call_softlayer_api_with_params).with(any_args())
-    ticket_proxy.getObject
+  describe "#related_service_named" do
+    it "can provide related services" do
+      related_service = service.related_service_named("SoftLayer_Hardware")
+      related_service.service_name.should eq("SoftLayer_Hardware")
+      related_service.client.should be(service.client)
+    end
   end
-
-  it "should not modify an object_with_id proxy even if that proxy is used with a mask" do
-    service = SoftLayer::Service.new("SoftLayer_Ticket", :username => "sample_username", :api_key => "blah")
-    ticket_proxy = service.object_with_id(123456)
-
-    service.should_receive(:issue_http_request).with(URI.parse("https://api.softlayer.com/rest/v3/SoftLayer_Ticket/123456/getObject.json?objectMask=fish;cow;duck"), an_instance_of(Net::HTTP::Get))
-    ticket_proxy.object_mask("fish", "cow", "duck").getObject
-
-    ticket_proxy.server_object_id.should eql(123456)
-    ticket_proxy.server_object_mask.should be_nil
-  end
-
-  it "should not modify an object_mask proxy even if it is used with an object ID" do
-    service = SoftLayer::Service.new("SoftLayer_Ticket", :username => "sample_username", :api_key => "blah")
-    masked_proxy = service.object_mask("fish", "cow", "duck")
-
-    service.should_receive(:issue_http_request).with(URI.parse("https://api.softlayer.com/rest/v3/SoftLayer_Ticket/123456/getObject.json?objectMask=fish;cow;duck"), an_instance_of(Net::HTTP::Get))
-    masked_proxy.object_with_id(123456).getObject
-
-    masked_proxy.server_object_id.should be_nil
-    masked_proxy.server_object_mask.should eql(["fish", "cow", "duck"])
-  end
-end
+end #describe SoftLayer::Service
