@@ -56,6 +56,7 @@ module SoftLayer
   $SL_API_BASE_URL = SoftLayer::API_PUBLIC_ENDPOINT
 end # module SoftLayer
 
+#
 # History:
 #
 # The history has been moved to the CHANGELOG.textile file in the source directory

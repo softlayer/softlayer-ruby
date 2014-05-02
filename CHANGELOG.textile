@@ -21,11 +21,10 @@ The @result_offset@ API filter has been removed.
 * Fixed a bug where the @result_limit@ and @result_offset@ object filters were just not working.
 
 *1.0.3*
-<<<<<<< HEAD
-* Added a request filter to add result limits to request.  Submitted by JN.  Thanks!
+* Added a request filter to add result limits to request. Submitted by JN. Thanks!
 
 *1.0.2*
-* We have some API routines that start with 'get' but expect arguments anyway.  The code now uses HTTP POST to send requests for which the user has provided arguments regardless of the name of the routine.
+* We have some API routines that start with 'get' but expect arguments anyway. The code now uses HTTP POST to send requests for which the user has provided arguments regardless of the name of the routine.
 
 *1.0*, *1.0.1*
 * Initial release of the gem
