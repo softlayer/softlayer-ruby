@@ -1,3 +1,6 @@
 .DS_Store
 *.*~
 *.gem
+
+log/
+internal_examples/

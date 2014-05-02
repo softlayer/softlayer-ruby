@@ -20,29 +20,17 @@
 # THE SOFTWARE.
 #
 
+$LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
+
 require 'rubygems'
 require 'softlayer_api'
-require 'pp'
+require 'rspec'
 
-$SL_API_USERNAME = "joecustomer"         # enter your username here
-$SL_API_KEY = "feeddeadbeefbadf00d..."   # enter your api key here
+describe SoftLayer::Config do
+	it "retrieves config information from environment variables" do
+		ENV.store("SL_USERNAME", "PoohBear")
+		ENV.store("SL_API_KEY", "DEADBEEFBADF00D")
 
-# use an account service to get a list of the open tickets and print their
-# IDs and titles
-account_service = SoftLayer::Service.new("SoftLayer_Account")
-
-open_tickets = account_service.getOpenTickets
-open_tickets.each { |ticket| puts "#{ticket['id']} - #{ticket['title']}" }
-
-# Now use the ticket service to get a each ticket (by ID) and a subset of the
-# information known about it. We've already collected this information above,
-# but this will demonstrate using an object mask to filter the results from
-# the server.
-ticket_service = SoftLayer::Service.new("SoftLayer_Ticket")
-open_tickets.each do |ticket|
-  begin
-    pp ticket_service.object_with_id(ticket["id"]).object_mask( "id", "title", "createDate", "modifyDate", { "assignedUser" => ["id", "username", "email"] }).getObject
-  rescue Exception => exception
-    puts "exception #{e}"
-  end
+		SoftLayer::Config.environment_settings.should == { :username => "PoohBear", :api_key => "DEADBEEFBADF00D" }
+	end
 end

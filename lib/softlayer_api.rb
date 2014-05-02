@@ -22,4 +22,9 @@
 
 require 'softlayer/base'
 require 'softlayer/object_mask_helpers'
-require 'softlayer/service'
+require 'softlayer/APIParameterFilter'
+require 'softlayer/ObjectFilter'
+require 'softlayer/Config'
+
+require 'softlayer/Client'
+require 'softlayer/Service'

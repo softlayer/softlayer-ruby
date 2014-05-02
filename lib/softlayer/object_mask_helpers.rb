@@ -20,28 +20,75 @@
 # THE SOFTWARE.
 #
 
+# Ruby Hash Class
 class Hash
-  def to_sl_object_mask(base = "")
-    return base if(self.empty?)
+  def __valid_root_property_key?(key_string)
+    return key_string == "mask" || (0 == (key_string =~ /\Amask\([a-z][a-z0-9_]*\)\z/i))
+  end
 
-    # ask the children to convert themselves with the key as the base
-    masked_children = self.map { |key, value| result = value.to_sl_object_mask(key); }.flatten
+  def to_sl_object_mask()
+    raise RuntimeError, "An object mask must contain properties" if empty?
+    raise RuntimeError, "An object mask must start with root properties" if keys().find { |key| !__valid_root_property_key?(key) }
 
-    # now resolve the children with respect to the base passed in.
-    masked_children.map { |mask_item| mask_item.to_sl_object_mask(base) }
+    key_strings = __sl_object_mask_properties_for_keys();
+    key_strings.count > 1 ? "[#{key_strings.join(',')}]" : "#{key_strings[0]}"
+  end
+
+  def to_sl_object_mask_property()
+    key_strings = __sl_object_mask_properties_for_keys();
+    "#{key_strings.join(',')}"
+  end
+
+  def __sl_object_mask_properties_for_keys
+    key_strings = [];
+
+    each do |key, value|
+      return "" if !value
+
+      string_for_key = key.to_sl_object_mask_property
+
+      if value.kind_of?(String) || value.kind_of?(Symbol) then
+        string_for_key = "#{string_for_key}.#{value.to_sl_object_mask_property}"
+      end
+
+      if value.kind_of?(Array) || value.kind_of?(Hash) then
+        value_string = value.to_sl_object_mask_property
+        if value_string && !value_string.empty?
+          string_for_key = "#{string_for_key}[#{value_string}]"
+        end
+      end
+
+      key_strings.push(string_for_key)
+    end
+
+    key_strings
   end
 end
 
+# Ruby Array Class
 class Array
-  def to_sl_object_mask(base = "")
-    return base if self.empty?
-    self.map { |item| item.to_sl_object_mask(base) }.flatten
+  # Returns a string representing the object mask content represented by the
+  # Array. Each value in the array is converted to its object mask eqivalent
+  def to_sl_object_mask_property()
+    return "" if self.empty?
+    property_content = map { |item| item.to_sl_object_mask_property() }.flatten.join(",")
+    "#{property_content}"
   end
 end
 
+# Ruby String Class
 class String
-  def to_sl_object_mask(base = "")
-    return base if self.empty?
-    base.empty? ? self : "#{base}.#{self}"
+  # Returns a string representing the object mask content represented by the
+  # String. Strings are simply represented as copies of themselves.  We make
+  # a copy in case the original String is modified somewhere along the way
+  def to_sl_object_mask_property()
+    return self.strip
+  end
+end
+
+# Ruby Symbol Class
+class Symbol
+  def to_sl_object_mask()
+    self.to_s.to_sl_object_mask()
   end
 end

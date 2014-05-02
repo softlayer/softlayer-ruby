@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
-gem 'json', '~> 1.8.1'
+
 gem 'rake'
 gem 'rspec'
+gem 'configparser', "~> 0.1.2", :require => false

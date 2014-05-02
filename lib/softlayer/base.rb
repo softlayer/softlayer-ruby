@@ -20,25 +20,24 @@
 # THE SOFTWARE.
 #
 
-# The SoftLayer Module
-#
+require 'rubygems'
+
 # This module is used to provide a namespace for SoftLayer code.  It also declares a number of
 # global variables:
 # - <tt>$SL_API_USERNAME</tt> - The default username passed by clients to the server for authentication.
 #   Set this if you want to use the same username for all clients and don't want to have to specify it when the client is created
 # - <tt>$SL_API_KEY</tt> - The default API key passed by clients to the server for authentication.
 #   Set this if you want to use the same api for all clients and don't want to have to specify it when the client is created
-# - <tt>$SL_API_BASE_URL</tt>- The default URL used to access the SoftLayer API. This defaults to the value of SoftLayer::API_PUBLIC_ENDPOINT
+# - <tt>$SL_API_BASE_URL</tt>- The default URL used to access the SoftLayer API. This defaults to the value of <tt>SoftLayer::API_PUBLIC_ENDPOINT</tt>
 #
-
 module SoftLayer
-  VERSION = "1.0.8"  # version history at the bottom of the file.
+  VERSION = "2.0.0"  # version history in the CHANGELOG.textile file at the root of the source
 
   # The base URL of the SoftLayer API's REST-like endpoints available to the public internet.
-  API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/rest/v3/'
+  API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/xmlrpc/v3/'
 
   # The base URL of the SoftLayer API's REST-like endpoints available through SoftLayer's private network
-  API_PRIVATE_ENDPOINT = 'https://api.service.softlayer.com/rest/v3/'
+  API_PRIVATE_ENDPOINT = 'https://api.service.softlayer.com/xmlrpc/v3/'
 
   #
   # These globals can be used to simplify client creation
@@ -56,3 +55,7 @@ module SoftLayer
   # The base URL used for the SoftLayer API's
   $SL_API_BASE_URL = SoftLayer::API_PUBLIC_ENDPOINT
 end # module SoftLayer
+
+# History:
+#
+# The history has been moved to the CHANGELOG.textile file in the source directory
