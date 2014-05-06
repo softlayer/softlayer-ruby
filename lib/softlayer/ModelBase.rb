@@ -30,7 +30,7 @@ module SoftLayer
       @softlayer_client = softlayer_client
       @sl_hash = network_hash.inject({}) { | new_hash, pair | new_hash[pair[0].to_sym] = pair[1]; new_hash }
 
-      raise ArgumentError, "The hash must have an id" unless @sl_hash.has_key?(:id)
+      raise ArgumentError, "The hash must have an id" unless has_sl_property?(:id)
       raise ArgumentError, "id must be non-nil and non-empty" unless @sl_hash[:id] && !@sl_hash.to_s.empty?
     end
 
@@ -56,19 +56,9 @@ module SoftLayer
       raise RuntimeError.new("Abstract method softlayer_properties in ModelBase was called")
     end
 
-    # This is defined for the benefit of Ruby 1.8.7 where "#id" used to
-    # return the same thing as object_id
-    def id
-      if @sl_hash.has_key? :id
-        @sl_hash[:id]
-      else
-        super
-      end
-    end
-
     def respond_to?(method_symbol)
       if @sl_hash
-        if @sl_hash.has_key? method_symbol
+        if has_sl_property? method_symbol
           true
         else
           super
@@ -80,7 +70,7 @@ module SoftLayer
 
     def method_missing(method_symbol, *args, &block)
       if(@sl_hash && 0 == args.length && !block)
-        if @sl_hash.has_key? method_symbol
+        if has_sl_property? method_symbol
           @sl_hash[method_symbol]
         else
           super
@@ -89,5 +79,16 @@ module SoftLayer
         super
       end
     end
-  end
-end
+
+    protected
+
+    def has_sl_property?(property_symbol)
+      @sl_hash && @sl_hash.has_key?(property_symbol)
+    end
+
+    def softlayer_hash
+      return @sl_hash
+    end
+
+  end # class ModelBase
+end # module SoftLayer

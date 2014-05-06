@@ -36,6 +36,31 @@ module SoftLayer
       return softlayer_client["Virtual_Guest"]
     end
 
+    def wait_until_ready(max_trials, wait_for_transactions = false, seconds_between_tries = 2)
+      # pessimistically assume the server is not ready
+      num_trials = 0
+      begin
+        self.refresh_details()
+
+        last_os_reload = has_sl_property? :lastOperatingSystemReload
+        active_transaction = has_sl_property? :activeTransaction
+
+        reloading_os = active_transaction && last_os_reload && (self.lastOperatingSystemReload['id'] == self.activeTransaction['id'])
+        provisioned = has_sl_property? :provisionDate
+
+        # a server is ready when it is provisioned, not reloading the OS and
+        # (if the user has asked us to wait on other transactions) when there are
+        # no active transactions.
+        ready = provisioned && !reloading_os && (!wait_for_transactions || !active_transaction)
+
+        num_trials = num_trials + 1
+
+        sleep(seconds_between_tries) if !ready && (num_trials <= max_trials)
+      end until ready || (num_trials >= max_trials)
+
+      ready
+    end
+
     ##
     # Returns the default object mask used when fetching servers from the API when an
     # explicit object mask is not provided.
@@ -67,16 +92,12 @@ module SoftLayer
     # Retrive the virtual server with the given server ID from the API
     #
     def self.server_with_id(softlayer_client, server_id, options = {})
-      if options.has_key?(:object_mask)
-        object_mask = options[:object_mask]
-      else
-        object_mask = default_object_mask.to_sl_object_mask
-      end
-
-      required_properties_mask = 'mask.id'
-
       service = softlayer_client["Virtual_Guest"]
-      service = service.object_mask(object_mask, required_properties_mask)
+      service = service.object_mask(default_object_mask.to_sl_object_mask)
+
+      if options.has_key?(:object_mask)
+        service = service.object_mask(options[:object_mask])
+      end
 
       server_data = service.object_with_id(server_id).getObject()
 
@@ -105,12 +126,6 @@ module SoftLayer
     # * <b>+:result_limit+</b> (hash with :limit, and :offset keys) - Limit the scope of results returned.
     #
     def self.find_servers(softlayer_client, options_hash = {})
-      if(!options_hash.has_key? :object_mask)
-        object_mask = VirtualServer.default_object_mask.to_sl_object_mask
-      else
-        object_mask = options_hash[:object_mask]
-      end
-
       object_filter = {}
 
       option_to_filter_path = {
@@ -150,8 +165,12 @@ module SoftLayer
       required_properties_mask = 'mask.id'
 
       service = softlayer_client['Account']
-      service = service.object_mask(object_mask, required_properties_mask)
-      service = service.object_filter(object_filter) if object_filter && !object_filter.empty?
+      service = service.object_filter(object_filter) unless object_filter.empty?
+      service = service.object_mask(default_object_mask.to_sl_object_mask)
+
+      if options_hash.has_key? :object_mask
+        service = service.object_mask(options_hash[:object_mask])
+      end
 
       if options_hash.has_key?(:result_limit)
         offset = options[:result_limit][:offset]

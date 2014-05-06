@@ -136,6 +136,7 @@ module SoftLayer
 
     def self.default_object_mask
       { "mask" => [
+          'id',
           'globalIdentifier',
           'notes',
           'hostname',

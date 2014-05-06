@@ -67,6 +67,7 @@ module SoftLayer
     def self.default_object_mask
       sub_mask = {
         "mask(SoftLayer_Hardware_Server)" => [
+          'billingItem.id',
           'bareMetalInstanceFlag',
           'provisionDate',
           'hardwareStatus',
@@ -109,16 +110,12 @@ module SoftLayer
     # Retrive the bare metal server with the given server ID from the
     # SoftLayer API
     def self.server_with_id(softlayer_client, server_id, options = {})
-      if options.has_key?(:object_mask)
-        object_mask = options[:object_mask]
-      else
-        object_mask = default_object_mask.to_sl_object_mask
-      end
-
-      required_properties_mask = ['id', 'bareMetalInstanceFlag', 'billingItem.id']
-
       service = softlayer_client["Hardware"]
-      service = service.object_mask([object_mask, required_properties_mask])
+      service = service.object_mask(default_object_mask.to_sl_object_mask)
+
+      if options.has_key?(:object_mask)
+        object_mask = service.object_mask(options[:object_mask])
+      end
 
       server_data = service.object_with_id(server_id).getObject()
 
@@ -146,12 +143,6 @@ module SoftLayer
     # * <b>+:result_limit+</b> (hash with :limit, and :offset keys) - Limit the scope of results returned.
     #
     def self.find_servers(softlayer_client, options_hash = {})
-      if(!options_hash.has_key? :object_mask)
-        object_mask = BareMetalServer.default_object_mask.to_sl_object_mask
-      else
-        object_mask = options_hash[:object_mask]
-      end
-
       if(options_hash.has_key? :object_filter)
         object_filter = options_hash[:object_filter]
       else
@@ -187,11 +178,13 @@ module SoftLayer
           } ));
       end
 
-      required_properties_mask = "mask[id,bareMetalInstanceFlag,billingItem.id]"
-
       service = softlayer_client['Account']
-      service = service.object_mask(object_mask, required_properties_mask)
-      service = service.object_filter(object_filter) if object_filter && !object_filter.empty?
+      service = service.object_filter(object_filter) unless object_filter.empty?
+      service = service.object_mask(default_object_mask.to_sl_object_mask)
+
+      if(options_hash.has_key? :object_mask)
+        service = service.object_mask(options_hash[:object_mask])
+      end
 
       if options_hash.has_key?(:result_limit)
         offset = options[:result_limit][:offset]
