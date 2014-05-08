@@ -24,7 +24,18 @@ require 'softlayer/base'
 require 'softlayer/object_mask_helpers'
 require 'softlayer/APIParameterFilter'
 require 'softlayer/ObjectFilter'
+require 'softlayer/ObjectMaskParser'
 require 'softlayer/Config'
 
 require 'softlayer/Client'
 require 'softlayer/Service'
+
+# model classes
+require 'softlayer/ModelBase'
+require 'softlayer/ModelResource'
+require 'softlayer/Account'
+require 'softlayer/Ticket'
+require 'softlayer/Server'
+require 'softlayer/BareMetalServer'
+require 'softlayer/VirtualServer'
+require 'softlayer/VirtualServerOrder'

@@ -121,7 +121,7 @@ describe SoftLayer::Service do
       masked_proxy.object_with_id(123456).getObject
 
       masked_proxy.server_object_id.should be_nil
-      masked_proxy.server_object_mask.should eql(["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"])
+      masked_proxy.server_object_mask.should == "[mask[fish,cow],mask(typed)[duck,chicken]]"
     end
   end
 
@@ -131,17 +131,17 @@ describe SoftLayer::Service do
 
       filter.should_not be_nil
       filter.target.should === service
-      filter.server_object_mask.should == ["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"]
+      filter.server_object_mask.should == "[mask[fish,cow],mask(typed)[duck,chicken]]"
     end
 
     it "creates a proxy object that can pass an object mask to an API call" do
       ticket_proxy = service.object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]")
 
-      ticket_proxy.server_object_mask.should eql(["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"])
+      ticket_proxy.server_object_mask.should == "[mask[fish,cow],mask(typed)[duck,chicken]]"
       service.should_receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter), []) do |method_selector, filter, arguments|
         filter.should_not be_nil
         filter.target.should == service
-        filter.server_object_mask.should == ["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"]
+        filter.server_object_mask.should == "[mask[fish,cow],mask(typed)[duck,chicken]]"
       end
       ticket_proxy.getObject
     end

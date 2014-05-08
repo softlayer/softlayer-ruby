@@ -20,7 +20,9 @@
 # THE SOFTWARE.
 #
 
-# Ruby Hash Class
+##
+# Extensions to the hash class to support using them in constructing object
+# masks
 class Hash
   def __valid_root_property_key?(key_string)
     return key_string == "mask" || (0 == (key_string =~ /\Amask\([a-z][a-z0-9_]*\)\z/i))
@@ -65,18 +67,22 @@ class Hash
   end
 end
 
-# Ruby Array Class
+##
+# Softlayer Extensions to the Array class to support using arrays to create
+# object masks
 class Array
   # Returns a string representing the object mask content represented by the
   # Array. Each value in the array is converted to its object mask eqivalent
   def to_sl_object_mask_property()
     return "" if self.empty?
-    property_content = map { |item| item.to_sl_object_mask_property() }.flatten.join(",")
+    property_content = map { |item| item ? item.to_sl_object_mask_property() : nil  }.compact.flatten.join(",")
     "#{property_content}"
   end
 end
 
-# Ruby String Class
+##
+# Softlayer Extensions to the String class to support using strings to create
+# object masks
 class String
   # Returns a string representing the object mask content represented by the
   # String. Strings are simply represented as copies of themselves.  We make
@@ -86,7 +92,9 @@ class String
   end
 end
 
-# Ruby Symbol Class
+##
+# Softlayer Extensions to the Symbol class to support using symbols to create
+# object masks
 class Symbol
   def to_sl_object_mask()
     self.to_s.to_sl_object_mask()

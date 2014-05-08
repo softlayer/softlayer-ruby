@@ -20,23 +20,36 @@
 # THE SOFTWARE.
 #
 
-$LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__)))
+$LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
 require 'rubygems'
-require 'bundler/gem_tasks'
-require 'rspec/core/rake_task'
-require 'yard'
+require 'softlayer_api'
+require 'rspec'
 
-YARD::Rake::YardocTask.new do |yard_task|
-	yard_task.files = ["lib/**/*.rb"]
-end
+require 'shared_server'
 
-RSpec::Core::RakeTask.new(:spec) do |t|
-	$DEBUG = 1
-	t.rspec_opts = ["-c"]
-end
+describe SoftLayer::VirtualServer do
+	let(:sample_server) {
+		mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "DEADBEEFBADF00D")
+		allow(mock_client).to receive(:[]) do |service_name|
+			service = mock_client.service_named(service_name)
+			allow(service).to receive(:object_with_id).and_return(service)
+			service.stub(:call_softlayer_api_with_params)
+			service
+		end
 
-task :gem => :build
+		SoftLayer::VirtualServer.new(mock_client, { "id" => 12345 })
+	}
 
-task :default => [:spec] do
+	it "identifies with the SoftLayer_Virtual_Guest service" do
+		sample_server.service.service_name.should == "SoftLayer_Virtual_Guest"
+	end
+
+	it_behaves_like "server with port speed" do
+		let (:server) { sample_server }
+	end
+
+  it_behaves_like "server with mutable hostname" do
+		let (:server) { sample_server }
+  end
 end

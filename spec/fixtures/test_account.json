@@ -1,0 +1,23 @@
+{
+	"accountStatusId": 1001,
+	"address1": "123 Main Street",
+	"allowedPptpVpnQuantity": 5,
+	"alternatePhone": "555.456.7891",
+	"brandId": 2,
+	"city": "Anytown",
+	"claimedTaxExemptTxFlag": false,
+	"companyName": "UpAndComing Software",
+	"country": "US",
+	"createDate": "2012-03-30T14:41:16-07:00",
+	"email": "just@a@test.com",
+	"firstName": "Don ",
+	"id": 99999,
+	"isReseller": 0,
+	"lastName": "Joe",
+	"lateFeeProtectionFlag": true,
+	"modifyDate": "2012-03-30T14:41:50-07:00",
+	"officePhone": "555.123.4567",
+	"postalCode": "778899",
+	"state": "TX",
+	"statusDate": null
+}

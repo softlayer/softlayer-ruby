@@ -20,23 +20,21 @@
 # THE SOFTWARE.
 #
 
-$LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__)))
+$LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
 require 'rubygems'
-require 'bundler/gem_tasks'
-require 'rspec/core/rake_task'
-require 'yard'
+require 'softlayer_api'
+require 'rspec'
 
-YARD::Rake::YardocTask.new do |yard_task|
-	yard_task.files = ["lib/**/*.rb"]
-end
+describe SoftLayer::Server do
+	it "is an abstract base class" do
+		mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "DEADBEEFBADF00D")
+		allow(mock_client).to receive(:[]) do |service_name|
+			service = mock_client.service_named(service_name)
+			service.stub(:call_softlayer_api_with_params)
+			service
+		end
 
-RSpec::Core::RakeTask.new(:spec) do |t|
-	$DEBUG = 1
-	t.rspec_opts = ["-c"]
-end
-
-task :gem => :build
-
-task :default => [:spec] do
+		expect { SoftLayer::Server.new(mock_client, { "id" => 12345 }) }.to raise_error
+	end
 end

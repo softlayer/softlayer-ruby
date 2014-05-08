@@ -1,3 +1,24 @@
+#
+# Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#
 
 module SoftLayer
 # An <tt>APIParameterFilter</tt> is an intermediary object that understands how
@@ -47,12 +68,17 @@ class APIParameterFilter
   #     "mask(SoftLayer_Some_Type).aProperty").getObject
   #
   # The object_mask becomes part of the request sent to the server
+  # The object mask strings are parsed into ObjectMaskProperty trees
+  # and those trees are stored with the parameters.  The trees are
+  # converted to strings immediately before the mask is used in a call
   #
   def object_mask(*args)
-    raise ArgumentError, "object_mask expects well-formatted root object mask strings" if args.empty? || (1 == args.count && !args[0])
-    raise ArgumentError, "object_mask expects well-formatted root object mask strings" if args.find { |arg| !(arg.kind_of?(String)) }
+    raise ArgumentError, "object_mask expects object mask strings" if args.empty? || (1 == args.count && !args[0])
+    raise ArgumentError, "object_mask expects strings" if args.find{ |arg| !arg.kind_of?(String) }
 
-    object_mask = (@parameters[:object_mask] || []) + args
+    mask_parser = ObjectMaskParser.new()
+    object_masks = args.collect { |mask_string| mask_parser.parse(mask_string)}.flatten
+    object_mask = (@parameters[:object_mask] || []) + object_masks
 
     # we create a new object in case the user wants to store off the
     # filter chain and reuse it later
@@ -94,7 +120,33 @@ class APIParameterFilter
   # a utility method that returns the object mask (if any) stored
   # in this parameter set.
   def server_object_mask
-    self.parameters[:object_mask]
+    if parameters[:object_mask] && !parameters[:object_mask].empty?
+
+      # Reduce the masks found in this object to a minimal set
+      #
+      # The API treats that situation as an error (and throws an exception)
+      # we get around that by removing the duplicate from the mask that actually gets
+      # passed to the server.  As a side benefit, the mask we send to the server
+      # will be "optimal" without many extraneous characters
+      reduced_masks = parameters[:object_mask].inject([]) do |merged_masks, object_mask|
+        mergeable_mask = merged_masks.find { |mask| mask.can_merge_with? object_mask }
+        if mergeable_mask
+          mergeable_mask.merge object_mask
+        else
+          merged_masks.push object_mask
+        end
+
+        merged_masks
+      end
+
+      if reduced_masks.count == 1
+        reduced_masks[0].to_s
+      else
+        "[#{reduced_masks.collect{|mask| mask.to_s}.join(',')}]"
+      end
+    else
+      nil
+    end
   end
 
   # a utility method that returns the starting index of the result limit (if any) stored
@@ -119,12 +171,10 @@ class APIParameterFilter
     puts "SoftLayer::APIParameterFilter#method_missing called #{method_name}, #{args.inspect}" if $DEBUG
 
     if(!block && method_name.to_s.match(/[[:alnum:]]+/))
-      result = @target.call_softlayer_api_with_params(method_name, self, args)
+      @target.call_softlayer_api_with_params(method_name, self, args)
     else
-      result = super
+      super
     end
-
-    result
   end
 end
 

@@ -48,7 +48,7 @@ describe SoftLayer::APIParameterFilter do
     it "allows call chaining with object_mask " do
       result = filter.object_with_id(12345).object_mask("mask.fish", "mask.cow", "mask.duck")
       result.server_object_id.should == 12345
-      result.server_object_mask.should == ["mask.fish", "mask.cow", "mask.duck"]
+      result.server_object_mask.to_s.should == "mask[fish,cow,duck]"
     end
   end
 
@@ -67,23 +67,23 @@ describe SoftLayer::APIParameterFilter do
       masked_filter = nil
 
       expect { masked_filter = filter.object_mask("[mask.firstProperty, mask.secondProperty]") }.to_not raise_error
-      masked_filter.server_object_mask.should == ["[mask.firstProperty, mask.secondProperty]"]
+      masked_filter.server_object_mask.should == "mask[firstProperty,secondProperty]"
     end
 
     it "stores its value in server_object_mask when called" do
       result = filter.object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]")
-      result.server_object_mask.should == ["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"]
+      result.server_object_mask.should == '[mask[fish,cow],mask(typed)[duck,chicken]]'
     end
 
     it "allows call chaining with object_with_id" do
       result = filter.object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]").object_with_id(12345)
       result.server_object_id.should == 12345
-      result.server_object_mask.should == ["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"]
+      result.server_object_mask.should == "[mask[fish,cow],mask(typed)[duck,chicken]]"
     end
 
     it "allows call chaining with other object masks" do
       result = filter.object_mask("mask.fish").object_mask("mask[cow]").object_mask("mask(typed).duck").object_mask("mask(typed)[chicken]")
-      result.server_object_mask.should == ["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"]
+      result.server_object_mask.should == "[mask[fish,cow],mask(typed)[duck,chicken]]"
     end
   end
 

@@ -1,4 +1,3 @@
-#
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -234,11 +233,9 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       end
 
       # Object masks go into the headers too.
-      if parameters && parameters.server_object_mask && parameters.server_object_mask.count != 0
+      if parameters && parameters.server_object_mask
         object_mask = parameters.server_object_mask
-        object_mask_string = object_mask.count == 1 ? object_mask[0] : "[#{object_mask.join(',')}]"
-
-        additional_headers.merge!("SoftLayer_ObjectMask" => { "mask" => object_mask_string }) unless object_mask_string.empty?
+        additional_headers.merge!("SoftLayer_ObjectMask" => { "mask" => object_mask }) unless object_mask.empty?
       end
 
       # Result limits go into the headers
