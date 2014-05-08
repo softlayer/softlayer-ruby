@@ -20,40 +20,92 @@
 # THE SOFTWARE.
 #
 
+require 'time'
+require 'json'
+
 module SoftLayer
   class VirtualServer < Server
-
+    include ::SoftLayer::ModelResource
+    
     ##
-    # Cancel this virtual server immediately and delete all its data.
+    # A virtual server can find out about Product_Packge items that are
+    # available for upgrades.
+    softlayer_resource :upgrade_items do |resource|
+      resource.should_update_if do
+        @upgrade_items == nil
+      end
+
+      resource.to_update do
+        service.object_with_id(self.id).object_mask("mask[id,categories.categoryCode,item[id,capacity,units,attributes,prices]]").getUpgradeItemPrices(true)
+      end
+    end
+    
+    ##
+    # IMMEDIATELY cancel this virtual server
     #
     def cancel!
       self.service.object_with_id(self.id).deleteObject()
     end
 
     ##
-    # Returns the SoftLayer Service used to work with instances of this class.  For Virtual Servers that is +SoftLayer_Virtual_Guest+
-    def service
-      return softlayer_client["Virtual_Guest"]
+    # Begins an OS reload on this virtual server.
+    #
+    # The OS reload can wipe out the data on your server so this method uses a
+    # confirmation mechanism built into the API.  If you call this method once
+    # without a token, it will not actually start the reload, but instead will
+    # return a token to you.  That token is good for 10 minutes.  If you call
+    # this method again and pass that token then the OS reload will actually
+    # begin.
+    #
+    # If you wish to force the OS Reload and bypass the token safety mechanism
+    # simply pass the token 'FORCE' as the first parameter.  If you do so
+    # the reload will proceed immediately.
+    #
+    def reload_os!(token = '', provisioning_script_uri = nil, ssh_keys = nil)
+      configuration = {}
+
+      configuration['customProvisionScriptUri'] = provisioning_script_uri if provisioning_script_uri
+      configuration['sshKeyIds'] = ssh_keys if ssh_keys
+
+      service.object_with_id(self.id).reloadOperatingSystem(token, configuration)
     end
 
+    ##
+    # Repeatedly polls the API to find out if this server is 'ready'.
+    #
+    # The server is ready when it is provisioned and any operating system reloads have completed.
+    #
+    # If wait_for_transactions is true, then the routine will poll until all transactions
+    # (not just an OS Reload) have completed on the server.
+    #
+    # max_trials is the maximum number of times the routine will poll the API
+    # seconds_between_tries is the polling interval (in seconds)
+    #
+    # The routine returns true if the server was found to be ready.  If max_trials
+    # is exceeded and the server is still not ready, the routine returns false
+    #
+    # If a block is passed to this routine it will be called on each trial with
+    # a boolean argument representing whether or not the server is ready
+    #
     def wait_until_ready(max_trials, wait_for_transactions = false, seconds_between_tries = 2)
       # pessimistically assume the server is not ready
       num_trials = 0
       begin
         self.refresh_details()
 
-        last_os_reload = has_sl_property? :lastOperatingSystemReload
-        active_transaction = has_sl_property? :activeTransaction
+        has_os_reload = has_sl_property? :lastOperatingSystemReload
+        has_active_transaction = has_sl_property? :activeTransaction
 
-        reloading_os = active_transaction && last_os_reload && (self.lastOperatingSystemReload['id'] == self.activeTransaction['id'])
+        reloading_os = has_active_transaction && has_os_reload && (self.lastOperatingSystemReload['id'] == self.activeTransaction['id'])
         provisioned = has_sl_property? :provisionDate
 
         # a server is ready when it is provisioned, not reloading the OS and
         # (if the user has asked us to wait on other transactions) when there are
         # no active transactions.
-        ready = provisioned && !reloading_os && (!wait_for_transactions || !active_transaction)
-
+        ready = provisioned && !reloading_os && (!wait_for_transactions || !has_active_transaction)
         num_trials = num_trials + 1
+
+        yield ready if block_given?
 
         sleep(seconds_between_tries) if !ready && (num_trials <= max_trials)
       end until ready || (num_trials >= max_trials)
@@ -62,34 +114,10 @@ module SoftLayer
     end
 
     ##
-    # Returns the default object mask used when fetching servers from the API when an
-    # explicit object mask is not provided.
-    def self.default_object_mask
-      sub_mask = {
-        "mask(SoftLayer_Virtual_Guest)" => [
-          'createDate',
-          'modifyDate',
-          'provisionDate',
-          'dedicatedAccountHostOnlyFlag',
-          'lastKnownPowerState.name',
-          'powerState',
-          'status',
-          'maxCpu',
-          'maxMemory',
-          'activeTransaction[id, transactionStatus[friendlyName,name]]',
-          'networkComponents[id, status, speed, maxSpeed, name, macAddress, primaryIpAddress, port, primarySubnet]',
-          'lastOperatingSystemReload.id',
-          'blockDevices',
-          'blockDeviceTemplateGroup[id, name, globalIdentifier]'
-        ]
-      }
-
-      super.merge(sub_mask)
-    end #default_object_mask
-
-
-    ##
     # Retrive the virtual server with the given server ID from the API
+    #
+    # The options may include the following keys
+    # * <b>+:object_mask+</b> (string) - A object mask of properties, in addition to the default properties, that you wish to retrieve for the server
     #
     def self.server_with_id(softlayer_client, server_id, options = {})
       service = softlayer_client["Virtual_Guest"]
@@ -122,7 +150,7 @@ module SoftLayer
     # * <b>+:private_ip+</b> (string) - same as :public_ip, but for private IP addresses
     #
     # Additionally you may provide options related to the request itself:
-    # * <b>+:object_mask+</b> (string, hash, or array) - The object mask of properties you wish to receive for the items returned If not provided, the result will use the default object mask
+    # * <b>+:object_mask+</b> (string) - A object mask of properties, in addition to the default properties, that you wish to retrieve for the servers
     # * <b>+:result_limit+</b> (hash with :limit, and :offset keys) - Limit the scope of results returned.
     #
     def self.find_servers(softlayer_client, options_hash = {})
@@ -191,6 +219,103 @@ module SoftLayer
       end
 
       virtual_server_data.collect { |server_data| VirtualServer.new(softlayer_client, server_data) }
+    end
+    
+    ##
+    # Returns the default object mask used when fetching servers from the API
+    def self.default_object_mask
+      sub_mask = {
+        "mask(SoftLayer_Virtual_Guest)" => [
+          'createDate',
+          'modifyDate',
+          'provisionDate',
+          'dedicatedAccountHostOnlyFlag',
+          'lastKnownPowerState.name',
+          'powerState',
+          'status',
+          'maxCpu',
+          'maxMemory',
+          'activeTransaction[id, transactionStatus[friendlyName,name]]',
+          'networkComponents[id, status, speed, maxSpeed, name, macAddress, primaryIpAddress, port, primarySubnet]',
+          'lastOperatingSystemReload.id',
+          'blockDevices',
+          'blockDeviceTemplateGroup[id, name, globalIdentifier]'
+        ]
+      }
+
+      super.merge(sub_mask)
+    end #default_object_mask
+    
+    ##
+    # Returns the SoftLayer Service used to work with instances of this class.  For Virtual Servers that is +SoftLayer_Virtual_Guest+
+    # This routine is largely an implementation detail of the framework
+    def service
+      return softlayer_client["Virtual_Guest"]
+    end
+    
+    ##
+    # This routine submits an order to upgrade the cpu count of the virtual server.
+    # The order may result in additional charges being applied to SoftLayer account
+    #
+    # This routine can also "downgrade" servers (set their cpu count lower)
+    #
+    # The routine returns true if the order is placed and false if it is not
+    #
+    def upgrade_cpus!(num_cpus)
+      upgrade_item_price = _item_price_in_category("guest_core", num_cpus)
+      _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
+      nil != upgrade_item_price
+    end
+
+    ##
+    # This routine submits an order to change the RAM available to the virtual server.
+    # Pass in the desired amount of RAM for the server in Gigabytes
+    #
+    # The order may result in additional charges being applied to SoftLayer account
+    #
+    # The routine returns true if the order is placed and false if it is not
+    #
+    def upgrade_RAM!(ram_in_GB)
+      upgrade_item_price = _item_price_in_category("ram", ram_in_GB)
+      _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
+      nil != upgrade_item_price
+    end
+    
+    ##
+    # This routine submits an order to change the maximum nic speed of the server
+    # Pass in the desired speed in Megabits per second (typically 10, 100, or 1000)
+    #
+    # The order may result in additional charges being applied to SoftLayer account
+    #
+    # The routine returns true if the order is placed and false if it is not
+    #
+    def upgrade_max_network_speed!(network_speed_in_Mbps)
+      upgrade_item_price = _item_price_in_category("port_speed", network_speed_in_Mbps)
+      _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
+      nil != upgrade_item_price
+    end
+    
+    private
+    
+    def _item_price_in_category(which_category, capacity)
+      item_prices_in_category = self.upgrade_items.select { |item_price| item_price["categories"].find { |category| category["categoryCode"] == which_category } }
+      item_prices_in_category.find { |ram_item| ram_item["item"]["capacity"].to_i == capacity}
+    end
+    
+    ##
+    # Constructs an upgrade order to order the given item price.
+    # The order is built to execute immediately
+    #
+    def _order_upgrade_item!(upgrade_item_price)
+      # put together an order
+      upgrade_order = { 
+        'complexType' => 'SoftLayer_Container_Product_Order_Virtual_Guest_Upgrade',
+        'virtualGuests' => [{'id' => self.id }],
+        'properties' => [{'name' => 'MAINTENANCE_WINDOW', 'value' => Time.now.iso8601}],
+        'prices' => [ upgrade_item_price ]
+      }
+
+      self.softlayer_client["Product_Order"].placeOrder(upgrade_order)
     end
   end #class VirtualServer
 end

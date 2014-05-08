@@ -50,7 +50,7 @@ module SoftLayer
     end
 
     ##
-    # properties used when reloading this object from teh softlayer API
+    # properties used when reloading this object from the softlayer API
     def softlayer_properties(object_mask = nil)
       my_service = self.service
 
@@ -116,7 +116,7 @@ module SoftLayer
     ##
     # Change the current port speed of the server
     #
-    # +new_speed+ should be 0, 10, 100, or 1000 and the actual
+    # +new_speed+ should be 0, 10, 100, or 1000 (units are Mbps) and the actual
     # speed of the port will be limited by the current maximum port
     # speed for the server.
     #
@@ -163,12 +163,13 @@ module SoftLayer
       }
     end
 
-     def to_s
+    def to_s
       result = super
       if respond_to?(:hostname) then
         result.sub!('>', ", #{hostname}>")
       end
       result
     end
-  end
-end # SoftLayer module
+
+  end # class Server
+end # module SoftLayer

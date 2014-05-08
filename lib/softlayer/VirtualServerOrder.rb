@@ -111,5 +111,11 @@ module SoftLayer
 
       template
     end
-  end
-end
+
+    def self.virtual_server_package_items(client)
+      client['Product_Package'].object_mask("mask[description,capacity,prices.id,categories.id]").object_with_id(46).getItems()
+    end
+
+  end # class VirtualServerOrder
+end # module SoftLayer
+
