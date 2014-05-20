@@ -37,7 +37,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.has_rdoc = true
-  s.required_ruby_version = '>= 1.9'
+  s.required_ruby_version = '>= 1.9.2'
   s.add_runtime_dependency 'configparser', '>= 0.1.2'
   s.add_development_dependency 'json', '~> 1.8', '>= 1.8.1'
   s.add_development_dependency 'rake'
