@@ -37,6 +37,4 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 task :gem => :build
-
-task :default => [:spec] do
-end
+task :default => :spec

@@ -1,8 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'rake'
-gem 'rspec'
-gem 'json' #used in unit tests
-gem 'configparser', "~> 0.1.2", :require => false
-gem 'RedCloth'
-gem 'yard'
+gem 'configparser', "~> 0.1.2"
+
+group :development do
+  gem 'rake'
+  gem 'rspec'
+  gem 'json' #used in unit tests
+  gem 'RedCloth'
+  gem 'yard'
+end

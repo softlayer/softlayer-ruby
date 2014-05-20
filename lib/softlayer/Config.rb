@@ -49,7 +49,6 @@ module SoftLayer
 			search_path = search_path.map { |file_path| File.expand_path(file_path) }
 
 			search_path.each do |file_path|
-
 				if File.readable? file_path
 					config = ConfigParser.new file_path
 					softlayer_section = config["softlayer"]
