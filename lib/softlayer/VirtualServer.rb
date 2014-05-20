@@ -30,6 +30,7 @@ module SoftLayer
     ##
     # A virtual server can find out about Product_Packge items that are
     # available for upgrades.
+    #
     softlayer_resource :upgrade_items do |resource|
       resource.should_update_if do
         @upgrade_items == nil
@@ -51,7 +52,7 @@ module SoftLayer
     # Begins an OS reload on this virtual server.
     #
     # The OS reload can wipe out the data on your server so this method uses a
-    # confirmation mechanism built into the API.  If you call this method once
+    # confirmation mechanism built into the API. If you call this method once
     # without a token, it will not actually start the reload, but instead will
     # return a token to you.  That token is good for 10 minutes.  If you call
     # this method again and pass that token then the OS reload will actually
@@ -68,6 +69,67 @@ module SoftLayer
       configuration['sshKeyIds'] = ssh_keys if ssh_keys
 
       service.object_with_id(self.id).reloadOperatingSystem(token, configuration)
+    end
+
+    ##
+    # This routine submits an order to upgrade the cpu count of the virtual server.
+    # The order may result in additional charges being applied to SoftLayer account
+    #
+    # This routine can also "downgrade" servers (set their cpu count lower)
+    #
+    # The routine returns true if the order is placed and false if it is not
+    #
+    def upgrade_cpus!(num_cpus)
+      upgrade_item_price = _item_price_in_category("guest_core", num_cpus)
+      _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
+      nil != upgrade_item_price
+    end
+
+    ##
+    # This routine submits an order to change the RAM available to the virtual server.
+    # Pass in the desired amount of RAM for the server in Gigabytes
+    #
+    # The order may result in additional charges being applied to SoftLayer account
+    #
+    # The routine returns true if the order is placed and false if it is not
+    #
+    def upgrade_RAM!(ram_in_GB)
+      upgrade_item_price = _item_price_in_category("ram", ram_in_GB)
+      _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
+      nil != upgrade_item_price
+    end
+
+    ##
+    # This routine submits an order to change the maximum nic speed of the server
+    # Pass in the desired speed in Megabits per second (typically 10, 100, or 1000)
+    #
+    # The order may result in additional charges being applied to SoftLayer account
+    #
+    # The routine returns true if the order is placed and false if it is not
+    #
+    def upgrade_max_network_speed!(network_speed_in_Mbps)
+      upgrade_item_price = _item_price_in_category("port_speed", network_speed_in_Mbps)
+      _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
+      nil != upgrade_item_price
+    end
+
+    ##
+    # Capture a disk image of this virtual server for use with other servers.
+    #
+    # image_name will become the name of the image in the portal.
+    #
+    # If include_attached_storage is true, the images of attached storage will be
+    # included as well.
+    #
+    # The image_notes should be a string and will be added to the image as notes.
+    #
+    def capture_image(image_name, include_attached_storage = false, image_notes = nil)
+      disk_filter = lambda { |disk| disk['device'] == '0' }
+      disk_filter = lambda { |disk| disk['device'] == '1' } if include_attached_storage
+
+      disks = self.blockDevices.select(&disk_filter)
+
+      service.object_with_id(id).createArchiveTransaction(image_name, disks, notes) if disks && !disks.empty?
     end
 
     ##
@@ -251,48 +313,6 @@ module SoftLayer
     # This routine is largely an implementation detail of the framework
     def service
       return softlayer_client["Virtual_Guest"]
-    end
-
-    ##
-    # This routine submits an order to upgrade the cpu count of the virtual server.
-    # The order may result in additional charges being applied to SoftLayer account
-    #
-    # This routine can also "downgrade" servers (set their cpu count lower)
-    #
-    # The routine returns true if the order is placed and false if it is not
-    #
-    def upgrade_cpus!(num_cpus)
-      upgrade_item_price = _item_price_in_category("guest_core", num_cpus)
-      _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
-      nil != upgrade_item_price
-    end
-
-    ##
-    # This routine submits an order to change the RAM available to the virtual server.
-    # Pass in the desired amount of RAM for the server in Gigabytes
-    #
-    # The order may result in additional charges being applied to SoftLayer account
-    #
-    # The routine returns true if the order is placed and false if it is not
-    #
-    def upgrade_RAM!(ram_in_GB)
-      upgrade_item_price = _item_price_in_category("ram", ram_in_GB)
-      _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
-      nil != upgrade_item_price
-    end
-
-    ##
-    # This routine submits an order to change the maximum nic speed of the server
-    # Pass in the desired speed in Megabits per second (typically 10, 100, or 1000)
-    #
-    # The order may result in additional charges being applied to SoftLayer account
-    #
-    # The routine returns true if the order is placed and false if it is not
-    #
-    def upgrade_max_network_speed!(network_speed_in_Mbps)
-      upgrade_item_price = _item_price_in_category("port_speed", network_speed_in_Mbps)
-      _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
-      nil != upgrade_item_price
     end
 
     private
