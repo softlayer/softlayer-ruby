@@ -1,3 +1,6 @@
+*2.1.0*
+* Began implementing a model framework that allows Ruby developers to work with elements in the SoftLayer API in a more object-oriented fashion. The first release of this framework includes the Ticket, VirtualServer, and BareMetalServer classes.
+
 *2.0.0*
 * Switched the Ruby API client to use XML-RPC when calling the SoftLayer API rather than using the REST-like interface.
 * Result limits are now specified using @result_limit(offset,limit)@.
