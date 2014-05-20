@@ -21,17 +21,60 @@
 #
 
 module SoftLayer
+
+  ##
+  # This module is inteneded to be used by classes in the SoftLayer
+  # object model.  It creates a small DSL for creating SoftLayer Resources
+  #
+  # +softlayer_resource+ is an implementation of a memoization scheme
+  # The module creates a getter which is implemented in terms of a
+  # predicate (identifying whether or not the resource needs to be updated) and
+  # an update routine
+  #
+  # When the getter is called, it checks the predicate routine to see if
+  # the resource needs to be updated. If it doesn't, then the getter simply
+  # returns the cached value for the resource. If the resource does need
+  # to be updated, the getter calls the update routine to get a new value
+  # and caches that value off before returning it to the caller.
+  #
+  # Declaring a resource will create three routines and an instance
+  # variable based on the name of the resource
+  #
+  # * The getter simply has the same name as the resource
+  # * The predicate routine is called +should_update_<resource name>?+
+  # * The updating routine is called +update_<resource name>!+
+  #
+  # The getter can also be called with a boolean argument.  If that
+  # argument is true, the getter will force the resource to be updated
+  # without consulting the +should_update_+ predicate
+  #
+  # When a resource is defined, the definition takes a block
+  # inside that block there is a small DSL that allows you to
+  # set the behavior of the +should_update_+ predicate and the +update_+
+  # routine.
+  #
+  # A resource definition might look something like this:
+  #
+  #    softlayer_resource :lollipop do |lollipop|
+  #      lollipop.should_update_if do
+  #        self.lollipop_supply_is_low?
+  #      end
+  #
+  #      lollipop.to_update do
+  #        candy_store.buy_lollipops(bakers_dozen)
+  #      end
+  #    end
+  #
   module ModelResource
 
     # ResourceDefinition inner class used to collect and
-    # store information about how and when a resource
-    # should be updated (presumably by loading it from the
-    # network)
+    # store information about how and when a softlayer_resource
+    # should be updated
     class ResourceDefinition
       # the name of the resource this definition is for
       attr_reader :resource_name
 
-      # The block to call in order to update the resource.  The
+      # The block to call in order to update the resource. The
       # return value of this block should be the new value of the
       # resource.
       attr_reader :update_block
@@ -48,16 +91,23 @@ module SoftLayer
         @should_update_block = Proc.new { true; }
       end
 
+      # This method is used to provide behavior for the
+      # should_update_ predicate for the resource
       def should_update_if (&block)
         @should_update_block = block
       end
 
+      # This method is used to provide the behavior for
+      # the update_! method for the resource.
       def to_update (&block)
         @update_block = block
       end
     end
 
     module ClassMethods
+
+      # Declares a new softlayer resource and accepts the block
+      # in which the should_update and update methods are declared.
       def softlayer_resource (resource_name, &block)
         resource_definition = ResourceDefinition.new(resource_name)
 
@@ -67,7 +117,6 @@ module SoftLayer
         # store off the resource definition where we can find it later
         @resource_definitions ||= {};
         @resource_definitions[resource_name] = resource_definition;
-
 
         # define a method called "update_<resource_name>!" which calls the update block
         # stored in the resource definition
@@ -83,7 +132,7 @@ module SoftLayer
         # called on which will get the value of the resource.
         #
         # The getter will take one argument "force_update" which
-        # is treated as boolean value.  If true, then the getter will
+        # is treated as boolean value. If true, then the getter will
         # force the resource to update (by using its "to_update") block.
         #
         # If the force variable is false, or not given, then the
@@ -102,7 +151,6 @@ module SoftLayer
 
           instance_variable_get(value_instance_variable)
         end
-
       end
 
       def softlayer_resource_definition(resource_name)

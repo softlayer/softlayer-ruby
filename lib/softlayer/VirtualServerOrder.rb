@@ -118,4 +118,3 @@ module SoftLayer
 
   end # class VirtualServerOrder
 end # module SoftLayer
-

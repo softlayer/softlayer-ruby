@@ -26,7 +26,7 @@ require 'json'
 module SoftLayer
   class VirtualServer < Server
     include ::SoftLayer::ModelResource
-    
+
     ##
     # A virtual server can find out about Product_Packge items that are
     # available for upgrades.
@@ -39,7 +39,7 @@ module SoftLayer
         service.object_with_id(self.id).object_mask("mask[id,categories.categoryCode,item[id,capacity,units,attributes,prices]]").getUpgradeItemPrices(true)
       end
     end
-    
+
     ##
     # IMMEDIATELY cancel this virtual server
     #
@@ -220,7 +220,7 @@ module SoftLayer
 
       virtual_server_data.collect { |server_data| VirtualServer.new(softlayer_client, server_data) }
     end
-    
+
     ##
     # Returns the default object mask used when fetching servers from the API
     def self.default_object_mask
@@ -245,14 +245,14 @@ module SoftLayer
 
       super.merge(sub_mask)
     end #default_object_mask
-    
+
     ##
     # Returns the SoftLayer Service used to work with instances of this class.  For Virtual Servers that is +SoftLayer_Virtual_Guest+
     # This routine is largely an implementation detail of the framework
     def service
       return softlayer_client["Virtual_Guest"]
     end
-    
+
     ##
     # This routine submits an order to upgrade the cpu count of the virtual server.
     # The order may result in additional charges being applied to SoftLayer account
@@ -280,7 +280,7 @@ module SoftLayer
       _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
       nil != upgrade_item_price
     end
-    
+
     ##
     # This routine submits an order to change the maximum nic speed of the server
     # Pass in the desired speed in Megabits per second (typically 10, 100, or 1000)
@@ -294,21 +294,25 @@ module SoftLayer
       _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
       nil != upgrade_item_price
     end
-    
+
     private
-    
+
+    ##
+    # Searches through the upgrade items pricess known to this server for the one that is in a particular category
+    # and whose capacity matches the value given.  Returns the item_price or nil
+    #
     def _item_price_in_category(which_category, capacity)
       item_prices_in_category = self.upgrade_items.select { |item_price| item_price["categories"].find { |category| category["categoryCode"] == which_category } }
       item_prices_in_category.find { |ram_item| ram_item["item"]["capacity"].to_i == capacity}
     end
-    
+
     ##
     # Constructs an upgrade order to order the given item price.
     # The order is built to execute immediately
     #
     def _order_upgrade_item!(upgrade_item_price)
       # put together an order
-      upgrade_order = { 
+      upgrade_order = {
         'complexType' => 'SoftLayer_Container_Product_Order_Virtual_Guest_Upgrade',
         'virtualGuests' => [{'id' => self.id }],
         'properties' => [{'name' => 'MAINTENANCE_WINDOW', 'value' => Time.now.iso8601}],
