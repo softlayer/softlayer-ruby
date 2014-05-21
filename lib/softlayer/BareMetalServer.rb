@@ -21,12 +21,20 @@
 #
 
 module SoftLayer
+  #
+  # This class is used to order a Bare Metal Server please see
+  # +BareMetalInstanceOrder+ to order Bare Metal Instances.
+  #
+  # Ordering hardware is complex. Please see the documentation for
+  # +BareMetalOrder+ for more information about ordering hardware servers.
+  #
   class BareMetalServer < Server
 
     ##
     # Returns true if this +BareMetalServer+ is actually a Bare Metal Instance
     # a Bare Metal Instance is physical, hardware server that is is provisioned to
     # match a profile based on Virtual Server charactersitics
+    #
     def bare_metal_instance?
       if @sl_hash.has_key?(:bareMetalInstanceFlag)
         self.bareMetalInstanceFlag != 0
@@ -51,12 +59,12 @@ module SoftLayer
         softlayer_client["Ticket"].createCancelServerTicket(self.id, cancel_reason, comment, true, 'HARDWARE')
       else
         # This is a bare metal instance
-        softlayer_client['Billing_Item'].object_with_id(self.billingItem['id']).cancelService()
+        softlayer_client['Billing_Item'].object_with_id(self.billingItem['id'].to_i).cancelService()
       end
     end
 
     ##
-    # Returns the SoftLayer Service used to work with instances of this class.  For Bare Metal Servers that is +SoftLayer_Hardware+
+    # Returns the SoftLayer Service used to work with instances of this class. For Bare Metal Servers that is +SoftLayer_Hardware+
     def service
       return softlayer_client["Hardware"]
     end
@@ -67,7 +75,6 @@ module SoftLayer
     def self.default_object_mask
       sub_mask = {
         "mask(SoftLayer_Hardware_Server)" => [
-          'billingItem.id',
           'bareMetalInstanceFlag',
           'provisionDate',
           'hardwareStatus',
@@ -77,8 +84,8 @@ module SoftLayer
           'networkComponents[id, status, speed, maxSpeed, name, ipmiMacAddress, ipmiIpAddress, macAddress, primaryIpAddress, port, primarySubnet]',
           'activeTransaction[id, transactionStatus[friendlyName,name]]',
           'hardwareChassis[id, name]'
-        ]
-      }
+          ]
+        }
 
       super.merge(sub_mask)
     end
@@ -87,7 +94,7 @@ module SoftLayer
     # Returns a list of the cancellation reasons to use when cancelling a server.
     #
     # When cancelling a server, you must provide a parameter which is the "cancellation reason".
-    # The API expects very specific values for that parameter.  To simplify the API we
+    # The API expects very specific values for that parameter. To simplify the API we
     # have reduced those reasons down to symbols and this method returns
     # a hash mapping from the symbol to the string that the API expects.
     #

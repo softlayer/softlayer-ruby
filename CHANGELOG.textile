@@ -9,7 +9,7 @@ The @result_offset@ API filter has been removed.
 * Changed the mechanism for obtaining services to include the Client class. This makes the Ruby API very similar to the API presented by the Python bindings. The old mechanism for obtaining services still works to preserve backward compatibility but you will receive deprecation warnings in debug mode.
 
 *1.0.8*
-* Set a default User-Agent string to be sent with all requests to SoftLayer API.  Provide interface to set a custom User-Agent string.
+* Set a default User-Agent string to be sent with all requests to SoftLayer API. Provide interface to set a custom User-Agent string.
 
 *1.0.7*
 * Calls to the @getObject@ method of any service should not take parameters. The gem now warns if you make this type of call and ignores the parameters. This prevents @SoftLayer_Virtual_Guest::getObject@ from accidentally creating (billable) VirtualServer instances.

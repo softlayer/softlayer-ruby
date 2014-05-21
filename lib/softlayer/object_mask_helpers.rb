@@ -24,10 +24,6 @@
 # Extensions to the hash class to support using them in constructing object
 # masks
 class Hash
-  def __valid_root_property_key?(key_string)
-    return key_string == "mask" || (0 == (key_string =~ /\Amask\([a-z][a-z0-9_]*\)\z/i))
-  end
-
   def to_sl_object_mask()
     raise RuntimeError, "An object mask must contain properties" if empty?
     raise RuntimeError, "An object mask must start with root properties" if keys().find { |key| !__valid_root_property_key?(key) }
@@ -39,6 +35,12 @@ class Hash
   def to_sl_object_mask_property()
     key_strings = __sl_object_mask_properties_for_keys();
     "#{key_strings.join(',')}"
+  end
+
+  private
+
+  def __valid_root_property_key?(key_string)
+    return key_string == "mask" || (0 == (key_string =~ /\Amask\([a-z][a-z0-9_]*\)\z/i))
   end
 
   def __sl_object_mask_properties_for_keys
@@ -85,7 +87,7 @@ end
 # object masks
 class String
   # Returns a string representing the object mask content represented by the
-  # String. Strings are simply represented as copies of themselves.  We make
+  # String. Strings are simply represented as copies of themselves. We make
   # a copy in case the original String is modified somewhere along the way
   def to_sl_object_mask_property()
     return self.strip

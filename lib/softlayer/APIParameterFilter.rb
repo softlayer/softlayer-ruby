@@ -21,22 +21,22 @@
 #
 
 module SoftLayer
-# An <tt>APIParameterFilter</tt> is an intermediary object that understands how
+# An +APIParameterFilter+ is an intermediary object that understands how
 # to accept the other API parameter filters and carry their values to
-# <tt>method_missing</tt> in <tt>Service</tt>. Instances of this class are created
-# internally by the <tt>Service</tt> in its handling of a method call and you
+# +method_missing+ in +Service+. Instances of this class are created
+# internally by the +Service+ in its handling of a method call and you
 # should not have to create instances of this class directly.
 #
 # Instead, to use an API filter, you add a filter method to the call
-# chain when you call a method through a <tt>SoftLayer::Service</tt>
+# chain when you call a method through a +SoftLayer::Service+
 #
-# For example, given a <tt>SoftLayer::Service</tt> instance called <tt>account_service</tt>
+# For example, given a +SoftLayer::Service+ instance called +account_service+
 # you could take advantage of the API filter that identifies a particular
-# object known to that service using the <tt>object_with_id</tt> method :
+# object known to that service using the +object_with_id+ method :
 #
 #     account_service.object_with_id(91234).getSomeAttribute
 #
-# The invocation of <tt>object_with_id</tt> will cause an instance of this
+# The invocation of +object_with_id+ will cause an instance of this
 # class to be created with the service as its target.
 #
 class APIParameterFilter
@@ -49,7 +49,7 @@ class APIParameterFilter
   end
 
   # Adds an API filter that narrows the scope of a call to an object with
-  # a particular ID.  For example, if you want to get the ticket
+  # a particular ID. For example, if you want to get the ticket
   # with an ID of 12345 from the ticket service you might use
   #
   # ticket_service.object_with_id(12345).getObject
@@ -69,7 +69,7 @@ class APIParameterFilter
   #
   # The object_mask becomes part of the request sent to the server
   # The object mask strings are parsed into ObjectMaskProperty trees
-  # and those trees are stored with the parameters.  The trees are
+  # and those trees are stored with the parameters. The trees are
   # converted to strings immediately before the mask is used in a call
   #
   def object_mask(*args)
@@ -100,7 +100,7 @@ class APIParameterFilter
     APIParameterFilter.new(self.target, @parameters.merge({ :result_offset => offset, :result_limit => limit }))
   end
 
-  # Adds an object_filter to the result.  An Object Filter allows you
+  # Adds an object_filter to the result. An Object Filter allows you
   # to specify criteria which are used to filter the results returned
   # by the server.
   def object_filter(filter)
@@ -126,7 +126,7 @@ class APIParameterFilter
       #
       # The API treats that situation as an error (and throws an exception)
       # we get around that by removing the duplicate from the mask that actually gets
-      # passed to the server.  As a side benefit, the mask we send to the server
+      # passed to the server. As a side benefit, the mask we send to the server
       # will be "optimal" without many extraneous characters
       reduced_masks = parameters[:object_mask].inject([]) do |merged_masks, object_mask|
         mergeable_mask = merged_masks.find { |mask| mask.can_merge_with? object_mask }

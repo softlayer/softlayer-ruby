@@ -23,51 +23,105 @@
 module SoftLayer
   class VirtualServerOrder
 
+    #--
     # Required Attributes
     # -------------------
     # The following attributes are required in order to successfully order
     # a virtual server
-    attr_accessor :cpus # integer, The number of virtual CPUs to include in the instance
-    attr_accessor :memory # integer, The amount of RAM for the new server (specified in megabytes so 4096 is 4GB)
-    attr_accessor :hostname # string, The hostname to assign to the new server
-    attr_accessor :domain # string, The domain (i.e. softlayer.com) for the new server
+    #++
 
-    # These two options are mutually exclusive.  You must provide an operating system reference code, or an image
+    # Fixnum, The number of virtual CPUs to include in the instance
+    attr_accessor :cpus
+
+    # Fixnum, The amount of RAM for the new server (specified in megabytes so 4096 is 4GB)
+    attr_accessor :memory
+
+    # String, The hostname to assign to the new server
+    attr_accessor :hostname
+
+    # String, The domain (i.e. softlayer.com) for the new server
+    attr_accessor :domain
+
+    #--
+    # These two options are mutually exclusive. You must provide an operating system reference code, or an image
     # if you provide both, the image will override the os reference code
+    #++
+
+    # String, An OS reference code for the operating system to install on the virtual server
     attr_accessor :os_referenceCode
+
+    # Fixnum, The id of a disk image to put on the newly created server
     attr_accessor :image_id
 
+    #--
     # Optional attributes
-    # -------------------
-    attr_accessor :hourly # boolean, If true, an hourly server will be ordered, otherwise a monthly server will be ordered
-    attr_accessor :use_local_disk # boolean, If true the server will use a virtual hard drive, if false, data will be stored on a SAN disk
-    attr_accessor :datacenter # string, short name of the data center that will house the new virtual server (e.g. "dal05" or "sea01")
-    attr_accessor :dedicated_host # boolean, If true, the virtual server will reside on dedicated hardware (single tennant) as opposed to a shared server (multi-tennant)
-    attr_accessor :public_vlan_id # integer, The id of the public VLAN this server should join
-    attr_accessor :private_vlan_id # integer, The id of the private VLAN this server should join
-    attr_accessor :bare_metal  # boolean, if true the order will create a Bare Metal Instance (that is a physical hardware server whose characteristics closely match the ones given in this order)
-    attr_accessor :disks # an array of disk sizes (in gigabytes) to create for this server
-    attr_accessor :post_provision_uri # string, the URI of a post provisioning script to run on this server once it is created
-    attr_accessor :private_network_only # if true then the virtual server will only have a private network interface (and no public network interface)
-    attr_accessor :ssh_keys  # an array of ssh keys to add to the root user's account.
-    attr_accessor :user_metadata # user metadata associated with the instance
-    attr_accessor :max_nic_speed # integer the maximum network interface card speed (in Mbps).  Should be 0, 10, 100, or 1000
+    #++
 
+    # Boolean,  If true, an hourly server will be ordered, otherwise a monthly server will be ordered
+    attr_accessor :hourly
+
+    # Boolean, If true the server will use a virtual hard drive, if false, data will be stored on a SAN disk
+    attr_accessor :use_local_disk
+
+    # String, short name of the data center that will house the new virtual server (e.g. "dal05" or "sea01")
+    attr_accessor :datacenter
+
+    # Boolean, If true, the virtual server will reside on dedicated hardware (single tennant) as opposed to a shared server (multi-tennant)
+    attr_accessor :dedicated_host
+
+    # Fixnum, The id of the public VLAN this server should join
+    attr_accessor :public_vlan_id
+
+    # Fixnum, The id of the private VLAN this server should join
+    attr_accessor :private_vlan_id
+
+    # Boolean, if true the order will create a Bare Metal Instance (that is a physical hardware server whose characteristics closely match the ones given in this order)
+    attr_accessor :bare_metal
+
+    # Array of Fixnum, Sizes (in gigabytes) of disks to attach to this server
+    attr_accessor :disks
+
+    # String, The URI of a post provisioning script to run on this server once it is created
+    attr_accessor :post_provision_uri
+
+    # Boolean, If true then the virtual server will only have a private network interface (and no public network interface)
+    attr_accessor :private_network_only
+
+    # Array of Strings, SSH keys to add to the root user's account.
+    attr_accessor :ssh_keys
+
+    # String, User metadata associated with the instance
+    attr_accessor :user_metadata
+
+    # Fixnum (Should be 0, 10, 100, or 1000), The maximum network interface card speed (in Mbps) for the new instance
+    attr_accessor :max_nic_speed
+
+    # Create a new order that works thorugh the given client connection
+    def initialize (client)
+      @softlayer_client = client
+    end
 
     # Calls the SoftLayer API to verify that the template provided by this order is valid
     # This routine will return the order template generated by the API or will throw an exception
     #
     # This routine will not actually create a Virtual Server and will not affect billing.
-    def verify(client)
-      client["Virtual_Guest"].generateOrderTemplate(self.virtual_guest_template)
+    def verify()
+      @softlayer_client["Virtual_Guest"].generateOrderTemplate(self.virtual_guest_template)
     end
 
     # Calls the SoftLayer API to place an order for a new virtual server based on the template in this
-    # order.  If this succeeds then you will be billed for the new Virtual Server.
-    def place_order!(client)
-      virtual_server_hash = client["Virtual_Guest"].createObject(self.virtual_guest_template)
-      SoftLayer::VirtualServer.server_with_id(client, virtual_server_hash["id"]) if virtual_server_hash
+    # order. If this succeeds then you will be billed for the new Virtual Server.
+    def place_order!()
+      virtual_server_hash = @softlayer_client["Virtual_Guest"].createObject(self.virtual_guest_template)
+      SoftLayer::VirtualServer.server_with_id(@softlayer_client, virtual_server_hash["id"]) if virtual_server_hash
     end
+
+    # Return the order items in the virtual server package.
+    def self.virtual_server_package_items(client)
+      client['Product_Package'].object_mask("mask[description,capacity,prices.id,categories.id]").object_with_id(46).getItems()
+    end
+
+    protected
 
     # Returns a hash of the creation options formatted to be sent to
     # the SoftLayer API for either verification or completion
@@ -110,10 +164,6 @@ module SoftLayer
       end
 
       template
-    end
-
-    def self.virtual_server_package_items(client)
-      client['Product_Package'].object_mask("mask[description,capacity,prices.id,categories.id]").object_with_id(46).getItems()
     end
 
   end # class VirtualServerOrder

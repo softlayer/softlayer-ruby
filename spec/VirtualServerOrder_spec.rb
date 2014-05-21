@@ -27,6 +27,15 @@ require 'softlayer_api'
 require 'rspec'
 
 describe SoftLayer::VirtualServerOrder do
+  before(:each) do
+    SoftLayer::VirtualServerOrder.send(:public, *SoftLayer::VirtualServerOrder.protected_instance_methods)
+  end
+
+  let (:subject) do
+    client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
+    SoftLayer::VirtualServerOrder.new(client)
+  end
+
   it "puts the cpu count an order template" do
     subject.cpus = 4
     subject.virtual_guest_template["startCpus"].should == 4
@@ -157,32 +166,34 @@ describe SoftLayer::VirtualServerOrder do
   end
 
   it "calls the softlayer API to validate an order template" do
-    test_order = SoftLayer::VirtualServerOrder.new()
+    client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
+
+    test_order = SoftLayer::VirtualServerOrder.new(client)
     test_order.cpus = 2
     test_order.memory = 2048
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
 
-    client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
     virtual_guest_order_service = client["Virtual_Guest"]
     virtual_guest_order_service.stub(:call_softlayer_api_with_params)
 
     expect(virtual_guest_order_service).to receive(:generateOrderTemplate).with(test_order.virtual_guest_template)
-    test_order.verify(client)
+    test_order.verify()
   end
 
   it "calls the softlayer API to place an order for a new virtual server" do
-    test_order = SoftLayer::VirtualServerOrder.new()
+    client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
+
+    test_order = SoftLayer::VirtualServerOrder.new(client)
     test_order.cpus = 2
     test_order.memory = 2048
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
 
-    client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
     virtual_guest_order_service = client["Virtual_Guest"]
     virtual_guest_order_service.stub(:call_softlayer_api_with_params)
 
     expect(virtual_guest_order_service).to receive(:createObject).with(test_order.virtual_guest_template)
-    test_order.place_order!(client)
+    test_order.place_order!()
   end
 end

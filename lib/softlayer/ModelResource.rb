@@ -24,7 +24,7 @@ module SoftLayer
 
   ##
   # This module is inteneded to be used by classes in the SoftLayer
-  # object model.  It creates a small DSL for creating SoftLayer Resources
+  # object model. It creates a small DSL for creating SoftLayer Resources
   #
   # +softlayer_resource+ is an implementation of a memoization scheme
   # The module creates a getter which is implemented in terms of a
@@ -44,7 +44,7 @@ module SoftLayer
   # * The predicate routine is called +should_update_<resource name>?+
   # * The updating routine is called +update_<resource name>!+
   #
-  # The getter can also be called with a boolean argument.  If that
+  # The getter can also be called with a boolean argument. If that
   # argument is true, the getter will force the resource to be updated
   # without consulting the +should_update_+ predicate
   #

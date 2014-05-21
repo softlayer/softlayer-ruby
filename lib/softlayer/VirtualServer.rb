@@ -49,29 +49,6 @@ module SoftLayer
     end
 
     ##
-    # Begins an OS reload on this virtual server.
-    #
-    # The OS reload can wipe out the data on your server so this method uses a
-    # confirmation mechanism built into the API. If you call this method once
-    # without a token, it will not actually start the reload, but instead will
-    # return a token to you.  That token is good for 10 minutes.  If you call
-    # this method again and pass that token then the OS reload will actually
-    # begin.
-    #
-    # If you wish to force the OS Reload and bypass the token safety mechanism
-    # simply pass the token 'FORCE' as the first parameter.  If you do so
-    # the reload will proceed immediately.
-    #
-    def reload_os!(token = '', provisioning_script_uri = nil, ssh_keys = nil)
-      configuration = {}
-
-      configuration['customProvisionScriptUri'] = provisioning_script_uri if provisioning_script_uri
-      configuration['sshKeyIds'] = ssh_keys if ssh_keys
-
-      service.object_with_id(self.id).reloadOperatingSystem(token, configuration)
-    end
-
-    ##
     # This routine submits an order to upgrade the cpu count of the virtual server.
     # The order may result in additional charges being applied to SoftLayer account
     #
@@ -143,7 +120,7 @@ module SoftLayer
     # max_trials is the maximum number of times the routine will poll the API
     # seconds_between_tries is the polling interval (in seconds)
     #
-    # The routine returns true if the server was found to be ready.  If max_trials
+    # The routine returns true if the server was found to be ready. If max_trials
     # is exceeded and the server is still not ready, the routine returns false
     #
     # If a block is passed to this routine it will be called on each trial with
@@ -309,7 +286,7 @@ module SoftLayer
     end #default_object_mask
 
     ##
-    # Returns the SoftLayer Service used to work with instances of this class.  For Virtual Servers that is +SoftLayer_Virtual_Guest+
+    # Returns the SoftLayer Service used to work with instances of this class. For Virtual Servers that is +SoftLayer_Virtual_Guest+
     # This routine is largely an implementation detail of the framework
     def service
       return softlayer_client["Virtual_Guest"]
@@ -319,7 +296,7 @@ module SoftLayer
 
     ##
     # Searches through the upgrade items pricess known to this server for the one that is in a particular category
-    # and whose capacity matches the value given.  Returns the item_price or nil
+    # and whose capacity matches the value given. Returns the item_price or nil
     #
     def _item_price_in_category(which_category, capacity)
       item_prices_in_category = self.upgrade_items.select { |item_price| item_price["categories"].find { |category| category["categoryCode"] == which_category } }

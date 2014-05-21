@@ -49,7 +49,7 @@ module SoftLayer
     end
 
     ##
-    # Subclasses implement this method.  The implementation should
+    # Subclasses implement this method. The implementation should
     # make a request to the SoftLayer API and retrieve an up-to-date
     # representation of this object expressed as a property hash.
     def softlayer_properties(object_mask = nil)

@@ -66,19 +66,19 @@ module SoftLayer
     end
 
     # Matches when the value is found at the beginning of the
-    # field.  This search is not case sensitive
+    # field. This search is not case sensitive
     def begins_with(value)
       ObjectFilterOperation.new('^=', value)
     end
 
     # Matches when the value is found at the end of the
-    # field.  This search is not case sensitive
+    # field. This search is not case sensitive
     def ends_with(value)
       ObjectFilterOperation.new('$=', value)
     end
 
     # Matches when the value in the field is exactly equal to the
-    # given value.  This is a case-sensitive match
+    # given value. This is a case-sensitive match
     def is(value)
       ObjectFilterOperation.new('_=', value)
     end
@@ -126,9 +126,9 @@ module SoftLayer
   # This allows you to build up object filters by chaining [] defeference
   # operations.
   #
-  # Starting empty object filter when you ask for <tt>object_filter["foo"]</tt>
+  # Starting empty object filter when you ask for +object_filter["foo"]+
   # either the value at that hash location will be returned, or foo will be +added+ to the
-  # object and the value of that key will be an Object Filter <tt>{ "foo" => {} }</tt>
+  # object and the value of that key will be an Object Filter +{ "foo" => {} }+
   #
   # By way of an example of chaining together +[]+ calls:
   #   object_filter["foo"]["bar"]["baz"] = 3
@@ -166,7 +166,7 @@ module SoftLayer
       end
 
       # if there is a block, then the query will come from
-      # calling the block.  We warn in debug mode if you override a
+      # calling the block. We warn in debug mode if you override a
       # query that was passed directly with the value from a block.
       if block
         $stderr.puts "The query from the block passed to ObjectFilter:build will override the query passed as a parameter" if $DEBUG && query
@@ -207,7 +207,7 @@ module SoftLayer
     #     "*= smaug"
     #
     # The query language also accepts some aliases using asterisks
-    # in a regular-expression-like way.  Those aliases look like:
+    # in a regular-expression-like way. Those aliases look like:
     #
     #   'value'   Exact value match (translates to '_= value')
     #   'value*'  Begins with value (translates to '^= value')

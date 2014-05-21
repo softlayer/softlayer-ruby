@@ -30,7 +30,7 @@ Version 2.0 of the @softlayer_api@ gem changes the protocol used to communicate 
 * Object Masks are now sent to the server using the "Extended Object Mask Format":http://sldn.softlayer.com/article/Object-Masks.
 * Result limits are now specified using a single call rather than requiring two
 
-The gem now allows you to specify your SoftLayer username and API key through a config file.  See "Providing authentication in a config file":#config_authorization for more information.
+The gem now allows you to specify your SoftLayer username and API key through a config file. See "Providing authentication in a config file":#config_authorization for more information.
 
 The softlayer_api gem no longer supports Ruby 1.8.x
 
@@ -189,7 +189,7 @@ If you wish to limit the volume of information that the server returns about a p
 
 The arguments to @object_mask@ must strings. Each string should be a well defined Object Mask as defined in the "SLDN documentation":http://sldn.softlayer.com/article/Object-Masks.
 
-To look at some examples, consider the following object from the server. It has four properties: @id@, @title@, @createDate@ and @modifyDate@.  It also has an entity, @assignedUser@. The @assignedUser@ entity has three properties: @id@, @username@, and @health@.
+To look at some examples, consider the following object from the server. It has four properties: @id@, @title@, @createDate@ and @modifyDate@. It also has an entity, @assignedUser@. The @assignedUser@ entity has three properties: @id@, @username@, and @health@.
 
 <pre style="border:1pt solid black;background:#eee;padding:0.5em;margin:0.5em"><code style="font-family:Menlo,Monaco,monospace;font-size:9pt">{
     "id"=>1736473,
@@ -234,7 +234,7 @@ We can identify a particular set of attributes we are interested in by combining
 => {"assignedUser"=>{"id"=>14, "health"=>"Fantastic"}}
 </code></pre>
 
-Object masks are sent to the server and applied on the server side.  Errors in the object mask format will lead to exceptions being thrown by the SoftLayer API. By carefully choosing an Object Mask, you can limit amount of information transferred from the server which may improve bandwidth and processing time.
+Object masks are sent to the server and applied on the server side. Errors in the object mask format will lead to exceptions being thrown by the SoftLayer API. By carefully choosing an Object Mask, you can limit amount of information transferred from the server which may improve bandwidth and processing time.
 
 You @object_with_id@ should only be called once in any calling sequence. You may call @object_mask@ multiple times, but the server may generate a warning if the Object Masks ask for duplicate properties of some object.
 

@@ -26,15 +26,15 @@ module SoftLayer
   # SoftLayer API.
   #
   # The following symbols can be used as hash arguments to pass options to the constructor:
-  # - <tt>:username</tt> - a non-empty string providing the username to use for requests to the service
-  # - <tt>:api_key</tt> - a non-empty string providing the api key to use for requests to the service
-  # - <tt>:endpoint_url</tt> - a non-empty string providing the endpoint URL to use for requests to the service
+  # - +:username+ - a non-empty string providing the username to use for requests to the service
+  # - +:api_key+ - a non-empty string providing the api key to use for requests to the service
+  # - +:endpoint_url+ - a non-empty string providing the endpoint URL to use for requests to the service
   #
   # If any of the options above are missing then the constructor will try to use the corresponding
   # global variable declared in the SoftLayer Module:
-  # - <tt>$SL_API_USERNAME</tt>
-  # - <tt>$SL_API_KEY</tt>
-  # - <tt>$SL_API_BASE_URL</tt>
+  # - +$SL_API_USERNAME+
+  # - +$SL_API_KEY+
+  # - +$SL_API_BASE_URL+
   #
   class Client
     # A username passed as authentication for each request. Cannot be emtpy or nil.
@@ -88,7 +88,7 @@ module SoftLayer
     #
     #
     # If the service has to be created then the service_options will be passed
-    # along to the creative function.  However, when returning a previously created
+    # along to the creative function. However, when returning a previously created
     # Service, the service_options will be ignored.
     #
     # If the service_name provided does not start with 'SoftLayer__' that prefix

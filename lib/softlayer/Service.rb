@@ -164,7 +164,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     # Use this as part of a method call chain to reduce the number
     # of results returned from the server. For example, if the server has a list
     # of 100 entities and you only want 5 of them, you can get the first five
-    # by using result_limit(0,5).  Then for the next 5 you would use
+    # by using result_limit(0,5). Then for the next 5 you would use
     # result_limit(5,5), then result_limit(10,5) etc.
     def result_limit(offset, limit)
       proxy = APIParameterFilter.new(self)
