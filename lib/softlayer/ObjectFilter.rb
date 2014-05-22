@@ -35,9 +35,13 @@ module SoftLayer
     '!~'    # Does not Contain (case sensitive)
   ]
 
-  # A class whose instances represent an Object Filter operation.
+  # A class whose instances represent an Object Filter operator and the value it is applied to.
   class ObjectFilterOperation
+    
+    # The operator, should be a member of the SoftLayer::OBJECT_FILTER_OPERATORS array
     attr_reader :operator
+    
+    # The operand of the operator
     attr_reader :value
 
     def initialize(operator, value)
@@ -49,7 +53,10 @@ module SoftLayer
     end
 
     def to_h
-      { 'operation' => "#{operator} #{value}"}
+      result = ObjectFilter.new
+      result['operation'] = "#{operator} #{value}"
+
+      result
     end
   end
 
@@ -99,10 +106,12 @@ module SoftLayer
       ObjectFilterOperation.new('<', value)
     end
 
+    # Matches when the value in the field is greater than or equal to the given value
     def is_greater_or_equal_to(value)
       ObjectFilterOperation.new('>=', value)
     end
 
+    # Matches when the value in the field is less than or equal to the given value
     def is_less_or_equal_to(value)
       ObjectFilterOperation.new('<=', value)
     end
@@ -120,15 +129,24 @@ module SoftLayer
     end
   end
 
-  # An ObjectFilter is a hash that, when asked to provide
+  # 
+  # An ObjectFilter is a tool that, when passed to the SoftLayer API
+  # allows the API server to filter, or limit the result set for a call.
+  #
+  # Constructing ObjectFilters is an art that is currently somewhat 
+  # arcane. This class tries to simplify filtering for the fundamental
+  # cases, while still allowing for more complex ObjectFilters to be
+  # created.
+  #
+  # The ObjectFilter class is implemented as a hash that, when asked to provide
   # an value for an unknown key, will create a sub element
-  # at that key which is, itself, an object filter.
-  # This allows you to build up object filters by chaining [] defeference
-  # operations.
+  # at that key which is, itself, an object filter. This allows you to build 
+  # up object filters by chaining [] dereference operations.
   #
   # Starting empty object filter when you ask for +object_filter["foo"]+
-  # either the value at that hash location will be returned, or foo will be +added+ to the
-  # object and the value of that key will be an Object Filter +{ "foo" => {} }+
+  # either the value at that hash location will be returned, or a new +foo+ key
+  # will be *added* to the object.  The value of that key will be an +ObjectFilter+ 
+  # and that +ObjectFilter+ will be returned.
   #
   # By way of an example of chaining together +[]+ calls:
   #   object_filter["foo"]["bar"]["baz"] = 3
@@ -214,6 +232,8 @@ module SoftLayer
     #   '*value'  Ends with value (translates to '$= value')
     #   '*value*' Contains value (translates to '*= value')
     #
+    # This method corresponds to the +query_filter+ method in the SoftLayer-Python
+    # API.
     def self.query_to_filter_operation(query)
       if query.kind_of? String then
         query.strip!

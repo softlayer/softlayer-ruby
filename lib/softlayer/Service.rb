@@ -50,7 +50,6 @@ class XMLRPC::Client
 end
 
 module SoftLayer
-
   # = SoftLayer API Service
   #
   # Instances of this class are the runtime representation of

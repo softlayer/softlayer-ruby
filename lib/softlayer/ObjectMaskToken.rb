@@ -21,6 +21,14 @@
 #
 
 module SoftLayer
+  # 
+  # This class is an implementation detail of the Object Mask Parser
+  # It represents a single semantic token as parsed out of an
+  # Object Mask String
+  # 
+  # The class also generates error messages that the parser can use
+  # when it encounters an unexpected token
+  #
   class ObjectMaskToken
     attr_reader :type
     attr_reader :value

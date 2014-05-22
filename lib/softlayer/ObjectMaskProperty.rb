@@ -21,6 +21,17 @@
 #
 
 module SoftLayer
+  #
+  # A class representing a SoftLayer Object's property as represented
+  # in an Object Mask.
+  #
+  # The Object Mask Parser parses Object Mask Strings into ObjectMaskProperty
+  # structures.
+  #
+  # Another useful property ObjectMaskProperty structures is that they can
+  # can merge with compatible structures to create a new structure which
+  # incorporates the properties of both, but in a streamlined construct
+  #
   class ObjectMaskProperty
     attr_reader :name, :type
     attr_reader :children

@@ -24,6 +24,10 @@ require 'time'
 require 'json'
 
 module SoftLayer
+  ##
+  # A class whose instances represent a single Virtual Server (called a Virtual_Guest by the API)
+  # in an account.
+  #
   class VirtualServer < Server
     include ::SoftLayer::ModelResource
 
@@ -125,6 +129,8 @@ module SoftLayer
     #
     # If a block is passed to this routine it will be called on each trial with
     # a boolean argument representing whether or not the server is ready
+    #
+    # Calling this routine will (in essence) block the thread on which the request is made.
     #
     def wait_until_ready(max_trials, wait_for_transactions = false, seconds_between_tries = 2)
       # pessimistically assume the server is not ready

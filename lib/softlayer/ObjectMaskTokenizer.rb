@@ -24,6 +24,12 @@ require 'softlayer/ObjectMaskToken'
 require 'strscan'
 
 module SoftLayer
+  #
+  # This class is an implementation detail of the ObjectMaskParser
+  #
+  # It takes an Object Mask String and breaks it down
+  # into ObjectMaskToken instances.
+  #
   class ObjectMaskTokenizer
     ObjectMask_Token_Specs = [
       [/\[/, :property_set_start],

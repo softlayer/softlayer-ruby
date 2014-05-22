@@ -21,6 +21,19 @@
 #
 
 module SoftLayer
+  #
+  # The SoftLayer Gem defines an Object Hierarchy representing entities in 
+  # an account's SoftLayer environment.  This class is the base object class
+  # for objects in that hierarchy
+  #
+  # The SoftLayer API represents entities as a hash of properties.  This class
+  # stores that hash (in the @sl_hash instance variable) and uses method_missing
+  # to allow code to access fields in that hash through simple method calls.
+  #
+  # The class also has a model for making network requests that will refresh
+  # the stored has so that it reflects the most up-to-date information about
+  # an entity from the server.
+  #
   class ModelBase
     attr_reader :softlayer_client
 

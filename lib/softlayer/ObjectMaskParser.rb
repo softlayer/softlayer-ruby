@@ -27,6 +27,16 @@ module SoftLayer
   class ObjectMaskParserError < RuntimeError
   end
 
+  # 
+  # A parser that can examine and validate SoftLayer Object Mask strings
+  #
+  # The Object Mask Parser parses Object Mask Strings into ObjectMaskProperty
+  # structures.
+  #
+  # The Object Mask parser allows the Gem to merge Object Mask Strings
+  # to avoid errors from the SoftLayer API server about duplicate properties being
+  # provided when the same property is provided in different Object Masks
+  #
   class ObjectMaskParser
     attr_reader :stack
 

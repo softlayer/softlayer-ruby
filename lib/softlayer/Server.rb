@@ -26,10 +26,9 @@ module SoftLayer
     # Construct a server from the given client using the network data found in +network_hash+
     #
     # Most users should not have to call this method directly. Instead you should access the
-    # servers property of an Account object, or use methods like find_servers in the +BareMetalServer+
-    # and +VirtualServer+ classes.
+    # servers property of an Account object, or use methods like find_servers in the BareMetalServer
+    # and VirtualServer classes.
     #
-    # @abstract
     def initialize(softlayer_client, network_hash)
       if self.class == Server
         raise RuntimeError, "The Server class is an abstract base class and should not be instantiated directly"
@@ -44,14 +43,13 @@ module SoftLayer
     # but subclasses implement this to return the appropriate service
     # from their client.
     #
-    # @abstract
     def service
       raise RuntimeError, "This method is an abstract method in the Server base class"
     end
 
     ##
-    # properties used when reloading this object from the softlayer API
-    #
+    # Make an API request to SoftLayer and return the latest properties hash
+    # for this object.
     def softlayer_properties(object_mask = nil)
       my_service = self.service
 
@@ -77,6 +75,9 @@ module SoftLayer
       service.object_with_id(self.id).editObject(edit_template)
     end
 
+    ##
+    # Change the user metadata for the server.
+    #
     def user_metadata=(new_metadata)
       raise ArgumentError.new("Cannot set user metadata to nil") unless new_metadata
 
@@ -100,6 +101,7 @@ module SoftLayer
 
     ##
     # Change the domain of this server
+    #
     # Raises an ArgumentError if the new domain is nil or empty
     # no further validation is done on the domain name
     #
