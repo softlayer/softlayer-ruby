@@ -45,7 +45,7 @@ class APIParameterFilter
   # the call on to the target. This is supposed to be an instance of
   # the SoftLayer::Service class.
   attr_reader :target
-  
+
   # The collected parameters represented by this filter.  These parameters
   # are passed along to the target when method_missing is forwarding
   # a message.
@@ -145,9 +145,9 @@ class APIParameterFilter
       # the same type scope), the API treats it as an error (and throws an exception)
       #
       # We get around that by parsing the various masks that have been given to us
-      # merging their properties where possible, thereby removing the duplicates 
-      # from the mask that actually gets passed to the server. As a side benefit, 
-      # the mask we send to the server will be streamlined; without too many extraneous 
+      # merging their properties where possible, thereby removing the duplicates
+      # from the mask that actually gets passed to the server. As a side benefit,
+      # the mask we send to the server will be streamlined; without too many extraneous
       # characters
       reduced_masks = parameters[:object_mask].inject([]) do |merged_masks, object_mask|
         mergeable_mask = merged_masks.find { |mask| mask.can_merge_with? object_mask }

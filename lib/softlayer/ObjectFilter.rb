@@ -37,10 +37,10 @@ module SoftLayer
 
   # A class whose instances represent an Object Filter operator and the value it is applied to.
   class ObjectFilterOperation
-    
+
     # The operator, should be a member of the SoftLayer::OBJECT_FILTER_OPERATORS array
     attr_reader :operator
-    
+
     # The operand of the operator
     attr_reader :value
 
@@ -129,23 +129,23 @@ module SoftLayer
     end
   end
 
-  # 
+  #
   # An ObjectFilter is a tool that, when passed to the SoftLayer API
   # allows the API server to filter, or limit the result set for a call.
   #
-  # Constructing ObjectFilters is an art that is currently somewhat 
+  # Constructing ObjectFilters is an art that is currently somewhat
   # arcane. This class tries to simplify filtering for the fundamental
   # cases, while still allowing for more complex ObjectFilters to be
   # created.
   #
   # The ObjectFilter class is implemented as a hash that, when asked to provide
   # an value for an unknown key, will create a sub element
-  # at that key which is, itself, an object filter. This allows you to build 
+  # at that key which is, itself, an object filter. This allows you to build
   # up object filters by chaining [] dereference operations.
   #
   # Starting empty object filter when you ask for +object_filter["foo"]+
   # either the value at that hash location will be returned, or a new +foo+ key
-  # will be *added* to the object.  The value of that key will be an +ObjectFilter+ 
+  # will be *added* to the object.  The value of that key will be an +ObjectFilter+
   # and that +ObjectFilter+ will be returned.
   #
   # By way of an example of chaining together +[]+ calls:

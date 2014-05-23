@@ -27,7 +27,7 @@ module SoftLayer
   class ObjectMaskParserError < RuntimeError
   end
 
-  # 
+  #
   # A parser that can examine and validate SoftLayer Object Mask strings
   #
   # The Object Mask Parser parses Object Mask Strings into ObjectMaskProperty

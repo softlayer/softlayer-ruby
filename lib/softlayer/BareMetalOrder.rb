@@ -43,7 +43,7 @@ module SoftLayer
   #     client = SoftLayer::Client.new()
   #     package_info = SoftLayer::BareMetalServerOrder.bare_metal_server_packages(client)
   #
-  # +package_info+ will look something like:
+  # +package_info+ might begin with items like this:
   #
   #     [{:package_id=>32,
   #       :package_name=>"Quad Processor, Quad Core Intel",
@@ -57,7 +57,7 @@ module SoftLayer
   #
   # The set of available packages and the information found in the packages changes infrequently
   # For performance reasons, you may wish to save off the package_info and re-use it, refreshing
-  # the information on occasion.
+  # the information only on occasion.
   #
   # For the sake of an example, let's assume you wish to order a Bare Metal Server that is
   # a Quad Processor, Quad Core Intel server. The list above shows that has a +:package_id+ of 32.
@@ -221,8 +221,6 @@ module SoftLayer
     #
     # Retrieves a list of the options for creating a bare metal server based on the given package
     #
-    # The package_id should be one of the values returned from BareMetalServerOrder.bare_metal_server_packages
-    #
     def self.bare_metal_order_options(client, package_id)
       package = client['Product_Package'].object_with_id(package_id)
 
@@ -231,18 +229,20 @@ module SoftLayer
         :locations => []
       }
 
+      # Get a list of the locations in which this package can create servers
       regions = package.getRegions
-      regions.each do |region|
-        region_detail = region['location']['locationPackageDetails'][0]
-        result[:locations].push( {
-          :delivery_information => region_detail['deliveryTimeInformation'],
+      result[:locations] = regions.collect do |region|
+        {
           :keyname => region['keyname'],
-          :long_name => region['description']
-        })
+          :long_name => region['description'],
+          :delivery_information => region['location']['locationPackageDetails'][0]['deliveryTimeInformation']
+        }
       end
 
-      configurations = package.object_mask('mask[itemCategory[group]]').getConfiguration
-      configurations.each do |configuration|
+      # Get a list of the option categories in the package as well as information about which
+      # categories are required in an order.
+      order_configurations = package.object_mask('mask[itemCategory[categoryCode,group]]').getConfiguration
+      order_configurations.each do |configuration|
         code = configuration['itemCategory']['categoryCode']
         group = configuration['itemCategory']['group'] || { 'name' => nil }
         result[:categories][code] = {
@@ -258,6 +258,10 @@ module SoftLayer
       categories = package.getCategories
       categories.each do |category|
         code = category['categoryCode']
+
+        # A category contains groups and the groups contain items.  We're not interested
+        # in the groups, just the items.  Run through each group and collect all the items
+        # in each group into a single "items" array.
         result[:categories][code][:items] = category['groups'].inject([]) do |collection, group|
           collection.concat(
             group['prices'].collect do |price|

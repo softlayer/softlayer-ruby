@@ -20,26 +20,27 @@
 # THE SOFTWARE.
 #
 
-require 'softlayer/base'
-require 'softlayer/object_mask_helpers'
-require 'softlayer/APIParameterFilter'
-require 'softlayer/ObjectFilter'
-require 'softlayer/ObjectMaskParser'
-require 'softlayer/Config'
+$LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
-require 'softlayer/Client'
-require 'softlayer/Service'
+require 'rubygems'
+require 'softlayer_api'
+require 'rspec'
 
-# model classes
-require 'softlayer/ModelBase'
-require 'softlayer/ModelResource'
-require 'softlayer/Account'
-require 'softlayer/Ticket'
-require 'softlayer/Server'
-require 'softlayer/BareMetalServer'
-require 'softlayer/BareMetalOrder'
-require 'softlayer/BareMetalServerOrder'
-require 'softlayer/BareMetalInstanceOrder'
-require 'softlayer/ProductPackage'
-require 'softlayer/VirtualServer'
-require 'softlayer/VirtualServerOrder'
+describe SoftLayer::ProductPackage do
+  it "requests packages by key name" do
+    client = SoftLayer::Client.new(:username => "fake_user", :api_key => "BADKEY")
+    product_package_service = client['Product_Package']
+
+    puts "service is #{product_package_service.object_id}"
+
+    expect(product_package_service).to receive(:call_softlayer_api_with_params) do |method_name, parameters, args|
+      method_name.should be(:getAllObjects)
+      parameters.server_object_filter.should_not be_nil
+      args.should be_empty
+
+      []
+    end
+
+    SoftLayer::ProductPackage.packages_with_key_name(client, 'FAKE_KEY_NAME')
+  end
+end

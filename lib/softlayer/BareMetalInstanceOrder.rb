@@ -41,7 +41,7 @@ module SoftLayer
     def package_id
       if nil == @package_id
         package = SoftLayer::BareMetalInstanceOrder.bare_metal_instance_package(@softlayer_client)
-        @package_id = package['id']
+        @package_id = package[:package_id]
       end
 
       @package_id
@@ -49,9 +49,17 @@ module SoftLayer
 
     # Return the bare metal instance package.  There should be only one.
     def self.bare_metal_instance_package(client)
-      filter = SoftLayer::ObjectFilter.build('name', 'Bare Metal Instance')
-      packages = client['Product_Package'].object_mask('mask[id, name]').object_filter(filter).getAllObjects
-      packages.first
+      filter = SoftLayer::ObjectFilter.build('type.keyName') { is('BARE_METAL_CORE') }
+      packages = client['Product_Package'].object_filter(filter).object_mask('mask[id, name, description]').getAllObjects
+
+      # At the time of this writing, there is only one BARE_METAL_CORE package.
+      # If there are ever more than one, then this logic will have to be updated
+      # to select the "right" one
+      bare_metal_package = packages.first
+
+      { :package_id => bare_metal_package['id'],
+        :package_name => bare_metal_package['name'],
+        :package_description => bare_metal_package['description'] }
     end #bare_metal_server_packages
 
     protected

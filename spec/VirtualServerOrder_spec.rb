@@ -128,7 +128,7 @@ describe SoftLayer::VirtualServerOrder do
 
   it "puts an OS identifier into the order template" do
     subject.virtual_guest_template["operatingSystemReferenceCode"].should be_nil
-    subject.os_referenceCode = 'UBUNTU_12_64'
+    subject.os_reference_code = 'UBUNTU_12_64'
     subject.virtual_guest_template['operatingSystemReferenceCode'].should == 'UBUNTU_12_64'
   end
 
@@ -137,7 +137,7 @@ describe SoftLayer::VirtualServerOrder do
     subject.virtual_guest_template["operatingSystemReferenceCode"].should be_nil
 
     subject.image_id = 12345
-    subject.os_referenceCode = 'UBUNTU_12_64'
+    subject.os_reference_code = 'UBUNTU_12_64'
 
     subject.virtual_guest_template['blockDeviceTemplateGroup'].should == {"globalIdentifier" => 12345}
     subject.virtual_guest_template['operatingSystemReferenceCode'].should be_nil

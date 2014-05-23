@@ -48,7 +48,7 @@ module SoftLayer
     #++
 
     # String, An OS reference code for the operating system to install on the virtual server
-    attr_accessor :os_referenceCode
+    attr_accessor :os_reference_code
 
     # Fixnum, The id of a disk image to put on the newly created server
     attr_accessor :image_id
@@ -74,9 +74,6 @@ module SoftLayer
 
     # Fixnum, The id of the private VLAN this server should join
     attr_accessor :private_vlan_id
-
-    # Boolean, if true the order will create a Bare Metal Instance (that is a physical hardware server whose characteristics closely match the ones given in this order)
-    attr_accessor :bare_metal
 
     # Array of Fixnum, Sizes (in gigabytes) of disks to attach to this server
     attr_accessor :disks
@@ -116,9 +113,15 @@ module SoftLayer
       SoftLayer::VirtualServer.server_with_id(@softlayer_client, virtual_server_hash["id"]) if virtual_server_hash
     end
 
-    # Return the order items in the virtual server package.
-    def self.virtual_server_package_items(client)
-      client['Product_Package'].object_mask("mask[description,capacity,prices.id,categories.id]").object_with_id(46).getItems()
+    def self.virtual_server_package(client)
+      filter = SoftLayer::ObjectFilter.build('type.keyName') { is('VIRTUAL_SERVER_INSTANCE') }
+      packages = client['Product_Package'].object_filter(filter).object_mask('mask[id, name, description]').getAllObjects
+      bare_metal_package = packages.first
+      {
+        :package_id => bare_metal_package['id'],
+        :package_name => bare_metal_package['name'],
+        :package_description => bare_metal_package['description']
+      }
     end
 
     protected
@@ -151,8 +154,8 @@ module SoftLayer
 
       if @image_id
           template["blockDeviceTemplateGroup"] = {"globalIdentifier" => @image_id}
-      elsif @os_referenceCode
-          template["operatingSystemReferenceCode"] = @os_referenceCode
+      elsif @os_reference_code
+          template["operatingSystemReferenceCode"] = @os_reference_code
       end
 
       if @disks

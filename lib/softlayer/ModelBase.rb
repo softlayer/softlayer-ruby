@@ -21,8 +21,8 @@
 #
 
 module SoftLayer
-  #
-  # The SoftLayer Gem defines an Object Hierarchy representing entities in 
+  ##
+  # The SoftLayer Gem defines an Object Hierarchy representing entities in
   # an account's SoftLayer environment.  This class is the base object class
   # for objects in that hierarchy
   #
@@ -65,12 +65,13 @@ module SoftLayer
     # Subclasses implement this method. The implementation should
     # make a request to the SoftLayer API and retrieve an up-to-date
     # representation of this object expressed as a property hash.
+    #
     def softlayer_properties(object_mask = nil)
       raise RuntimeError.new("Abstract method softlayer_properties in ModelBase was called")
     end
 
     def respond_to?(method_symbol)
-      if @sl_hash
+      if softlayer_hash
         if has_sl_property? method_symbol
           true
         else
@@ -84,7 +85,7 @@ module SoftLayer
     def method_missing(method_symbol, *args, &block)
       if(@sl_hash && 0 == args.length && !block)
         if has_sl_property? method_symbol
-          @sl_hash[method_symbol]
+          softlayer_hash[method_symbol]
         else
           super
         end
@@ -93,15 +94,14 @@ module SoftLayer
       end
     end
 
-    protected
-
     def has_sl_property?(property_symbol)
-      @sl_hash && @sl_hash.has_key?(property_symbol)
+      softlayer_hash && softlayer_hash.has_key?(property_symbol)
     end
+
+    protected
 
     def softlayer_hash
       return @sl_hash
     end
-
   end # class ModelBase
 end # module SoftLayer
