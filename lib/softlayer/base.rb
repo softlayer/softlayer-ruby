@@ -31,7 +31,7 @@ require 'rubygems'
 # - <tt>$SL_API_BASE_URL</tt>- The default URL used to access the SoftLayer API. This defaults to the value of <tt>SoftLayer::API_PUBLIC_ENDPOINT</tt>
 #
 module SoftLayer
-  VERSION = "2.0.0"  # version history in the CHANGELOG.textile file at the root of the source
+  VERSION = "2.0.1"  # version history in the CHANGELOG.textile file at the root of the source
 
   # The base URL of the SoftLayer API's REST-like endpoints available to the public internet.
   API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/xmlrpc/v3/'
