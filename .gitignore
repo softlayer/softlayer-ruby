@@ -1,8 +1,8 @@
 .DS_Store
 *.*~
 *.gem
-
+.bundle/
 log/
 internal_examples/
-.yardoc/
 doc/
+Gemfile.lock

@@ -101,7 +101,7 @@ module SoftLayer
     protected
 
     def self.default_object_mask
-      "mask[id,name,description,regions[keyname,description],configuration[isRequired,itemCategory[categoryCode]]]"
+      "mask[id,name,description,locations,configuration[isRequired,itemCategory[categoryCode]]]"
     end
 
   end
