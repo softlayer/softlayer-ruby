@@ -56,7 +56,7 @@ module SoftLayer
   # A resource definition might look something like this:
   #
   #    softlayer_resource :lollipop do |lollipop|
-  #      lollipop.should_update_if do
+  #      lollipop.should_update? do
   #        self.lollipop_supply_is_low?
   #      end
   #
@@ -93,7 +93,7 @@ module SoftLayer
 
       # This method is used to provide behavior for the
       # should_update_ predicate for the resource
-      def should_update_if (&block)
+      def should_update? (&block)
         @should_update_block = block
       end
 

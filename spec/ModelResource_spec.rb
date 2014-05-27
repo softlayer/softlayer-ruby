@@ -117,7 +117,7 @@ describe SoftLayer::ModelResource do
       class TestClass
         include SoftLayer::ModelResource
         softlayer_resource(:test_resource) do |rsrc|
-          rsrc.should_update_if do
+          rsrc.should_update? do
             @last_test_resource_update ||= Time.at(0)
             (Time.now - @last_test_resource_update) > 0.5 # update once a second
           end
@@ -157,7 +157,7 @@ describe SoftLayer::ModelResource do
     end
 
     it "allows DSL syntax" do
-      test_definition.should_update_if { "Yea!" }
+      test_definition.should_update? { "Yea!" }
       test_definition.to_update do
         "test_resource value!"
       end

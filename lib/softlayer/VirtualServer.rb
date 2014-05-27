@@ -36,7 +36,7 @@ module SoftLayer
     # available for upgrades.
     #
     softlayer_resource :upgrade_items do |resource|
-      resource.should_update_if do
+      resource.should_update? do
         @upgrade_items == nil
       end
 

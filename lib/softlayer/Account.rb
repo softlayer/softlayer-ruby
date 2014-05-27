@@ -20,8 +20,6 @@
 # THE SOFTWARE.
 #
 
-require 'rubygems'
-
 module SoftLayer
   class Account < SoftLayer::ModelBase
     include ::SoftLayer::ModelResource
@@ -31,7 +29,7 @@ module SoftLayer
     # account. Unless you force these to update, they will be refreshed every
     # five minutes.
     softlayer_resource :bare_metal_servers do |bare_metal|
-      bare_metal.should_update_if do
+      bare_metal.should_update? do
         @last_bare_metal_update ||= Time.at(0)
         (Time.now - @last_bare_metal_update) > 5 * 60  # update every 5 minutes
       end
@@ -47,7 +45,7 @@ module SoftLayer
     # account. Unless you force these to update, they will be refreshed every
     # five minutes.
     softlayer_resource :virtual_servers do |virtual_servers|
-      virtual_servers.should_update_if do
+      virtual_servers.should_update? do
         @last_virtual_server_update ||= Time.at(0)
         (Time.now - @last_virtual_server_update) > 5 * 60  # update every 5 minutes
       end
@@ -62,7 +60,7 @@ module SoftLayer
     # The tickets resource consists of all open tickets, and tickets closed
     # "recently". These refresh every 5 minutes
     softlayer_resource :tickets do |tickets|
-      tickets.should_update_if do
+      tickets.should_update? do
         @last_ticket_update ||= Time.at(0)
         (Time.now - @last_ticket_update) > 5 * 60 #update every 5 minutes
       end

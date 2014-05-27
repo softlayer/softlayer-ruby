@@ -32,33 +32,5 @@ module SoftLayer
 
     # Fixnum, The package corresponding to the chassis for the server being ordered
     attr_accessor :package_id
-
-    ##
-    #
-    # Retrieves a list of packages that are available for ordering
-    # bare metal servers.
-    #
-    # Each package identifies it's :package_id, :package_name, and :package_description
-    #
-    # Note that :package_descriptions contain HTML tags.
-    #
-    def self.bare_metal_server_packages(client)
-      package_service = client['Product_Package']
-
-      filter = SoftLayer::ObjectFilter.build('type.keyName') { is('BARE_METAL_CPU') }
-      package_data = package_service.object_filter(filter).object_mask('mask[id, name, description]').getAllObjects
-
-      # Filter out packages without a name or that are designated as 'OUTLET.'
-      # The outlet packages are missing some necessary data and orders based on them will fail.
-      package_data = package_data.select { |package_datum| package_datum['name'] && !package_datum['description'].include?('OUTLET') }
-
-      package_data.collect do |package_datum|
-        {
-          :package_id => package_datum['id'],
-          :package_name => package_datum['name'],
-          :package_description => package_datum['description']
-        }
-      end
-    end #bare_metal_server_packages
   end # BareMetalServerOrder
 end # SoftLayer
