@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
 
   s.has_rdoc = true
   s.add_dependency 'configparser', '~> 0.1.2'
-  s.add_runtime_dependency 'json', '~> 1.8', '>= 1.8.1'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'
+  s.add_development_dependency 'json', '~> 1.8', '>= 1.8.1'
 end
