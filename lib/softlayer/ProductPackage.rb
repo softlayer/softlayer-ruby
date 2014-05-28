@@ -121,6 +121,24 @@ module SoftLayer
     end
 
     ##
+    # A convenience routine which returns valid location information for this
+    # package.  It returns an array of hashes each with the following keys:
+    #
+    # * <b>+:keyname+</b> A code representing this location to the API
+    # * <b>+:description+</b> A user friendly description of the location
+    # * <b>+:delivery_information+</b> Information (if available) about server configuration in that location
+    #
+    def locations
+      self.regions.collect do |region|
+        {
+          :keyname => region['keyname'],
+          :description => region['description'],
+          :delivery_information => region['location']['locationPackageDetails'][0]['deliveryTimeInformation'] || ""
+        }
+      end
+    end
+    
+    ##
     # Requests a list (array) of ProductPackages whose key names match the
     # one passed in.
     #
@@ -128,6 +146,11 @@ module SoftLayer
       filter = SoftLayer::ObjectFilter.build('type.keyName') { is(key_name) }
       packages_data = client['Product_Package'].object_filter(filter).object_mask(self.default_object_mask('mask')).getAllObjects
       packages_data.collect { |package_data| ProductPackage.new(client, package_data) }
+    end
+    
+    def self.package_with_id(client, package_id)
+      package_data = client['Product_Package'].object_with_id(package_id).object_mask(self.default_object_mask('mask')).getObject
+      ProductPackage.new(client, package_data)
     end
 
     ##
@@ -156,7 +179,7 @@ module SoftLayer
     protected
 
     def self.default_object_mask(root)
-      "#{root}[id,name,description,locations]"
+      "#{root}[id,name,description,regions]"
     end
   end
 end # SoftLayer

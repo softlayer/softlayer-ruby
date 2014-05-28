@@ -22,11 +22,22 @@
 
 module SoftLayer
   #
-  # This class is used to order a Bare Metal Server please see
-  # +BareMetalInstanceOrder+ to order Bare Metal Instances.
+  # This class represents a BareMetalServer in the SoftLayer Environment.
+  # It corresponds rougly to the SoftLayer_Hardware_Server service in the SoftLayer API
+  # http://sldn.softlayer.com/reference/datatypes/SoftLayer_Hardware_Server
   #
-  # Ordering hardware is complex. Please see the documentation for
-  # +BareMetalOrder+ for more information about ordering hardware servers.
+  # SoftLayer offers two options for configuration hardware servers they are called
+  # Bare Metal Servers, and Bare Metal Instances:
+  #
+  # * Bare Metal Server - Offers a full suite of configuration options which allows fine tuning of 
+  #   the performance characteristics of the server
+  #    
+  # * Bare Metal Instances - Offers a suite of configuraiton options similar to those of virtual servers.  
+  #   Bare Metal Instances are easier to configure than Bare Metal Servers, but still offer the raw 
+  #   performance characteristics of hardware.
+  #
+  # This class represents hardware servers configured as Bare Metal Servers or Bare Metal Instances.  
+  # The +bare_metal_instance?+ method distinguishes one flavor of hardware server from the other.
   #
   class BareMetalServer < Server
 
@@ -94,9 +105,9 @@ module SoftLayer
     # Returns a list of the cancellation reasons to use when cancelling a server.
     #
     # When cancelling a server, you must provide a parameter which is the "cancellation reason".
-    # The API expects very specific values for that parameter. To simplify the API we
-    # have reduced those reasons down to symbols and this method returns
-    # a hash mapping from the symbol to the string that the API expects.
+    # The API expects very specific values for that parameter. To simplify the Ruby interface we
+    # have reduced those reasons down to symbols. This method returns a hash that maps the 
+    # symbol to the string that the SoftLayer API expects.
     #
     def self.cancellation_reasons
       {
