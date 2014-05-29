@@ -29,14 +29,14 @@ module SoftLayer
   # SoftLayer offers two options for configuration hardware servers they are called
   # Bare Metal Servers, and Bare Metal Instances:
   #
-  # * Bare Metal Server - Offers a full suite of configuration options which allows fine tuning of 
+  # * Bare Metal Server - Offers a full suite of configuration options which allows fine tuning of
   #   the performance characteristics of the server
-  #    
-  # * Bare Metal Instances - Offers a suite of configuraiton options similar to those of virtual servers.  
-  #   Bare Metal Instances are easier to configure than Bare Metal Servers, but still offer the raw 
+  #
+  # * Bare Metal Instances - Offers a suite of configuraiton options similar to those of virtual servers.
+  #   Bare Metal Instances are easier to configure than Bare Metal Servers, but still offer the raw
   #   performance characteristics of hardware.
   #
-  # This class represents hardware servers configured as Bare Metal Servers or Bare Metal Instances.  
+  # This class represents hardware servers configured as Bare Metal Servers or Bare Metal Instances.
   # The +bare_metal_instance?+ method distinguishes one flavor of hardware server from the other.
   #
   class BareMetalServer < Server
@@ -106,7 +106,7 @@ module SoftLayer
     #
     # When cancelling a server, you must provide a parameter which is the "cancellation reason".
     # The API expects very specific values for that parameter. To simplify the Ruby interface we
-    # have reduced those reasons down to symbols. This method returns a hash that maps the 
+    # have reduced those reasons down to symbols. This method returns a hash that maps the
     # symbol to the string that the SoftLayer API expects.
     #
     def self.cancellation_reasons

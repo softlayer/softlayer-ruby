@@ -1,3 +1,5 @@
+$LOAD_PATH << File.join(File.dirname(__FILE__), "../lib")
+
 #
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
@@ -25,7 +27,7 @@ require 'softlayer_api'
 require 'pp'
 
 # This example walks through the process putting together an order for
-# a bare metal server using the SoftLayer::BareMetalServerOrder class.
+# a bare metal server using the SoftLayer::BareMetalServerPackageOrder class.
 #
 # The script uses verify_order to ensure the order constructed is
 # valid. If you actually wanted to place an order for a server
@@ -37,30 +39,30 @@ require 'pp'
 # a server.
 def tl_dr_version
   client = SoftLayer::Client.new(
-    :username => "joecustomer"              # enter your username here
-    :api_key => "feeddeadbeefbadf00d..."   # enter your api key here
+    # :username => "joecustomer"              # enter your username here
+    # :api_key => "feeddeadbeefbadf00d..."   # enter your api key here
   )
-  
+
   # Select a package
   quad_intel_package = SoftLayer::ProductPackage.package_with_id(client, 32)
-  
+
   # Find required Categories and fill config_options with defaults
   config_options = {}
   required_categories = quad_intel_package.configuration.select { |category| category.required? }
   required_categories.each { |required_category| config_options[required_category.categoryCode] = required_category.default_option }
-  
+
   # Provide a value for missing config categories
-  config_options['server'] = 1417 # price id of Quad Processor Quad Core Intel 7420 - 2.13GHz (Dunnington) - 4 x 6MB / 8MB cache 
-  
+  config_options['server'] = 1417 # price id of Quad Processor Quad Core Intel 7420 - 2.13GHz (Dunnington) - 4 x 6MB / 8MB cache
+
   # With all the config options in place we can now construct the product order.
-  server_order = SoftLayer::BareMetalServerOrder.new(client, quad_intel_package)
+  server_order = SoftLayer::BareMetalServerPackageOrder.new(client, quad_intel_package)
   server_order.location = 'FIRST_AVAILABLE'
   server_order.hostname = 'sample'
   server_order.domain = 'softlayer_api.org'
   server_order.configuration_options = config_options
 
   begin
-    server_order.verify_order()
+    server_order.verify()
     puts "The Order appears to be OK"
   rescue Exception => e
     puts "Order didn't verify :-( #{e}"
@@ -69,8 +71,8 @@ end
 
 begin
   client = SoftLayer::Client.new(
-    :username => "joecustomer"              # enter your username here
-    :api_key => "feeddeadbeefbadf00d..."   # enter your api key here
+    # :username => "joecustomer"              # enter your username here
+    # :api_key => "feeddeadbeefbadf00d..."   # enter your api key here
   )
 
   # Servers are ordered from ProductPackages. We first get a list of all the
@@ -78,12 +80,12 @@ begin
   puts "Bare Metal Server Packages:"
   packages = SoftLayer::ProductPackage.bare_metal_server_packages(client)
   packages.each { |package| puts "#{package.id}\t#{package.name}"}
-  
+
   # For this example, we'll assume that we've selected the a package
   # with an id of 32 representing a "Quad Processor, Quad Core Intel"
   quad_intel_package = SoftLayer::ProductPackage.package_with_id(client, 32)
-  
-  # Now we need to now what ProductItemCategories are required to 
+
+  # Now we need to now what ProductItemCategories are required to
   # configure a server in that package. This code prints out a table
   # of the required category codes with a description of each
   puts "\nRequired Categories for '#{quad_intel_package.name}':"
@@ -99,12 +101,12 @@ begin
   os_category = quad_intel_package.category('os')
   config_options = os_category.configuration_options
   puts "\nConfiguration options in the 'os' category:"
-  config_options.each { |option| printf "%6s\t#{option.description}\n", option.price_id }
-  
+  config_options.each { |option| printf "%5s\t#{option.description}\n", option.price_id }
+
   # For this example, we'll choose the first os option that contains the string 'CentOS 6'
   # in its description
   os_config_option = config_options.find { |option| option.description =~ /CentOS 6/ }
-  
+
   # Let's begin choosing configuration_options with the default options in each required category
   # where they can be found. Read the description of ProductItemCategory#default_option carefully
   # to avoid surprises!
@@ -115,18 +117,18 @@ begin
   puts "\nConfiguration with default options:"
   max_category_length = config_options.inject(0) { |max_category_length, pair| [pair[0].length, max_category_length].max }
   config_options.each { |category, config_option| printf "%#{max_category_length}s\t#{config_option ? config_option.description : 'no default'}\n", category }
-  
+
   # Regardless of the default values... we know we want the os selection we discovered above:
   config_options['os'] = os_config_option
-  
+
   # And we can customize the default config by providing selections for any config categories
   # we are interested in
   config_options.merge! ({
-    'server' => 1417, # price id of Quad Processor Quad Core Intel 7420 - 2.13GHz (Dunnington) - 4 x 6MB / 8MB cache 
+    'server' => 1417, # price id of Quad Processor Quad Core Intel 7420 - 2.13GHz (Dunnington) - 4 x 6MB / 8MB cache
     'os' => os_config_option,
     'port_speed' => 274 # 1 Gbps Public & Private Network Uplinks
   })
-  
+
   # We have a configuration for the server, we also need a location for the new server.
   # The package can give us a list of locations. Let's print out that list
   puts "\nLocations for '#{quad_intel_package.name}':"
@@ -134,22 +136,22 @@ begin
   quad_intel_package.locations.each { |location| printf "%#{max_key_length}s\t\t#{location[:description]}\n",location[:keyname]}
 
   # With all the config options in place we can now construct the product order.
-  server_order = SoftLayer::BareMetalServerOrder.new(client, quad_intel_package)
+  server_order = SoftLayer::BareMetalServerPackageOrder.new(client, quad_intel_package)
   server_order.location = 'FIRST_AVAILABLE'
   server_order.hostname = 'sample'
   server_order.domain = 'softlayer_api.org'
   server_order.configuration_options = config_options
-  
+
   # The order should be complete... call verify_order to make sure it's OK.
-  # you'll either get back a filled-out order, or you will get an 
+  # you'll either get back a filled-out order, or you will get an
   # exception
   begin
-    server_order.verify_order()
+    server_order.verify()
     puts "The Order appears to be OK"
   rescue Exception => e
     puts "Order didn't verify :-( #{e}"
   end
-  
+
 rescue Exception => exception
   $stderr.puts "An exception occurred while trying to complete the SoftLayer API calls #{exception}"
 end

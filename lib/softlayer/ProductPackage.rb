@@ -75,16 +75,16 @@ module SoftLayer
         # We call SoftLayer_Product_Package to get the configuration for this package. The configuration gives you a list of the categories
         # that go into a product order from this package as well as information about which categories are required to complete an order.
         #
-        # Unfortunately, even though this call returns SoftLayer_Product_Item_Category entities, it does not have the context needed to 
+        # Unfortunately, even though this call returns SoftLayer_Product_Item_Category entities, it does not have the context needed to
         # determine the category information that is relevant to the account at this point in time so we can't use that information
         # to construct ProductItemCategory objects.
         #
-        # Instead, we make a second call, this time to SoftLayer_Product_Package::getCategories.  That method incorporates a complex 
-        # filtering mechanism on the server side to give us a list of the categories, groups, and prices that are valid for the current 
+        # Instead, we make a second call, this time to SoftLayer_Product_Package::getCategories.  That method incorporates a complex
+        # filtering mechanism on the server side to give us a list of the categories, groups, and prices that are valid for the current
         # account at the current time.  We construct the ProductItemCategory objects from the results we back.
         #
         configuration_data = softlayer_client['Product_Package'].object_with_id(self.id).object_mask("mask[isRequired,itemCategory.categoryCode]").getConfiguration()
-        
+
         # We sort of invert the information and create a map from category codes to a boolean representing
         # whether or not they are required.
         required_by_category_code = configuration_data.inject({}) do |required_by_category_code, config_category|
@@ -94,7 +94,7 @@ module SoftLayer
 
         # This call to getCategories is the one that does lots of fancy back-end filtering for us
         categories_data = softlayer_client['Product_Package'].object_with_id(self.id).getCategories()
-        
+
         # Run though the categories and for each one that's in our config, create a SoftLayer::ProductItemCategory object.
         # Conveniently the @keys@ of the required_by_category_code gives us a list of the category codes in the configuration
         config_categories = required_by_category_code.keys
@@ -137,7 +137,7 @@ module SoftLayer
         }
       end
     end
-    
+
     ##
     # Requests a list (array) of ProductPackages whose key names match the
     # one passed in.
@@ -147,7 +147,7 @@ module SoftLayer
       packages_data = client['Product_Package'].object_filter(filter).object_mask(self.default_object_mask('mask')).getAllObjects
       packages_data.collect { |package_data| ProductPackage.new(client, package_data) }
     end
-    
+
     def self.package_with_id(client, package_id)
       package_data = client['Product_Package'].object_with_id(package_id).object_mask(self.default_object_mask('mask')).getObject
       ProductPackage.new(client, package_data)

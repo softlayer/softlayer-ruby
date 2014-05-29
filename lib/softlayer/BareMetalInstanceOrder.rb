@@ -22,38 +22,168 @@
 
 module SoftLayer
   #
-  # This class is used to order a Bare Metal Instances.  Please see
-  # the class +BareMetalServerOrder+ to order a bare metal server.
+  # A Bare Metal Instance is a hardware server which is ordered
+  # using options similar to ones used to order a virtual server.
+  # As such, the order does not offer the same level of customization
+  # that a Bare Metal Server order might provide. However it allows
+  # you to take advantage of the power and speed of dedicated hardware
+  # with the ease of ordering a virtual server.
   #
-  # Ordering hardware is complex. Please see the documentation for
-  # +BareMetalOrder+ for more information about ordering hardware servers.
+  # If you wish to order hardware with greater control over the
+  # configuration see BareMetalServerPackageOrder
   #
-  class BareMetalInstanceOrder < BareMetalOrder
-    # A single package is used to create Bare Metal Instances
-    # This returns that package ID.
-    attr_reader :package_id
+  # This class makes use of SoftLayer_Hardware::createObject to configure
+  # and order a Bare Metal Instance.
+  #
+  # http://sldn.softlayer.com/reference/services/SoftLayer_Hardware/createObject
+  #
+  # +createObject+ allows you to order a server by providing a simple
+  # a simple set of attributes, avoiding much of the complexity of the 
+  # SoftLayer ordering system (see BareMetalServerPackageOrder and ProductPackage)
+  #
+  class BareMetalInstanceOrder
+    #--
+    # Required Attributes
+    # -------------------
+    # The following attributes are required in order to successfully order
+    # a Bare Metal Instance
+    #++
 
-    # Boolean, If true the order will try to create an instance that is
-    # billed hourly.  Otherwise it will create a monthly billed instance
-    # (monthly is the default billing method)
+    # String, short name of the data center that will house the new Bare Metal Instance (e.g. "dal05" or "sea01")
+    # Corresponds to +datacenter.name+ in the documentation for createObject
+    attr_accessor :datacenter
+
+    # String, The hostname to assign to the new server
+    attr_accessor :hostname
+
+    # String, The domain (i.e. softlayer.com) for the new server
+    attr_accessor :domain
+
+    # Integer, The number of cpu cores to include in the instance
+    # Corresponds to +processorCoreAmount+ in the documentation for +createObject+
+    attr_accessor :cores
+
+    # Integer, The amount of RAM for the new server (specified in Gigabytes so a value of 4 is 4GB)
+    # Corresponds to +memoryCapacity+ in the documentation for +createObject+
+    attr_accessor :memory
+
+    # String, An OS reference code for the operating system to install on the server
+    # Corresponds to +operatingSystemReferenceCode+ in the +createObject+ documentation
+    attr_accessor :os_reference_code
+
+    #--
+    # Optional attributes
+    #++
+
+    # Boolean, If true, an hourly server will be ordered, otherwise a monthly server will be ordered
+    # Corresponds to +hourlyBillingFlag+ in the +createObject+ documentation
     attr_accessor :hourly
 
-    def package_id
-      if nil == @package_id
-        package = SoftLayer::BareMetalInstanceOrder.bare_metal_instance_package(@softlayer_client)
-        @package_id = package[:package_id]
-      end
+    # Integer, The id of the public VLAN this server should join
+    # Corresponds to +primaryNetworkComponent.networkVlan.id+ in the +createObject+ documentation
+    attr_accessor :public_vlan_id
 
-      @package_id
+    # Integer, The id of the private VLAN this server should join
+    # Corresponds to +primaryBackendNetworkComponent.networkVlan.id+ in the +createObject+ documentation
+    attr_accessor :private_vlan_id
+
+    # Array of Integer, Sizes (in gigabytes... so use 25 to get a 25GB disk) of disks to attach to this server
+    # This roughly Corresponds to +hardDrives+ field in the +createObject+ documentation.
+    attr_accessor :disks
+
+    # Array of Strings, SSH keys to add to the root user's account.
+    # Corresponds to +sshKeys+ in the +createObject+ documentation
+    attr_accessor :ssh_key_ids
+
+    # Object responding to to_s and providing a valid URI, The URI of a post provisioning script to run on 
+    # this server once it is created.
+    # Corresponds to +postInstallScriptUri+ in the +createObject+ documentation
+    attr_accessor :provision_script_URI
+
+    # Boolean, If true then the server will only have a private network interface (and no public network interface)
+    # Corresponds to +privateNetworkOnlyFlag+ in the +createObject+ documentation
+    attr_accessor :private_network_only
+
+    # String, User metadata associated with the instance
+    # Corresponds to +userData.value+ in the +createObject+ documentation
+    attr_accessor :user_metadata
+
+    # Integer (Should be 10, 100, or 1000), The maximum network interface card speed (in Mbps) for the new instance
+    # Corresponds to +networkComponents.maxSpeed+ in the +createObject+ documentation
+    attr_accessor :max_port_speed
+
+    ##
+    # Create a new order that works thorugh the given client connection
+    def initialize (client)
+      @softlayer_client = client
+    end
+
+    ##
+    # Calls the SoftLayer API to verify that the template provided by this order is valid
+    # This routine will return the order template generated by the API or will throw an exception
+    #
+    # This routine will not actually create a Bare Metal Instance and will not affect billing.
+    #
+    # If you provide a block, it will receive the order template as a parameter and 
+    # the block may make changes to the template before it is submitted.
+    def verify()
+      order_template = hardware_instance_template
+      order_template = yield order_template if block_given?
+
+      @softlayer_client["Hardware"].generateOrderTemplate(order_template)
+    end
+    
+    ##
+    # Calls the SoftLayer API to place an order for a new server based on the template in this
+    # order. If this succeeds then you will be billed for the new server.
+    #
+    # If you provide a block, it will receive the order template as a parameter and 
+    # the block may make changes to the template before it is submitted.
+    def place_order!()
+      order_template = hardware_instance_template
+      order_template = yield order_template if block_given?
+
+      server_hash = @softlayer_client["Hardware"].createObject(order_template)
+      SoftLayer::BareMetalServer.server_with_id(@softlayer_client, server_hash["id"]) if server_hash
     end
 
     protected
 
-    def order_hash
-      order_hash = super
-      order_hash['useHourlyPricing'] = !!@hourly
-      order_hash['hardware']['bareMetalInstanceFlag'] = true
-      order_hash
+    ##
+    # Returns a hash of the creation options formatted to be sent to
+    # the SoftLayer API for either verification or completion
+    def hardware_instance_template
+      template = {
+        "processorCoreAmount" => @cores.to_i,
+        "memoryCapacity" => @memory.to_i,
+        "hostname" => @hostname,
+        "domain" => @domain,
+        "operatingSystemReferenceCode" => @os_reference_code,
+
+        # Note : for the values below, we want to use the constants "true" and "false" not nil
+        # the nil value (while false to Ruby) will not translate to XML properly
+        "localDiskFlag" => !!@use_local_disk,
+        "hourlyBillingFlag" => !!@hourly
+      }
+
+      template["privateNetworkOnlyFlag"] = true if @private_network_only
+
+      template["datacenter"] = {"name" => @datacenter} if @datacenter
+      template['userData'] = [{'value' => @user_metadata}] if @user_metadata
+      template['networkComponents'] = [{'maxSpeed'=> @max_port_speed}] if @max_port_speed
+      template['postInstallScriptUri'] = @provision_script_URI.to_s if @provision_script_URI
+      template['sshKeys'] = @ssh_key_ids.collect { |ssh_key| {'id'=> ssh_key.to_i } } if @ssh_key_ids
+      template['primaryNetworkComponent'] = { "networkVlan" => { "id" => @public_vlan_id.to_i } } if @public_vlan_id
+      template["primaryBackendNetworkComponent"] = { "networkVlan" => {"id" => @private_vlan_id.to_i } } if @private_vlan_id
+
+      if @disks && !@disks.empty?
+        template['hardDrives'] = @disks.collect do |disk|
+          {"capacity" => disk.to_i}
+        end
+      end
+
+      template
     end
-  end
-end # SoftLayer
+
+  end # class BareMetalInstanceOrder
+end # module SoftLayer

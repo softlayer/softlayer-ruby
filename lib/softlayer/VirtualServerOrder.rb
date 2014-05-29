@@ -21,8 +21,16 @@
 #
 
 module SoftLayer
+  #
+  # VirtualServerOrder orders virtual servers using SoftLayer_Virtual_Guest::createObject.
+  #
+  # http://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest/createObject
+  #
+  # +createObject+ allows you to order a virtual server by providing
+  # a simple set of attributes and allows you to avoid much of the 
+  # complexity of the SoftLayer ordering system (see ProductPackage)
+  #
   class VirtualServerOrder
-
     #--
     # Required Attributes
     # -------------------
@@ -30,11 +38,9 @@ module SoftLayer
     # a virtual server
     #++
 
-    # Fixnum, The number of virtual CPUs to include in the instance
-    attr_accessor :cpus
-
-    # Fixnum, The amount of RAM for the new server (specified in megabytes so 4096 is 4GB)
-    attr_accessor :memory
+    # String, short name of the data center that will house the new virtual server (e.g. "dal05" or "sea01")
+    # Corresponds to +datacenter.name+ in the documentation for createObject
+    attr_accessor :datacenter
 
     # String, The hostname to assign to the new server
     attr_accessor :hostname
@@ -42,56 +48,75 @@ module SoftLayer
     # String, The domain (i.e. softlayer.com) for the new server
     attr_accessor :domain
 
+    # Integer, The number of virtual CPU cores to include in the instance
+    # Corresponds to +startCpus+ in the documentation for +createObject+
+    attr_accessor :cores
+
+    # Integer, The amount of RAM for the new server (specified in Gigabytes so a value of 4 is 4GB)
+    # Corresponds to +maxMemory+ in the documentation for +createObject+
+    attr_accessor :memory
+
     #--
-    # These two options are mutually exclusive. You must provide an operating system reference code, or an image
-    # if you provide both, the image will override the os reference code
+    # These two options are mutually exclusive, but one or the other must be provided.
+    # If you provide both, the image_global_id will be added to the order and the os_reference_code will be ignored
     #++
 
     # String, An OS reference code for the operating system to install on the virtual server
+    # Corresponds to +operatingSystemReferenceCode+ in the +createObject+ documentation
     attr_accessor :os_reference_code
 
-    # Fixnum, The id of a disk image to put on the newly created server
-    attr_accessor :image_id
+    # String, The globalIdentifier of a disk image to put on the newly created server
+    # Corresponds to +blockDeviceTemplateGroup.globalIdentifier+ in the +createObject+ documentation
+    attr_accessor :image_global_id
 
     #--
     # Optional attributes
     #++
 
-    # Boolean,  If true, an hourly server will be ordered, otherwise a monthly server will be ordered
+    # Boolean, If true, an hourly server will be ordered, otherwise a monthly server will be ordered
+    # Corresponds to +hourlyBillingFlag+ in the +createObject+ documentation
     attr_accessor :hourly
 
     # Boolean, If true the server will use a virtual hard drive, if false, data will be stored on a SAN disk
+    # Corresponds to +localDiskFlag+ in the +createObject+ documentation
     attr_accessor :use_local_disk
 
-    # String, short name of the data center that will house the new virtual server (e.g. "dal05" or "sea01")
-    attr_accessor :datacenter
+    # Boolean, If true, the virtual server will reside only on hosts with instances from this same account
+    # Corresponds to +dedicatedAccountHostOnlyFlag+ in the +createObject+ documentation
+    attr_accessor :dedicated_host_only
 
-    # Boolean, If true, the virtual server will reside on dedicated hardware (single tennant) as opposed to a shared server (multi-tennant)
-    attr_accessor :dedicated_host
-
-    # Fixnum, The id of the public VLAN this server should join
+    # Integer, The id of the public VLAN this server should join
+    # Corresponds to +primaryNetworkComponent.networkVlan.id+ in the +createObject+ documentation
     attr_accessor :public_vlan_id
 
-    # Fixnum, The id of the private VLAN this server should join
+    # Integer, The id of the private VLAN this server should join
+    # Corresponds to +primaryBackendNetworkComponent.networkVlan.id+ in the +createObject+ documentation
     attr_accessor :private_vlan_id
 
-    # Array of Fixnum, Sizes (in gigabytes) of disks to attach to this server
+    # Array of Integer, Sizes (in gigabytes... so use 25 to get a 25GB disk) of disks to attach to this server
+    # This roughly Corresponds to +blockDevices+ field in the +createObject+ documentation.
+    # This attribute only allows you to configure the size of disks while +blockDevices+ allows
+    # more configuration options
     attr_accessor :disks
 
+    # Array of Strings, SSH keys to add to the root user's account.
+    # Corresponds to +sshKeys+ in the +createObject+ documentation
+    attr_accessor :ssh_key_ids
+
     # String, The URI of a post provisioning script to run on this server once it is created
-    attr_accessor :post_provision_uri
+    attr_accessor :provision_script_URI
 
     # Boolean, If true then the virtual server will only have a private network interface (and no public network interface)
+    # Corresponds to +userData.value+ in the +createObject+ documentation
     attr_accessor :private_network_only
 
-    # Array of Strings, SSH keys to add to the root user's account.
-    attr_accessor :ssh_keys
-
     # String, User metadata associated with the instance
+    # Corresponds to +primaryBackendNetworkComponent.networkVlan.id+ in the +createObject+ documentation
     attr_accessor :user_metadata
 
-    # Fixnum (Should be 0, 10, 100, or 1000), The maximum network interface card speed (in Mbps) for the new instance
-    attr_accessor :max_nic_speed
+    # Integer (Should be 10, 100, or 1000), The maximum network interface card speed (in Mbps) for the new instance
+    # Corresponds to +networkComponents.maxSpeed+ in the +createObject+ documentation
+    attr_accessor :max_port_speed
 
     # Create a new order that works thorugh the given client connection
     def initialize (client)
@@ -102,26 +127,28 @@ module SoftLayer
     # This routine will return the order template generated by the API or will throw an exception
     #
     # This routine will not actually create a Virtual Server and will not affect billing.
+    #
+    # If you provide a block, it will receive the order template as a parameter and it
+    # should return the order template you wish to forward to the server.
     def verify()
-      @softlayer_client["Virtual_Guest"].generateOrderTemplate(self.virtual_guest_template)
+      order_template = virtual_guest_template
+      order_template = yield order_template if block_given?
+
+      @softlayer_client["Virtual_Guest"].generateOrderTemplate(order_template)
     end
 
     # Calls the SoftLayer API to place an order for a new virtual server based on the template in this
     # order. If this succeeds then you will be billed for the new Virtual Server.
+    #
+    # If you provide a block, it will receive the order template as a parameter and 
+    # should return an order template, **carefully** modified, that will be 
+    # sent to create the server
     def place_order!()
-      virtual_server_hash = @softlayer_client["Virtual_Guest"].createObject(self.virtual_guest_template)
-      SoftLayer::VirtualServer.server_with_id(@softlayer_client, virtual_server_hash["id"]) if virtual_server_hash
-    end
+      order_template = virtual_guest_template
+      order_template = yield order_template if block_given?
 
-    def self.virtual_server_package(client)
-      filter = SoftLayer::ObjectFilter.build('type.keyName') { is('VIRTUAL_SERVER_INSTANCE') }
-      packages = client['Product_Package'].object_filter(filter).object_mask('mask[id, name, description]').getAllObjects
-      bare_metal_package = packages.first
-      {
-        :package_id => bare_metal_package['id'],
-        :package_name => bare_metal_package['name'],
-        :package_description => bare_metal_package['description']
-      }
+      virtual_server_hash = @softlayer_client["Virtual_Guest"].createObject(order_template)
+      SoftLayer::VirtualServer.server_with_id(@softlayer_client, virtual_server_hash["id"]) if virtual_server_hash
     end
 
     protected
@@ -130,39 +157,43 @@ module SoftLayer
     # the SoftLayer API for either verification or completion
     def virtual_guest_template
       template = {
-        "startCpus" => @cpus.to_i,
-        "maxMemory" => @memory.to_i,
+        "startCpus" => @cores.to_i,
+        "maxMemory" => @memory.to_i * 1024,  # we let the user specify memory in GB, but the API expects maxMemory in MB.
         "hostname" => @hostname,
         "domain" => @domain,
 
         # Note : for the values below, we want to use the constants "true" and "false" not nil
         # the nil value (while false to Ruby) will not translate to XML properly
-        "localDiskFlag" => @use_local_disk ? true : false,
-        "hourlyBillingFlag" => @hourly ? true : false
+        "localDiskFlag" => !!@use_local_disk,
+        "hourlyBillingFlag" => !!@hourly
       }
 
-      template["dedicatedAccountHostOnlyFlag"] = true if @dedicated_host
+      template["dedicatedAccountHostOnlyFlag"] = true if @dedicated_host_only
       template["privateNetworkOnlyFlag"] = true if @private_network_only
 
       template["datacenter"] = {"name" => @datacenter} if @datacenter
       template['userData'] = [{'value' => @user_metadata}] if @user_metadata
-      template['networkComponents'] = [{'maxSpeed'=> @max_nic_speed}] if @max_nic_speed
-      template['postInstallScriptUri'] = @post_provision_uri if @post_provision_uri
-      template['sshKeys'] = @ssh_keys.collect { |ssh_key| {'id'=> ssh_key} } if @ssh_keys
+      template['networkComponents'] = [{'maxSpeed'=> @max_port_speed}] if @max_port_speed
+      template['postInstallScriptUri'] = @provision_script_URI.to_s if @provision_script_URI
+      template['sshKeys'] = @ssh_key_ids.collect { |ssh_key_id| {'id'=> ssh_key_id.to_i } } if @ssh_key_ids
       template['primaryNetworkComponent'] = { "networkVlan" => { "id" => @public_vlan_id.to_i } } if @public_vlan_id
-      template["primaryBackendNetworkComponent"] = { "networkVlan" => {"id" => @private_vlan_id } } if @private_vlan_id
+      template["primaryBackendNetworkComponent"] = { "networkVlan" => {"id" => @private_vlan_id.to_i } } if @private_vlan_id
 
-      if @image_id
-          template["blockDeviceTemplateGroup"] = {"globalIdentifier" => @image_id}
+      if @image_global_id
+          template["blockDeviceTemplateGroup"] = {"globalIdentifier" => @image_global_id}
       elsif @os_reference_code
           template["operatingSystemReferenceCode"] = @os_reference_code
       end
 
-      if @disks
+      if @disks && !@disks.empty?
         template['blockDevices'] = []
 
+        # According to the documentation for +createObject+,
+        # device number 1 is reserved for the SWAP disk of the computing instance.
+        # So we assign device 0 and then assign the rest starting at index 2.
         @disks.each_with_index do |disk, index|
-          template['blockDevices'].push({"device" => "#{index}", "diskImage" => {"capacity" => disk}})
+          device_id = (index >= 1) ? index + 1 : index
+          template['blockDevices'].push({"device" => "#{device_id}", "diskImage" => {"capacity" => disk}})
         end
       end
 
