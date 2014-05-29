@@ -34,7 +34,7 @@ describe SoftLayer::BareMetalServerPackageOrder do
 
   let (:test_order) do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
-    
+
     package = SoftLayer::ProductPackage.new(client, {'id' => 42})
     SoftLayer::BareMetalServerPackageOrder.new(client, package)
   end
@@ -69,7 +69,7 @@ describe SoftLayer::BareMetalServerPackageOrder do
   it "allows config options to be objects that respond to price_id" do
     config_option_1 = Object.new
     config_option_2 = Object.new
-    
+
     def config_option_1.price_id
       1
     end
@@ -77,7 +77,7 @@ describe SoftLayer::BareMetalServerPackageOrder do
     def config_option_2.price_id
       2
     end
-    
+
     test_order.configuration_options = {'os' => config_option_1, 'ram' => config_option_2}
     test_order.hardware_order['prices'].should == [{'id' => 1}, {'id' => 2}]
   end
@@ -93,13 +93,13 @@ describe SoftLayer::BareMetalServerPackageOrder do
     test_order.provision_script_URI = 'https://testprovision.mydomain.org/fancyscript.sh'
     test_order.hardware_order['provisionScripts'].should == ['https://testprovision.mydomain.org/fancyscript.sh']
   end
-  
+
   it "allows a URI object to be provided as the :provision_script_URI" do
     test_order.hardware_order['provisionScripts'].should be_nil
     test_order.provision_script_URI = URI.parse('https://testprovision.mydomain.org/fancyscript.sh')
     test_order.hardware_order['provisionScripts'].should == ['https://testprovision.mydomain.org/fancyscript.sh']
   end
-  
+
   it "calls the softlayer API to verify an order" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
     package = SoftLayer::ProductPackage.new(client, {'id' => 42})
@@ -133,7 +133,7 @@ describe SoftLayer::BareMetalServerPackageOrder do
     expect(order_service).to receive(:placeOrder).with(test_order.hardware_order)
     test_order.place_order!()
   end
-    
+
   it "allows a block to modify the template sent to the server when verifying an order" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
     package = SoftLayer::ProductPackage.new(client, {'id' => 42})
@@ -151,7 +151,7 @@ describe SoftLayer::BareMetalServerPackageOrder do
     expect(order_service).to receive(:verifyOrder).with(substituted_order_template)
     test_order.verify() { |order_template| substituted_order_template }
   end
-  
+
   it "allows a block to modify the template sent to the server when placing an order" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
     package = SoftLayer::ProductPackage.new(client, {'id' => 42})

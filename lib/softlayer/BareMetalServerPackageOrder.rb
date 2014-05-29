@@ -23,8 +23,8 @@
 module SoftLayer
   #
   # This class is used to order a hardware server by providing the full set of
-  # configuration options.  Hardware servers may also be ordered with a more 
-  # streamlined set of configuration options using the BareMetalInstanceOrder 
+  # configuration options.  Hardware servers may also be ordered with a more
+  # streamlined set of configuration options using the BareMetalInstanceOrder
   # class.
   #
   # This class roughly Corresponds to the SoftLayer_Container_Product_Order_Hardware_Server
@@ -89,7 +89,7 @@ module SoftLayer
     # in the order for your inspection and return the completed entity.
     #
     # If you add a block to the method call, it will receive the product
-    # order template before it is sent to the API.  You may **carefully** make 
+    # order template before it is sent to the API.  You may **carefully** make
     # changes to the template to provide specialized configuration.
     #
     def verify
@@ -107,12 +107,12 @@ module SoftLayer
     # in the order for your inspection and return the completed entity.
     #
     # If you add a block to the method call, it will receive the product
-    # order template before it is sent to the API.  You may **carefully** make 
+    # order template before it is sent to the API.  You may **carefully** make
     # changes to the template to provide specialized configuration.
     #
     # The return value of this call is a product order receipt.
-    # Because the order must be authorized by sales, and because 
-    # hardware provisioning takes times, this routine does not return 
+    # Because the order must be authorized by sales, and because
+    # hardware provisioning takes times, this routine does not return
     # the BareMetalServer.
     #
     def place_order!

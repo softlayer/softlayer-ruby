@@ -38,7 +38,7 @@ module SoftLayer
   # http://sldn.softlayer.com/reference/services/SoftLayer_Hardware/createObject
   #
   # +createObject+ allows you to order a server by providing a simple
-  # a simple set of attributes, avoiding much of the complexity of the 
+  # a simple set of attributes, avoiding much of the complexity of the
   # SoftLayer ordering system (see BareMetalServerPackageOrder and ProductPackage)
   #
   class BareMetalInstanceOrder
@@ -95,7 +95,7 @@ module SoftLayer
     # Corresponds to +sshKeys+ in the +createObject+ documentation
     attr_accessor :ssh_key_ids
 
-    # Object responding to to_s and providing a valid URI, The URI of a post provisioning script to run on 
+    # Object responding to to_s and providing a valid URI, The URI of a post provisioning script to run on
     # this server once it is created.
     # Corresponds to +postInstallScriptUri+ in the +createObject+ documentation
     attr_accessor :provision_script_URI
@@ -124,7 +124,7 @@ module SoftLayer
     #
     # This routine will not actually create a Bare Metal Instance and will not affect billing.
     #
-    # If you provide a block, it will receive the order template as a parameter and 
+    # If you provide a block, it will receive the order template as a parameter and
     # the block may make changes to the template before it is submitted.
     def verify()
       order_template = hardware_instance_template
@@ -132,12 +132,12 @@ module SoftLayer
 
       @softlayer_client["Hardware"].generateOrderTemplate(order_template)
     end
-    
+
     ##
     # Calls the SoftLayer API to place an order for a new server based on the template in this
     # order. If this succeeds then you will be billed for the new server.
     #
-    # If you provide a block, it will receive the order template as a parameter and 
+    # If you provide a block, it will receive the order template as a parameter and
     # the block may make changes to the template before it is submitted.
     def place_order!()
       order_template = hardware_instance_template

@@ -54,7 +54,7 @@ describe SoftLayer::VirtualServerOrder do
     subject.domain = "softlayer.com"
     subject.virtual_guest_template["domain"].should == "softlayer.com"
   end
-  
+
   it "places its :cores attribute into the order template as startCpus" do
     subject.cores = 4
     subject.virtual_guest_template["startCpus"].should == 4
@@ -70,20 +70,20 @@ describe SoftLayer::VirtualServerOrder do
     subject.os_reference_code = 'UBUNTU_12_64'
     subject.virtual_guest_template['operatingSystemReferenceCode'].should == 'UBUNTU_12_64'
   end
-  
+
   it "places an image template global identifier in the template as blockDeviceTemplateGroup.globalIdentifier" do
     subject.virtual_guest_template["blockDeviceTemplateGroup"].should be_nil
     subject.image_global_id = "12345-abcd-eatatjoes"
     subject.virtual_guest_template['blockDeviceTemplateGroup'].should == {'globalIdentifier' => '12345-abcd-eatatjoes'}
   end
-  
+
   it "allows an image global id to override an os reference code when both are provided" do
     subject.virtual_guest_template["blockDeviceTemplateGroup"].should be_nil
     subject.virtual_guest_template["operatingSystemReferenceCode"].should be_nil
 
     subject.image_global_id = "12345-abcd-eatatjoes"
     subject.os_reference_code = 'UBUNTU_12_64'
-  
+
     subject.virtual_guest_template['blockDeviceTemplateGroup'].should == {'globalIdentifier' => '12345-abcd-eatatjoes'}
     subject.virtual_guest_template['operatingSystemReferenceCode'].should be_nil
   end
@@ -91,10 +91,10 @@ describe SoftLayer::VirtualServerOrder do
   it "places the attribute :hourly into the template as hourlyBillingFlag converting the value to a boolean constant" do
     # note, we don't want the flag to be nil we want it to be eotjer false or true
     subject.virtual_guest_template["hourlyBillingFlag"].should be(false)
-  
+
     subject.hourly = true
     subject.virtual_guest_template["hourlyBillingFlag"].should be(true)
-  
+
     subject.hourly = false
     subject.virtual_guest_template["hourlyBillingFlag"].should be(false)
   end
@@ -102,10 +102,10 @@ describe SoftLayer::VirtualServerOrder do
   it "places the attribute :use_local_disk in the template as the localDiskFlag" do
     # note, we don't want the flag to be nil we want it to be false or true
     subject.virtual_guest_template["localDiskFlag"].should be(false)
-  
+
     subject.use_local_disk = true
     subject.virtual_guest_template["localDiskFlag"].should be(true)
-  
+
     subject.use_local_disk = false
     subject.virtual_guest_template["localDiskFlag"].should be(false)
   end
@@ -121,13 +121,13 @@ describe SoftLayer::VirtualServerOrder do
     subject.public_vlan_id = 12345
     subject.virtual_guest_template["primaryNetworkComponent"].should == { "networkVlan" => { "id" => 12345 } }
   end
-  
+
   it "puts the private VLAN id into an order template as primaryBackendNetworkComponent.networkVlan.id" do
     subject.virtual_guest_template["primaryBackendNetworkComponent"].should be_nil
     subject.private_vlan_id = 12345
     subject.virtual_guest_template["primaryBackendNetworkComponent"].should == { "networkVlan" => { "id" => 12345 } }
   end
-  
+
   it "sets up disks in the order template as blockDevices" do
     subject.virtual_guest_template["blockDevices"].should be_nil
     subject.disks = [2, 25, 50]
@@ -157,7 +157,7 @@ describe SoftLayer::VirtualServerOrder do
     subject.provision_script_URI = URI.parse('http:/provisionhome.mydomain.com/fancyscript.sh')
     subject.virtual_guest_template['postInstallScriptUri'].should == 'http:/provisionhome.mydomain.com/fancyscript.sh'
   end
-  
+
   it "places the private_network_only attribute in the template as privateNetworkOnlyFlag" do
     subject.virtual_guest_template["privateNetworkOnlyFlag"].should be_nil
     subject.private_network_only = true
@@ -169,7 +169,7 @@ describe SoftLayer::VirtualServerOrder do
     subject.user_metadata = "MetadataValue"
     subject.virtual_guest_template['userData'].should == [{'value' => 'MetadataValue'}]
   end
- 
+
   it "puts the max_port_speed attribute into the template as networkComponents.maxSpeed" do
     subject.virtual_guest_template["networkComponents"].should be_nil
     subject.max_port_speed = 1000
@@ -185,10 +185,10 @@ describe SoftLayer::VirtualServerOrder do
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
 
-    virtual_guest_order_service = client["Virtual_Guest"]
-    virtual_guest_order_service.stub(:call_softlayer_api_with_params)
+    virtual_guest_service = client["Virtual_Guest"]
+    virtual_guest_service.stub(:call_softlayer_api_with_params)
 
-    expect(virtual_guest_order_service).to receive(:generateOrderTemplate).with(test_order.virtual_guest_template)
+    expect(virtual_guest_service).to receive(:generateOrderTemplate).with(test_order.virtual_guest_template)
     test_order.verify()
   end
 
@@ -201,13 +201,13 @@ describe SoftLayer::VirtualServerOrder do
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
 
-    virtual_guest_order_service = client["Virtual_Guest"]
-    virtual_guest_order_service.stub(:call_softlayer_api_with_params)
+    virtual_guest_service = client["Virtual_Guest"]
+    virtual_guest_service.stub(:call_softlayer_api_with_params)
 
-    expect(virtual_guest_order_service).to receive(:createObject).with(test_order.virtual_guest_template)
+    expect(virtual_guest_service).to receive(:createObject).with(test_order.virtual_guest_template)
     test_order.place_order!()
   end
-  
+
   it "allows a block to modify the template sent to the server when verifying an order" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
 
@@ -217,11 +217,11 @@ describe SoftLayer::VirtualServerOrder do
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
 
-    virtual_guest_order_service = client["Virtual_Guest"]
-    virtual_guest_order_service.stub(:call_softlayer_api_with_params)
+    virtual_guest_service = client["Virtual_Guest"]
+    virtual_guest_service.stub(:call_softlayer_api_with_params)
 
     substituted_order_template = { 'aFake' => 'andBogusOrderTemplate' }
-    expect(virtual_guest_order_service).to receive(:generateOrderTemplate).with(substituted_order_template)
+    expect(virtual_guest_service).to receive(:generateOrderTemplate).with(substituted_order_template)
     test_order.verify() { |order_template| substituted_order_template }
   end
 
@@ -234,12 +234,51 @@ describe SoftLayer::VirtualServerOrder do
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
 
-    virtual_guest_order_service = client["Virtual_Guest"]
-    virtual_guest_order_service.stub(:call_softlayer_api_with_params)
+    virtual_guest_service = client["Virtual_Guest"]
+    virtual_guest_service.stub(:call_softlayer_api_with_params)
 
     substituted_order_template = { 'aFake' => 'andBogusOrderTemplate' }
-    expect(virtual_guest_order_service).to receive(:createObject).with(substituted_order_template)
+    expect(virtual_guest_service).to receive(:createObject).with(substituted_order_template)
     test_order.place_order!() { |order_template| substituted_order_template }
   end
 
+  describe "class methods" do
+    let (:client) do
+      client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
+      virtual_guest_service = client["Virtual_Guest"]
+      virtual_guest_service.stub(:call_softlayer_api_with_params)
+
+      fake_options = fixture_from_json("Virtual_Guest_createObjectOptions")
+      allow(virtual_guest_service).to receive(:getCreateObjectOptions) {
+        fake_options
+      }
+      
+      client
+    end
+
+    it "retrieves the set of options that can be put in the order template" do
+      fake_options = fixture_from_json("Virtual_Guest_createObjectOptions")
+      SoftLayer::VirtualServerOrder.create_object_options(client).should == fake_options
+    end
+    
+    it "transmogrifies the processor create object options for the cores attribute" do
+      SoftLayer::VirtualServerOrder.core_options(client).should == [1, 2, 4, 8, 12, 16]
+    end
+
+    it "transmogrifies the memory create object options for the memory attribute" do
+      SoftLayer::VirtualServerOrder.memory_options(client).should == [1, 2, 4, 6, 8, 12, 16, 32, 48, 64]
+    end
+
+    it "transmogrifies the blockDevices create object options for the disks attribute" do
+      SoftLayer::VirtualServerOrder.disk_options(client).should == [10, 20, 25, 30, 40, 50, 75, 100, 125, 150, 175, 200, 250, 300, 350, 400, 500, 750, 1000, 1500, 2000]
+    end
+
+    it "transmogrifies the operatingSystems create object options for the os_reference_code attribute" do
+      SoftLayer::VirtualServerOrder.os_reference_code_options(client).should == ["CENTOS_5_32", "CENTOS_5_64", "CENTOS_6_32", "CENTOS_6_64", "CLOUDLINUX_5_32", "CLOUDLINUX_5_64", "CLOUDLINUX_6_32", "CLOUDLINUX_6_64", "DEBIAN_5_32", "DEBIAN_5_64", "DEBIAN_6_32", "DEBIAN_6_64", "DEBIAN_7_32", "DEBIAN_7_64", "REDHAT_5_32", "REDHAT_5_64", "REDHAT_6_32", "REDHAT_6_64", "UBUNTU_10_32", "UBUNTU_10_64", "UBUNTU_12_32", "UBUNTU_12_64", "UBUNTU_8_32", "UBUNTU_8_64", "VYATTACE_6.5_64", "VYATTACE_6.6_64", "WIN_2003-DC-SP2-1_32", "WIN_2003-DC-SP2-1_64", "WIN_2003-ENT-SP2-5_32", "WIN_2003-ENT-SP2-5_64", "WIN_2003-STD-SP2-5_32", "WIN_2003-STD-SP2-5_64", "WIN_2008-DC-R2_64", "WIN_2008-DC-SP2_64", "WIN_2008-ENT-R2_64", "WIN_2008-ENT-SP2_32", "WIN_2008-ENT-SP2_64", "WIN_2008-STD-R2-SP1_64", "WIN_2008-STD-R2_64", "WIN_2008-STD-SP2_32", "WIN_2008-STD-SP2_64", "WIN_2012-DC_64", "WIN_2012-STD_64"]
+    end
+
+    it "transmogrifies the networkComponents create object options for the max_port_speed attribute" do
+      SoftLayer::VirtualServerOrder.max_port_speed_options(client).should == [10, 100, 1000]
+    end
+  end
 end

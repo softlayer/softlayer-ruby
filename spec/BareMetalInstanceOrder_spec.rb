@@ -54,7 +54,7 @@ describe SoftLayer::BareMetalInstanceOrder do
     subject.domain = "softlayer.com"
     subject.hardware_instance_template["domain"].should == "softlayer.com"
   end
-  
+
   it "places its :cores attribute into the order template as startCpus" do
     subject.cores = 4
     subject.hardware_instance_template["processorCoreAmount"].should == 4
@@ -74,10 +74,10 @@ describe SoftLayer::BareMetalInstanceOrder do
   it "places the attribute :hourly into the template as hourlyBillingFlag converting the value to a boolean constant" do
     # note, we don't want the flag to be nil we want it to be eotjer false or true
     subject.hardware_instance_template["hourlyBillingFlag"].should be(false)
-  
+
     subject.hourly = true
     subject.hardware_instance_template["hourlyBillingFlag"].should be(true)
-  
+
     subject.hourly = false
     subject.hardware_instance_template["hourlyBillingFlag"].should be(false)
   end
@@ -87,13 +87,13 @@ describe SoftLayer::BareMetalInstanceOrder do
     subject.public_vlan_id = 12345
     subject.hardware_instance_template["primaryNetworkComponent"].should == { "networkVlan" => { "id" => 12345 } }
   end
-  
+
   it "puts the private VLAN id into an order template as primaryBackendNetworkComponent.networkVlan.id" do
     subject.hardware_instance_template["primaryBackendNetworkComponent"].should be_nil
     subject.private_vlan_id = 12345
     subject.hardware_instance_template["primaryBackendNetworkComponent"].should == { "networkVlan" => { "id" => 12345 } }
   end
-  
+
   it "sets up disks in the order template as hardDrives" do
     subject.hardware_instance_template["hardDrives"].should be_nil
     subject.disks = [2, 25, 50]
@@ -123,7 +123,7 @@ describe SoftLayer::BareMetalInstanceOrder do
     subject.provision_script_URI = URI.parse('http:/provisionhome.mydomain.com/fancyscript.sh')
     subject.hardware_instance_template['postInstallScriptUri'].should == 'http:/provisionhome.mydomain.com/fancyscript.sh'
   end
-  
+
   it "places the private_network_only attribute in the template as privateNetworkOnlyFlag" do
     subject.hardware_instance_template["privateNetworkOnlyFlag"].should be_nil
     subject.private_network_only = true
@@ -135,7 +135,7 @@ describe SoftLayer::BareMetalInstanceOrder do
     subject.user_metadata = "MetadataValue"
     subject.hardware_instance_template['userData'].should == [{'value' => 'MetadataValue'}]
   end
- 
+
   it "puts the max_port_speed attribute into the template as networkComponents.maxSpeed" do
     subject.hardware_instance_template["networkComponents"].should be_nil
     subject.max_port_speed = 1000
@@ -173,7 +173,7 @@ describe SoftLayer::BareMetalInstanceOrder do
     expect(hardware_service).to receive(:createObject).with(test_order.hardware_instance_template)
     test_order.place_order!()
   end
-  
+
   it "allows a block to modify the template sent to the server when verifying an order" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
 
