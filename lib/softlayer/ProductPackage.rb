@@ -27,8 +27,8 @@ module SoftLayer
   #
   # === Configuration Option Categories
   # A important companion to Product Packages are ProductItemCategories.
-  # Each ProductItemCategory represents a set of options that you may choose from to configure
-  # one attribute of the product or service you are ordering.
+  # Each ProductItemCategory represents a set of options that you may choose from when
+  # configuring an attribute of the product or service you are ordering.
   #
   # ProductItemCategories are identified by +categoryCode+. Examples of category codes
   # include 'os', 'ram', and 'port_speed'.
@@ -50,17 +50,13 @@ module SoftLayer
   #
   # === Regions/Locations
   #
-  # Not all products and services are available in all the SoftLayer data centers. The +regions+
+  # Not all products and services are available in all locations. The +regions+
   # property of a ProductPackage indicates in which data centers the products in the package
   # can be ordered.
   #
   class ProductPackage < ModelBase
     include ::SoftLayer::ModelResource
-
-    VIRTUAL_SERVER_PACKAGE_KEY = 'VIRTUAL_SERVER_INSTANCE'
-    BARE_METAL_INSTANCE_PACKAGE_KEY = 'BARE_METAL_CORE'
-    BARE_METAL_SERVER_PACKAGE_KEY = 'BARE_METAL_CPU'
-
+    
     ##
     # The set of product categories needed to make an order for this product package.
     #
@@ -72,16 +68,14 @@ module SoftLayer
 
       resource.to_update do
         #
-        # We call SoftLayer_Product_Package to get the configuration for this package. The configuration gives you a list of the categories
-        # that go into a product order from this package as well as information about which categories are required to complete an order.
+        # We call SoftLayer_Product_Package to get the configuration for this package.
         #
-        # Unfortunately, even though this call returns SoftLayer_Product_Item_Category entities, it does not have the context needed to
-        # determine the category information that is relevant to the account at this point in time so we can't use that information
-        # to construct ProductItemCategory objects.
+        # Unfortunately, even though this call includes SoftLayer_Product_Item_Category entities, it does not have the context 
+        # needed to find the active price items for that category.
         #
-        # Instead, we make a second call, this time to SoftLayer_Product_Package::getCategories.  That method incorporates a complex
+        # Instead, we make a second call, this time to SoftLayer_Product_Package::getCategories. That method incorporates a complex
         # filtering mechanism on the server side to give us a list of the categories, groups, and prices that are valid for the current
-        # account at the current time.  We construct the ProductItemCategory objects from the results we back.
+        # account at the current time. We construct the ProductItemCategory objects from the results we get back.
         #
         configuration_data = softlayer_client['Product_Package'].object_with_id(self.id).object_mask("mask[isRequired,itemCategory.categoryCode]").getConfiguration()
 
@@ -109,7 +103,7 @@ module SoftLayer
     end
 
     ##
-    # Returns an array of all the that are required by the package
+    # Returns an array of the required categories in this package
     def required_categories
       configuration.select { |category| category.required? }
     end
@@ -122,7 +116,7 @@ module SoftLayer
 
     ##
     # A convenience routine which returns valid location information for this
-    # package.  It returns an array of hashes each with the following keys:
+    # package. It returns an array of hashes each with the following keys:
     #
     # * <b>+:keyname+</b> A code representing this location to the API
     # * <b>+:description+</b> A user friendly description of the location
@@ -157,23 +151,29 @@ module SoftLayer
     # Returns the ProductPackage of the package used to order virtual servers
     # At the time of this writing, the code assumes this package is unique
     #
+    # 'VIRTUAL_SERVER_INSTANCE' is a "well known" constant value for this purpose
     def self.virtual_server_package(client)
-      packages_with_key_name(client, VIRTUAL_SERVER_PACKAGE_KEY).first
+      packages_with_key_name(client, 'VIRTUAL_SERVER_INSTANCE').first
     end
 
     ##
-    # Returns the ProductPackage of the package used to order Bare Metal Instances
+    # Returns the ProductPackage of the package used to order Bare Metal Servers
+    # with simplified configuration options.
+    #
     # At the time of this writing, the code assumes this package is unique
     #
+    # 'BARE_METAL_CORE' is a "well known" constant value for this purpose
     def self.bare_metal_instance_package(client)
-      packages_with_key_name(client, BARE_METAL_INSTANCE_PACKAGE_KEY).first
+      packages_with_key_name(client, 'BARE_METAL_CORE').first
     end
 
     ##
     # Returns an array of ProductPackages, each of which can be used
     # as the foundation to order a bare metal server.
+    #
+    # 'BARE_METAL_CPU' is a "well known" constant value for this purpose
     def self.bare_metal_server_packages(client)
-      packages_with_key_name(client, BARE_METAL_SERVER_PACKAGE_KEY)
+      packages_with_key_name(client, 'BARE_METAL_CPU')
     end
 
     protected

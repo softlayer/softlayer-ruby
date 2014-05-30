@@ -35,7 +35,7 @@ module SoftLayer
     # A virtual server can find out about Product_Packge items that are
     # available for upgrades.
     #
-    softlayer_resource :upgrade_items do |resource|
+    softlayer_resource :upgrade_options do |resource|
       resource.should_update? do
         @upgrade_items == nil
       end
@@ -60,8 +60,8 @@ module SoftLayer
     #
     # The routine returns true if the order is placed and false if it is not
     #
-    def upgrade_cpus!(num_cpus)
-      upgrade_item_price = _item_price_in_category("guest_core", num_cpus)
+    def upgrade_cores!(num_cores)
+      upgrade_item_price = _item_price_in_category("guest_core", num_cores)
       _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
       nil != upgrade_item_price
     end
@@ -83,12 +83,13 @@ module SoftLayer
     ##
     # This routine submits an order to change the maximum nic speed of the server
     # Pass in the desired speed in Megabits per second (typically 10, 100, or 1000)
+    # (since you may choose a slower speed this routine can also be used for "downgrades")
     #
     # The order may result in additional charges being applied to SoftLayer account
     #
     # The routine returns true if the order is placed and false if it is not
     #
-    def upgrade_max_network_speed!(network_speed_in_Mbps)
+    def upgrade_max_port_speed!(network_speed_in_Mbps)
       upgrade_item_price = _item_price_in_category("port_speed", network_speed_in_Mbps)
       _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
       nil != upgrade_item_price
@@ -144,9 +145,8 @@ module SoftLayer
         reloading_os = has_active_transaction && has_os_reload && (self.lastOperatingSystemReload['id'] == self.activeTransaction['id'])
         provisioned = has_sl_property? :provisionDate
 
-        # a server is ready when it is provisioned, not reloading the OS and
-        # (if the user has asked us to wait on other transactions) when there are
-        # no active transactions.
+        # a server is ready when it is provisioned, not reloading the OS
+        # (and if wait_for_transactions is true, when there are no active transactions).
         ready = provisioned && !reloading_os && (!wait_for_transactions || !has_active_transaction)
         num_trials = num_trials + 1
 
