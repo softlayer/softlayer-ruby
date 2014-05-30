@@ -38,10 +38,6 @@ module SoftLayer
     # a virtual server
     #++
 
-    # String, short name of the data center that will house the new virtual server (e.g. "dal05" or "sea01")
-    # Corresponds to +datacenter.name+ in the documentation for createObject
-    attr_accessor :datacenter
-
     # String, The hostname to assign to the new server
     attr_accessor :hostname
 
@@ -72,6 +68,11 @@ module SoftLayer
     #--
     # Optional attributes
     #++
+
+    # String, short name of the data center that will house the new virtual server (e.g. "dal05" or "sea01")
+    # Corresponds to +datacenter.name+ in the documentation for createObject.  If not provided, the server will
+    # be provisioned in the first available data center.
+    attr_accessor :datacenter
 
     # Boolean, If true, the virtual server will reside only on hosts with instances from this same account
     # Corresponds to +dedicatedAccountHostOnlyFlag+ in the +createObject+ documentation
