@@ -22,17 +22,24 @@
 
 module SoftLayer
   #
-  # This class is used to order a hardware server by providing the full set of
-  # configuration options.  Hardware servers may also be ordered with a more
-  # streamlined set of configuration options using the BareMetalInstanceOrder
-  # class.
+  # This class is used to order a hardware server using a product package.
+  #
+  # Ordering a server using a product package is a more complex process than 
+  # ordering with simple attributes (as is done by the BareMetalServerOrder class). 
+  # However with that complexity comes the the ability to specify the configuration 
+  # of the server in exacting detail.
+  #
+  # To use this class, you first select a product package. The product package
+  # defines the base configuration, the chassis, of the server as well as the set of configuration
+  # options available for that chassis. To fully configure the server you must select
+  # the value for each configuration option.
   #
   # This class roughly Corresponds to the SoftLayer_Container_Product_Order_Hardware_Server
   # data type in the SoftLayer API
   #
   # http://sldn.softlayer.com/reference/datatypes/SoftLayer_Container_Product_Order_Hardware_Server
   #
-  class BareMetalServerPackageOrder < Server
+  class BareMetalServerOrder_Package < Server
     # The following properties are required in a server order.
 
     # The product package identifying the base configuration for the server.
@@ -51,9 +58,11 @@ module SoftLayer
     attr_accessor :domain
 
     # The value of this property should be a hash. The keys of the hash are ProdcutItemCategory
-    # codes (like 'os' and 'ram') while the values may either be Integers or objects that respond
-    # to the +price_id+ message by returning an Integer.  The Integer values should be the +id+
-    # of a SoftLayer_Product_Item_Price representing the configuration option chosen for that category.
+    # codes (like 'os' and 'ram') while the values may be Integers or Objects. The Integer values 
+    # should be the +id+ of a SoftLayer_Product_Item_Price representing the configuration option 
+    # chosen for that category. Objects must respond to the price_id message and return an integer
+    # that is the +id+ of a SoftLayer_Product_Item_Price. Instances of the ProductConfigurationOption
+    # class behave this way.
     #
     # At a minimum, the configuation_options should include entries for each of the categories
     # required by the package (i.e. those returned from ProductPackage#required_categories)
@@ -68,11 +77,11 @@ module SoftLayer
     attr_accessor :ssh_key_ids
 
     # The URI of a script to execute on the server after it has been provisioned. This may be
-    # any object which accepts the to_s message.  The resulting string will be passed to SoftLayer API.
+    # any object which accepts the to_s message. The resulting string will be passed to SoftLayer API.
     attr_accessor :provision_script_URI
 
     ##
-    # You initialize a BareMetalServerPackageOrder by passing in the package that you
+    # You initialize a BareMetalServerOrder_Package by passing in the package that you
     # are ordering from.
     def initialize(client, package)
       @softlayer_client = client
@@ -82,14 +91,14 @@ module SoftLayer
 
     ##
     # Present the order for verification by the SoftLayer ordering system.
-    # The order is verified, but not executed.  This should not
+    # The order is verified, but not executed. This should not
     # change the billing of your account.
     #
     # If successful, the SoftLayer API will fill out additional fields
     # in the order for your inspection and return the completed entity.
     #
     # If you add a block to the method call, it will receive the product
-    # order template before it is sent to the API.  You may **carefully** make
+    # order template before it is sent to the API. You may **carefully** make
     # changes to the template to provide specialized configuration.
     #
     def verify
@@ -107,13 +116,11 @@ module SoftLayer
     # in the order for your inspection and return the completed entity.
     #
     # If you add a block to the method call, it will receive the product
-    # order template before it is sent to the API.  You may **carefully** make
+    # order template before it is sent to the API. You may **carefully** make
     # changes to the template to provide specialized configuration.
     #
-    # The return value of this call is a product order receipt.
-    # Because the order must be authorized by sales, and because
-    # hardware provisioning takes times, this routine does not return
-    # the BareMetalServer.
+    # The return value of this call is a product order receipt. After
+    # submitting the order it will proceed to Sales for authorization.
     #
     def place_order!
       product_order = hardware_order
@@ -152,5 +159,5 @@ module SoftLayer
 
       product_order
     end
-  end # BareMetalServerPackageOrder
+  end # BareMetalServerOrder_Package
 end # SoftLayer

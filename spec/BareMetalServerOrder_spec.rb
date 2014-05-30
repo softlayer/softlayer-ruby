@@ -27,14 +27,14 @@ require 'softlayer_api'
 require 'rspec'
 require 'uri'
 
-describe SoftLayer::BareMetalInstanceOrder do
+describe SoftLayer::BareMetalServerOrder do
   before(:each) do
-    SoftLayer::BareMetalInstanceOrder.send(:public, *SoftLayer::BareMetalInstanceOrder.protected_instance_methods)
+    SoftLayer::BareMetalServerOrder.send(:public, *SoftLayer::BareMetalServerOrder.protected_instance_methods)
   end
 
   let (:subject) do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
-    SoftLayer::BareMetalInstanceOrder.new(client)
+    SoftLayer::BareMetalServerOrder.new(client)
   end
 
   it "places its :datacenter attribute into the order template" do
@@ -145,7 +145,7 @@ describe SoftLayer::BareMetalInstanceOrder do
   it "calls the softlayer API to validate an order template" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
 
-    test_order = SoftLayer::BareMetalInstanceOrder.new(client)
+    test_order = SoftLayer::BareMetalServerOrder.new(client)
     test_order.cores = 2
     test_order.memory = 2
     test_order.hostname = "ruby-client-test"
@@ -161,7 +161,7 @@ describe SoftLayer::BareMetalInstanceOrder do
   it "calls the softlayer API to place an order for a new virtual server" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
 
-    test_order = SoftLayer::BareMetalInstanceOrder.new(client)
+    test_order = SoftLayer::BareMetalServerOrder.new(client)
     test_order.cores = 2
     test_order.memory = 2
     test_order.hostname = "ruby-client-test"
@@ -177,7 +177,7 @@ describe SoftLayer::BareMetalInstanceOrder do
   it "allows a block to modify the template sent to the server when verifying an order" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
 
-    test_order = SoftLayer::BareMetalInstanceOrder.new(client)
+    test_order = SoftLayer::BareMetalServerOrder.new(client)
     test_order.cores = 2
     test_order.memory = 2
     test_order.hostname = "ruby-client-test"
@@ -194,7 +194,7 @@ describe SoftLayer::BareMetalInstanceOrder do
   it "allows a block to modify the template sent to the server when placing an order" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
 
-    test_order = SoftLayer::BareMetalInstanceOrder.new(client)
+    test_order = SoftLayer::BareMetalServerOrder.new(client)
     test_order.cores = 2
     test_order.memory = 2
     test_order.hostname = "ruby-client-test"
@@ -206,6 +206,45 @@ describe SoftLayer::BareMetalInstanceOrder do
     substituted_order_template = { 'aFake' => 'andBogusOrderTemplate' }
     expect(hardware_service).to receive(:createObject).with(substituted_order_template)
     test_order.place_order!() { |order_template| substituted_order_template }
+  end
+
+  describe "methods returning available options for attributes" do
+    let (:client) do
+      client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
+      virtual_guest_service = client["Hardware"]
+      virtual_guest_service.stub(:call_softlayer_api_with_params)
+
+      fake_options = fixture_from_json("Hardware_createObjectOptions")
+      allow(virtual_guest_service).to receive(:getCreateObjectOptions) {
+        fake_options
+      }
+      
+      client
+    end
+
+    it "retrieves the set of options that can be put in the order template" do
+      SoftLayer::BareMetalServerOrder.create_object_options(client).should == fixture_from_json("Hardware_createObjectOptions")
+    end
+
+    it "transmogrifies the datacenter options for the :datacenter attribute" do
+      SoftLayer::BareMetalServerOrder.datacenter_options(client).should == ["ams01", "dal01", "dal05", "dal06", "sea01", "sjc01", "sng01", "wdc01"]
+    end
+    
+    it "transmogrifies the processor create object options for the cores attribute" do
+      SoftLayer::BareMetalServerOrder.core_options(client).should == [2, 4, 8, 16]
+    end
+
+    it "transmogrifies the blockDevices options for the disks attribute" do
+      SoftLayer::BareMetalServerOrder.disk_options(client).should == [250, 500]
+    end
+
+    it "transmogrifies the operatingSystems create object options for the os_reference_code attribute" do
+      SoftLayer::BareMetalServerOrder.os_reference_code_options(client).should == ["CENTOS_5_32", "CENTOS_5_64", "CENTOS_6_32", "CENTOS_6_64", "CLOUDLINUX_5_32", "CLOUDLINUX_5_64", "CLOUDLINUX_6_32", "CLOUDLINUX_6_64", "DEBIAN_6_32", "DEBIAN_6_64", "DEBIAN_7_32", "DEBIAN_7_64", "ESXI_5_64", "ESX_4_64", "FREEBSD_10_32", "FREEBSD_10_64", "FREEBSD_8_32", "FREEBSD_8_64", "FREEBSD_9_32", "FREEBSD_9_64", "REDHAT_5_32", "REDHAT_5_64", "REDHAT_6_32", "REDHAT_6_64", "UBUNTU_10_32", "UBUNTU_10_64", "UBUNTU_12_32", "UBUNTU_12_64", "UBUNTU_8_32", "UBUNTU_8_64", "VYATTACE_6.5R1_64", "VYATTACE_6.6R1_64", "VYATTASE_6.6R2_64", "WIN_2003-DC-SP2-1_32", "WIN_2003-DC-SP2-1_64", "WIN_2003-ENT-SP2-5_32", "WIN_2003-ENT-SP2-5_64", "WIN_2003-STD-SP2-5_32", "WIN_2003-STD-SP2-5_64", "WIN_2008-DC-R2_64", "WIN_2008-DC-SP2_32", "WIN_2008-DC-SP2_64", "WIN_2008-ENT-R2_64", "WIN_2008-ENT-SP2_32", "WIN_2008-ENT-SP2_64", "WIN_2008-STD-R2-SP1_64", "WIN_2008-STD-R2_64", "WIN_2008-STD-SP2_32", "WIN_2008-STD-SP2_64", "WIN_2012-DC_64", "WIN_2012-STD_64", "XENSERVER_5.5_64", "XENSERVER_5.6_64", "XENSERVER_6.0_64", "XENSERVER_6.1_64", "XENSERVER_6.2_64"]
+    end
+
+    it "transmogrifies the networkComponents create object options for the max_port_speed attribute" do
+      SoftLayer::BareMetalServerOrder.max_port_speed_options(client).should == [10, 100, 1000]
+    end
   end
 
 end

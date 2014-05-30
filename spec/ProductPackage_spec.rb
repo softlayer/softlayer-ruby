@@ -31,8 +31,6 @@ describe SoftLayer::ProductPackage do
     client = SoftLayer::Client.new(:username => "fake_user", :api_key => "BADKEY")
     product_package_service = client['Product_Package']
 
-    puts "service is #{product_package_service.object_id}"
-
     expect(product_package_service).to receive(:call_softlayer_api_with_params) do |method_name, parameters, args|
       method_name.should be(:getAllObjects)
       parameters.server_object_filter.should_not be_nil

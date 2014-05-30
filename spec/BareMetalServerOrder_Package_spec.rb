@@ -27,16 +27,16 @@ require 'softlayer_api'
 require 'rspec'
 require 'uri'
 
-describe SoftLayer::BareMetalServerPackageOrder do
+describe SoftLayer::BareMetalServerOrder_Package do
   before(:each) do
-    SoftLayer::BareMetalServerPackageOrder.send(:public, *SoftLayer::BareMetalServerPackageOrder.protected_instance_methods)
+    SoftLayer::BareMetalServerOrder_Package.send(:public, *SoftLayer::BareMetalServerOrder_Package.protected_instance_methods)
   end
 
   let (:test_order) do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
 
     package = SoftLayer::ProductPackage.new(client, {'id' => 42})
-    SoftLayer::BareMetalServerPackageOrder.new(client, package)
+    SoftLayer::BareMetalServerOrder_Package.new(client, package)
   end
 
   it 'places the package id from which it was ordered into the order template' do
@@ -107,7 +107,7 @@ describe SoftLayer::BareMetalServerPackageOrder do
     order_service = client["Product_Order"]
     order_service.stub(:call_softlayer_api_with_params)
 
-    test_order = SoftLayer::BareMetalServerPackageOrder.new(client, package)
+    test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
     test_order.location = 'FIRST_AVAILABLE'
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
@@ -124,7 +124,7 @@ describe SoftLayer::BareMetalServerPackageOrder do
     order_service = client["Product_Order"]
     order_service.stub(:call_softlayer_api_with_params)
 
-    test_order = SoftLayer::BareMetalServerPackageOrder.new(client, package)
+    test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
     test_order.location = 'FIRST_AVAILABLE'
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
@@ -141,7 +141,7 @@ describe SoftLayer::BareMetalServerPackageOrder do
     order_service = client["Product_Order"]
     order_service.stub(:call_softlayer_api_with_params)
 
-    test_order = SoftLayer::BareMetalServerPackageOrder.new(client, package)
+    test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
     test_order.location = 'FIRST_AVAILABLE'
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
@@ -159,7 +159,7 @@ describe SoftLayer::BareMetalServerPackageOrder do
     order_service = client["Product_Order"]
     order_service.stub(:call_softlayer_api_with_params)
 
-    test_order = SoftLayer::BareMetalServerPackageOrder.new(client, package)
+    test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
     test_order.location = 'FIRST_AVAILABLE'
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"

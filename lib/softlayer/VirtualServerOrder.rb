@@ -73,25 +73,9 @@ module SoftLayer
     # Optional attributes
     #++
 
-    # Boolean, If true, an hourly server will be ordered, otherwise a monthly server will be ordered
-    # Corresponds to +hourlyBillingFlag+ in the +createObject+ documentation
-    attr_accessor :hourly
-
-    # Boolean, If true the server will use a virtual hard drive, if false, data will be stored on a SAN disk
-    # Corresponds to +localDiskFlag+ in the +createObject+ documentation
-    attr_accessor :use_local_disk
-
     # Boolean, If true, the virtual server will reside only on hosts with instances from this same account
     # Corresponds to +dedicatedAccountHostOnlyFlag+ in the +createObject+ documentation
     attr_accessor :dedicated_host_only
-
-    # Integer, The id of the public VLAN this server should join
-    # Corresponds to +primaryNetworkComponent.networkVlan.id+ in the +createObject+ documentation
-    attr_accessor :public_vlan_id
-
-    # Integer, The id of the private VLAN this server should join
-    # Corresponds to +primaryBackendNetworkComponent.networkVlan.id+ in the +createObject+ documentation
-    attr_accessor :private_vlan_id
 
     # Array of Integer, Sizes (in gigabytes... so use 25 to get a 25GB disk) of disks to attach to this server
     # This roughly Corresponds to +blockDevices+ field in the +createObject+ documentation.
@@ -99,24 +83,40 @@ module SoftLayer
     # more configuration options
     attr_accessor :disks
 
-    # Array of Strings, SSH keys to add to the root user's account.
-    # Corresponds to +sshKeys+ in the +createObject+ documentation
-    attr_accessor :ssh_key_ids
+    # Boolean, If true, an hourly server will be ordered, otherwise a monthly server will be ordered
+    # Corresponds to +hourlyBillingFlag+ in the +createObject+ documentation
+    attr_accessor :hourly
 
-    # String, The URI of a post provisioning script to run on this server once it is created
-    attr_accessor :provision_script_URI
+    # Integer (Should be 10, 100, or 1000), The maximum network interface card speed (in Mbps) for the new instance
+    # Corresponds to +networkComponents.maxSpeed+ in the +createObject+ documentation
+    attr_accessor :max_port_speed
 
     # Boolean, If true then the virtual server will only have a private network interface (and no public network interface)
     # Corresponds to +userData.value+ in the +createObject+ documentation
     attr_accessor :private_network_only
 
+    # Integer, The id of the private VLAN this server should join
+    # Corresponds to +primaryBackendNetworkComponent.networkVlan.id+ in the +createObject+ documentation
+    attr_accessor :private_vlan_id
+
+    # String, The URI of a post provisioning script to run on this server once it is created
+    attr_accessor :provision_script_URI
+
+    # Integer, The id of the public VLAN this server should join
+    # Corresponds to +primaryNetworkComponent.networkVlan.id+ in the +createObject+ documentation
+    attr_accessor :public_vlan_id
+
+    # Array of Strings, SSH keys to add to the root user's account.
+    # Corresponds to +sshKeys+ in the +createObject+ documentation
+    attr_accessor :ssh_key_ids
+
+    # Boolean, If true the server will use a virtual hard drive, if false, data will be stored on a SAN disk
+    # Corresponds to +localDiskFlag+ in the +createObject+ documentation
+    attr_accessor :use_local_disk
+
     # String, User metadata associated with the instance
     # Corresponds to +primaryBackendNetworkComponent.networkVlan.id+ in the +createObject+ documentation
     attr_accessor :user_metadata
-
-    # Integer (Should be 10, 100, or 1000), The maximum network interface card speed (in Mbps) for the new instance
-    # Corresponds to +networkComponents.maxSpeed+ in the +createObject+ documentation
-    attr_accessor :max_port_speed
 
     # Create a new order that works thorugh the given client connection
     def initialize (client)
@@ -215,31 +215,37 @@ module SoftLayer
     #++
 
     ##
-    # Return a list of values that are valid for the :cores attribute in a Virtual Server order.
+    # Return a list of values that are valid for the :datacenter attribute
+    def self.datacenter_options(client)
+      create_object_options(client)["datacenters"].collect { |datacenter_spec| datacenter_spec['template']['datacenter']["name"] }.uniq.sort!
+    end
+
+    ##
+    # Return a list of values that are valid for the :cores attribute
     def self.core_options(client)
       create_object_options(client)["processors"].collect { |processor_spec| processor_spec['template']['startCpus'] }.uniq.sort!
     end
 
     ##
-    # Return a list of values that are valid for the :memory attribute in a Virtual Server order.
+    # Return a list of values that are valid for the :memory attribute
     def self.memory_options(client)
       create_object_options(client)["memory"].collect { |memory_spec| memory_spec['template']['maxMemory'].to_i / 1024}.uniq.sort!
     end
 
     ##
-    # Return a list of values that are valid the array given to the :disks attribute of a Virtual Server order
+    # Return a list of values that are valid the array given to the :disks
     def self.disk_options(client)
       create_object_options(client)["blockDevices"].collect { |block_device_spec| block_device_spec['template']['blockDevices'][0]['diskImage']['capacity']}.uniq.sort!
     end
 
     ##
-    # Returns a list of the os_refrence_codes that are valid in a Virtual Server Order.
+    # Returns a list of the valid :os_refrence_codes
     def self.os_reference_code_options(client)
       create_object_options(client)["operatingSystems"].collect { |os_spec| os_spec['template']['operatingSystemReferenceCode'] }.uniq.sort!
     end
 
     ##
-    # Returns a list of the max_port_speeds that are valid in a Virtual Server Order.
+    # Returns a list of the :max_port_speeds
     def self.max_port_speed_options(client)
       create_object_options(client)["networkComponents"].collect { |component_spec| component_spec['template']['networkComponents'][0]['maxSpeed'] }
     end

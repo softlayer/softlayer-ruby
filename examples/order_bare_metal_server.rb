@@ -27,7 +27,7 @@ require 'softlayer_api'
 require 'pp'
 
 # This example walks through the process putting together an order for
-# a bare metal server using the SoftLayer::BareMetalServerPackageOrder class.
+# a bare metal server using the SoftLayer::BareMetalServerOrder_Package class.
 #
 # The script uses verify_order to ensure the order constructed is
 # valid. If you actually wanted to place an order for a server
@@ -55,7 +55,7 @@ def tl_dr_version
   config_options['server'] = 1417 # price id of Quad Processor Quad Core Intel 7420 - 2.13GHz (Dunnington) - 4 x 6MB / 8MB cache
 
   # With all the config options in place we can now construct the product order.
-  server_order = SoftLayer::BareMetalServerPackageOrder.new(client, quad_intel_package)
+  server_order = SoftLayer::BareMetalServerOrder_Package.new(client, quad_intel_package)
   server_order.location = 'FIRST_AVAILABLE'
   server_order.hostname = 'sample'
   server_order.domain = 'softlayer_api.org'
@@ -136,7 +136,7 @@ begin
   quad_intel_package.locations.each { |location| printf "%#{max_key_length}s\t\t#{location[:description]}\n",location[:keyname]}
 
   # With all the config options in place we can now construct the product order.
-  server_order = SoftLayer::BareMetalServerPackageOrder.new(client, quad_intel_package)
+  server_order = SoftLayer::BareMetalServerOrder_Package.new(client, quad_intel_package)
   server_order.location = 'FIRST_AVAILABLE'
   server_order.hostname = 'sample'
   server_order.domain = 'softlayer_api.org'

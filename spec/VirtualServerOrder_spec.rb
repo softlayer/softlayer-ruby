@@ -242,7 +242,7 @@ describe SoftLayer::VirtualServerOrder do
     test_order.place_order!() { |order_template| substituted_order_template }
   end
 
-  describe "class methods" do
+  describe "methods returning available options for attributes" do
     let (:client) do
       client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
       virtual_guest_service = client["Virtual_Guest"]
@@ -260,24 +260,28 @@ describe SoftLayer::VirtualServerOrder do
       fake_options = fixture_from_json("Virtual_Guest_createObjectOptions")
       SoftLayer::VirtualServerOrder.create_object_options(client).should == fake_options
     end
+
+    it "transmogrifies the datacenter options for the cores attribute" do
+      SoftLayer::VirtualServerOrder.datacenter_options(client).should == ["ams01", "dal01", "dal05", "dal06", "sea01", "sjc01", "sng01", "wdc01"]
+    end
     
-    it "transmogrifies the processor create object options for the cores attribute" do
+    it "transmogrifies the processor options for the cores attribute" do
       SoftLayer::VirtualServerOrder.core_options(client).should == [1, 2, 4, 8, 12, 16]
     end
 
-    it "transmogrifies the memory create object options for the memory attribute" do
+    it "transmogrifies the memory options for the memory attribute" do
       SoftLayer::VirtualServerOrder.memory_options(client).should == [1, 2, 4, 6, 8, 12, 16, 32, 48, 64]
     end
 
-    it "transmogrifies the blockDevices create object options for the disks attribute" do
+    it "transmogrifies the blockDevices options for the disks attribute" do
       SoftLayer::VirtualServerOrder.disk_options(client).should == [10, 20, 25, 30, 40, 50, 75, 100, 125, 150, 175, 200, 250, 300, 350, 400, 500, 750, 1000, 1500, 2000]
     end
 
-    it "transmogrifies the operatingSystems create object options for the os_reference_code attribute" do
+    it "transmogrifies the operatingSystems options for the os_reference_code attribute" do
       SoftLayer::VirtualServerOrder.os_reference_code_options(client).should == ["CENTOS_5_32", "CENTOS_5_64", "CENTOS_6_32", "CENTOS_6_64", "CLOUDLINUX_5_32", "CLOUDLINUX_5_64", "CLOUDLINUX_6_32", "CLOUDLINUX_6_64", "DEBIAN_5_32", "DEBIAN_5_64", "DEBIAN_6_32", "DEBIAN_6_64", "DEBIAN_7_32", "DEBIAN_7_64", "REDHAT_5_32", "REDHAT_5_64", "REDHAT_6_32", "REDHAT_6_64", "UBUNTU_10_32", "UBUNTU_10_64", "UBUNTU_12_32", "UBUNTU_12_64", "UBUNTU_8_32", "UBUNTU_8_64", "VYATTACE_6.5_64", "VYATTACE_6.6_64", "WIN_2003-DC-SP2-1_32", "WIN_2003-DC-SP2-1_64", "WIN_2003-ENT-SP2-5_32", "WIN_2003-ENT-SP2-5_64", "WIN_2003-STD-SP2-5_32", "WIN_2003-STD-SP2-5_64", "WIN_2008-DC-R2_64", "WIN_2008-DC-SP2_64", "WIN_2008-ENT-R2_64", "WIN_2008-ENT-SP2_32", "WIN_2008-ENT-SP2_64", "WIN_2008-STD-R2-SP1_64", "WIN_2008-STD-R2_64", "WIN_2008-STD-SP2_32", "WIN_2008-STD-SP2_64", "WIN_2012-DC_64", "WIN_2012-STD_64"]
     end
 
-    it "transmogrifies the networkComponents create object options for the max_port_speed attribute" do
+    it "transmogrifies the networkComponents options for the max_port_speed attribute" do
       SoftLayer::VirtualServerOrder.max_port_speed_options(client).should == [10, 100, 1000]
     end
   end

@@ -22,26 +22,23 @@
 
 module SoftLayer
   #
-  # A Bare Metal Instance is a hardware server which is ordered
-  # using options similar to ones used to order a virtual server.
-  # As such, the order does not offer the same level of customization
-  # that a Bare Metal Server order might provide. However it allows
-  # you to take advantage of the power and speed of dedicated hardware
-  # with the ease of ordering a virtual server.
+  # This class allows you to order a Bare Metal Server by providing
+  # a simple set of attributes for the newly created server. The
+  # SoftLayer system will select a server that matches the attributes
+  # provided and provision it or will report an error.
   #
-  # If you wish to order hardware with greater control over the
-  # configuration see BareMetalServerPackageOrder
+  # If you wish to have more exacting control over the set of options
+  # that go into configuring the server, please see the
+  # BareMetalServerOrder_Package class.
   #
-  # This class makes use of SoftLayer_Hardware::createObject to configure
-  # and order a Bare Metal Instance.
+  # This class creates the server with the SoftLayer_Hardware::createObject 
+  # method.
   #
   # http://sldn.softlayer.com/reference/services/SoftLayer_Hardware/createObject
   #
-  # +createObject+ allows you to order a server by providing a simple
-  # a simple set of attributes, avoiding much of the complexity of the
-  # SoftLayer ordering system (see BareMetalServerPackageOrder and ProductPackage)
+  # Reading that documentation may help you understand the options presented here.
   #
-  class BareMetalInstanceOrder
+  class BareMetalServerOrder
     #--
     # Required Attributes
     # -------------------
@@ -185,5 +182,40 @@ module SoftLayer
       template
     end
 
-  end # class BareMetalInstanceOrder
+    ##
+    # The first time this is called it requests SoftLayer_Hardware::getCreateObjectOptions
+    # from the API and remembers the result. On subsequent calls it returns the remembered result.
+    def self.create_object_options(client)
+      @@create_object_options ||= client["Hardware"].getCreateObjectOptions()
+    end
+    
+    ##
+    # Return a list of values that are valid for the :datacenter attribute
+    def self.datacenter_options(client)
+      create_object_options(client)["datacenters"].collect { |datacenter_spec| datacenter_spec['template']['datacenter']["name"] }.uniq.sort!
+    end
+    
+    def self.core_options(client)
+      create_object_options(client)["processors"].collect { |processor_spec| processor_spec['template']['processorCoreAmount'] }.uniq.sort!
+    end
+
+    ##
+    # Return a list of values that are valid the array given to the :disks
+    def self.disk_options(client)
+      create_object_options(client)["hardDrives"].collect { |disk_spec| disk_spec['template']['hardDrives'][0]['capacity'].to_i}.uniq.sort!
+    end
+
+    ##
+    # Returns a list of the valid :os_refrence_codes
+    def self.os_reference_code_options(client)
+      create_object_options(client)["operatingSystems"].collect { |os_spec| os_spec['template']['operatingSystemReferenceCode'] }.uniq.sort!
+    end
+
+    ##
+    # Returns a list of the :max_port_speeds
+    def self.max_port_speed_options(client)
+      create_object_options(client)["networkComponents"].collect { |component_spec| component_spec['template']['networkComponents'][0]['maxSpeed'] }
+    end    
+
+  end # class BareMetalServerOrder
 end # module SoftLayer
