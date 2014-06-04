@@ -32,9 +32,9 @@ describe SoftLayer::ProductPackage do
     product_package_service = client['Product_Package']
 
     expect(product_package_service).to receive(:call_softlayer_api_with_params) do |method_name, parameters, args|
-      method_name.should be(:getAllObjects)
-      parameters.server_object_filter.should_not be_nil
-      args.should be_empty
+      expect(method_name).to be(:getAllObjects)
+      expect(parameters.server_object_filter).to_not be_nil
+      expect(args).to be_empty
 
       []
     end

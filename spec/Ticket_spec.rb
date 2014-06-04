@@ -34,7 +34,7 @@ describe SoftLayer::Ticket do
 
 	  mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key=> 'fakekey')
       allow(mock_client).to receive(:[]) do |service_name|
-        service_name.should == "Ticket_Subject"
+        expect(service_name).to eq "Ticket_Subject"
 
         mock_service = SoftLayer::Service.new("SoftLayer_Ticket_Subject", :client => mock_client)
         expect(mock_service).to receive(:getAllObjects).once.and_return(fakeTicketSubjects)
@@ -43,10 +43,10 @@ describe SoftLayer::Ticket do
         mock_service
       end
 
-      SoftLayer::Ticket.ticket_subjects(mock_client).should be(fakeTicketSubjects)
+      expect(SoftLayer::Ticket.ticket_subjects(mock_client)).to be(fakeTicketSubjects)
 
       # call for the subjects again which should NOT re-request them from the client
       # (so :getAllObjects on the service should not be called again)
-      SoftLayer::Ticket.ticket_subjects(mock_client).should be(fakeTicketSubjects)
+      expect(SoftLayer::Ticket.ticket_subjects(mock_client)).to be(fakeTicketSubjects)
 	end
 end

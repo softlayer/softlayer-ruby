@@ -31,8 +31,8 @@ describe SoftLayer::APIParameterFilter do
 
   describe "#object_with_id" do
     it "initializes with empty properties" do
-      filter.server_object_id.should be_nil
-      filter.server_object_mask.should be_nil
+      expect(filter.server_object_id).to be_nil
+      expect(filter.server_object_mask).to be_nil
     end
 
     it "rejects nil object masks" do
@@ -41,14 +41,14 @@ describe SoftLayer::APIParameterFilter do
 
     it "stores its value in server_object_id when called " do
       result = filter.object_with_id(12345)
-      result.server_object_id.should eql(12345)
-      result.parameters.should eql({:server_object_id => 12345})
+      expect(result.server_object_id).to eq 12345
+      expect(result.parameters).to eq({:server_object_id => 12345})
     end
 
     it "allows call chaining with object_mask " do
       result = filter.object_with_id(12345).object_mask("mask.fish", "mask.cow", "mask.duck")
-      result.server_object_id.should == 12345
-      result.server_object_mask.to_s.should == "mask[fish,cow,duck]"
+      expect(result.server_object_id).to eq 12345
+      expect(result.server_object_mask.to_s).to eq "mask[fish,cow,duck]"
     end
   end
 
@@ -67,23 +67,23 @@ describe SoftLayer::APIParameterFilter do
       masked_filter = nil
 
       expect { masked_filter = filter.object_mask("[mask.firstProperty, mask.secondProperty]") }.to_not raise_error
-      masked_filter.server_object_mask.should == "mask[firstProperty,secondProperty]"
+      expect(masked_filter.server_object_mask).to eq "mask[firstProperty,secondProperty]"
     end
 
     it "stores its value in server_object_mask when called" do
       result = filter.object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]")
-      result.server_object_mask.should == '[mask[fish,cow],mask(typed)[duck,chicken]]'
+      expect(result.server_object_mask).to eq '[mask[fish,cow],mask(typed)[duck,chicken]]'
     end
 
     it "allows call chaining with object_with_id" do
       result = filter.object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]").object_with_id(12345)
-      result.server_object_id.should == 12345
-      result.server_object_mask.should == "[mask[fish,cow],mask(typed)[duck,chicken]]"
+      expect(result.server_object_id).to eq 12345
+      expect(result.server_object_mask).to eq "[mask[fish,cow],mask(typed)[duck,chicken]]"
     end
 
     it "allows call chaining with other object masks" do
       result = filter.object_mask("mask.fish").object_mask("mask[cow]").object_mask("mask(typed).duck").object_mask("mask(typed)[chicken]")
-      result.server_object_mask.should == "[mask[fish,cow],mask(typed)[duck,chicken]]"
+      expect(result.server_object_mask).to eq "[mask[fish,cow],mask(typed)[duck,chicken]]"
     end
   end
 
@@ -97,7 +97,7 @@ describe SoftLayer::APIParameterFilter do
       test_filter["fish"] = "cow"
 
       result = filter.object_filter(test_filter)
-      result.server_object_filter.should == {"fish" => "cow"}
+      expect(result.server_object_filter).to eq({"fish" => "cow"})
     end
   end
 
@@ -106,7 +106,7 @@ describe SoftLayer::APIParameterFilter do
       target = double("method_missing_target")
 
       filter = SoftLayer::APIParameterFilter.new(target).object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]").object_with_id(12345)
-      target.should_receive(:call_softlayer_api_with_params).with(:getObject, filter, ["marshmallow"])
+      expect(target).to receive(:call_softlayer_api_with_params).with(:getObject, filter, ["marshmallow"])
 
       filter.getObject("marshmallow")
     end

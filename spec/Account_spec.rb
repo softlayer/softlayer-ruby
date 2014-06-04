@@ -30,21 +30,21 @@ require 'spec_helper'
 
 describe SoftLayer::Account do
 	it "should exist" do
-		SoftLayer::Account.should_not be_nil
+		expect(SoftLayer::Account).to_not be_nil
 	end
 
   it "should return its initialization id as the account_id" do
     test_account = SoftLayer::Account.new(nil, "id" => "232279", "firstName" => "kangaroo")
-    test_account.account_id.should eq("232279")
+    expect(test_account.account_id).to eq("232279")
 
     another_test_acct = SoftLayer::Account.new(nil, :id => "232279", "firstName" => "kangaroo")
-    test_account.account_id.should eq("232279")
+    expect(test_account.account_id).to eq("232279")
   end
 
   it "should allow the user to get the default account for a service" do
     test_client = double("mockClient")
     allow(test_client).to receive(:[]) do |service_name|
-      service_name.should == "Account"
+      expect(service_name).to eq "Account"
 
       test_service = double("mockService")
       allow(test_service).to receive(:getObject) do
@@ -55,10 +55,10 @@ describe SoftLayer::Account do
     end
 
     test_account = SoftLayer::Account.account_for_client(test_client)
-    test_account.softlayer_client.should eq(test_client)
-    test_account.account_id.should eq("232279")
-    test_account.id.should eq("232279")
-    test_account.firstName.should eq("kangaroo")
+    expect(test_account.softlayer_client).to eq(test_client)
+    expect(test_account.account_id).to eq("232279")
+    expect(test_account.id).to eq("232279")
+    expect(test_account.firstName).to eq("kangaroo")
   end
 
   describe "relationship to servers" do
@@ -69,7 +69,7 @@ describe SoftLayer::Account do
 
       @mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
       allow(@mock_client).to receive(:[]) do |service_name|
-        service_name.should == "Account"
+        expect(service_name).to eq "Account"
 
         if !@mock_service
           @mock_service = SoftLayer::Service.new("SoftLayer_Account", :client => @mock_client)
@@ -90,11 +90,11 @@ describe SoftLayer::Account do
     it "should respond to a request for servers" do
       test_account = SoftLayer::Account.account_for_client(@mock_client)
 
-      test_account.should respond_to(:servers)
-      test_account.should_not respond_to(:servers=)
+      expect(test_account).to respond_to(:servers)
+      expect(test_account).to_not respond_to(:servers=)
 
       servers = test_account.servers
-      servers.length.should eq(6)
+      expect(servers.length).to eq(6)
     end
   end
 
@@ -106,7 +106,7 @@ describe SoftLayer::Account do
 
       @mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
       allow(@mock_client).to receive(:[]) do |service_name|
-        service_name.should == "Account"
+        expect(service_name).to eq "Account"
 
         if !@mock_service
 
@@ -128,8 +128,8 @@ describe SoftLayer::Account do
 
     it "responds to a tickets request" do
       test_account = SoftLayer::Account.account_for_client(@mock_client)
-      test_account.should respond_to(:tickets)
-      test_account.should_not respond_to(:tickets=)
+      expect(test_account).to respond_to(:tickets)
+      expect(test_account).to_not respond_to(:tickets=)
 
       tickets = test_account.tickets
     end

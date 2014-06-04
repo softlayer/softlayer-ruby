@@ -31,6 +31,6 @@ describe SoftLayer::Config do
 		ENV.store("SL_USERNAME", "PoohBear")
 		ENV.store("SL_API_KEY", "DEADBEEFBADF00D")
 
-		SoftLayer::Config.environment_settings.should == { :username => "PoohBear", :api_key => "DEADBEEFBADF00D" }
+		expect(SoftLayer::Config.environment_settings).to eq({ :username => "PoohBear", :api_key => "DEADBEEFBADF00D" })
 	end
 end

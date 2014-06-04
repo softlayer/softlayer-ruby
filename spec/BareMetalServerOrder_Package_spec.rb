@@ -40,30 +40,30 @@ describe SoftLayer::BareMetalServerOrder_Package do
   end
 
   it 'places the package id from which it was ordered into the order template' do
-    test_order.hardware_order["packageId"].should == 42
+    expect(test_order.hardware_order["packageId"]).to eq 42
   end
 
   it "places its :location attribute into the order template" do
-    test_order.hardware_order["location"].should be_nil
+    expect(test_order.hardware_order["location"]).to be_nil
     test_order.location = "FIRST_AVAILABLE"
-    test_order.hardware_order["location"].should == "FIRST_AVAILABLE"
+    expect(test_order.hardware_order["location"]).to eq "FIRST_AVAILABLE"
   end
 
   it "places its :hostname attribute into the hardware template in the order" do
-    test_order.hardware_order['hardware']['hostname'].should be_nil
+    expect(test_order.hardware_order['hardware']['hostname']).to be_nil
     test_order.hostname = "testhostname"
-    test_order.hardware_order['hardware']['hostname'].should == "testhostname"
+    expect(test_order.hardware_order['hardware']['hostname']).to eq "testhostname"
   end
 
   it "places its :domain attribute into into the hardware template in the order" do
-    test_order.hardware_order['hardware']['domain'].should be_nil
+    expect(test_order.hardware_order['hardware']['domain']).to be_nil
     test_order.domain = "softlayer.com"
-    test_order.hardware_order['hardware']['domain'].should == "softlayer.com"
+    expect(test_order.hardware_order['hardware']['domain']).to eq "softlayer.com"
   end
 
   it "places config options as prices in the order" do
     test_order.configuration_options = {'os' => 1, 'ram' => 2}
-    test_order.hardware_order['prices'].should == [{'id' => 1}, {'id' => 2}]
+    expect(test_order.hardware_order['prices']).to eq([{'id' => 1}, {'id' => 2}])
   end
 
   it "allows config options to be objects that respond to price_id" do
@@ -79,25 +79,25 @@ describe SoftLayer::BareMetalServerOrder_Package do
     end
 
     test_order.configuration_options = {'os' => config_option_1, 'ram' => config_option_2}
-    test_order.hardware_order['prices'].should == [{'id' => 1}, {'id' => 2}]
+    expect(test_order.hardware_order['prices']).to eq([{'id' => 1}, {'id' => 2}])
   end
 
   it "places its :ssh_key_ids attribute into into order" do
-    test_order.hardware_order['sshKeys'].should be_nil
+    expect(test_order.hardware_order['sshKeys']).to be_nil
     test_order.ssh_key_ids = [123, 456, 789]
-    test_order.hardware_order['sshKeys'].should == [{ 'sshKeyIds' => [123, 456, 789]}]
+    expect(test_order.hardware_order['sshKeys']).to eq([{ 'sshKeyIds' => [123, 456, 789]}])
   end
 
   it "places its :provision_script_URI attribute into into order" do
-    test_order.hardware_order['provisionScripts'].should be_nil
+    expect(test_order.hardware_order['provisionScripts']).to be_nil
     test_order.provision_script_URI = 'https://testprovision.mydomain.org/fancyscript.sh'
-    test_order.hardware_order['provisionScripts'].should == ['https://testprovision.mydomain.org/fancyscript.sh']
+    expect(test_order.hardware_order['provisionScripts']).to eq ['https://testprovision.mydomain.org/fancyscript.sh']
   end
 
   it "allows a URI object to be provided as the :provision_script_URI" do
-    test_order.hardware_order['provisionScripts'].should be_nil
+    expect(test_order.hardware_order['provisionScripts']).to be_nil
     test_order.provision_script_URI = URI.parse('https://testprovision.mydomain.org/fancyscript.sh')
-    test_order.hardware_order['provisionScripts'].should == ['https://testprovision.mydomain.org/fancyscript.sh']
+    expect(test_order.hardware_order['provisionScripts']).to eq ['https://testprovision.mydomain.org/fancyscript.sh']
   end
 
   it "calls the softlayer API to verify an order" do
@@ -105,7 +105,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     package = SoftLayer::ProductPackage.new(client, {'id' => 42})
 
     order_service = client["Product_Order"]
-    order_service.stub(:call_softlayer_api_with_params)
+    allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
     test_order.location = 'FIRST_AVAILABLE'
@@ -122,7 +122,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     package = SoftLayer::ProductPackage.new(client, {'id' => 42})
 
     order_service = client["Product_Order"]
-    order_service.stub(:call_softlayer_api_with_params)
+    allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
     test_order.location = 'FIRST_AVAILABLE'
@@ -139,7 +139,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     package = SoftLayer::ProductPackage.new(client, {'id' => 42})
 
     order_service = client["Product_Order"]
-    order_service.stub(:call_softlayer_api_with_params)
+    allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
     test_order.location = 'FIRST_AVAILABLE'
@@ -157,7 +157,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     package = SoftLayer::ProductPackage.new(client, {'id' => 42})
 
     order_service = client["Product_Order"]
-    order_service.stub(:call_softlayer_api_with_params)
+    allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
     test_order.location = 'FIRST_AVAILABLE'

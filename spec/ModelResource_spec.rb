@@ -46,11 +46,11 @@ describe SoftLayer::ModelResource do
     end
 
     it "defines ::softlayer_resource in the class" do
-      TestClass.should respond_to(:softlayer_resource)
+      expect(TestClass).to respond_to(:softlayer_resource)
     end
 
     it "defines ::softlayer_resource_definition in the class" do
-      TestClass.should respond_to(:softlayer_resource_definition)
+      expect(TestClass).to respond_to(:softlayer_resource_definition)
     end
   end
 
@@ -63,24 +63,24 @@ describe SoftLayer::ModelResource do
     end
 
     it "adds a resource definition" do
-      TestClass.softlayer_resource_definition(:test_resource).should_not be_nil
+      expect(TestClass.softlayer_resource_definition(:test_resource)).to_not be_nil
     end
 
     it "adds a resource getter to instances" do
       sample_instance = TestClass.new()
-      sample_instance.should respond_to(:test_resource)
+      expect(sample_instance).to respond_to(:test_resource)
 
-      sample_instance.test_resource.should be_nil
+      expect(sample_instance.test_resource).to be_nil
     end
 
     it "adds a predicate to check for updates" do
       sample_instance = TestClass.new()
-      sample_instance.should respond_to(:should_update_test_resource?)
+      expect(sample_instance).to respond_to(:should_update_test_resource?)
     end
 
     it "adds a method to perform updates" do
       sample_instance = TestClass.new()
-      sample_instance.should respond_to(:update_test_resource!)
+      expect(sample_instance).to respond_to(:update_test_resource!)
     end
   end
 
@@ -103,12 +103,12 @@ describe SoftLayer::ModelResource do
     it "should obtain an updated value when called" do
       sample_instance = TestClass.new
 
-      sample_instance.instance_variable_defined?(:@test_resource).should be_false
+      expect(sample_instance.instance_variable_defined?(:@test_resource)).to be(false)
 
-      sample_instance.should_receive(:method_in_test_class_instance_context)
-      sample_instance.test_resource.should == "Value update accomplished!"
-      sample_instance.instance_variable_defined?(:@test_resource).should be_true
-      sample_instance.instance_variable_get(:@test_resource).should == "Value update accomplished!"
+      expect(sample_instance).to receive(:method_in_test_class_instance_context)
+      expect(sample_instance.test_resource).to eq "Value update accomplished!"
+      expect(sample_instance.instance_variable_defined?(:@test_resource)).to be(true)
+      expect(sample_instance.instance_variable_get(:@test_resource)).to eq "Value update accomplished!"
     end
   end
 
@@ -134,10 +134,10 @@ describe SoftLayer::ModelResource do
       sample_instance = TestClass.new
       last_update = sample_instance.test_resource
       next_update = sample_instance.test_resource
-      next_update.should == last_update
+      expect(next_update).to eq last_update
       sleep(0.75)
       final_update = sample_instance.test_resource
-      final_update.should_not == last_update
+      expect(final_update).to_not eq last_update
     end
   end
 
@@ -152,8 +152,8 @@ describe SoftLayer::ModelResource do
     end
 
     it "has valid initial values" do
-      test_definition.resource_name.should be(:test_resource)
-      test_definition.update_block.should_not be_nil
+      expect(test_definition.resource_name).to be(:test_resource)
+      expect(test_definition.update_block).to_not be_nil
     end
 
     it "allows DSL syntax" do
@@ -162,8 +162,8 @@ describe SoftLayer::ModelResource do
         "test_resource value!"
       end
 
-      test_definition.update_block.call.should == "test_resource value!"
-      test_definition.should_update_block.call.should == "Yea!"
+      expect(test_definition.update_block.call).to eq "test_resource value!"
+      expect(test_definition.should_update_block.call).to eq "Yea!"
     end
   end
 end

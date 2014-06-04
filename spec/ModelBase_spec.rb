@@ -41,19 +41,19 @@ describe SoftLayer::ModelBase do
     it "remembers its first argument as the client" do
       mock_client = double("Mock SoftLayer Client")
       test_model = SoftLayer::ModelBase.new(mock_client, { :id => "12345"});
-      test_model.softlayer_client.should be(mock_client)
+      expect(test_model.softlayer_client).to be(mock_client)
     end
   end
 
   it "treats keys in its hash as methods returning the value of the key" do
     test_model = SoftLayer::ModelBase.new(nil, { :id => "12345", :kangaroo => "Fun"});
-    test_model.kangaroo.should == "Fun"
+    expect(test_model.kangaroo).to eq "Fun"
   end
 
   it "returns nil from to_ary" do
     test_model = SoftLayer::ModelBase.new(nil, { :id => "12345" })
-    test_model.should respond_to(:to_ary)
-    test_model.to_ary.should be_nil
+    expect(test_model).to respond_to(:to_ary)
+    expect(test_model.to_ary).to be_nil
   end
 
 end

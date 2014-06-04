@@ -31,22 +31,22 @@ describe SoftLayer::ObjectMaskParser, "#parse_property_set" do
     result = nil
     expect { result = subject.parse("mask.simple") }.to_not raise_error
 
-    result.name.should == 'mask'
-    result.children[0].name.should == 'simple'
+    expect(result.name).to eq 'mask'
+    expect(result.children[0].name).to eq 'simple'
   end
 
   it "should parse a simple mask set" do
     result = nil
     expect { result = subject.parse("[mask.simple1, mask.simple2]") }.to_not raise_error
 
-    result.count.should == 2
-    result[0].name.should == 'mask'
-    result[0].children.count.should == 1
-    result[0].children[0].name.should == "simple1"
+    expect(result.count).to eq 2
+    expect(result[0].name).to eq 'mask'
+    expect(result[0].children.count).to eq 1
+    expect(result[0].children[0].name).to eq "simple1"
 
-    result[1].name.should == 'mask'
-    result[1].children.count.should == 1
-    result[1].children[0].name.should == "simple2"
+    expect(result[1].name).to eq 'mask'
+    expect(result[1].children.count).to eq 1
+    expect(result[1].children[0].name).to eq "simple2"
   end
 
   it "should reject extraeous text" do
@@ -61,12 +61,12 @@ describe SoftLayer::ObjectMaskParser, "#parse_property_set" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("[propertyName]")
     sequence = subject.parse_property_set(tokenizer)
 
-    sequence.should be_kind_of(Array)
-    sequence.count.should == 1
+    expect(sequence).to be_kind_of(Array)
+    expect(sequence.count).to eq 1
 
     property = sequence[0]
-    property.should be_kind_of(SoftLayer::ObjectMaskProperty)
-    property.name.should == "propertyName"
+    expect(property).to be_kind_of(SoftLayer::ObjectMaskProperty)
+    expect(property.name).to eq "propertyName"
   end
 
   it "should fail if missing the starting bracket" do
@@ -85,28 +85,28 @@ describe SoftLayer::ObjectMaskParser, "#parse_property_sequence" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("propertyName")
     sequence = subject.parse_property_sequence(tokenizer)
 
-    sequence.should be_kind_of(Array)
-    sequence.count.should == 1
+    expect(sequence).to be_kind_of(Array)
+    expect(sequence.count).to eq 1
 
     property = sequence[0]
-    property.should be_kind_of(SoftLayer::ObjectMaskProperty)
-    property.name.should == "propertyName"
+    expect(property).to be_kind_of(SoftLayer::ObjectMaskProperty)
+    expect(property.name).to eq "propertyName"
   end
 
   it "should parse a two property sequence" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("propertyName,secondProperty")
     sequence = subject.parse_property_sequence(tokenizer)
 
-    sequence.should be_kind_of(Array)
-    sequence.count.should == 2
+    expect(sequence).to be_kind_of(Array)
+    expect(sequence.count).to eq 2
 
     property = sequence[0]
-    property.should be_kind_of(SoftLayer::ObjectMaskProperty)
-    property.name.should == "propertyName"
+    expect(property).to be_kind_of(SoftLayer::ObjectMaskProperty)
+    expect(property.name).to eq "propertyName"
 
     property = sequence[1]
-    property.should be_kind_of(SoftLayer::ObjectMaskProperty)
-    property.name.should == "secondProperty"
+    expect(property).to be_kind_of(SoftLayer::ObjectMaskProperty)
+    expect(property.name).to eq "secondProperty"
   end
 
   it "should reject an incomplete sequence" do
@@ -125,59 +125,59 @@ describe SoftLayer::ObjectMaskParser, "#parse_property" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("propertyName")
     property = subject.parse_property(tokenizer)
 
-    property.should be_kind_of(SoftLayer::ObjectMaskProperty)
-    property.name.should == "propertyName"
+    expect(property).to be_kind_of(SoftLayer::ObjectMaskProperty)
+    expect(property.name).to eq "propertyName"
   end
 
   it "should parse property with a type" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("propertyName(Property_Type)")
     property = subject.parse_property(tokenizer)
 
-    property.name.should == "propertyName"
-    property.type.should == "Property_Type"
+    expect(property.name).to eq "propertyName"
+    expect(property.type).to eq "Property_Type"
   end
 
   it "should parse property with a child" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("propertyName.childProperty")
     property = subject.parse_property(tokenizer)
 
-    property.name.should == "propertyName"
-    property.type.should be_nil
+    expect(property.name).to eq "propertyName"
+    expect(property.type).to be_nil
 
-    property.children.count.should == 1
-    property.children[0].name.should == "childProperty"
-    property.children[0].type.should be_nil
-    property.children[0].children.should be_empty
+    expect(property.children.count).to eq 1
+    expect(property.children[0].name).to eq "childProperty"
+    expect(property.children[0].type).to be_nil
+    expect(property.children[0].children).to be_empty
   end
 
   it "should parse property with property set" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("propertyName[firstChild,secondChild]")
     property = subject.parse_property(tokenizer)
 
-    property.name.should == "propertyName"
-    property.type.should be_nil
+    expect(property.name).to eq "propertyName"
+    expect(property.type).to be_nil
 
-    property.children.count.should == 2
-    property.children[0].name.should == "firstChild"
-    property.children[0].type.should be_nil
-    property.children[0].children.should be_empty
+    expect(property.children.count).to eq 2
+    expect(property.children[0].name).to eq "firstChild"
+    expect(property.children[0].type).to be_nil
+    expect(property.children[0].children).to be_empty
 
-    property.children[1].name.should == "secondChild"
-    property.children[1].type.should be_nil
-    property.children[1].children.should be_empty
+    expect(property.children[1].name).to eq "secondChild"
+    expect(property.children[1].type).to be_nil
+    expect(property.children[1].children).to be_empty
   end
 
   it "should parse property with type and dot-child" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("propertyName(Property_Type).firstChild")
     property = subject.parse_property(tokenizer)
 
-    property.name.should == "propertyName"
-    property.type.should == "Property_Type"
+    expect(property.name).to eq "propertyName"
+    expect(property.type).to eq "Property_Type"
 
-    property.children.count.should == 1
-    property.children[0].name.should == "firstChild"
-    property.children[0].type.should be_nil
-    property.children[0].children.should be_empty
+    expect(property.children.count).to eq 1
+    expect(property.children[0].name).to eq "firstChild"
+    expect(property.children[0].type).to be_nil
+    expect(property.children[0].children).to be_empty
   end
 
 end
@@ -186,7 +186,7 @@ describe SoftLayer::ObjectMaskParser, "#parse_property_name" do
   it "should parse a valid property name" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("propertyName")
     property_name = subject.parse_property_name(tokenizer)
-    property_name.should == "propertyName"
+    expect(property_name).to eq "propertyName"
   end
 
   it "should reject the empty string when looking for a property type name" do
@@ -212,7 +212,7 @@ describe SoftLayer::ObjectMaskParser, "#parse_property_type" do
     property_type = nil
     expect { property_type = subject.parse_property_type(tokenizer) }.to_not raise_error
 
-    property_type.should == "Valid_Property_Type"
+    expect(property_type).to eq "Valid_Property_Type"
   end
 
   it "should fail if you try to provide a type list" do
@@ -235,7 +235,7 @@ describe SoftLayer::ObjectMaskParser, "#parse_property_type_name" do
   it "should parse a valid property type name" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("Valid_Property_Type")
     property_type = subject.parse_property_type_name(tokenizer)
-    property_type.should == "Valid_Property_Type"
+    expect(property_type).to eq "Valid_Property_Type"
   end
 
   it "should reject the empty string when looking for a property type name" do

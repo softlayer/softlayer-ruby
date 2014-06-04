@@ -31,7 +31,7 @@ describe SoftLayer::Server do
 		mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "DEADBEEFBADF00D")
 		allow(mock_client).to receive(:[]) do |service_name|
 			service = mock_client.service_named(service_name)
-			service.stub(:call_softlayer_api_with_params)
+			allow(service).to receive(:call_softlayer_api_with_params)
 			service
 		end
 

@@ -34,7 +34,7 @@ describe SoftLayer::BareMetalServer do
 		allow(mock_client).to receive(:[]) do |service_name|
 			service = mock_client.service_named(service_name)
 			allow(service).to receive(:object_with_id).and_return(service)
-			service.stub(:call_softlayer_api_with_params)
+			allow(service).to receive(:call_softlayer_api_with_params)
 			service
 		end
 
@@ -42,7 +42,7 @@ describe SoftLayer::BareMetalServer do
 	end
 
 	it "identifies with the SoftLayer_Virtual_Guest service" do
-		sample_server.service.service_name.should == "SoftLayer_Hardware"
+		expect(sample_server.service.service_name).to eq "SoftLayer_Hardware"
 	end
 
 	it_behaves_like "server with port speed" do
@@ -52,11 +52,11 @@ describe SoftLayer::BareMetalServer do
 	it "can be cancelled" do
 		mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "DEADBEEFBADF00D")
 		allow(mock_client).to receive(:[]) do |service_name|
-			service_name.should == "Ticket"
+			expect(service_name).to eq "Ticket"
 
 			service = mock_client.service_named(service_name)
 			expect(service).to receive(:createCancelServerTicket).with(12345, 'Migrating to larger server', 'moving on up!', true, 'HARDWARE')
-			service.stub(:call_softlayer_api_with_params)
+			allow(service).to receive(:call_softlayer_api_with_params)
 			service
 		end
 

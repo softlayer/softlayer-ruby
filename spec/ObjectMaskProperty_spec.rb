@@ -29,44 +29,44 @@ require 'softlayer/ObjectMaskProperty'
 describe SoftLayer::ObjectMaskProperty do
   it "obtains a name when created" do
     property = SoftLayer::ObjectMaskProperty.new("propertyName")
-    property.name.should == "propertyName"
-    property.type.should be_nil
-    property.children.should == []
+    expect(property.name).to eq "propertyName"
+    expect(property.type).to be_nil
+    expect(property.children).to eq []
   end
 
   it "may obtain a type when created" do
       property = SoftLayer::ObjectMaskProperty.new("propertyName", "SomeType")
-      property.name.should == "propertyName"
-      property.type.should == "SomeType"
-      property.children.should == []
+      expect(property.name).to eq "propertyName"
+      expect(property.type).to eq "SomeType"
+      expect(property.children).to eq []
   end
 
   it "knows it can merge with properties that have the same name" do
     property1 = SoftLayer::ObjectMaskProperty.new("propertyName", nil)
     property2 = SoftLayer::ObjectMaskProperty.new("propertyName", nil)
 
-    property1.can_merge_with?(property2).should be_true
+    expect(property1.can_merge_with?(property2)).to be(true)
   end
 
   it "knows it can merge with properties that have the same name and type" do
     property1 = SoftLayer::ObjectMaskProperty.new("propertyName", "SomeType")
     property2 = SoftLayer::ObjectMaskProperty.new("propertyName", "SomeType")
 
-    property1.can_merge_with?(property2).should be_true
+    expect(property1.can_merge_with?(property2)).to be(true)
   end
 
   it "knows it cannot merge if the names don't match" do
     property1 = SoftLayer::ObjectMaskProperty.new("propertyName", nil)
     property2 = SoftLayer::ObjectMaskProperty.new("someOtherName", nil)
 
-    property1.can_merge_with?(property2).should be_false
+    expect(property1.can_merge_with?(property2)).to be(false)
   end
 
   it "knows it cannot merge if the types don't match" do
     property1 = SoftLayer::ObjectMaskProperty.new("propertyName", "SomeType")
     property2 = SoftLayer::ObjectMaskProperty.new("propertyName", "AnotherType")
 
-    property1.can_merge_with?(property2).should be_false
+    expect(property1.can_merge_with?(property2)).to be(false)
   end
 
   it "collects children" do
@@ -74,8 +74,8 @@ describe SoftLayer::ObjectMaskProperty do
     property2 = SoftLayer::ObjectMaskProperty.new("propertyName", "AnotherType")
 
     property1.add_children([property2])
-    property1.children.count.should == 1
-    property1.children[0].should == property2
+    expect(property1.children.count).to eq 1
+    expect(property1.children[0]).to eq property2
   end
 
   it "collects children" do
@@ -85,8 +85,8 @@ describe SoftLayer::ObjectMaskProperty do
     property1.add_children([property2])
     property1.add_children([property2])
 
-    property1.children.count.should == 1
-    property1.children[0].should == property2
+    expect(property1.children.count).to eq 1
+    expect(property1.children[0]).to eq property2
   end
 
   it "merges children" do
@@ -104,14 +104,14 @@ describe SoftLayer::ObjectMaskProperty do
     second_child.add_child(second_subchild)
     property2.add_child(second_child)
 
-    property1.can_merge_with?(property2).should be_true
+    expect(property1.can_merge_with?(property2)).to be(true)
     property1.add_children(property2.children)
 
-    property1.children.count.should == 1
+    expect(property1.children.count).to eq 1
     child = property1.children[0]
-    child.name.should == "child"
-    child.children.count.should == 2
-    child.children.should include(first_subchild)
-    child.children.should include(second_subchild)
+    expect(child.name).to eq "child"
+    expect(child.children.count).to eq 2
+    expect(child.children).to include(first_subchild)
+    expect(child.children).to include(second_subchild)
   end
 end

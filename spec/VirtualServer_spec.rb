@@ -34,7 +34,7 @@ describe SoftLayer::VirtualServer do
 		allow(mock_client).to receive(:[]) do |service_name|
 			service = mock_client.service_named(service_name)
 			allow(service).to receive(:object_with_id).and_return(service)
-			service.stub(:call_softlayer_api_with_params)
+			allow(service).to receive(:call_softlayer_api_with_params)
 			service
 		end
 
@@ -42,7 +42,7 @@ describe SoftLayer::VirtualServer do
 	}
 
 	it "identifies with the SoftLayer_Virtual_Guest service" do
-		sample_server.service.service_name.should == "SoftLayer_Virtual_Guest"
+		expect(sample_server.service.service_name).to eq "SoftLayer_Virtual_Guest"
 	end
 
 	it_behaves_like "server with port speed" do
