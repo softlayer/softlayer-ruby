@@ -86,12 +86,11 @@ module SoftLayer
     # will be returned each time it is called for by name. Otherwise the system
     # will try to construct a new service object and return that.
     #
-    #
     # If the service has to be created then the service_options will be passed
     # along to the creative function. However, when returning a previously created
     # Service, the service_options will be ignored.
     #
-    # If the service_name provided does not start with 'SoftLayer__' that prefix
+    # If the service_name provided does not start with 'SoftLayer_' that prefix
     # will be added
     def service_named(service_name, service_options = {})
       raise ArgumentError,"Please provide a service name" if service_name.nil? || service_name.empty?

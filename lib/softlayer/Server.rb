@@ -21,6 +21,16 @@
 #
 
 module SoftLayer
+  # Server is the base class for VirtualServer and BareMetalServer.
+  # It implements some functionality common to both those classes.
+  #
+  # Server is an abstract class and you should not create them
+  # directly.
+  #
+  # While VirtualServer and BareMetalServer each have analogs
+  # in the SoftLayer API, those analogs do not share a direct
+  # ancestry.  As a result there is no SoftLayer API analog
+  # to this class.
   class Server  < SoftLayer::ModelBase
     ##
     # Construct a server from the given client using the network data found in +network_hash+

@@ -46,6 +46,10 @@ module SoftLayer
     # a Bare Metal Instance
     #++
 
+    # String, short name of the data center that will house the new Bare Metal Instance (e.g. "dal05" or "sea01")
+    # Corresponds to +datacenter.name+ in the documentation for +createObject+.
+    attr_accessor :datacenter
+
     # String, The hostname to assign to the new server
     attr_accessor :hostname
 
@@ -67,10 +71,6 @@ module SoftLayer
     #--
     # Optional attributes
     #++
-
-    # String, short name of the data center that will house the new Bare Metal Instance (e.g. "dal05" or "sea01")
-    # Corresponds to +datacenter.name+ in the documentation for createObject
-    attr_accessor :datacenter
 
     # Boolean, If true, an hourly server will be ordered, otherwise a monthly server will be ordered
     # Corresponds to +hourlyBillingFlag+ in the +createObject+ documentation

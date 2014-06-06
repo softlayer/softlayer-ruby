@@ -25,7 +25,7 @@ module SoftLayer
   # Each SoftLayer ProductPackage provides information about ordering a product
   # or service from SoftLayer.
   #
-  # === Configuration Option Categories
+  # === Product Item Categories
   # A important companion to Product Packages are ProductItemCategories.
   # Each ProductItemCategory represents a set of options that you may choose from when
   # configuring an attribute of the product or service you are ordering.
@@ -48,12 +48,6 @@ module SoftLayer
   # that the Configuration marks as required (and you must supply a value even if the
   # Category only has one choice)
   #
-  # === Regions/Locations
-  #
-  # Not all products and services are available in all locations. The +regions+
-  # property of a ProductPackage indicates in which data centers the products in the package
-  # can be ordered.
-  #
   class ProductPackage < ModelBase
     include ::SoftLayer::ModelResource
     
@@ -68,12 +62,12 @@ module SoftLayer
 
       resource.to_update do
         #
-        # We call SoftLayer_Product_Package to get the configuration for this package.
+        # We call +SoftLayer_Product_Package+ to get the configuration for this package.
         #
-        # Unfortunately, even though this call includes SoftLayer_Product_Item_Category entities, it does not have the context 
+        # Unfortunately, even though this call includes +SoftLayer_Product_Item_Category+ entities, it does not have the context 
         # needed to find the active price items for that category.
         #
-        # Instead, we make a second call, this time to SoftLayer_Product_Package::getCategories. That method incorporates a complex
+        # Instead, we make a second call, this time to +SoftLayer_Product_Package::getCategories+. That method incorporates a complex
         # filtering mechanism on the server side to give us a list of the categories, groups, and prices that are valid for the current
         # account at the current time. We construct the ProductItemCategory objects from the results we get back.
         #
@@ -90,7 +84,7 @@ module SoftLayer
         categories_data = softlayer_client['Product_Package'].object_with_id(self.id).getCategories()
 
         # Run though the categories and for each one that's in our config, create a SoftLayer::ProductItemCategory object.
-        # Conveniently the @keys@ of the required_by_category_code gives us a list of the category codes in the configuration
+        # Conveniently the +keys+ of the required_by_category_code gives us a list of the category codes in the configuration
         config_categories = required_by_category_code.keys
         categories_data.collect do |category_data|
           if config_categories.include? category_data['categoryCode']
@@ -114,22 +108,13 @@ module SoftLayer
       configuration.find { |category| category.categoryCode == category_code }
     end
 
-    ##
-    # A convenience routine which returns valid location information for this
-    # package. It returns an array of hashes each with the following keys:
-    #
-    # * <b>+:keyname+</b> A code representing this location to the API
-    # * <b>+:description+</b> A user friendly description of the location
-    # * <b>+:delivery_information+</b> Information (if available) about server configuration in that location
-    #
-    def locations
-      self.regions.collect do |region|
-        {
-          :keyname => region['keyname'],
-          :description => region['description'],
-          :delivery_information => region['location']['locationPackageDetails'][0]['deliveryTimeInformation'] || ""
-        }
-      end
+    def datacenter_options
+      availableLocations.collect { |location_data| location_data["location"]["name"] }
+    end
+    
+    def location_id_for_datacenter_name(datacenter_name)
+      location_data = availableLocations.find { |location_data| location_data["location"]["name"]  == datacenter_name }
+      location_data["locationId"]
     end
 
     ##
@@ -142,6 +127,10 @@ module SoftLayer
       packages_data.collect { |package_data| ProductPackage.new(client, package_data) }
     end
 
+    ##
+    # Requests a list (array) of ProductPackages whose key names match the
+    # one passed in.
+    #
     def self.package_with_id(client, package_id)
       package_data = client['Product_Package'].object_with_id(package_id).object_mask(self.default_object_mask('mask')).getObject
       ProductPackage.new(client, package_data)
@@ -151,7 +140,7 @@ module SoftLayer
     # Returns the ProductPackage of the package used to order virtual servers
     # At the time of this writing, the code assumes this package is unique
     #
-    # 'VIRTUAL_SERVER_INSTANCE' is a "well known" constant value for this purpose
+    # 'VIRTUAL_SERVER_INSTANCE' is a "well known" constant for this purpose
     def self.virtual_server_package(client)
       packages_with_key_name(client, 'VIRTUAL_SERVER_INSTANCE').first
     end
@@ -162,7 +151,7 @@ module SoftLayer
     #
     # At the time of this writing, the code assumes this package is unique
     #
-    # 'BARE_METAL_CORE' is a "well known" constant value for this purpose
+    # 'BARE_METAL_CORE' is a "well known" constant for this purpose
     def self.bare_metal_instance_package(client)
       packages_with_key_name(client, 'BARE_METAL_CORE').first
     end
@@ -171,7 +160,7 @@ module SoftLayer
     # Returns an array of ProductPackages, each of which can be used
     # as the foundation to order a bare metal server.
     #
-    # 'BARE_METAL_CPU' is a "well known" constant value for this purpose
+    # 'BARE_METAL_CPU' is a "well known" constant for this purpose
     def self.bare_metal_server_packages(client)
       packages_with_key_name(client, 'BARE_METAL_CPU')
     end
@@ -179,7 +168,7 @@ module SoftLayer
     protected
 
     def self.default_object_mask(root)
-      "#{root}[id,name,description,regions]"
+      "#{root}[id,name,description,availableLocations.location]"
     end
   end
 end # SoftLayer

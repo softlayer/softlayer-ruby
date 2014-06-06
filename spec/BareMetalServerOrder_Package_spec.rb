@@ -35,18 +35,18 @@ describe SoftLayer::BareMetalServerOrder_Package do
   let (:test_order) do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
 
-    package = SoftLayer::ProductPackage.new(client, {'id' => 42})
+    package = SoftLayer::ProductPackage.new(client, fixture_from_json("Product_Package"))
     SoftLayer::BareMetalServerOrder_Package.new(client, package)
   end
 
   it 'places the package id from which it was ordered into the order template' do
-    expect(test_order.hardware_order["packageId"]).to eq 42
+    expect(test_order.hardware_order["packageId"]).to eq 32
   end
 
-  it "places its :location attribute into the order template" do
+  it "places its :datacenter attribute into the order template" do
     expect(test_order.hardware_order["location"]).to be_nil
-    test_order.location = "FIRST_AVAILABLE"
-    expect(test_order.hardware_order["location"]).to eq "FIRST_AVAILABLE"
+    test_order.datacenter = "sng01"
+    expect(test_order.hardware_order["location"]).to eq 224092
   end
 
   it "places its :hostname attribute into the hardware template in the order" do
@@ -102,13 +102,13 @@ describe SoftLayer::BareMetalServerOrder_Package do
 
   it "calls the softlayer API to verify an order" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
-    package = SoftLayer::ProductPackage.new(client, {'id' => 42})
+    package = SoftLayer::ProductPackage.new(client, fixture_from_json("Product_Package"))
 
     order_service = client["Product_Order"]
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
-    test_order.location = 'FIRST_AVAILABLE'
+    test_order.datacenter = 'sng01'
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
     test_order.configuration_options = { 'category' => 123 }
@@ -119,13 +119,13 @@ describe SoftLayer::BareMetalServerOrder_Package do
 
   it "calls the softlayer API to place an order" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
-    package = SoftLayer::ProductPackage.new(client, {'id' => 42})
+    package = SoftLayer::ProductPackage.new(client, fixture_from_json("Product_Package"))
 
     order_service = client["Product_Order"]
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
-    test_order.location = 'FIRST_AVAILABLE'
+    test_order.datacenter = 'sng01'
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
     test_order.configuration_options = { 'category' => 123 }
@@ -136,13 +136,13 @@ describe SoftLayer::BareMetalServerOrder_Package do
 
   it "allows a block to modify the template sent to the server when verifying an order" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
-    package = SoftLayer::ProductPackage.new(client, {'id' => 42})
+    package = SoftLayer::ProductPackage.new(client, fixture_from_json("Product_Package"))
 
     order_service = client["Product_Order"]
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
-    test_order.location = 'FIRST_AVAILABLE'
+    test_order.datacenter = 'sng01'
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
     test_order.configuration_options = { 'category' => 123 }
@@ -154,13 +154,13 @@ describe SoftLayer::BareMetalServerOrder_Package do
 
   it "allows a block to modify the template sent to the server when placing an order" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
-    package = SoftLayer::ProductPackage.new(client, {'id' => 42})
+    package = SoftLayer::ProductPackage.new(client, fixture_from_json("Product_Package"))
 
     order_service = client["Product_Order"]
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
-    test_order.location = 'FIRST_AVAILABLE'
+    test_order.datacenter = 'sng01'
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
     test_order.configuration_options = { 'category' => 123 }

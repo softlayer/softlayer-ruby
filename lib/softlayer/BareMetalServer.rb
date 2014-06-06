@@ -22,29 +22,21 @@
 
 module SoftLayer
   #
-  # This class represents a BareMetalServer in the SoftLayer Environment.
-  # It corresponds rougly to the SoftLayer_Hardware_Server service in the SoftLayer API
+  # This class represents a Bare Metal Server, a hardware server in contrast to a virtual machine,
+  # in the SoftLayer Environment. It corresponds rougly to the +SoftLayer_Hardware+ and 
+  # +SoftLayer_Hardware_Server+ services in the SoftLayer API
+  #
+  # http://sldn.softlayer.com/reference/datatypes/SoftLayer_Hardware
   # http://sldn.softlayer.com/reference/datatypes/SoftLayer_Hardware_Server
-  #
-  # SoftLayer offers two options for configuration hardware servers they are called
-  # Bare Metal Servers, and Bare Metal Instances:
-  #
-  # * Bare Metal Server - Offers a full suite of configuration options which allows fine tuning of
-  #   the performance characteristics of the server
-  #
-  # * Bare Metal Instances - Offers a suite of configuraiton options similar to those of virtual servers.
-  #   Bare Metal Instances are easier to configure than Bare Metal Servers, but still offer the raw
-  #   performance characteristics of hardware.
-  #
-  # This class represents hardware servers configured as Bare Metal Servers or Bare Metal Instances.
-  # The +bare_metal_instance?+ method distinguishes one flavor of hardware server from the other.
   #
   class BareMetalServer < Server
 
     ##
     # Returns true if this +BareMetalServer+ is actually a Bare Metal Instance
     # a Bare Metal Instance is physical, hardware server that is is provisioned to
-    # match a profile based on Virtual Server charactersitics
+    # match a profile with characteristics similar to a Virtual Server
+    #
+    # This is an important distincition in rare cases, like cancelling the server.
     #
     def bare_metal_instance?
       if @sl_hash.has_key?(:bareMetalInstanceFlag)
@@ -57,6 +49,7 @@ module SoftLayer
     ##
     # Sends a ticket asking that a server be cancelled (i.e. shutdown and
     # removed from the account).
+    #
     # The +cancellation_reason+ parameter should be a key from the hash returned
     # by +BareMetalServer::cancellation_reasons+.
     #
@@ -69,13 +62,17 @@ module SoftLayer
         cancel_reason = cancellation_reasons[reason] || cancellation_reasons[:unneeded]
         softlayer_client["Ticket"].createCancelServerTicket(self.id, cancel_reason, comment, true, 'HARDWARE')
       else
-        # This is a bare metal instance
+        # Note that reason and comment are ignored in this case, unfortunately
         softlayer_client['Billing_Item'].object_with_id(self.billingItem['id'].to_i).cancelService()
       end
     end
 
     ##
-    # Returns the SoftLayer Service used to work with instances of this class. For Bare Metal Servers that is +SoftLayer_Hardware+
+    # Returns the SoftLayer Service used to work with instances of this class. 
+    # For Bare Metal Servers that is +SoftLayer_Hardware+ though in some special cases
+    # you may have to use +SoftLayer_Hardware_Server+ as a type or service.
+    #
+    # This routine is largely an implementation detail of this object framework
     def service
       return softlayer_client["Hardware"]
     end
@@ -104,10 +101,10 @@ module SoftLayer
     ##
     # Returns a list of the cancellation reasons to use when cancelling a server.
     #
-    # When cancelling a server, you must provide a parameter which is the "cancellation reason".
-    # The API expects very specific values for that parameter. To simplify the Ruby interface we
-    # have reduced those reasons down to symbols. This method returns a hash that maps the
-    # symbol to the string that the SoftLayer API expects.
+    # When cancelling a server with the cancel! method, the first parameter is the reason and
+    # should be one of the keys in the hash returned by this method.  This, in turn
+    # will be translated into a string which is, for all intents and purposes, a 
+    # literal string constant with special meaning to the SoftLayer API.
     #
     def self.cancellation_reasons
       {
@@ -141,7 +138,7 @@ module SoftLayer
     end
 
     ##
-    # Retrieve a list of Hardware, or "bare metal" servers from the account.
+    # Retrieve a list of Bare Metal servers from the account
     #
     # You may filter the list returned by adding options:
     #

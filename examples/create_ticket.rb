@@ -24,8 +24,7 @@ require 'rubygems'
 require 'softlayer_api'
 require 'pp'
 
-# We're creating more than one service so we'll use the globals to establish
-# the username and API key.
+# We can use globals to establish our client's credentials
 $SL_API_USERNAME = "joecustomer"         # enter your username here
 $SL_API_KEY = "feeddeadbeefbadf00d..."   # enter your api key here
 

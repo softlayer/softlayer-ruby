@@ -214,9 +214,9 @@ module SoftLayer
       result
     end
 
-    # This method tries to simplify creating a correct object filter structure
-    # by allowing the caller to provide a string in a simple query language.
-    # It then translates that string into an Object Filter operation structure
+    # This method simplifies creating correct object filter structures
+    # by defining a simple query language. It translates strings in that 
+    # language into an Object Filter operations
     #
     # Object Filter comparisons are done using operators. Some operators make
     # case sensitive comparisons and some do not. The general form of an Object

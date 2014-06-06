@@ -36,22 +36,16 @@ module SoftLayer
     end
   end
 
-  ProductConfigurationOption.class_eval do
-  end
-
-  # This class rougly represents entities in the  SoftLayer_Product_Item_Category
-  # service.
+  # The goal of this class is to make it easy for scripts (and scripters) to 
+  # discover what product configuration options exist that can be added to a 
+  # product order.
   #
   # Instances of this class are created by and discovered in the context
-  # of a ProductPackage object. They arise from a call to
-  # SoftLayer_Product_Package::getCategories which does some complex
-  # filtering and object masking on the back end. As a result there should not
-  # be a need to create instances of this class directly. Instead they should
-  # be created through a ProductPackage object.
+  # of a ProductPackage object. There should not be a need to create instances 
+  # of this class directly.
   #
-  # The goal of this class is to make it easy for scripts to discover what
-  # product configuration options exist that can be added to a product order.
-  #
+  # This class rougly represents entities in the +SoftLayer_Product_Item_Category+
+  # service.
   class ProductItemCategory < ModelBase
     include ::SoftLayer::ModelResource
 
@@ -63,8 +57,13 @@ module SoftLayer
 
       resource.to_update do
         # This method assumes that the group and price item data was sent in
-        # as part of the "network_hash" used to initialize this object (as is done)
-        # by the ProductPackage class.
+        # as part of the +network_hash+ used to initialize this object (as is done)
+        # by the ProductPackage class. That class, in turn, gets its information
+        # from SoftLayer_Product_Package::getCategories which does some complex
+        # work on the back end to ensure the prices returned are correct.
+        #
+        # If this object was created in any other way, the configuration 
+        # options might be incorrect. So Caveat Emptor.
         #
         # Options are divided into groups (for convenience in the
         # web UI), but this code collapses the groups.
@@ -75,11 +74,11 @@ module SoftLayer
               price_item['item']['description'],
               price_item['item']['capacity'],
               price_item['item']['units'],
-              price_item['setupFee'].to_f,
-              price_item['laborFee'].to_f,
-              price_item['oneTimeFee'].to_f,
-              price_item['recurringFee'].to_f,
-              price_item['hourlyRecurringFee'].to_f
+              price_item['setupFee'] ? price_item['setupFee'].to_f : 0.0,
+              price_item['laborFee'] ? price_item['laborFee'].to_f : 0.0,
+              price_item['oneTimeFee'] ? price_item['oneTimeFee'].to_f : 0.0,
+              price_item['recurringFee'] ? price_item['recurringFee'].to_f : 0.0,
+              price_item['hourlyRecurringFee'] ? price_item['hourlyRecurringFee'].to_f : 0.0
               )
           end
         end.flatten # flatten out the individual group arrays.
@@ -93,11 +92,11 @@ module SoftLayer
     #
     # If there are multiple options with no fees, it simply returns the first it finds
     #
-    # It may be important to note that this option may NOT be the same default
-    # option presented by the on-line web-based ordering system.
+    # Note that the option found may NOT be the same default option that is given 
+    # in the web-based ordering system.
     #
-    # If there are multiple options and they all have a fee then this method
-    # **can** return nil.
+    # If there are multiple options, and all of them have associated fees, then this method
+    # **will** return nil.
     #
     def default_option
       if configuration_options.count == 1
@@ -108,15 +107,14 @@ module SoftLayer
     end
 
     # The ProductItemCategory class augments the base initialization by accepting
-    # a boolean variable, +is_required+, that indicates whether or not
-    # the package this category is found in requires that category
+    # a boolean variable, +is_required+, which (when true) indicates that this category
+    # is required for orders against the package that created it.
     def initialize(softlayer_client, network_hash, is_required)
       super(softlayer_client, network_hash)
       @is_required = is_required
     end
 
-    # Returns true if this category is required in the package it is
-    # associated with
+    # Returns true if this category is required in its package
     def required?()
       return @is_required
     end

@@ -37,8 +37,9 @@ module SoftLayer
   # to be updated, the getter calls the update routine to get a new value
   # and caches that value off before returning it to the caller.
   #
-  # Declaring a resource will create three routines and an instance
-  # variable based on the name of the resource
+  # Declaring a resource adds three methods to a class and
+  # a corresponding instance variable in instances of the class
+  # All three are based on the name of the resource:
   #
   # * The getter simply has the same name as the resource
   # * The predicate routine is called +should_update_<resource name>?+
@@ -48,8 +49,8 @@ module SoftLayer
   # argument is true, the getter will force the resource to be updated
   # without consulting the +should_update_+ predicate
   #
-  # When a resource is defined, the definition takes a block
-  # inside that block there is a small DSL that allows you to
+  # When a resource is defined, the definition takes a block.
+  # Inside the block there is a small DSL that allows you to
   # set the behavior of the +should_update_+ predicate and the +update_+
   # routine.
   #

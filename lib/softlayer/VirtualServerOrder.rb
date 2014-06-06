@@ -38,6 +38,11 @@ module SoftLayer
     # a virtual server
     #++
 
+    # String, short name of the data center that will house the new virtual server (e.g. "dal05" or "sea01")
+    # Corresponds to +datacenter.name+ in the documentation for createObject.  If not provided, the server will
+    # be provisioned in the first available data center.
+    attr_accessor :datacenter
+
     # String, The hostname to assign to the new server
     attr_accessor :hostname
 
@@ -69,11 +74,6 @@ module SoftLayer
     # Optional attributes
     #++
 
-    # String, short name of the data center that will house the new virtual server (e.g. "dal05" or "sea01")
-    # Corresponds to +datacenter.name+ in the documentation for createObject.  If not provided, the server will
-    # be provisioned in the first available data center.
-    attr_accessor :datacenter
-
     # Boolean, If true, the virtual server will reside only on hosts with instances from this same account
     # Corresponds to +dedicatedAccountHostOnlyFlag+ in the +createObject+ documentation
     attr_accessor :dedicated_host_only
@@ -88,7 +88,7 @@ module SoftLayer
     # Corresponds to +hourlyBillingFlag+ in the +createObject+ documentation
     attr_accessor :hourly
 
-    # Integer (Should be 10, 100, or 1000), The maximum network interface card speed (in Mbps) for the new instance
+    # Integer, The maximum network interface card speed (in Mbps) for the new instance
     # Corresponds to +networkComponents.maxSpeed+ in the +createObject+ documentation
     attr_accessor :max_port_speed
 
@@ -202,8 +202,11 @@ module SoftLayer
     end
 
     ##
-    # The first time this is called it requests SoftLayer_Virtual_Guest::getCreateObjectOptions
+    # The first time this is called it requests SoftLayer_Virtual_Guest::getCreateObjectOptions:
     # from the API and remembers the result. On subsequent calls it returns the remembered result.
+    #
+    # http://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest/getCreateObjectOptions
+    #
     def self.create_object_options(client)
       @@create_object_options ||= client["Virtual_Guest"].getCreateObjectOptions()
     end

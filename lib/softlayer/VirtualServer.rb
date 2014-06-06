@@ -25,14 +25,17 @@ require 'json'
 
 module SoftLayer
   ##
-  # A class whose instances represent a single Virtual Server (called a Virtual_Guest by the API)
-  # in an account.
+  # Instance of this class represent servers that are virtual machines in the 
+  # SoftLayer environment.
+  #
+  # This class roughly corresponds to the entity SoftLayer_Virtual_Guest in the
+  # API.
   #
   class VirtualServer < Server
     include ::SoftLayer::ModelResource
 
     ##
-    # A virtual server can find out about Product_Packge items that are
+    # A virtual server can find out about items that are
     # available for upgrades.
     #
     softlayer_resource :upgrade_options do |resource|
@@ -293,7 +296,7 @@ module SoftLayer
 
     ##
     # Returns the SoftLayer Service used to work with instances of this class. For Virtual Servers that is +SoftLayer_Virtual_Guest+
-    # This routine is largely an implementation detail of the framework
+    # This routine is largely an implementation detail of this object framework
     def service
       return softlayer_client["Virtual_Guest"]
     end

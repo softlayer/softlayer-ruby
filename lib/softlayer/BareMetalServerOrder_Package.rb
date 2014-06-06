@@ -47,9 +47,9 @@ module SoftLayer
     # SoftLayer::ProductPackage.bare_metal_server_packages
     attr_reader :package
 
-    # SoftLayer Region Keyname indicating where the server should be provisioned
-    # A list of key names is included in the return value from ProductPackage#locations
-    attr_accessor :location
+    # String, short name of the data center that will house the new virtual server (e.g. "dal05" or "sea01")
+    # A list of valid data centers can be found in ProductPackage#datacenter_options
+    attr_accessor :datacenter
 
     # The hostname of the server being created (i.e. 'sldn' is the hostname of sldn.softlayer.com).
     attr_accessor :hostname
@@ -59,9 +59,9 @@ module SoftLayer
 
     # The value of this property should be a hash. The keys of the hash are ProdcutItemCategory
     # codes (like 'os' and 'ram') while the values may be Integers or Objects. The Integer values 
-    # should be the +id+ of a SoftLayer_Product_Item_Price representing the configuration option 
-    # chosen for that category. Objects must respond to the price_id message and return an integer
-    # that is the +id+ of a SoftLayer_Product_Item_Price. Instances of the ProductConfigurationOption
+    # should be the +id+ of a +SoftLayer_Product_Item_Price+ representing the configuration option 
+    # chosen for that category. Objects must respond to the +price_id+ message and return an integer
+    # that is the +id+ of a +SoftLayer_Product_Item_Price+. Instances of the ProductConfigurationOption
     # class behave this way.
     #
     # At a minimum, the configuation_options should include entries for each of the categories
@@ -94,9 +94,6 @@ module SoftLayer
     # The order is verified, but not executed. This should not
     # change the billing of your account.
     #
-    # If successful, the SoftLayer API will fill out additional fields
-    # in the order for your inspection and return the completed entity.
-    #
     # If you add a block to the method call, it will receive the product
     # order template before it is sent to the API. You may **carefully** make
     # changes to the template to provide specialized configuration.
@@ -112,15 +109,12 @@ module SoftLayer
     # If successful this will probably result in additional billing items
     # applied to your account!
     #
-    # If successful, the SoftLayer API will fill out additional fields
-    # in the order for your inspection and return the completed entity.
-    #
     # If you add a block to the method call, it will receive the product
     # order template before it is sent to the API. You may **carefully** make
     # changes to the template to provide specialized configuration.
     #
     # The return value of this call is a product order receipt. After
-    # submitting the order it will proceed to Sales for authorization.
+    # submitting the order, it will proceed to Sales for authorization.
     #
     def place_order!
       product_order = hardware_order
@@ -131,18 +125,19 @@ module SoftLayer
     protected
 
     ##
-    # Construct and return a hash representing a SoftLayer_Container_Product_Order_Hardware_Server
+    # Construct and return a hash representing a +SoftLayer_Container_Product_Order_Hardware_Server+
     # based on the configuration options given.
     def hardware_order
       product_order = {
         'packageId' => @package.id,
-        'location' => @location,
         'useHourlyPricing' => false,
         'hardware' => {
           'hostname' => @hostname,
           'domain' => @domain
         }
       }
+
+      product_order['location'] = @package.location_id_for_datacenter_name(@datacenter.downcase) if @datacenter
 
       product_order['sshKeys'] = [{ 'sshKeyIds' => @ssh_key_ids }] if @ssh_key_ids
       product_order['provisionScripts'] = [@provision_script_URI.to_s] if @provision_script_URI
@@ -159,5 +154,7 @@ module SoftLayer
 
       product_order
     end
+    
   end # BareMetalServerOrder_Package
+  
 end # SoftLayer
