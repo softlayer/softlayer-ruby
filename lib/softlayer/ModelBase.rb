@@ -23,16 +23,18 @@
 module SoftLayer
   ##
   # The SoftLayer Gem defines an Object Hierarchy representing entities in
-  # an account's SoftLayer environment.  This class is the base object class
+  # an account's SoftLayer environment. This class is the base object class
   # for objects in that hierarchy
   #
-  # The SoftLayer API represents entities as a hash of properties.  This class
-  # stores that hash (in the @sl_hash instance variable) and uses method_missing
-  # to allow code to access fields in that hash through simple method calls.
+  # The SoftLayer API represents entities as a hash of properties. This class
+  # stores that hash and uses +method_missing+ to allow code to access fields in 
+  # that hash through simple method calls.
   #
   # The class also has a model for making network requests that will refresh
-  # the stored has so that it reflects the most up-to-date information about
-  # an entity from the server.
+  # the stored hash so that it reflects the most up-to-date information about
+  # an entity from the server. Subclasses should override softlayer_properties
+  # to retrieve information from the server. Client code should call 
+  # refresh_details to ask an object to update itself.
   #
   class ModelBase
     attr_reader :softlayer_client
@@ -41,10 +43,10 @@ module SoftLayer
       raise ArgumentError, "A hash is required" if nil == network_hash
 
       @softlayer_client = softlayer_client
-      @sl_hash = network_hash.inject({}) { | new_hash, pair | new_hash[pair[0].to_sym] = pair[1]; new_hash }
-
+      self.softlayer_hash = network_hash
+      
       raise ArgumentError, "The hash must have an id" unless has_sl_property?(:id)
-      raise ArgumentError, "id must be non-nil and non-empty" unless @sl_hash[:id] && !@sl_hash.to_s.empty?
+      raise ArgumentError, "id must be non-nil and non-empty" unless softlayer_hash[:id] && !softlayer_hash.to_s.empty?
     end
 
     def to_ary
@@ -54,17 +56,20 @@ module SoftLayer
     ##
     # Asks a model object to reload itself from the SoftLayer API.
     #
-    # This is only implemented in subclasses.
+    # Subclasses should not override this method, rather they should 
+    # implement softlayer_properties to actually make the API request 
+    # and return the new hash.
     #
     def refresh_details(object_mask = nil)
-      network_hash = self.softlayer_properties(object_mask)
-      @sl_hash = network_hash.inject({}) { | new_hash, pair | new_hash[pair[0].to_sym] = pair[1]; new_hash }
+      softlayer_hash = self.softlayer_properties(object_mask)
     end
 
     ##
-    # Subclasses implement this method. The implementation should
-    # make a request to the SoftLayer API and retrieve an up-to-date
-    # representation of this object expressed as a property hash.
+    # Subclasses should implement this method as part of enabling the 
+    # refresh_details fuctionality The implementation should make a request 
+    # to the SoftLayer API and retrieve an up-to-date SoftLayer hash 
+    # representation of this object. That hash should be the return value 
+    # of this routine.
     #
     def softlayer_properties(object_mask = nil)
       raise RuntimeError.new("Abstract method softlayer_properties in ModelBase was called")
@@ -102,6 +107,10 @@ module SoftLayer
 
     def softlayer_hash
       return @sl_hash
+    end
+    
+    def softlayer_hash=(new_hash)
+      @sl_hash = new_hash.inject({}) { | new_hash, pair | new_hash[pair[0].to_sym] = pair[1]; new_hash }
     end
   end # class ModelBase
 end # module SoftLayer
