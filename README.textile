@@ -5,7 +5,7 @@ The SoftLayer API Client for Ruby is a library for connecting to and calling the
 <div id="note" style="margin: 1em; padding: 0.5em; background-color: #fcfcfc; border: 1px solid black">
 	*Important Note*
 
-	Version 2.0 of the gem may require you change your existing scripts. Please see "What's New":#whats_new for details.
+	Version 2.0 of the gem may require you change your existing scripts. Please see "What's New":#whats-new for details.
 </div>
 
 h2. Overview
@@ -24,7 +24,7 @@ The Ruby client has been tested using a wide variety of Ruby implementations inc
 
 A network connection is required, and a valid SoftLayer API username and api key are required to call the SoftLayer API. A connection to the SoftLayer private network is required to connect to SoftLayer's private network API endpoints.
 
-h2(#whats_new). What's New
+h2(#whats-new). What's New
 
 Version 2.0 of the @softlayer_api@ gem changes the protocol used to communicate with the SoftLayer API from REST to XML-RPC. This change should not require any changes to existing scripts. However there are two new behaviors which may require you to change existing scripts:
 * Object Masks are now sent to the server using the "Extended Object Mask Format":http://sldn.softlayer.com/article/Object-Masks.
