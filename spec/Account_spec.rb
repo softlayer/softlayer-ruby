@@ -33,12 +33,9 @@ describe SoftLayer::Account do
 		expect(SoftLayer::Account).to_not be_nil
 	end
 
-  it "should return its initialization id as the account_id" do
+  it "knows its id" do
     test_account = SoftLayer::Account.new(nil, "id" => "232279", "firstName" => "kangaroo")
-    expect(test_account.account_id).to eq("232279")
-
-    another_test_acct = SoftLayer::Account.new(nil, :id => "232279", "firstName" => "kangaroo")
-    expect(test_account.account_id).to eq("232279")
+    expect(test_account.id).to eq("232279")
   end
 
   it "should allow the user to get the default account for a service" do
@@ -56,11 +53,30 @@ describe SoftLayer::Account do
 
     test_account = SoftLayer::Account.account_for_client(test_client)
     expect(test_account.softlayer_client).to eq(test_client)
-    expect(test_account.account_id).to eq("232279")
     expect(test_account.id).to eq("232279")
     expect(test_account.firstName).to eq("kangaroo")
   end
 
+  describe "softlayer attributes" do
+    let (:test_account) {
+      mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
+      SoftLayer::Account.new(mock_client, fixture_from_json("test_account"))
+    }
+    
+    it "exposes a great many softlayer attributes" do
+      expect(test_account.companyName).to eq "UpAndComing Software"
+      expect(test_account.firstName).to eq "Don "
+      expect(test_account.lastName).to eq "Joe"
+      expect(test_account.address1).to eq "123 Main Street"
+      expect(test_account.address2).to eq nil
+      expect(test_account.city).to eq "Anytown"
+      expect(test_account.state).to eq "TX"
+      expect(test_account.country).to eq "US"
+      expect(test_account.postalCode).to eq "778899"
+      expect(test_account.officePhone).to eq "555.123.4567"
+    end
+  end
+  
   describe "relationship to servers" do
     before do
       fixture_account_data = fixture_from_json("test_account")

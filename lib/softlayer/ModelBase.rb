@@ -43,10 +43,10 @@ module SoftLayer
       raise ArgumentError, "A hash is required" if nil == network_hash
 
       @softlayer_client = softlayer_client
-      self.softlayer_hash = network_hash
+      @softlayer_hash = network_hash
       
-      raise ArgumentError, "The hash must have an id" unless has_sl_property?(:id)
-      raise ArgumentError, "id must be non-nil and non-empty" unless softlayer_hash[:id] && !softlayer_hash.to_s.empty?
+      raise ArgumentError, "The hash used to construct a softlayer model object must have an id" unless has_sl_property?(:id)
+      raise ArgumentError, "id must be non-nil and non-empty" unless self[:id]
     end
 
     def to_ary
@@ -75,42 +75,44 @@ module SoftLayer
       raise RuntimeError.new("Abstract method softlayer_properties in ModelBase was called")
     end
 
-    def respond_to?(method_symbol)
-      if softlayer_hash
-        if has_sl_property? method_symbol
-          true
-        else
-          super
-        end
-      else
-        super
-      end
+    ##
+    # Returns the value of of the given property as stored in the
+    # softlayer_hash. This gives you access to the low-level, raw
+    # properties that underly this model object.  The need for this
+    # is not uncommon, but using this method should still be done
+    # with deliberation.
+    def [](softlayer_property)
+      self.softlayer_hash[softlayer_property.to_s]
     end
+    
+    ##
+    # Returns true if the given property can be found in the softlayer hash
+    def has_sl_property?(softlayer_property)
+      softlayer_hash && softlayer_hash.has_key?(softlayer_property.to_s)
+    end
+    
+    ##
+    # allows subclasses to define attributes as softlayer_attr
+    # softlayer_attr are attributes that draw their value from the
+    # low-level hash representation of the object.
+    def self.softlayer_attr(attribute_symbol, hash_key = nil)
+      raise "The softlayer_attr expects a symbol for the attribute to define" unless attribute_symbol.kind_of?(Symbol)
+      raise "The hash key used to define an attribute cannot be empty" if hash_key && hash_key.empty?
 
-    def method_missing(method_symbol, *args, &block)
-      if(@sl_hash && 0 == args.length && !block)
-        if has_sl_property? method_symbol
-          softlayer_hash[method_symbol]
-        else
-          super
-        end
-      else
-        super
-      end
+      define_method(attribute_symbol.to_sym) { self[hash_key ? hash_key : attribute_symbol.to_s]}
     end
-
-    def has_sl_property?(property_symbol)
-      softlayer_hash && softlayer_hash.has_key?(property_symbol)
-    end
+    
+    ##
+    # :attr_reader: id
+    # The unique identifier of this object within it's API service
+    softlayer_attr(:id)
 
     protected
 
-    def softlayer_hash
-      return @sl_hash
-    end
-    
-    def softlayer_hash=(new_hash)
-      @sl_hash = new_hash.inject({}) { | new_hash, pair | new_hash[pair[0].to_sym] = pair[1]; new_hash }
-    end
+    ##
+    # The softlayer_hash stores the low-level information about an
+    # object as it was retrieved from the SoftLayer API.
+    attr_reader :softlayer_hash
+
   end # class ModelBase
 end # module SoftLayer

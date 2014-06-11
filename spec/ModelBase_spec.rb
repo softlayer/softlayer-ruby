@@ -31,7 +31,7 @@ describe SoftLayer::ModelBase do
   describe "#initialize" do
     it "rejects hashes without an id" do
       expect { SoftLayer::ModelBase.new(nil, {}) }.to raise_error(ArgumentError)
-      expect { SoftLayer::ModelBase.new(nil, {:id => "someID"}) }.not_to raise_error
+      expect { SoftLayer::ModelBase.new(nil, {"id" => "someID"}) }.not_to raise_error
     end
 
     it "rejects nil hashes" do
@@ -40,18 +40,26 @@ describe SoftLayer::ModelBase do
 
     it "remembers its first argument as the client" do
       mock_client = double("Mock SoftLayer Client")
-      test_model = SoftLayer::ModelBase.new(mock_client, { :id => "12345"});
+      test_model = SoftLayer::ModelBase.new(mock_client, { "id" => "12345"});
       expect(test_model.softlayer_client).to be(mock_client)
     end
   end
 
-  it "treats keys in its hash as methods returning the value of the key" do
-    test_model = SoftLayer::ModelBase.new(nil, { :id => "12345", :kangaroo => "Fun"});
-    expect(test_model.kangaroo).to eq "Fun"
+  it "allows access to raw softlayer properties" do
+    mock_client = double("Mock SoftLayer Client")
+    test_model = SoftLayer::ModelBase.new(mock_client, { "id" => "12345"});
+    expect(test_model[:id]).to eq("12345")
+    expect(test_model["id"]).to eq("12345")
   end
-
+  
+  it "allows access to exposed softlayer properties" do
+    mock_client = double("Mock SoftLayer Client")
+    test_model = SoftLayer::ModelBase.new(mock_client, { "id" => "12345"});
+    expect(test_model.id).to eq("12345")
+  end
+  
   it "returns nil from to_ary" do
-    test_model = SoftLayer::ModelBase.new(nil, { :id => "12345" })
+    test_model = SoftLayer::ModelBase.new(nil, { "id" => "12345" })
     expect(test_model).to respond_to(:to_ary)
     expect(test_model.to_ary).to be_nil
   end

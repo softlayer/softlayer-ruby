@@ -1,3 +1,5 @@
+$LOAD_PATH << File.join(File.dirname(__FILE__), "../lib" )
+
 #
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
@@ -30,7 +32,9 @@ begin
 #    :api_key => "feeddeadbeefbadf00d..."   # enter your api key here
   )
 
-	# use an account service to get a list of the open tickets and print their IDs and titles
+	# Demonstrates using the low-level capabilities of the softlayer_api
+  # gem to get directly at methods in the SoftLayer API and extract
+  # data from them.
 	account_service = softlayer_client['Account'];
 	account = account_service.getObject
 

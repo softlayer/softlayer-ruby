@@ -50,7 +50,11 @@ module SoftLayer
   #
   class ProductPackage < ModelBase
     include ::SoftLayer::ModelResource
-    
+
+    ##
+    # The list of locations where this product package is available.
+    softlayer_attr :availableLocations
+
     ##
     # The set of product categories needed to make an order for this product package.
     #

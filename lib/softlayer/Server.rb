@@ -32,6 +32,15 @@ module SoftLayer
   # ancestry.  As a result there is no SoftLayer API analog
   # to this class.
   class Server  < SoftLayer::ModelBase
+    
+    softlayer_attr :hostname
+    softlayer_attr :domain
+    softlayer_attr :fullyQualifiedDomainName
+    softlayer_attr :datacenter
+    softlayer_attr :primary_public_ip, "primaryIpAddress"
+    softlayer_attr :primary_private_ip, "primaryBackendIpAddress"
+    softlayer_attr :notes     
+
     ##
     # Construct a server from the given client using the network data found in +network_hash+
     #
@@ -188,7 +197,6 @@ module SoftLayer
           },
           'privateNetworkOnlyFlag',
           'userData',
-          'datacenter',
           'networkComponents.primarySubnet[id, netmask, broadcastAddress, networkIdentifier, gateway]',
           'billingItem[id,recurringFee]',
           'hourlyBillingFlag',

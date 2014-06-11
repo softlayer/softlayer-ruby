@@ -24,8 +24,19 @@ module SoftLayer
   class Account < SoftLayer::ModelBase
     include ::SoftLayer::ModelResource
 
+    softlayer_attr :companyName
+    softlayer_attr :firstName
+    softlayer_attr :lastName
+    softlayer_attr :address1
+    softlayer_attr :address2
+    softlayer_attr :city
+    softlayer_attr :state
+    softlayer_attr :country
+    softlayer_attr :postalCode
+    softlayer_attr :officePhone
+
     ##
-    # The bare metal (or Hardware) servers associated with the
+    # The Bare Metal Servers (physical hardware) associated with the
     # account. Unless you force these to update, they will be refreshed every
     # five minutes.
     softlayer_resource :bare_metal_servers do |bare_metal|
@@ -86,12 +97,6 @@ module SoftLayer
       account_service = softlayer_client['Account']
       network_hash = account_service.getObject()
       new(softlayer_client, network_hash)
-    end
-
-    ##
-    # The +account_id+ property is simply an alias for the SLDN id of the account object.
-    def account_id
-      @sl_hash[:id]
     end
 
     ##

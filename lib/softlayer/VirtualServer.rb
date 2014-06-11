@@ -34,6 +34,14 @@ module SoftLayer
   class VirtualServer < Server
     include ::SoftLayer::ModelResource
 
+    softlayer_attr :createDate
+    softlayer_attr :modifyDate
+    softlayer_attr :provisionDate
+    softlayer_attr :maxCpu
+    softlayer_attr :activeTransaction
+    softlayer_attr :blockDevices
+    softlayer_attr :lastOperatingSystemReload
+    
     ##
     # A virtual server can find out about items that are
     # available for upgrades.

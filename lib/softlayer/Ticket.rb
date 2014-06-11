@@ -21,12 +21,12 @@
 #
 
 module SoftLayer
-	class Ticket < SoftLayer::ModelBase
+	class Ticket < SoftLayer::ModelBase  
 		##
 		# Add an update to this ticket.
 		#
 		def update(body = nil)
-			softlayer_client["Ticket"].object_with_id(self.id).edit(@sl_hash, body)
+			softlayer_client["Ticket"].object_with_id(self.id).edit(self.softlayer_hash, body)
 		end
 
 		def softlayer_properties(object_mask = nil)

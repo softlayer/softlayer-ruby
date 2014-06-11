@@ -45,6 +45,21 @@ describe SoftLayer::VirtualServer do
 		expect(sample_server.service.service_name).to eq "SoftLayer_Virtual_Guest"
 	end
 
+  it "implements softlayer properties inherited from Server" do
+		mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "DEADBEEFBADF00D")
+
+    test_servers = fixture_from_json('test_virtual_servers')
+    test_server = SoftLayer::VirtualServer.new(mock_client,test_servers.first)
+    
+    expect(test_server.hostname).to eq("test-server-1")
+    expect(test_server.domain).to eq("softlayer-api-test.rb")
+    expect(test_server.fullyQualifiedDomainName).to eq("test-server-1.softlayer-api-test.rb")
+    expect(test_server.datacenter).to eq({"id"=>17936, "longName"=>"Dallas 6", "name"=>"dal06"})
+    expect(test_server.primary_public_ip).to eq("198.51.100.121")
+    expect(test_server.primary_private_ip).to eq("203.0.113.82")
+    expect(test_server.notes).to eq("These are test notes")
+  end
+  
 	it_behaves_like "server with port speed" do
 		let (:server) { sample_server }
 	end

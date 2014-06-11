@@ -39,7 +39,7 @@ module SoftLayer
     # This is an important distincition in rare cases, like cancelling the server.
     #
     def bare_metal_instance?
-      if @sl_hash.has_key?(:bareMetalInstanceFlag)
+      if has_sl_property?(:bareMetalInstanceFlag)
         self.bareMetalInstanceFlag != 0
       else
         false
