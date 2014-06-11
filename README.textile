@@ -5,7 +5,7 @@ The SoftLayer API Client for Ruby is a library for connecting to and calling the
 <div id="note" style="margin: 1em; padding: 0.5em; background-color: #fcfcfc; border: 1px solid black">
 	*Important Note*
 
-	Version 2.0 of the gem may require you change your existing scripts. Please see "What's New":#whats_new for details.
+	If you are arriving at this build from verison 1.0 of the @softlayer_api@ gem, you will probably have to change some of your existing scripts. Please see "What's New":#whats-new for details.
 </div>
 
 h2. Overview
@@ -24,15 +24,23 @@ The Ruby client has been tested using a wide variety of Ruby implementations inc
 
 A network connection is required, and a valid SoftLayer API username and api key are required to call the SoftLayer API. A connection to the SoftLayer private network is required to connect to SoftLayer's private network API endpoints.
 
-h2(#whats_new). What's New
+h2(#whats-new). What's New
 
-Version 2.0 of the @softlayer_api@ gem changes the protocol used to communicate with the SoftLayer API from REST to XML-RPC. This change should not require any changes to existing scripts. However there are two new behaviors which may require you to change existing scripts:
+The softlayer_api gem no longer supports Ruby 1.8.x
+
+**Version 2.1** of @softlayer_api@ builds an object model of SoftLayer clases on top of the low-level SoftLayer API calls. The object model provides a high-level interface to the elements within the SoftLayer environment and encapsulates some of the details of the "raw" SoftLayer API.
+
+
+With this first release, the Object Model provides classes for the SoftLayer Account, Bare Metal and Virutal servers, and Tickets. The model also provides classes to help you place orders for both Bare Metal and Virtual Servers. The class structure is not meant to be comprehensive.  Our goal is to provide a simple API for performing common operations.
+
+Interface documentation for the new object hierarchy is available in the gem's source. More comprehensive documentation including a design guide for new clases and a contribution guide for developers will be added in the future.
+
+**Version 2.0** of the @softlayer_api@ gem changes the protocol used to communicate with the SoftLayer API from REST to XML-RPC. This change alone should not require any changes to scripts written to the version 1.0 gem. However there are two new behaviors which will require existing version 1.0 scripts to change:
+
 * Object Masks are now sent to the server using the "Extended Object Mask Format":http://sldn.softlayer.com/article/Object-Masks.
 * Result limits are now specified using a single call rather than requiring two
 
 The gem now allows you to specify your SoftLayer username and API key through a config file. See "Providing authentication in a config file":#config_authorization for more information.
-
-The softlayer_api gem no longer supports Ruby 1.8.x
 
 h3. XML-RPC
 
