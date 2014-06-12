@@ -27,8 +27,8 @@ module SoftLayer
   # for objects in that hierarchy
   #
   # The SoftLayer API represents entities as a hash of properties. This class
-  # stores that hash and uses +method_missing+ to allow code to access fields in
-  # that hash through simple method calls.
+  # stores that hash and allows the use of subscripting to access those properties
+  # directly.
   #
   # The class also has a model for making network requests that will refresh
   # the stored hash so that it reflects the most up-to-date information about
@@ -37,8 +37,15 @@ module SoftLayer
   # refresh_details to ask an object to update itself.
   #
   class ModelBase
+    # The client environment that this model object belongs to
     attr_reader :softlayer_client
 
+    ##
+    # :attr_reader: id
+    # The unique identifier of this object within its API service
+
+    # Construct a new model object in the environment of the given client and
+    # with the given hash of network data (presumably returned by the SoftLayer API)
     def initialize(softlayer_client, network_hash)
       raise ArgumentError, "A hash is required" if nil == network_hash
 
@@ -49,8 +56,18 @@ module SoftLayer
       raise ArgumentError, "id must be non-nil and non-empty" unless self[:id]
     end
 
-    def to_ary
-      return nil
+    ##
+    # The service method of a Model object should return a SoftLayer Service
+    # that best represents the modeled object.  For example, a Ticket models
+    # a particular entity in the SoftLayer_Ticket service.  The particular
+    # entity is identified by its id so the Ticket class would return
+    #
+    #     softlayer_client["Ticket"].object_with_id
+    #
+    # which is a service which would allow calls to the ticket service
+    # through that particular object.
+    def service
+      raise "Abstract method service in ModelBase was called"
     end
 
     ##
@@ -72,7 +89,7 @@ module SoftLayer
     # of this routine.
     #
     def softlayer_properties(object_mask = nil)
-      raise RuntimeError.new("Abstract method softlayer_properties in ModelBase was called")
+      raise "Abstract method softlayer_properties in ModelBase was called"
     end
 
     ##
@@ -101,12 +118,17 @@ module SoftLayer
 
       define_method(attribute_symbol.to_sym) { self[hash_key ? hash_key : attribute_symbol.to_s]}
     end
+    
+    sl_attr :id
 
-    ##
-    # :attr_reader: id
-    # The unique identifier of this object within it's API service
-    sl_attr(:id)
-
+    # When printing to the console using puts, ruby will call the
+    # to_ary method trying to convert an object into an array of lines
+    # for stdio. We override to_ary to return nil for model objects
+    # so they may be printed
+    def to_ary()
+      return nil;
+    end
+    
     protected
 
     ##

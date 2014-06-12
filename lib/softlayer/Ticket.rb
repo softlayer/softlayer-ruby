@@ -49,21 +49,34 @@ module SoftLayer
 		# Add an update to this ticket.
 		#
 		def update(body = nil)
-			softlayer_client["Ticket"].object_with_id(self.id).edit(self.softlayer_hash, body)
+			self.service.edit(self.softlayer_hash, body)
 		end
+    
+    ## 
+    # Override of service from ModelBase. Returns the SoftLayer_Ticket service
+    # set up to talk to the ticket with my ID.
+    def service
+      return softlayer_client["Ticket"].object_with_id(self.id)
+    end
 
+    ##
+    # Override from model base. Requests new details about the ticket
+    # from the server.
 		def softlayer_properties(object_mask = nil)
-      service = softlayer_client["Ticket"]
+      my_service = self.service
 
       if(object_mask)
-        service = service.object_mask(object_mask)
+        my_service = service.object_mask(object_mask)
       else
-        service = service.object_mask(self.class.default_object_mask.to_sl_object_mask)
+        my_service = service.object_mask(self.class.default_object_mask.to_sl_object_mask)
       end
 
-      service.object_with_id(self.id).getObject()
+      my_service.getObject()
 		end
 
+    ##
+    # Returns the default object mask,as a hash, that is used when
+    # retrieving ticket information from the SoftLayer server.
 		def self.default_object_mask
       {
         "mask" => [
@@ -83,6 +96,9 @@ module SoftLayer
       }
 		end
 
+    ##
+    # Queries the SoftLayer API to retrieve a list of the valid
+    # ticket subjects.
 		def self.ticket_subjects(softlayer_client)
 			@ticket_subjects ||= nil
 			if !@ticket_subjects
@@ -91,6 +107,8 @@ module SoftLayer
 			@ticket_subjects
 		end
 
+    ##
+    # Find the ticket with the given ID and return it
 		def self.ticket_with_id(softlayer_client, ticket_id, options = {})
       if options.has_key?(:object_mask)
         object_mask = options[:object_mask]
@@ -103,6 +121,8 @@ module SoftLayer
       return new(softlayer_client, ticket_data)
     end
 
+    ##
+    # Create and submit a new support Ticket to SoftLayer.
     def self.create_ticket(softlayer_client, title=nil, body=nil, subject_id=nil, user_id=nil)
       if(nil == user_id)
         current_user = softlayer_client["Account"].object_mask("id").getCurrentUser()

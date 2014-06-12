@@ -134,6 +134,13 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     def related_service_named(service_name)
       @client.service_named(service_name)
     end
+    
+    # Added here so that the interface of this class matches that
+    # of APIParameterFilter.  In APIParameterFilter the target is
+    # a service.  In a service, the target is itself.
+    def target
+      return self
+    end
 
     # Use this as part of a method call chain to identify a particular
     # object as the target of the request. The parameter is the SoftLayer

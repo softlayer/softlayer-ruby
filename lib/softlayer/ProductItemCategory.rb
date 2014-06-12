@@ -49,13 +49,13 @@ module SoftLayer
   class ProductItemCategory < ModelBase
     include ::SoftLayer::DynamicAttribute
 
-    sl_dynamic_attr :configuration_options do |resource|
-      resource.should_update? do
+    sl_dynamic_attr :configuration_options do |config_opts|
+      config_opts.should_update? do
         # only retrieved once per instance
         @configuration_options == nil
       end
 
-      resource.to_update do
+      config_opts.to_update do
         # This method assumes that the group and price item data was sent in
         # as part of the +network_hash+ used to initialize this object (as is done)
         # by the ProductPackage class. That class, in turn, gets its information
@@ -85,6 +85,10 @@ module SoftLayer
       end
     end
 
+    def service
+      softlayer_client["SoftLayer_Product_Item_Category"].object_with_id(self.id)
+    end
+    
     ##
     # If the category has a single option (regardless of fees) this method will return
     # that option.  If the category has more than one option, this method will

@@ -79,7 +79,7 @@ module SoftLayer
       end
 
       resource.to_update do
-        service.object_with_id(self.id).object_mask("mask[id,categories.categoryCode,item[id,capacity,units,attributes,prices]]").getUpgradeItemPrices(true)
+        self.service.object_mask("mask[id,categories.categoryCode,item[id,capacity,units,attributes,prices]]").getUpgradeItemPrices(true)
       end
     end
 
@@ -87,7 +87,7 @@ module SoftLayer
     # IMMEDIATELY cancel this virtual server
     #
     def cancel!
-      self.service.object_with_id(self.id).deleteObject()
+      self.service.deleteObject()
     end
 
     ##
@@ -149,7 +149,7 @@ module SoftLayer
 
       disks = self.blockDevices.select(&disk_filter)
 
-      service.object_with_id(id).createArchiveTransaction(image_name, disks, notes) if disks && !disks.empty?
+      self.service.createArchiveTransaction(image_name, disks, notes) if disks && !disks.empty?
     end
 
     ##
@@ -204,14 +204,14 @@ module SoftLayer
     # * <b>+:object_mask+</b> (string) - A object mask of properties, in addition to the default properties, that you wish to retrieve for the server
     #
     def self.server_with_id(softlayer_client, server_id, options = {})
-      service = softlayer_client["Virtual_Guest"]
-      service = service.object_mask(default_object_mask.to_sl_object_mask)
+      vg_service = softlayer_client["Virtual_Guest"]
+      vg_service = vg_service.object_mask(default_object_mask.to_sl_object_mask)
 
       if options.has_key?(:object_mask)
-        service = service.object_mask(options[:object_mask])
+        vg_service = vg_service.object_mask(options[:object_mask])
       end
 
-      server_data = service.object_with_id(server_id).getObject()
+      server_data = vg_service.object_with_id(server_id).getObject()
 
       return VirtualServer.new(softlayer_client, server_data)
     end
@@ -276,30 +276,30 @@ module SoftLayer
 
       required_properties_mask = 'mask.id'
 
-      service = softlayer_client['Account']
-      service = service.object_filter(object_filter) unless object_filter.empty?
-      service = service.object_mask(default_object_mask.to_sl_object_mask)
+      account_service = softlayer_client['Account']
+      account_service = account_service.object_filter(object_filter) unless object_filter.empty?
+      account_service = account_service.object_mask(default_object_mask.to_sl_object_mask)
 
       if options_hash.has_key? :object_mask
-        service = service.object_mask(options_hash[:object_mask])
+        account_service = account_service.object_mask(options_hash[:object_mask])
       end
 
       if options_hash.has_key?(:result_limit)
         offset = options[:result_limit][:offset]
         limit = options[:result_limit][:limit]
 
-        service = service.result_limit(offset, limit)
+        account_service = account_service.result_limit(offset, limit)
       end
 
       case
       when options_hash[:hourly] && options_hash[:monthly]
-        virtual_server_data = service.getVirtualGuests()
+        virtual_server_data = account_service.getVirtualGuests()
       when options_hash[:hourly]
-        virtual_server_data = service.getHourlyVirtualGuests()
+        virtual_server_data = account_service.getHourlyVirtualGuests()
       when options_hash[:monthly]
-        virtual_server_data = service.getMonthlyVirtualGuests()
+        virtual_server_data = account_service.getMonthlyVirtualGuests()
       else
-        virtual_server_data = service.getVirtualGuests()
+        virtual_server_data = account_service.getVirtualGuests()
       end
 
       virtual_server_data.collect { |server_data| VirtualServer.new(softlayer_client, server_data) }
@@ -331,10 +331,11 @@ module SoftLayer
     end #default_object_mask
 
     ##
-    # Returns the SoftLayer Service used to work with instances of this class. For Virtual Servers that is +SoftLayer_Virtual_Guest+
-    # This routine is largely an implementation detail of this object framework
+    # Returns the SoftLayer Service that represents calls to this object
+    # For VirtualServers the service is +SoftLayer_Virtual_Guest+ and 
+    # addressing this object is done by id.
     def service
-      return softlayer_client["Virtual_Guest"]
+      return softlayer_client["Virtual_Guest"].object_with_id(self.id)
     end
 
     private

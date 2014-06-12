@@ -137,6 +137,10 @@ module SoftLayer
       end
     end
 
+    def service
+      softlayer_client["Account"].object_with_id(self.id)
+    end
+    
     ##
     # Using the login credentials in the client, retrieve
     # the account associated with those credentials.

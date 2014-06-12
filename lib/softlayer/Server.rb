@@ -84,16 +84,6 @@ module SoftLayer
     end
 
     ##
-    # Returns the service responsible for handling the given
-    # server. In the base class (this one) the server is abstract
-    # but subclasses implement this to return the appropriate service
-    # from their client.
-    #
-    def service
-      raise RuntimeError, "This method is an abstract method in the Server base class"
-    end
-
-    ##
     # Make an API request to SoftLayer and return the latest properties hash
     # for this object.
     def softlayer_properties(object_mask = nil)
@@ -105,7 +95,7 @@ module SoftLayer
         my_service = my_service.object_mask(self.class.default_object_mask.to_sl_object_mask)
       end
 
-      my_service.object_with_id(self.id).getObject()
+      my_service.getObject()
     end
 
     ##
@@ -118,7 +108,7 @@ module SoftLayer
         "notes" => new_notes
       }
 
-      service.object_with_id(self.id).editObject(edit_template)
+      self.service.editObject(edit_template)
       self.refresh_details()
     end
 
@@ -127,7 +117,7 @@ module SoftLayer
     #
     def user_metadata=(new_metadata)
       raise ArgumentError.new("Cannot set user metadata to nil") unless new_metadata
-      service.object_with_id(self.id).setUserMetadata([new_metadata])
+      self.service.setUserMetadata([new_metadata])
       self.refresh_details()
     end
 
@@ -143,7 +133,7 @@ module SoftLayer
         "hostname" => new_hostname
       }
 
-      service.object_with_id(self.id).editObject(edit_template)
+      self.service.editObject(edit_template)
       self.refresh_details()
     end
 
@@ -161,7 +151,7 @@ module SoftLayer
         "domain" => new_domain
       }
 
-      service.object_with_id(self.id).editObject(edit_template)
+      self.service.editObject(edit_template)
       self.refresh_details()
     end
 
@@ -177,9 +167,9 @@ module SoftLayer
     #
     def change_port_speed(new_speed, public = true)
       if public
-        service.object_with_id(self.id).setPublicNetworkInterfaceSpeed(new_speed)
+        self.service.setPublicNetworkInterfaceSpeed(new_speed)
       else
-        service.object_with_id(self.id).setPrivateNetworkInterfaceSpeed(new_speed)
+        self.service.setPrivateNetworkInterfaceSpeed(new_speed)
       end
 
       self.refresh_details()
@@ -206,7 +196,7 @@ module SoftLayer
       configuration['customProvisionScriptUri'] = provisioning_script_uri if provisioning_script_uri
       configuration['sshKeyIds'] = ssh_keys if ssh_keys
 
-      service.object_with_id(self.id).reloadOperatingSystem(token, configuration)
+      self.service.reloadOperatingSystem(token, configuration)
     end
 
     def to_s

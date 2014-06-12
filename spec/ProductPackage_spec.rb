@@ -41,4 +41,22 @@ describe SoftLayer::ProductPackage do
 
     SoftLayer::ProductPackage.packages_with_key_name(client, 'FAKE_KEY_NAME')
   end
+  
+  it "identifies itself with the Product_Package service" do
+    mock_client = SoftLayer::Client.new(:username => "fake_user", :api_key => "BADKEY")
+    allow(mock_client).to receive(:[]) do |service_name|
+      expect(service_name).to eq "Product_Package"
+      mock_service = SoftLayer::Service.new("SoftLayer_Product_Package", :client => mock_client)
+
+      # mock out call_softlayer_api_with_params so the service doesn't actually try to
+      # communicate with the api endpoint
+      allow(mock_service).to receive(:call_softlayer_api_with_params)
+      
+      mock_service
+    end
+
+    fake_package = SoftLayer::ProductPackage.new(mock_client, {"id" => 12345})
+    expect(fake_package.service.server_object_id).to eq(12345)
+    expect(fake_package.service.target.service_name).to eq "SoftLayer_Product_Package"
+  end
 end

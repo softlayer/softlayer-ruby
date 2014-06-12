@@ -68,13 +68,11 @@ module SoftLayer
     end
 
     ##
-    # Returns the SoftLayer Service used to work with instances of this class.
+    # Returns the SoftLayer Service used to work with this Server
     # For Bare Metal Servers that is +SoftLayer_Hardware+ though in some special cases
     # you may have to use +SoftLayer_Hardware_Server+ as a type or service.
-    #
-    # This routine is largely an implementation detail of this object framework
     def service
-      return softlayer_client["Hardware"]
+      return softlayer_client["Hardware"].object_with_id(self.id)
     end
 
     ##
@@ -125,14 +123,14 @@ module SoftLayer
     # Retrive the bare metal server with the given server ID from the
     # SoftLayer API
     def self.server_with_id(softlayer_client, server_id, options = {})
-      service = softlayer_client["Hardware"]
-      service = service.object_mask(default_object_mask.to_sl_object_mask)
+      hardware_service = softlayer_client["Hardware"]
+      hardware_service = hardware_service.object_mask(default_object_mask.to_sl_object_mask)
 
       if options.has_key?(:object_mask)
-        object_mask = service.object_mask(options[:object_mask])
+        object_mask = hardware_service.object_mask(options[:object_mask])
       end
 
-      server_data = service.object_with_id(server_id).getObject()
+      server_data = hardware_service.object_with_id(server_id).getObject()
 
       return BareMetalServer.new(softlayer_client, server_data)
     end
@@ -193,22 +191,22 @@ module SoftLayer
           } ));
       end
 
-      service = softlayer_client['Account']
-      service = service.object_filter(object_filter) unless object_filter.empty?
-      service = service.object_mask(default_object_mask.to_sl_object_mask)
+      account_service = softlayer_client['Account']
+      account_service = account_service.object_filter(object_filter) unless object_filter.empty?
+      account_service = account_service.object_mask(default_object_mask.to_sl_object_mask)
 
       if(options_hash.has_key? :object_mask)
-        service = service.object_mask(options_hash[:object_mask])
+        account_service = account_service.object_mask(options_hash[:object_mask])
       end
 
       if options_hash.has_key?(:result_limit)
         offset = options[:result_limit][:offset]
         limit = options[:result_limit][:limit]
 
-        service = service.result_limit(offset, limit)
+        account_service = account_service.result_limit(offset, limit)
       end
 
-      bare_metal_data = service.getHardware()
+      bare_metal_data = account_service.getHardware()
       bare_metal_data.collect { |server_data| BareMetalServer.new(softlayer_client, server_data) }
     end
   end #BareMetalServer

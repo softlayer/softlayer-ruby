@@ -26,9 +26,9 @@ module SoftLayer
   # SoftLayer API.
   #
   # The following symbols can be used as hash arguments to pass options to the constructor:
-  # - +:username+ - a non-empty string providing the username to use for requests to the service
-  # - +:api_key+ - a non-empty string providing the api key to use for requests to the service
-  # - +:endpoint_url+ - a non-empty string providing the endpoint URL to use for requests to the service
+  # - +:username+ - a non-empty string providing the username to use for requests to the client
+  # - +:api_key+ - a non-empty string providing the api key to use for requests to the client
+  # - +:endpoint_url+ - a non-empty string providing the endpoint URL to use for requests to the client
   #
   # If any of the options above are missing then the constructor will try to use the corresponding
   # global variable declared in the SoftLayer Module:

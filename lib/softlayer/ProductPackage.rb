@@ -116,9 +116,16 @@ module SoftLayer
       availableLocations.collect { |location_data| location_data["location"]["name"] }
     end
 
+    ##
+    # Given a datacenter name that was returned by datacenter_options, use information
+    # in the package to retrieve a location id.
     def location_id_for_datacenter_name(datacenter_name)
       location_data = availableLocations.find { |location_data| location_data["location"]["name"]  == datacenter_name }
       location_data["locationId"]
+    end
+
+    def service
+      softlayer_client['Product_Package'].object_with_id(self.id)
     end
 
     ##

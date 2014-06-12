@@ -26,7 +26,6 @@ require 'rubygems'
 require 'softlayer_api'
 require 'rspec'
 
-
 describe SoftLayer::ModelBase do
   describe "#initialize" do
     it "rejects hashes without an id" do

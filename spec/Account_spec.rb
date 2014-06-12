@@ -34,10 +34,28 @@ describe SoftLayer::Account do
 	end
 
   it "knows its id" do
-    test_account = SoftLayer::Account.new(nil, "id" => "232279", "firstName" => "kangaroo")
-    expect(test_account.id).to eq("232279")
+    test_account = SoftLayer::Account.new(nil, "id" => 232279, "firstName" => "kangaroo")
+    expect(test_account.id).to eq(232279)
   end
 
+  it "identifies itself with the Account service" do
+    mock_client = SoftLayer::Client.new(:username => "fake_user", :api_key => "BADKEY")
+    allow(mock_client).to receive(:[]) do |service_name|
+      expect(service_name).to eq "Account"
+      mock_service = SoftLayer::Service.new("SoftLayer_Account", :client => mock_client)
+
+      # mock out call_softlayer_api_with_params so the service doesn't actually try to
+      # communicate with the api endpoint
+      allow(mock_service).to receive(:call_softlayer_api_with_params)
+
+      mock_service
+    end
+
+    fake_account = SoftLayer::Account.new(mock_client, "id" => 12345)
+    expect(fake_account.service.server_object_id).to eq(12345)
+    expect(fake_account.service.target.service_name).to eq "SoftLayer_Account"
+  end
+  
   it "should allow the user to get the default account for a service" do
     test_client = double("mockClient")
     allow(test_client).to receive(:[]) do |service_name|

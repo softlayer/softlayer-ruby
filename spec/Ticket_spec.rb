@@ -33,20 +33,41 @@ describe SoftLayer::Ticket do
     fakeTicketSubjects = fixture_from_json("ticket_subjects")
 
 	  mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key=> 'fakekey')
-      allow(mock_client).to receive(:[]) do |service_name|
-        expect(service_name).to eq "Ticket_Subject"
+    allow(mock_client).to receive(:[]) do |service_name|
+      expect(service_name).to eq "Ticket_Subject"
 
-        mock_service = SoftLayer::Service.new("SoftLayer_Ticket_Subject", :client => mock_client)
-        expect(mock_service).to receive(:getAllObjects).once.and_return(fakeTicketSubjects)
-        expect(mock_service).to_not receive(:call_softlayer_api_with_params)
+      mock_service = SoftLayer::Service.new("SoftLayer_Ticket_Subject", :client => mock_client)
+      expect(mock_service).to receive(:getAllObjects).once.and_return(fakeTicketSubjects)
+      expect(mock_service).to_not receive(:call_softlayer_api_with_params)
 
-        mock_service
-      end
+      mock_service
+    end
 
-      expect(SoftLayer::Ticket.ticket_subjects(mock_client)).to be(fakeTicketSubjects)
+    expect(SoftLayer::Ticket.ticket_subjects(mock_client)).to be(fakeTicketSubjects)
 
-      # call for the subjects again which should NOT re-request them from the client
-      # (so :getAllObjects on the service should not be called again)
-      expect(SoftLayer::Ticket.ticket_subjects(mock_client)).to be(fakeTicketSubjects)
+    # call for the subjects again which should NOT re-request them from the client
+    # (so :getAllObjects on the service should not be called again)
+    expect(SoftLayer::Ticket.ticket_subjects(mock_client)).to be(fakeTicketSubjects)
 	end
+  
+  it "identifies itself with the ticket service" do
+    fake_ticket_data = fixture_from_json("test_tickets").first
+
+	  mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key=> 'fakekey')
+    allow(mock_client).to receive(:[]) do |service_name|
+      expect(service_name).to eq "Ticket"
+      mock_service = SoftLayer::Service.new("SoftLayer_Ticket", :client => mock_client)
+
+      # mock out call_softlayer_api_with_params so the service doesn't actually try to
+      # communicate with the api endpoint
+      allow(mock_service).to receive(:call_softlayer_api_with_params)
+      
+      mock_service
+    end
+
+    fake_ticket = SoftLayer::Ticket.new(mock_client, fake_ticket_data)
+    ticket_service = fake_ticket.service
+    expect(ticket_service.server_object_id).to eq(12345)
+    expect(ticket_service.target.service_name).to eq "SoftLayer_Ticket"
+  end
 end

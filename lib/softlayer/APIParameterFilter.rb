@@ -129,7 +129,7 @@ class APIParameterFilter
   ##
   # A utility method that returns the server object ID (if any) stored
   # in this parameter set.
-  def server_object_id
+  def server_object_id 
     self.parameters[:server_object_id]
   end
 

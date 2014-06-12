@@ -43,12 +43,12 @@ module SoftLayer
   # These globals can be used to simplify client creation
   #
 
-  # Set this if you want to provide a default username for each service as it is created.
-  # usernames provided to the service initializer will override the global
+  # Set this if you want to provide a default username for each client as it is created.
+  # usernames provided to the client initializer will override the global
   $SL_API_USERNAME = nil
 
-  # Set this if you want to provide a default api_key for each service as it is
-  # created. API keys provided in the constructor when a service is created will
+  # Set this if you want to provide a default api_key for each client as it is
+  # created. API keys provided in the constructor when a client is created will
   # override the values in this global
   $SL_API_KEY = nil
 

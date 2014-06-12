@@ -18,17 +18,17 @@ shared_examples_for "server with port speed" do
 	end
 
 	it "changes public port speed if no interface is specified" do
-		expect(server.service).to receive(:setPublicNetworkInterfaceSpeed).with(10)
+		expect(server.service.target).to receive(:call_softlayer_api_with_params).with(:setPublicNetworkInterfaceSpeed, instance_of(SoftLayer::APIParameterFilter),[10])
 		server.change_port_speed(10)
 	end
 
 	it "changes public port speed if told to do so" do
-		expect(server.service).to receive(:setPublicNetworkInterfaceSpeed).with(10)
+		expect(server.service.target).to receive(:call_softlayer_api_with_params).with(:setPublicNetworkInterfaceSpeed, instance_of(SoftLayer::APIParameterFilter),[10])
 		server.change_port_speed(10, true)
 	end
 
 	it "changes private port speed if told to change private" do
-		expect(server.service).to receive(:setPrivateNetworkInterfaceSpeed).with(10)
+		expect(server.service.target).to receive(:call_softlayer_api_with_params).with(:setPrivateNetworkInterfaceSpeed, instance_of(SoftLayer::APIParameterFilter),[10])
 		server.change_port_speed(10, false)
 	end
 end
