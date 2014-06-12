@@ -67,16 +67,16 @@ describe SoftLayer::ModelBase do
   it "realizes when low-level hash keys are added" do
     test_model = SoftLayer::ModelBase.new(nil, { "id" => "12345" })
     allow(test_model).to receive(:softlayer_properties) { { "id" => "12345", "newInfo" => "fun" } }
-    expect(test_model.has_sl_property? :newInfo).to be_false
+    expect(test_model.has_sl_property? :newInfo).to be(false)
     test_model.refresh_details()
-    expect(test_model.has_sl_property? :newInfo).to be_true
+    expect(test_model.has_sl_property? :newInfo).to be(true)
   end
 
   it "realizes when low-level hash keys are removed" do
     test_model = SoftLayer::ModelBase.new(nil, { "id" => "12345", "newInfo" => "fun" })
     allow(test_model).to receive(:softlayer_properties) { { "id" => "12345" } }
-    expect(test_model.has_sl_property? :newInfo).to be_true
+    expect(test_model.has_sl_property? :newInfo).to be(true)
     test_model.refresh_details()
-    expect(test_model.has_sl_property? :newInfo).to be_false
+    expect(test_model.has_sl_property? :newInfo).to be(false)
   end
 end
