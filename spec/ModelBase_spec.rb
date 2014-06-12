@@ -51,13 +51,13 @@ describe SoftLayer::ModelBase do
     expect(test_model[:id]).to eq("12345")
     expect(test_model["id"]).to eq("12345")
   end
-  
+
   it "allows access to exposed softlayer properties" do
     mock_client = double("Mock SoftLayer Client")
     test_model = SoftLayer::ModelBase.new(mock_client, { "id" => "12345"});
     expect(test_model.id).to eq("12345")
   end
-  
+
   it "returns nil from to_ary" do
     test_model = SoftLayer::ModelBase.new(nil, { "id" => "12345" })
     expect(test_model).to respond_to(:to_ary)

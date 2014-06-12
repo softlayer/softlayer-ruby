@@ -36,20 +36,20 @@ module SoftLayer
     end
   end
 
-  # The goal of this class is to make it easy for scripts (and scripters) to 
-  # discover what product configuration options exist that can be added to a 
+  # The goal of this class is to make it easy for scripts (and scripters) to
+  # discover what product configuration options exist that can be added to a
   # product order.
   #
   # Instances of this class are created by and discovered in the context
-  # of a ProductPackage object. There should not be a need to create instances 
+  # of a ProductPackage object. There should not be a need to create instances
   # of this class directly.
   #
   # This class rougly represents entities in the +SoftLayer_Product_Item_Category+
   # service.
   class ProductItemCategory < ModelBase
-    include ::SoftLayer::ModelResource
+    include ::SoftLayer::DynamicAttribute
 
-    softlayer_resource :configuration_options do |resource|
+    sl_dynamic_attr :configuration_options do |resource|
       resource.should_update? do
         # only retrieved once per instance
         @configuration_options == nil
@@ -62,7 +62,7 @@ module SoftLayer
         # from SoftLayer_Product_Package::getCategories which does some complex
         # work on the back end to ensure the prices returned are correct.
         #
-        # If this object was created in any other way, the configuration 
+        # If this object was created in any other way, the configuration
         # options might be incorrect. So Caveat Emptor.
         #
         # Options are divided into groups (for convenience in the
@@ -92,7 +92,7 @@ module SoftLayer
     #
     # If there are multiple options with no fees, it simply returns the first it finds
     #
-    # Note that the option found may NOT be the same default option that is given 
+    # Note that the option found may NOT be the same default option that is given
     # in the web-based ordering system.
     #
     # If there are multiple options, and all of them have associated fees, then this method

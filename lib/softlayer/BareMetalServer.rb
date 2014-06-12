@@ -23,7 +23,7 @@
 module SoftLayer
   #
   # This class represents a Bare Metal Server, a hardware server in contrast to a virtual machine,
-  # in the SoftLayer Environment. It corresponds rougly to the +SoftLayer_Hardware+ and 
+  # in the SoftLayer Environment. It corresponds rougly to the +SoftLayer_Hardware+ and
   # +SoftLayer_Hardware_Server+ services in the SoftLayer API
   #
   # http://sldn.softlayer.com/reference/datatypes/SoftLayer_Hardware
@@ -68,7 +68,7 @@ module SoftLayer
     end
 
     ##
-    # Returns the SoftLayer Service used to work with instances of this class. 
+    # Returns the SoftLayer Service used to work with instances of this class.
     # For Bare Metal Servers that is +SoftLayer_Hardware+ though in some special cases
     # you may have to use +SoftLayer_Hardware_Server+ as a type or service.
     #
@@ -103,7 +103,7 @@ module SoftLayer
     #
     # When cancelling a server with the cancel! method, the first parameter is the reason and
     # should be one of the keys in the hash returned by this method.  This, in turn
-    # will be translated into a string which is, for all intents and purposes, a 
+    # will be translated into a string which is, for all intents and purposes, a
     # literal string constant with special meaning to the SoftLayer API.
     #
     def self.cancellation_reasons

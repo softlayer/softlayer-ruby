@@ -32,21 +32,48 @@ module SoftLayer
   # ancestry.  As a result there is no SoftLayer API analog
   # to this class.
   class Server  < SoftLayer::ModelBase
-    
-    softlayer_attr :hostname
-    softlayer_attr :domain
-    softlayer_attr :fullyQualifiedDomainName
-    softlayer_attr :datacenter
-    softlayer_attr :primary_public_ip, "primaryIpAddress"
-    softlayer_attr :primary_private_ip, "primaryBackendIpAddress"
-    softlayer_attr :notes     
+
+    ##
+    # :attr_reader:
+    # The host name SoftLayer has stored for the server
+    sl_attr :hostname
+
+    ##
+    # :attr_reader:
+    # The domain name SoftLayer has stored for the server
+    sl_attr :domain
+
+    ##
+    # :attr_reader:
+    # A convenience attribute that combines the hostname and domain name
+    sl_attr :fullyQualifiedDomainName
+
+    ##
+    # :attr_reader:
+    # The data center where the server is located
+    sl_attr :datacenter
+
+    ##
+    # :attr_reader:
+    # The IP address of the primary public interface for the server
+    sl_attr :primary_public_ip, "primaryIpAddress"
+
+    ##
+    # :attr_reader:
+    # The IP address of the primary private interface for the server
+    sl_attr :primary_private_ip, "primaryBackendIpAddress"
+
+    ##
+    # :attr_reader:
+    # Notes about these server (for use by the customer)
+    sl_attr :notes
 
     ##
     # Construct a server from the given client using the network data found in +network_hash+
     #
     # Most users should not have to call this method directly. Instead you should access the
-    # servers property of an Account object, or use methods like find_servers in the BareMetalServer
-    # and VirtualServer classes.
+    # servers property of an Account object, or use methods like BareMetalServer#find_servers
+    # or VirtualServer#find_servers
     #
     def initialize(softlayer_client, network_hash)
       if self.class == Server
@@ -138,13 +165,12 @@ module SoftLayer
     ##
     # Change the current port speed of the server
     #
-    # +new_speed+ should be 0, 10, 100, or 1000 (units are Mbps) and the actual
-    # speed of the port will be limited by the current maximum port
-    # speed for the server.
+    # +new_speed+ is expressed Mbps and should be 0, 10, 100, or 1000.
+    # Ports have a maximum speed that will limit the actual speed set
+    # on the port.
     #
     # Set +public+ to +false+ in order to change the speed of the
-    # primary private network interface instead of the primary
-    # public one.
+    # primary private network interface.
     #
     def change_port_speed(new_speed, public = true)
       if public
@@ -160,14 +186,14 @@ module SoftLayer
     # Begins an OS reload on this server.
     #
     # The OS reload can wipe out the data on your server so this method uses a
-    # confirmation mechanism built into the API. If you call this method once
-    # without a token, it will not actually start the reload, but instead will
-    # return a token to you. That token is good for 10 minutes. If you call
-    # this method again and pass that token then the OS reload will actually
-    # begin.
+    # confirmation mechanism built into the underlying SoftLayer API. If you
+    # call this method once without a token, it will not actually start the
+    # reload. Instead it will return a token to you. That token is good for
+    # 10 minutes. If you call this method again and pass that token **then**
+    # the OS reload will actually begin.
     #
     # If you wish to force the OS Reload and bypass the token safety mechanism
-    # simply pass the token 'FORCE' as the first parameter. If you do so
+    # pass the token 'FORCE' as the first parameter. If you do so
     # the reload will proceed immediately.
     #
     def reload_os!(token = '', provisioning_script_uri = nil, ssh_keys = nil)
@@ -179,6 +205,20 @@ module SoftLayer
       service.object_with_id(self.id).reloadOperatingSystem(token, configuration)
     end
 
+    def to_s
+      result = super
+      if respond_to?(:hostname) then
+        result.sub!('>', ", #{hostname}>")
+      end
+      result
+    end
+
+    protected
+
+    # returns the default object mask for all servers
+    # structured as a hash so that the classes BareMetalServer
+    # and VirtualServer can use hash construction techniques to
+    # specialize the mask for their use.
     def self.default_object_mask
       { "mask" => [
           'id',
@@ -205,14 +245,6 @@ module SoftLayer
           'postInstallScriptUri'
         ]
       }
-    end
-
-    def to_s
-      result = super
-      if respond_to?(:hostname) then
-        result.sub!('>', ", #{hostname}>")
-      end
-      result
     end
 
   end # class Server

@@ -31,7 +31,7 @@ module SoftLayer
   # that go into configuring the server, please see the
   # BareMetalServerOrder_Package class.
   #
-  # This class creates the server with the SoftLayer_Hardware::createObject 
+  # This class creates the server with the SoftLayer_Hardware::createObject
   # method.
   #
   # http://sldn.softlayer.com/reference/services/SoftLayer_Hardware/createObject
@@ -188,13 +188,13 @@ module SoftLayer
     def self.create_object_options(client)
       @@create_object_options ||= client["Hardware"].getCreateObjectOptions()
     end
-    
+
     ##
     # Return a list of values that are valid for the :datacenter attribute
     def self.datacenter_options(client)
       create_object_options(client)["datacenters"].collect { |datacenter_spec| datacenter_spec['template']['datacenter']["name"] }.uniq.sort!
     end
-    
+
     def self.core_options(client)
       create_object_options(client)["processors"].collect { |processor_spec| processor_spec['template']['processorCoreAmount'] }.uniq.sort!
     end
@@ -215,7 +215,7 @@ module SoftLayer
     # Returns a list of the :max_port_speeds
     def self.max_port_speed_options(client)
       create_object_options(client)["networkComponents"].collect { |component_spec| component_spec['template']['networkComponents'][0]['maxSpeed'] }
-    end    
+    end
 
   end # class BareMetalServerOrder
 end # module SoftLayer

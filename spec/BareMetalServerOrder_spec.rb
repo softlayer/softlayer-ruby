@@ -218,7 +218,7 @@ describe SoftLayer::BareMetalServerOrder do
       allow(virtual_guest_service).to receive(:getCreateObjectOptions) {
         fake_options
       }
-      
+
       client
     end
 
@@ -229,7 +229,7 @@ describe SoftLayer::BareMetalServerOrder do
     it "transmogrifies the datacenter options for the :datacenter attribute" do
       expect(SoftLayer::BareMetalServerOrder.datacenter_options(client)).to eq ["ams01", "dal01", "dal05", "dal06", "sea01", "sjc01", "sng01", "wdc01"]
     end
-    
+
     it "transmogrifies the processor create object options for the cores attribute" do
       expect(SoftLayer::BareMetalServerOrder.core_options(client)).to eq [2, 4, 8, 16]
     end

@@ -21,9 +21,16 @@
 #
 
 ##
-# Extensions to the hash class to support using them in constructing object
-# masks
+# This extension to the Hash class to allows object masks to be constructed
+# from built-in Ruby types and converted to object masks strings for presentation
+# to the SoftLayer API
 class Hash
+  # Given a hash, generate an Object Mask string from the structure
+  # found within the hash. This allows object masks to be constructed
+  # as hashes, then converted to strings when they must be passed
+  # to the API. The routine does some very rudimentary validation to 
+  # ensure that the hash represents a valid object mask, but care must
+  # still be taken when constructing the hash.
   def to_sl_object_mask()
     raise RuntimeError, "An object mask must contain properties" if empty?
     raise RuntimeError, "An object mask must start with root properties" if keys().find { |key| !__valid_root_property_key?(key) }
@@ -32,7 +39,10 @@ class Hash
     key_strings.count > 1 ? "[#{key_strings.join(',')}]" : "#{key_strings[0]}"
   end
 
-  def to_sl_object_mask_property()
+  # Returns a string representing the hash as a property within a larger
+  # object mask. This routine is an implementation detail used in the conversion 
+  # of hashes to object mask strings. You should not have to call this method directly.
+  def _to_sl_object_mask_property()
     key_strings = __sl_object_mask_properties_for_keys();
     "#{key_strings.join(',')}"
   end
@@ -49,14 +59,14 @@ class Hash
     each do |key, value|
       return "" if !value
 
-      string_for_key = key.to_sl_object_mask_property
+      string_for_key = key._to_sl_object_mask_property
 
       if value.kind_of?(String) || value.kind_of?(Symbol) then
-        string_for_key = "#{string_for_key}.#{value.to_sl_object_mask_property}"
+        string_for_key = "#{string_for_key}.#{value._to_sl_object_mask_property}"
       end
 
       if value.kind_of?(Array) || value.kind_of?(Hash) then
-        value_string = value.to_sl_object_mask_property
+        value_string = value._to_sl_object_mask_property
         if value_string && !value_string.empty?
           string_for_key = "#{string_for_key}[#{value_string}]"
         end
@@ -75,9 +85,11 @@ end
 class Array
   # Returns a string representing the object mask content represented by the
   # Array. Each value in the array is converted to its object mask eqivalent
-  def to_sl_object_mask_property()
+  # This routine is an implementation detail used in the conversion of hashes
+  # to object mask strings. You should not have to call this method directly.
+  def _to_sl_object_mask_property()
     return "" if self.empty?
-    property_content = map { |item| item ? item.to_sl_object_mask_property() : nil  }.compact.flatten.join(",")
+    property_content = map { |item| item ? item._to_sl_object_mask_property() : nil  }.compact.flatten.join(",")
     "#{property_content}"
   end
 end
@@ -89,7 +101,9 @@ class String
   # Returns a string representing the object mask content represented by the
   # String. Strings are simply represented as copies of themselves. We make
   # a copy in case the original String is modified somewhere along the way
-  def to_sl_object_mask_property()
+  # This routine is an implementation detail used in the conversion of hashes
+  # to object mask strings. You should not have to call this method directly.
+  def _to_sl_object_mask_property()
     return self.strip
   end
 end
@@ -98,7 +112,11 @@ end
 # Softlayer Extensions to the Symbol class to support using symbols to create
 # object masks
 class Symbol
-  def to_sl_object_mask()
-    self.to_s.to_sl_object_mask()
+  # Converts the Symbol to a string, then converts the string to an 
+  # object mask property. This routine is an implementation detail used in 
+  # the conversion of hashes to object mask strings. You should not have to 
+  # call this method directly.
+  def _to_sl_object_mask_property()
+    self.to_s._to_sl_object_mask_property()
   end
 end

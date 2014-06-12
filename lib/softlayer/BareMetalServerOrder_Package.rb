@@ -24,9 +24,9 @@ module SoftLayer
   #
   # This class is used to order a hardware server using a product package.
   #
-  # Ordering a server using a product package is a more complex process than 
-  # ordering with simple attributes (as is done by the BareMetalServerOrder class). 
-  # However with that complexity comes the the ability to specify the configuration 
+  # Ordering a server using a product package is a more complex process than
+  # ordering with simple attributes (as is done by the BareMetalServerOrder class).
+  # However with that complexity comes the the ability to specify the configuration
   # of the server in exacting detail.
   #
   # To use this class, you first select a product package. The product package
@@ -58,8 +58,8 @@ module SoftLayer
     attr_accessor :domain
 
     # The value of this property should be a hash. The keys of the hash are ProdcutItemCategory
-    # codes (like 'os' and 'ram') while the values may be Integers or Objects. The Integer values 
-    # should be the +id+ of a +SoftLayer_Product_Item_Price+ representing the configuration option 
+    # codes (like 'os' and 'ram') while the values may be Integers or Objects. The Integer values
+    # should be the +id+ of a +SoftLayer_Product_Item_Price+ representing the configuration option
     # chosen for that category. Objects must respond to the +price_id+ message and return an integer
     # that is the +id+ of a +SoftLayer_Product_Item_Price+. Instances of the ProductConfigurationOption
     # class behave this way.
@@ -154,7 +154,7 @@ module SoftLayer
 
       product_order
     end
-    
+
   end # BareMetalServerOrder_Package
-  
+
 end # SoftLayer

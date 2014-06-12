@@ -50,7 +50,7 @@ describe SoftLayer::VirtualServer do
 
     test_servers = fixture_from_json('test_virtual_servers')
     test_server = SoftLayer::VirtualServer.new(mock_client,test_servers.first)
-    
+
     expect(test_server.hostname).to eq("test-server-1")
     expect(test_server.domain).to eq("softlayer-api-test.rb")
     expect(test_server.fullyQualifiedDomainName).to eq("test-server-1.softlayer-api-test.rb")
@@ -59,7 +59,7 @@ describe SoftLayer::VirtualServer do
     expect(test_server.primary_private_ip).to eq("203.0.113.82")
     expect(test_server.notes).to eq("These are test notes")
   end
-  
+
 	it_behaves_like "server with port speed" do
 		let (:server) { sample_server }
 	end

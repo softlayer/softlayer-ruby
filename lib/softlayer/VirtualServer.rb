@@ -24,26 +24,57 @@ require 'time'
 
 module SoftLayer
   ##
-  # Instance of this class represent servers that are virtual machines in the 
+  # Instance of this class represent servers that are virtual machines in the
   # SoftLayer environment.
   #
   # This class roughly corresponds to the entity SoftLayer_Virtual_Guest in the
   # API.
   #
   class VirtualServer < Server
-    include ::SoftLayer::ModelResource
+    include ::SoftLayer::DynamicAttribute
 
-    softlayer_attr :provisionDate
-    softlayer_attr :maxCpu
-    softlayer_attr :activeTransaction
-    softlayer_attr :blockDevices
-    softlayer_attr :lastOperatingSystemReload
-    
+    ##
+    # :attr_reader:
+    # A count of the nubmer of virtual processing cores allocated
+    # to the server.
+    sl_attr :cores, 'maxCpu'
+
+    ##
+    # :attr_reader:
+    # The date the Virtual Server was provisioned.  This attribute can be
+    # nil if the SoftLayer system has not yet finished provisioning the
+    # server (consequently this attribute is used by the #wait_until_ready
+    # method to determine when a server has been provisioned)
+    sl_attr :provisionDate
+
+    ##
+    # :attr_reader:
+    # The active transaction (if any) for this virtual server. Transactions
+    # are used to make configuration changes to the server and only one
+    # transaction can be active at a time.
+    sl_attr :activeTransaction
+
+
+    ##
+    # :attr_reader:
+    # Storage devices attached to the server. Storage may be local
+    # to the host running the Virtual Server, or it may be located
+    # on the SAN
+    sl_attr :blockDevices
+
+    ##
+    # :attr_reader:
+    # The last operating system reload transaction that was
+    # run for this server. #wait_until_ready compares the
+    # ID of this transaction to the ID of the active transaction
+    # to determine if an OS reload is in progress.
+    sl_attr :lastOperatingSystemReload
+
     ##
     # A virtual server can find out about items that are
     # available for upgrades.
     #
-    softlayer_resource :upgrade_options do |resource|
+    sl_dynamic_attr :upgrade_options do |resource|
       resource.should_update? do
         @upgrade_items == nil
       end

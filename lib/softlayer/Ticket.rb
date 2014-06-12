@@ -22,9 +22,16 @@
 
 module SoftLayer
 	class Ticket < SoftLayer::ModelBase
-    
-    softlayer_attr :title
-    softlayer_attr :subject
+
+    ##
+    # :attr_reader: title
+    # The title is an identifying string set when the ticket is created
+    sl_attr :title
+
+    ##
+    # :attr_reader: subject
+    # The ticket system maintains a fixed set of subjects for tickets that are used to ensure tickets make it to the right folks quickly
+    sl_attr :subject
 
     ##
     # Returns true if the ticket has "unread" updates
@@ -37,7 +44,7 @@ module SoftLayer
     def server_admin_ticket?
       self["serverAdministrationFlag"] != 0
     end
-    
+
 		##
 		# Add an update to this ticket.
 		#

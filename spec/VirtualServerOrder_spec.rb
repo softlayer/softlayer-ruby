@@ -252,7 +252,7 @@ describe SoftLayer::VirtualServerOrder do
       allow(virtual_guest_service).to receive(:getCreateObjectOptions) {
         fake_options
       }
-      
+
       client
     end
 
@@ -264,7 +264,7 @@ describe SoftLayer::VirtualServerOrder do
     it "transmogrifies the datacenter options for the cores attribute" do
       expect(SoftLayer::VirtualServerOrder.datacenter_options(client)).to eq ["ams01", "dal01", "dal05", "dal06", "sea01", "sjc01", "sng01", "wdc01"]
     end
-    
+
     it "transmogrifies the processor options for the cores attribute" do
       expect(SoftLayer::VirtualServerOrder.core_options(client)).to eq [1, 2, 4, 8, 12, 16]
     end

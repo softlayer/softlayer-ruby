@@ -49,16 +49,16 @@ module SoftLayer
   # Category only has one choice)
   #
   class ProductPackage < ModelBase
-    include ::SoftLayer::ModelResource
+    include ::SoftLayer::DynamicAttribute
 
     ##
     # The list of locations where this product package is available.
-    softlayer_attr :availableLocations
+    sl_attr :availableLocations
 
     ##
     # The set of product categories needed to make an order for this product package.
     #
-    softlayer_resource :configuration do |resource|
+    sl_dynamic_attr :configuration do |resource|
       resource.should_update? do
         # only retrieved once per instance
         @configuration == nil
@@ -68,7 +68,7 @@ module SoftLayer
         #
         # We call +SoftLayer_Product_Package+ to get the configuration for this package.
         #
-        # Unfortunately, even though this call includes +SoftLayer_Product_Item_Category+ entities, it does not have the context 
+        # Unfortunately, even though this call includes +SoftLayer_Product_Item_Category+ entities, it does not have the context
         # needed to find the active price items for that category.
         #
         # Instead, we make a second call, this time to +SoftLayer_Product_Package::getCategories+. That method incorporates a complex
@@ -115,7 +115,7 @@ module SoftLayer
     def datacenter_options
       availableLocations.collect { |location_data| location_data["location"]["name"] }
     end
-    
+
     def location_id_for_datacenter_name(datacenter_name)
       location_data = availableLocations.find { |location_data| location_data["location"]["name"]  == datacenter_name }
       location_data["locationId"]

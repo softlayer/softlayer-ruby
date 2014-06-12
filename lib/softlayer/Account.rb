@@ -22,24 +22,68 @@
 
 module SoftLayer
   class Account < SoftLayer::ModelBase
-    include ::SoftLayer::ModelResource
+    include ::SoftLayer::DynamicAttribute
 
-    softlayer_attr :companyName
-    softlayer_attr :firstName
-    softlayer_attr :lastName
-    softlayer_attr :address1
-    softlayer_attr :address2
-    softlayer_attr :city
-    softlayer_attr :state
-    softlayer_attr :country
-    softlayer_attr :postalCode
-    softlayer_attr :officePhone
+    ##
+    # :attr_reader:
+    # The company name of the primary contact
+    sl_attr :companyName
+
+    ##
+    # :attr_reader:
+    # The given name name of the primary contact
+    sl_attr :firstName
+
+    ##
+    # :attr_reader:
+    # The surname of the primary contact
+    sl_attr :lastName
+
+    ##
+    # :attr_reader:
+    # The first address line for the primary contact's address
+    sl_attr :address1
+
+    ##
+    # :attr_reader:
+    # The second address line (if any, may be nil) for the primary contact's address
+    sl_attr :address2
+
+    ##
+    # :attr_reader:
+    # The city stored as part of the primary contact's address
+    sl_attr :city
+
+    ##
+    # :attr_reader:
+    # The two character abbreviation for the state, province, or other similar national
+    # division that is part of the address of the primary contact.  For addresses
+    # outside of the US and Canada, where there may not be an equivalent to a state,
+    # this may be 'NA' (for not applicable)
+    sl_attr :state
+
+    ##
+    # :attr_reader:
+    # The country stored as part of the primary contact's address
+    sl_attr :country
+
+    ##
+    # :attr_reader:
+    # The postal code (in the US, aka. zip code) of the primary contact's address
+    sl_attr :postalCode
+
+    ##
+    # :attr_reader:
+    # The office phone nubmer listed for the primary contact
+    sl_attr :officePhone
 
     ##
     # The Bare Metal Servers (physical hardware) associated with the
     # account. Unless you force these to update, they will be refreshed every
     # five minutes.
-    softlayer_resource :bare_metal_servers do |bare_metal|
+    # :call-seq:
+    #   bare_metal_servers(force_update=false)
+    sl_dynamic_attr :bare_metal_servers do |bare_metal|
       bare_metal.should_update? do
         @last_bare_metal_update ||= Time.at(0)
         (Time.now - @last_bare_metal_update) > 5 * 60  # update every 5 minutes
@@ -55,7 +99,9 @@ module SoftLayer
     # The virtual servers (aka. CCIs or Virtual_Guests) associated with the
     # account. Unless you force these to update, they will be refreshed every
     # five minutes.
-    softlayer_resource :virtual_servers do |virtual_servers|
+    # :call-seq:
+    #   virtual_servers(force_update=false)
+    sl_dynamic_attr :virtual_servers do |virtual_servers|
       virtual_servers.should_update? do
         @last_virtual_server_update ||= Time.at(0)
         (Time.now - @last_virtual_server_update) > 5 * 60  # update every 5 minutes
@@ -69,8 +115,10 @@ module SoftLayer
 
     ##
     # The tickets resource consists of all open tickets, and tickets closed
-    # "recently". These refresh every 5 minutes
-    softlayer_resource :tickets do |tickets|
+    # "recently". These refresh every 5 minutes.
+    # :call-seq:
+    #   tickets(force_update=false)
+    sl_dynamic_attr :tickets do |tickets|
       tickets.should_update? do
         @last_ticket_update ||= Time.at(0)
         (Time.now - @last_ticket_update) > 5 * 60 #update every 5 minutes

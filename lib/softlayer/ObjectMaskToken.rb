@@ -67,7 +67,7 @@ module SoftLayer
     end
 
     def mask_root_marker?
-      return @type == :identifier && @value == "mask"
+      return @type == :identifier && (@value == "mask" || @value == "filterMask")
     end
 
     def valid_property_name?

@@ -62,7 +62,7 @@ describe SoftLayer::Account do
       mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
       SoftLayer::Account.new(mock_client, fixture_from_json("test_account"))
     }
-    
+
     it "exposes a great many softlayer attributes" do
       expect(test_account.companyName).to eq "UpAndComing Software"
       expect(test_account.firstName).to eq "Don "
@@ -76,7 +76,7 @@ describe SoftLayer::Account do
       expect(test_account.officePhone).to eq "555.123.4567"
     end
   end
-  
+
   describe "relationship to servers" do
     before do
       fixture_account_data = fixture_from_json("test_account")
