@@ -21,7 +21,23 @@
 #
 
 module SoftLayer
-	class Ticket < SoftLayer::ModelBase  
+	class Ticket < SoftLayer::ModelBase
+    
+    softlayer_attr :title
+    softlayer_attr :subject
+
+    ##
+    # Returns true if the ticket has "unread" updates
+    def has_updates?
+      self["newUpdatesFlag"] != 0
+    end
+
+    ##
+    # Returns true if the ticket is a server admin ticket
+    def server_admin_ticket?
+      self["serverAdministrationFlag"] != 0
+    end
+    
 		##
 		# Add an update to this ticket.
 		#

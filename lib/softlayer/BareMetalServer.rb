@@ -40,7 +40,7 @@ module SoftLayer
     #
     def bare_metal_instance?
       if has_sl_property?(:bareMetalInstanceFlag)
-        self.bareMetalInstanceFlag != 0
+        self["bareMetalInstanceFlag"] != 0
       else
         false
       end

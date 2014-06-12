@@ -21,7 +21,6 @@
 #
 
 require 'time'
-require 'json'
 
 module SoftLayer
   ##
@@ -34,8 +33,6 @@ module SoftLayer
   class VirtualServer < Server
     include ::SoftLayer::ModelResource
 
-    softlayer_attr :createDate
-    softlayer_attr :modifyDate
     softlayer_attr :provisionDate
     softlayer_attr :maxCpu
     softlayer_attr :activeTransaction
