@@ -53,17 +53,17 @@ module SoftLayer
       elsif token.type == :property_set_start
         property_set = parse_property_set(@tokenizer)
       else
-        raise ObjectMaskParserError, "A valid Object mask is a 'mask' root property, or a property set containing root properties" + ObjectMaskToken.error_for_unexpected_token(token)
+        raise ObjectMaskParserError, "A valid Object mask is a 'mask' or 'filterMask' root property, or a property set containing root properties" + ObjectMaskToken.error_for_unexpected_token(token)
       end
 
       recognize_token(@tokenizer, :eos, "Extraneous text after object mask: ")
 
-      if property && property.name != "mask"
-        raise ObjectMaskParserError, "Object Mask must begin with a 'mask' root property"
+      if property && (property.name != "mask" && propertyName != "filterMask")
+        raise ObjectMaskParserError, "Object Mask must begin with a 'mask' or 'filterMask' root property"
       end
 
-      if property_set && property_set.find { |subproperty| subproperty.name != 'mask'}
-        raise ObjectMaskParserError, "A root property set must contain only root properties"
+      if property_set && property_set.find { |subproperty| subproperty.name != 'mask' && subproperty.name != 'filterMask' }
+        raise ObjectMaskParserError, "A root property set must contain only 'mask' or 'filterMask' root properties"
       end
 
       property || property_set

@@ -61,7 +61,7 @@ module SoftLayer
     # and return the new hash.
     #
     def refresh_details(object_mask = nil)
-      softlayer_hash = self.softlayer_properties(object_mask)
+      @softlayer_hash = self.softlayer_properties(object_mask)
     end
 
     ##

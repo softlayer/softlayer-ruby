@@ -54,7 +54,6 @@ module SoftLayer
     # transaction can be active at a time.
     sl_attr :activeTransaction
 
-
     ##
     # :attr_reader:
     # Storage devices attached to the server. Storage may be local
@@ -187,6 +186,7 @@ module SoftLayer
         # a server is ready when it is provisioned, not reloading the OS
         # (and if wait_for_transactions is true, when there are no active transactions).
         ready = provisioned && !reloading_os && (!wait_for_transactions || !has_active_transaction)
+
         num_trials = num_trials + 1
 
         yield ready if block_given?

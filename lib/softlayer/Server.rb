@@ -119,6 +119,7 @@ module SoftLayer
       }
 
       service.object_with_id(self.id).editObject(edit_template)
+      self.refresh_details()
     end
 
     ##
@@ -126,8 +127,8 @@ module SoftLayer
     #
     def user_metadata=(new_metadata)
       raise ArgumentError.new("Cannot set user metadata to nil") unless new_metadata
-
       service.object_with_id(self.id).setUserMetadata([new_metadata])
+      self.refresh_details()
     end
 
     ##
@@ -143,6 +144,7 @@ module SoftLayer
       }
 
       service.object_with_id(self.id).editObject(edit_template)
+      self.refresh_details()
     end
 
     ##
@@ -160,6 +162,7 @@ module SoftLayer
       }
 
       service.object_with_id(self.id).editObject(edit_template)
+      self.refresh_details()
     end
 
     ##
@@ -179,6 +182,7 @@ module SoftLayer
         service.object_with_id(self.id).setPrivateNetworkInterfaceSpeed(new_speed)
       end
 
+      self.refresh_details()
       self
     end
 

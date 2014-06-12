@@ -28,7 +28,7 @@ class Hash
   # Given a hash, generate an Object Mask string from the structure
   # found within the hash. This allows object masks to be constructed
   # as hashes, then converted to strings when they must be passed
-  # to the API. The routine does some very rudimentary validation to 
+  # to the API. The routine does some very rudimentary validation to
   # ensure that the hash represents a valid object mask, but care must
   # still be taken when constructing the hash.
   def to_sl_object_mask()
@@ -40,7 +40,7 @@ class Hash
   end
 
   # Returns a string representing the hash as a property within a larger
-  # object mask. This routine is an implementation detail used in the conversion 
+  # object mask. This routine is an implementation detail used in the conversion
   # of hashes to object mask strings. You should not have to call this method directly.
   def _to_sl_object_mask_property()
     key_strings = __sl_object_mask_properties_for_keys();
@@ -112,9 +112,9 @@ end
 # Softlayer Extensions to the Symbol class to support using symbols to create
 # object masks
 class Symbol
-  # Converts the Symbol to a string, then converts the string to an 
-  # object mask property. This routine is an implementation detail used in 
-  # the conversion of hashes to object mask strings. You should not have to 
+  # Converts the Symbol to a string, then converts the string to an
+  # object mask property. This routine is an implementation detail used in
+  # the conversion of hashes to object mask strings. You should not have to
   # call this method directly.
   def _to_sl_object_mask_property()
     self.to_s._to_sl_object_mask_property()
