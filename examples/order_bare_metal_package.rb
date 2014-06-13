@@ -81,7 +81,7 @@ begin
 
   # For this example, we'll assume that we've selected the a package
   # with an id of 32 representing a "Quad Processor, Quad Core Intel"
-  quad_intel_package = SoftLayer::ProductPackage.package_with_id(client, 32)
+  quad_intel_package = SoftLayer::ProductPackage.package_with_id(32, client)
 
   # Now we need to now what ProductItemCategories are required to
   # configure a server in that package. This code prints out a table

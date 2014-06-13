@@ -52,6 +52,10 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
+    # A friendly, readable name for the package
+    sl_attr :name
+
+    ##
     # The list of locations where this product package is available.
     sl_attr :availableLocations
 

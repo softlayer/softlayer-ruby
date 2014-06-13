@@ -48,6 +48,17 @@ module SoftLayer
   # service.
   class ProductItemCategory < ModelBase
     include ::SoftLayer::DynamicAttribute
+    
+    ##
+    # :attr_reader:
+    # The categoryCode is a primary identifier for a particular
+    # category.  It is a string like 'os' or 'ram'
+    sl_attr :categoryCode
+    
+    ##
+    # :attr_reader:
+    # The name of a category is a friendly, readable string
+    sl_attr :name
 
     sl_dynamic_attr :configuration_options do |config_opts|
       config_opts.should_update? do
@@ -67,7 +78,7 @@ module SoftLayer
         #
         # Options are divided into groups (for convenience in the
         # web UI), but this code collapses the groups.
-        groups.collect do |group|
+        self['groups'].collect do |group|
           group['prices'].sort{|lhs,rhs| lhs['sort'] <=> rhs['sort']}.collect do |price_item|
             ProductConfigurationOption.new(
               price_item['id'],
