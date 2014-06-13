@@ -24,24 +24,30 @@ module SoftLayer
 	class Ticket < SoftLayer::ModelBase
 
     ##
-    # :attr_reader: title
+    # :attr_reader:
     # The title is an identifying string set when the ticket is created
     sl_attr :title
 
     ##
-    # :attr_reader: subject
+    # :attr_reader:
     # The ticket system maintains a fixed set of subjects for tickets that are used to ensure tickets make it to the right folks quickly
     sl_attr :subject
+    
+    ##
+    # :attr_reader:
+    # The date the ticket was last updated. 
+    sl_attr :lastEditDate
 
     ##
     # Returns true if the ticket has "unread" updates
     def has_updates?
-      self["newUpdatesFlag"] != 0
+      self["newUpdatesFlag"]
     end
 
     ##
     # Returns true if the ticket is a server admin ticket
     def server_admin_ticket?
+      # note that serverAdministrationFlag comes from the server as an Integer (0, or 1)
       self["serverAdministrationFlag"] != 0
     end
 
@@ -89,9 +95,9 @@ module SoftLayer
           'status.id',
           'createDate',
           'lastEditDate',
-          'newUpdatesFlag',
-          'awaitingUserResponseFlag',
-          'serverAdministrationFlag',
+          'newUpdatesFlag',             # This comes in from the server as a Boolean value
+          'awaitingUserResponseFlag',   # This comes in from the server as a Boolean value
+          'serverAdministrationFlag',   # This comes in from the server as an integer :-(
         ]
       }
 		end
@@ -113,6 +119,29 @@ module SoftLayer
 		end
 
     ##
+    # Returns the set of currently open tickets
+    #
+    # Options should contain:
+    #
+    # <b>+:client+</b> - the client in which to search for the ticket
+    #
+    # If a client is not provided then the routine will search Client::default_client
+    # If Client::default_client is also nil the routine will raise an error.    
+    def self.open_tickets(options = {})
+      softlayer_client = options[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
+      if options.has_key?(:object_mask)
+        object_mask = options[:object_mask]
+      else
+        object_mask = default_object_mask.to_sl_object_mask
+      end
+
+      open_tickets_data = softlayer_client["Account"].object_mask(object_mask).getOpenTickets
+      open_tickets_data.collect { |ticket_data| new(softlayer_client, ticket_data) }
+    end
+    
+    ##
     # Find the ticket with the given ID and return it
     #
     # Options should contain:
@@ -132,7 +161,7 @@ module SoftLayer
         object_mask = default_object_mask.to_sl_object_mask
       end
 
-      ticket_data = softlayer_client["Ticket"].object_with_id(server_id).object_mask(object_mask).getObject()
+      ticket_data = softlayer_client["Ticket"].object_with_id(ticket_id).object_mask(object_mask).getObject()
 
       return new(softlayer_client, ticket_data)
     end
@@ -153,7 +182,7 @@ module SoftLayer
     # * <b>+:body+</b> (String) - The content of the ticket
     # * <b>+:subject_id+</b> (Int) - The id of a subject to use for the ticket.  A list of ticket subjects can be returned by SoftLayer::Ticket.ticket_subjects
     # * <b>+:assigned_user_id+</b> (Int) - The id of a user to whom the ticket should be assigned
-    def self.create_ticket(options = {})
+    def self.create_standard_ticket(options = {})
       softlayer_client = options[:client] || SoftLayer::Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 

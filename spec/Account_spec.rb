@@ -98,27 +98,18 @@ describe SoftLayer::Account do
 
   describe "relationship to servers" do
     it "should respond to a request for servers" do
-      fixture_account_data = fixture_from_json("test_account")
-      fixture_bare_metal_data = fixture_from_json("test_bare_metal.json")
-      fixture_virtual_server_data = fixture_from_json("test_virtual_servers")
-
       mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
-      allow(mock_client).to receive(:[]) do |service_name|
-        expect(service_name).to eq "Account"
-
-        if(!@mock_service)
-          @mock_service = SoftLayer::Service.new("SoftLayer_Account", :client => mock_client)
-          allow(@mock_service).to receive(:getObject).and_return(fixture_account_data)
-
-          expect(@mock_service).to receive(:getHardware).and_return(fixture_bare_metal_data)
-          expect(@mock_service).to receive(:getVirtualGuests).and_return(fixture_virtual_server_data)
-          allow(@mock_service).to receive(:object_mask).and_return(@mock_service)
-
-          # if we've stubbed everything out correctly... we shouldn't actually be calling the API
-          expect(@mock_service).to_not receive(:call_softlayer_api_with_params)
-        end
-
-        @mock_service
+      account_service = mock_client["Account"]
+      allow(account_service).to receive(:getObject).and_return(fixture_from_json("test_account"))
+      allow(account_service).to receive(:call_softlayer_api_with_params) do |api_method, api_filter, arguments|
+        case api_method
+        when :getHardware
+          fixture_bare_metal_data = fixture_from_json("test_bare_metal")
+        when :getVirtualGuests
+          fixture_from_json("test_virtual_servers")
+        when :getObject
+          fixture_from_json("test_account")
+        end            
       end
 
       test_account = SoftLayer::Account.account_for_client(mock_client)
@@ -128,43 +119,6 @@ describe SoftLayer::Account do
 
       servers = test_account.servers
       expect(servers.length).to eq(6)
-    end
-  end
-
-  describe "fetching tickets" do
-    before do
-      fixture_account_data = fixture_from_json("test_account")
-      fixture_open_tickets = fixture_from_json("test_tickets")
-      fixture_closed_tickets = fixture_from_json("test_tickets.json")
-
-      @mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
-      allow(@mock_client).to receive(:[]) do |service_name|
-        expect(service_name).to eq "Account"
-
-        if !@mock_service
-
-          @mock_service = SoftLayer::Service.new("SoftLayer_Account", :client => @mock_client)
-          allow(@mock_service).to receive(:getObject).and_return(fixture_account_data)
-          allow(@mock_service).to receive(:object_mask).and_return(@mock_service)
-          allow(@mock_service).to receive(:call_softlayer_api_with_params)
-
-          expect(@mock_service).to receive(:getOpenTickets).and_return(fixture_open_tickets)
-          expect(@mock_service).to receive(:getTicketsClosedInTheLastThreeDays).and_return(fixture_closed_tickets)
-
-          # if we've stubbed everything out correctly... we shouldn't actually be calling the API
-          expect(@mock_service).to_not receive(:call_softlayer_api_with_params)
-        end
-
-        @mock_service
-      end
-    end
-
-    it "responds to a tickets request" do
-      test_account = SoftLayer::Account.account_for_client(@mock_client)
-      expect(test_account).to respond_to(:tickets)
-      expect(test_account).to_not respond_to(:tickets=)
-
-      tickets = test_account.tickets
     end
   end
 
@@ -188,5 +142,4 @@ describe SoftLayer::Account do
       expect(mock_account.id).to be(12345)
     end
   end
-
 end

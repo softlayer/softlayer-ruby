@@ -113,30 +113,6 @@ module SoftLayer
       end
     end
 
-    ##
-    # The tickets resource consists of all open tickets, and tickets closed
-    # "recently". These refresh every 5 minutes.
-    # :call-seq:
-    #   tickets(force_update=false)
-    sl_dynamic_attr :tickets do |tickets|
-      tickets.should_update? do
-        @last_ticket_update ||= Time.at(0)
-        (Time.now - @last_ticket_update) > 5 * 60 #update every 5 minutes
-      end
-
-      tickets.to_update do
-        @last_ticket_update = Time.now
-
-        open_ticket_data = self.softlayer_client["Account"].object_mask(Ticket.default_object_mask).getOpenTickets()
-        recently_closed_data = self.softlayer_client["Account"].object_mask(Ticket.default_object_mask).getTicketsClosedInTheLastThreeDays()
-
-        open_tickets = open_ticket_data.collect { |ticket_data| Ticket.new(self.softlayer_client, ticket_data) }
-        closed_tickets = recently_closed_data.collect { |ticket_data| Ticket.new(self.softlayer_client, ticket_data) }
-
-        open_tickets + closed_tickets
-      end
-    end
-
     def service
       softlayer_client["Account"].object_with_id(self.id)
     end

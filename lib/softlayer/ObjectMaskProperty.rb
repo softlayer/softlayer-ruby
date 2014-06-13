@@ -75,6 +75,7 @@ module SoftLayer
       new_children.each { |new_child| add_child(new_child) }
     end
 
+    # DANGER: assumes you've already checked can_merge_with? before calling this routine!
     def merge(other_property)
       add_children other_property.children
     end

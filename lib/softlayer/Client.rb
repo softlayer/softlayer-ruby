@@ -52,6 +52,8 @@ module SoftLayer
     ##
     # The client class maintains an (optional) default client. The default client
     # will be used by many methods if you do not provide an explicit client.
+    @@default_client = nil
+
     def self.default_client
       return @@default_client
     end

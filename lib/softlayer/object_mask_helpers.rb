@@ -80,7 +80,7 @@ class Hash
 end
 
 ##
-# Softlayer Extensions to the Array class to support using arrays to create
+# SoftLayer Extensions to the Array class to support using arrays to create
 # object masks
 class Array
   # Returns a string representing the object mask content represented by the
@@ -95,7 +95,7 @@ class Array
 end
 
 ##
-# Softlayer Extensions to the String class to support using strings to create
+# SoftLayer Extensions to the String class to support using strings to create
 # object masks
 class String
   # Returns a string representing the object mask content represented by the
@@ -109,7 +109,7 @@ class String
 end
 
 ##
-# Softlayer Extensions to the Symbol class to support using symbols to create
+# SoftLayer Extensions to the Symbol class to support using symbols to create
 # object masks
 class Symbol
   # Converts the Symbol to a string, then converts the string to an

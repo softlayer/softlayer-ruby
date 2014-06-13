@@ -287,7 +287,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     # If this is not defined for Service, then when you print a service object
     # the code will try to convert it to an array and end up calling method_missing
     #
-    # We define this here to prevent odd calls to the Softlayer API
+    # We define this here to prevent odd calls to the SoftLayer API
     def to_ary
       nil
     end

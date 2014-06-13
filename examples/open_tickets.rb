@@ -24,27 +24,22 @@ require 'rubygems'
 require 'softlayer_api'
 require 'pp'
 
-$SL_API_USERNAME = "joecustomer"         # enter your username here
-$SL_API_KEY = "feeddeadbeefbadf00d..."   # enter your api key here
+# One way to provide a username and api key is to provide them
+# as globals.
+# $SL_API_USERNAME = "joecustomer"         # enter your username here
+# $SL_API_KEY = "feeddeadbeefbadf00d..."   # enter your api key here
 
-softlayer_client = SoftLayer::Client.new()
+# The client constructed here must get it's credentials from somewhere
+# In this script you might uncomment the globals above and assign your 
+# credentials there
+SoftLayer::Client.default_client = SoftLayer::Client.new()
 
-# use an account service to get a list of the open tickets and print their
-# IDs and titles
-account_service = softlayer_client.service_named("Account")
+# The openTickets routine will pick up the default client established above.
+open_tickets = SoftLayer::Ticket.open_tickets()
 
-open_tickets = account_service.getOpenTickets
-open_tickets.each { |ticket| puts "#{ticket['id']} - #{ticket['title']}" }
-
-# Now use the ticket service to get a each ticket (by ID) and a subset of the
-# information known about it. We've already collected this information above,
-# but this will demonstrate using an object mask to filter the results from
-# the server.
-ticket_service = softlayer_client["Ticket"]
+open_tickets.sort!{ |lhs, rhs| -(lhs.lastEditDate <=> rhs.lastEditDate) } 
 open_tickets.each do |ticket|
-  begin
-    pp ticket_service.object_with_id(ticket["id"]).object_mask("mask[id,title,createDate,modifyDate,assignedUser[id,username,email]]").getObject
-  rescue Exception => exception
-    puts "exception #{exception}"
-  end
+  printf "#{ticket.id} - #{ticket.title}"
+
+  ticket.has_updates? ? printf("\t*\n") : printf("\n")
 end
