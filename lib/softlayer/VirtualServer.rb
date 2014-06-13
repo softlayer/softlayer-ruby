@@ -200,10 +200,20 @@ module SoftLayer
     ##
     # Retrive the virtual server with the given server ID from the API
     #
+    # The options parameter should contain:
+    #
+    # <b>+:client+</b> - The client used to connect to the API
+    #
+    # If no client is given, then the routine will try to use Client.default_client
+    # If no client can be found the routine will raise an error.
+    #
     # The options may include the following keys
     # * <b>+:object_mask+</b> (string) - A object mask of properties, in addition to the default properties, that you wish to retrieve for the server
     #
-    def self.server_with_id(softlayer_client, server_id, options = {})
+    def self.server_with_id(server_id, options = {})
+      softlayer_client = options[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
       vg_service = softlayer_client["Virtual_Guest"]
       vg_service = vg_service.object_mask(default_object_mask.to_sl_object_mask)
 
@@ -218,6 +228,13 @@ module SoftLayer
 
     ##
     # Retrieve a list of virtual servers from the account.
+    #
+    # The options parameter should contain:
+    #
+    # <b>+:client+</b> - The client used to connect to the API
+    #
+    # If no client is given, then the routine will try to use Client.default_client
+    # If no client can be found the routine will raise an error.
     #
     # You may filter the list returned by adding options:
     # * <b>+:hourly+</b> (boolean) - Include servers billed hourly in the list
@@ -237,7 +254,10 @@ module SoftLayer
     # * <b>+:object_mask+</b> (string) - A object mask of properties, in addition to the default properties, that you wish to retrieve for the servers
     # * <b>+:result_limit+</b> (hash with :limit, and :offset keys) - Limit the scope of results returned.
     #
-    def self.find_servers(softlayer_client, options_hash = {})
+    def self.find_servers(options_hash = {})
+      softlayer_client = options_hash[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
       object_filter = {}
 
       option_to_filter_path = {
@@ -332,7 +352,7 @@ module SoftLayer
 
     ##
     # Returns the SoftLayer Service that represents calls to this object
-    # For VirtualServers the service is +SoftLayer_Virtual_Guest+ and 
+    # For VirtualServers the service is +SoftLayer_Virtual_Guest+ and
     # addressing this object is done by id.
     def service
       return softlayer_client["Virtual_Guest"].object_with_id(self.id)

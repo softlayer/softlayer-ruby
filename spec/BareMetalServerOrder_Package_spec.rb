@@ -36,7 +36,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
 
     package = SoftLayer::ProductPackage.new(client, fixture_from_json("Product_Package"))
-    SoftLayer::BareMetalServerOrder_Package.new(client, package)
+    SoftLayer::BareMetalServerOrder_Package.new(package, client)
   end
 
   it 'places the package id from which it was ordered into the order template' do
@@ -107,7 +107,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     order_service = client["Product_Order"]
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
-    test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
+    test_order = SoftLayer::BareMetalServerOrder_Package.new(package, client)
     test_order.datacenter = 'sng01'
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
@@ -124,7 +124,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     order_service = client["Product_Order"]
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
-    test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
+    test_order = SoftLayer::BareMetalServerOrder_Package.new(package, client)
     test_order.datacenter = 'sng01'
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
@@ -141,7 +141,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     order_service = client["Product_Order"]
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
-    test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
+    test_order = SoftLayer::BareMetalServerOrder_Package.new(package, client)
     test_order.datacenter = 'sng01'
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
@@ -159,7 +159,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     order_service = client["Product_Order"]
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
-    test_order = SoftLayer::BareMetalServerOrder_Package.new(client, package)
+    test_order = SoftLayer::BareMetalServerOrder_Package.new(package, client)
     test_order.datacenter = 'sng01'
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
@@ -168,5 +168,11 @@ describe SoftLayer::BareMetalServerOrder_Package do
     substituted_order_template = { 'aFake' => 'andBogusOrderTemplate' }
     expect(order_service).to receive(:placeOrder).with(substituted_order_template)
     test_order.place_order!() { |order_template| substituted_order_template }
+  end
+
+  it "picks up the default client if none is provided" do
+    SoftLayer::Client.default_client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
+    package = SoftLayer::ProductPackage.new(SoftLayer::Client.default_client, fixture_from_json("Product_Package"))
+    expect(package.softlayer_client).to be(SoftLayer::Client.default_client)
   end
 end

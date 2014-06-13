@@ -91,7 +91,7 @@ module SoftLayer
 
       bare_metal.to_update do
         @last_bare_metal_update = Time.now
-        BareMetalServer.find_servers(self.softlayer_client)
+        BareMetalServer.find_servers(:client => self.softlayer_client)
       end
     end
 
@@ -109,7 +109,7 @@ module SoftLayer
 
       virtual_servers.to_update do
         @last_virtual_server_update = Time.now
-        VirtualServer.find_servers(self.softlayer_client)
+        VirtualServer.find_servers(:client => self.softlayer_client)
       end
     end
 
@@ -140,12 +140,15 @@ module SoftLayer
     def service
       softlayer_client["Account"].object_with_id(self.id)
     end
-    
+
     ##
     # Using the login credentials in the client, retrieve
     # the account associated with those credentials.
     #
-    def self.account_for_client(softlayer_client)
+    def self.account_for_client(client = nil)
+      softlayer_client = client || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
       account_service = softlayer_client['Account']
       network_hash = account_service.getObject()
       new(softlayer_client, network_hash)

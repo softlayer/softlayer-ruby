@@ -49,6 +49,28 @@ module SoftLayer
     # A string passsed as the value for the User-Agent header when requests are sent to SoftLayer API.
     attr_accessor :user_agent
 
+    ##
+    # The client class maintains an (optional) default client. The default client
+    # will be used by many methods if you do not provide an explicit client.
+    def self.default_client
+      return @@default_client
+    end
+
+    def self.default_client=(new_default)
+      @@default_client = new_default
+    end
+
+    ##
+    #
+    # Clients are built with a number of settings:
+    # * <b>+:username+</b> - The username of the account you wish to access through the API
+    # * <b>+:api_key+</b> - The API key used to authenticate the user with the API
+    # * <b>+:enpoint_url+</b> - The API endpoint the client should connect to.  This defaults to API_PUBLIC_ENDPOINT
+    # * <b>+:user_agent+</b> - A string that is passed along as the user agent when the client sends requests to the server
+    #
+    # If these arguments are not provided then the client will try to locate them using other
+    # sources including global variables, and the SoftLayer config file (if one exists)
+    #
     def initialize(options = {})
       @services = { }
 

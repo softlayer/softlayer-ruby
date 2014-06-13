@@ -120,8 +120,9 @@ module SoftLayer
     attr_accessor :user_metadata
 
     # Create a new order that works thorugh the given client connection
-    def initialize (client)
-      @softlayer_client = client
+    def initialize (client = nil)
+      @softlayer_client = client || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !@softlayer_client
     end
 
     # Calls the SoftLayer API to verify that the template provided by this order is valid
@@ -149,7 +150,7 @@ module SoftLayer
       order_template = yield order_template if block_given?
 
       virtual_server_hash = @softlayer_client["Virtual_Guest"].createObject(order_template)
-      SoftLayer::VirtualServer.server_with_id(@softlayer_client, virtual_server_hash["id"]) if virtual_server_hash
+      SoftLayer::VirtualServer.server_with_id(virtual_server_hash["id"], :client => @softlayer_client) if virtual_server_hash
     end
 
     protected
@@ -207,8 +208,13 @@ module SoftLayer
     #
     # http://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest/getCreateObjectOptions
     #
-    def self.create_object_options(client)
-      @@create_object_options ||= client["Virtual_Guest"].getCreateObjectOptions()
+    def self.create_object_options(client = nil)
+      softlayer_client = client || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
+      @@create_object_options ||= nil
+      @@create_object_options = softlayer_client["Virtual_Guest"].getCreateObjectOptions() if !@@create_object_options
+      @@create_object_options
     end
 
     #--
@@ -220,37 +226,37 @@ module SoftLayer
 
     ##
     # Return a list of values that are valid for the :datacenter attribute
-    def self.datacenter_options(client)
+    def self.datacenter_options(client = nil)
       create_object_options(client)["datacenters"].collect { |datacenter_spec| datacenter_spec['template']['datacenter']["name"] }.uniq.sort!
     end
 
     ##
     # Return a list of values that are valid for the :cores attribute
-    def self.core_options(client)
+    def self.core_options(client = nil)
       create_object_options(client)["processors"].collect { |processor_spec| processor_spec['template']['startCpus'] }.uniq.sort!
     end
 
     ##
     # Return a list of values that are valid for the :memory attribute
-    def self.memory_options(client)
+    def self.memory_options(client = nil)
       create_object_options(client)["memory"].collect { |memory_spec| memory_spec['template']['maxMemory'].to_i / 1024}.uniq.sort!
     end
 
     ##
     # Return a list of values that are valid the array given to the :disks
-    def self.disk_options(client)
+    def self.disk_options(client = nil)
       create_object_options(client)["blockDevices"].collect { |block_device_spec| block_device_spec['template']['blockDevices'][0]['diskImage']['capacity']}.uniq.sort!
     end
 
     ##
     # Returns a list of the valid :os_refrence_codes
-    def self.os_reference_code_options(client)
+    def self.os_reference_code_options(client = nil)
       create_object_options(client)["operatingSystems"].collect { |os_spec| os_spec['template']['operatingSystemReferenceCode'] }.uniq.sort!
     end
 
     ##
     # Returns a list of the :max_port_speeds
-    def self.max_port_speed_options(client)
+    def self.max_port_speed_options(client = nil)
       create_object_options(client)["networkComponents"].collect { |component_spec| component_spec['template']['networkComponents'][0]['maxSpeed'] }
     end
   end # class VirtualServerOrder

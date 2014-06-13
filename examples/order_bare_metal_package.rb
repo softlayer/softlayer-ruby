@@ -53,7 +53,7 @@ def tl_dr_version
   config_options['server'] = 1417 # price id of Quad Processor Quad Core Intel 7420 - 2.13GHz (Dunnington) - 4 x 6MB / 8MB cache
 
   # With all the config options in place we can now construct the product order.
-  server_order = SoftLayer::BareMetalServerOrder_Package.new(client, quad_intel_package)
+  server_order = SoftLayer::BareMetalServerOrder_Package.new(quad_intel_package, client)
   server_order.location = 'sng01'
   server_order.hostname = 'sample'
   server_order.domain = 'softlayerapi.org'
@@ -132,7 +132,7 @@ begin
   quad_intel_package.datacenter_options.each { |location| puts "\t#{location}"}
 
   # With all the config options in place we can now construct the product order.
-  server_order = SoftLayer::BareMetalServerOrder_Package.new(client, quad_intel_package)
+  server_order = SoftLayer::BareMetalServerOrder_Package.new(quad_intel_package, client)
   server_order.datacenter = 'sng01'
   server_order.hostname = 'sample'
   server_order.domain = 'softlayerapi.org'

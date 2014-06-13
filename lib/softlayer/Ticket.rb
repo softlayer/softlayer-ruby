@@ -51,8 +51,8 @@ module SoftLayer
 		def update(body = nil)
 			self.service.edit(self.softlayer_hash, body)
 		end
-    
-    ## 
+
+    ##
     # Override of service from ModelBase. Returns the SoftLayer_Ticket service
     # set up to talk to the ticket with my ID.
     def service
@@ -99,17 +99,33 @@ module SoftLayer
     ##
     # Queries the SoftLayer API to retrieve a list of the valid
     # ticket subjects.
-		def self.ticket_subjects(softlayer_client)
+		def self.ticket_subjects(client = nil)
 			@ticket_subjects ||= nil
+
 			if !@ticket_subjects
+        softlayer_client = client || Client.default_client
+        raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
 				@ticket_subjects = softlayer_client['Ticket_Subject'].getAllObjects();
 			end
+
 			@ticket_subjects
 		end
 
     ##
     # Find the ticket with the given ID and return it
-		def self.ticket_with_id(softlayer_client, ticket_id, options = {})
+    #
+    # Options should contain:
+    #
+    # <b>+:client+</b> - the client in which to search for the ticket
+    #
+    # If a client is not provided then the routine will search Client::default_client
+    # If Client::default_client is also nil the routine will raise an error.
+    #
+		def self.ticket_with_id(ticket_id, options = {})
+      softlayer_client = options[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
       if options.has_key?(:object_mask)
         object_mask = options[:object_mask]
       else
@@ -123,16 +139,38 @@ module SoftLayer
 
     ##
     # Create and submit a new support Ticket to SoftLayer.
-    def self.create_ticket(softlayer_client, title=nil, body=nil, subject_id=nil, user_id=nil)
-      if(nil == user_id)
+    #
+    # The options parameter should contain:
+    #
+    # <b>+:client+</b> - The client used to connect to the API
+    #
+    # If no client is given, then the routine will try to use Client.default_client
+    # If no client can be found the routine will raise an error.
+    #
+    # The options should also contain:
+    #
+    # * <b>+:title+</b> (String) - The user provided title for the ticket.
+    # * <b>+:body+</b> (String) - The content of the ticket
+    # * <b>+:subject_id+</b> (Int) - The id of a subject to use for the ticket.  A list of ticket subjects can be returned by SoftLayer::Ticket.ticket_subjects
+    # * <b>+:assigned_user_id+</b> (Int) - The id of a user to whom the ticket should be assigned
+    def self.create_ticket(options = {})
+      softlayer_client = options[:client] || SoftLayer::Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
+      title = options[:title]
+      body = options[:body]
+      subject_id = options[:subject_id]
+      assigned_user_id = options[:assigned_user_id]
+
+      if(nil == assigned_user_id)
         current_user = softlayer_client["Account"].object_mask("id").getCurrentUser()
-        user_id = current_user["id"]
+        assigned_user_id = current_user["id"]
       end
 
       new_ticket = {
         'subjectId' => subject_id,
         'contents' => body,
-        'assignedUserId' => user_id,
+        'assignedUserId' => assigned_user_id,
         'title' => title
       }
 

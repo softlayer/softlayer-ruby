@@ -132,19 +132,26 @@ module SoftLayer
     # Requests a list (array) of ProductPackages whose key names match the
     # one passed in.
     #
-    def self.packages_with_key_name(client, key_name)
+    def self.packages_with_key_name(key_name, client = nil)
+      softlayer_client = client || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+      
       filter = SoftLayer::ObjectFilter.build('type.keyName') { is(key_name) }
-      packages_data = client['Product_Package'].object_filter(filter).object_mask(self.default_object_mask('mask')).getAllObjects
-      packages_data.collect { |package_data| ProductPackage.new(client, package_data) }
+      filtered_service = softlayer_client['Product_Package'].object_filter(filter).object_mask(self.default_object_mask('mask'))
+      packages_data = filtered_service.getAllObjects
+      packages_data.collect { |package_data| ProductPackage.new(softlayer_client, package_data) }
     end
 
     ##
     # Requests a list (array) of ProductPackages whose key names match the
     # one passed in.
     #
-    def self.package_with_id(client, package_id)
-      package_data = client['Product_Package'].object_with_id(package_id).object_mask(self.default_object_mask('mask')).getObject
-      ProductPackage.new(client, package_data)
+    def self.package_with_id(package_id, client = nil)
+      softlayer_client = client || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+      
+      package_data = softlayer_client['Product_Package'].object_with_id(package_id).object_mask(self.default_object_mask('mask')).getObject
+      ProductPackage.new(softlayer_client, package_data)
     end
 
     ##
@@ -152,8 +159,8 @@ module SoftLayer
     # At the time of this writing, the code assumes this package is unique
     #
     # 'VIRTUAL_SERVER_INSTANCE' is a "well known" constant for this purpose
-    def self.virtual_server_package(client)
-      packages_with_key_name(client, 'VIRTUAL_SERVER_INSTANCE').first
+    def self.virtual_server_package(client = nil)
+      packages_with_key_name('VIRTUAL_SERVER_INSTANCE', client).first
     end
 
     ##
@@ -163,8 +170,8 @@ module SoftLayer
     # At the time of this writing, the code assumes this package is unique
     #
     # 'BARE_METAL_CORE' is a "well known" constant for this purpose
-    def self.bare_metal_instance_package(client)
-      packages_with_key_name(client, 'BARE_METAL_CORE').first
+    def self.bare_metal_instance_package(client = nil)
+      packages_with_key_name('BARE_METAL_CORE', client).first
     end
 
     ##
@@ -172,8 +179,8 @@ module SoftLayer
     # as the foundation to order a bare metal server.
     #
     # 'BARE_METAL_CPU' is a "well known" constant for this purpose
-    def self.bare_metal_server_packages(client)
-      packages_with_key_name(client, 'BARE_METAL_CPU')
+    def self.bare_metal_server_packages(client = nil)
+      packages_with_key_name('BARE_METAL_CPU', client)
     end
 
     protected

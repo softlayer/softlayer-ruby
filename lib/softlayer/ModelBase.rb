@@ -48,6 +48,7 @@ module SoftLayer
     # with the given hash of network data (presumably returned by the SoftLayer API)
     def initialize(softlayer_client, network_hash)
       raise ArgumentError, "A hash is required" if nil == network_hash
+      raise ArgumentError, "Model objects must be created in the context of a client" if nil == softlayer_client
 
       @softlayer_client = softlayer_client
       @softlayer_hash = network_hash
@@ -118,7 +119,7 @@ module SoftLayer
 
       define_method(attribute_symbol.to_sym) { self[hash_key ? hash_key : attribute_symbol.to_s]}
     end
-    
+
     sl_attr :id
 
     # When printing to the console using puts, ruby will call the
@@ -128,7 +129,7 @@ module SoftLayer
     def to_ary()
       return nil;
     end
-    
+
     protected
 
     ##

@@ -1,5 +1,3 @@
-$LOAD_PATH << File.join(File.dirname(__FILE__), "../lib")
-
 #
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
@@ -55,7 +53,7 @@ def tl_dr_version
   config_options['server'] = 1417 # price id of Quad Processor Quad Core Intel 7420 - 2.13GHz (Dunnington) - 4 x 6MB / 8MB cache
 
   # With all the config options in place we can now construct the product order.
-  server_order = SoftLayer::BareMetalServerOrder_Package.new(client, quad_intel_package)
+  server_order = SoftLayer::BareMetalServerOrder_Package.new(quad_intel_package, client)
   server_order.location = 'FIRST_AVAILABLE'
   server_order.hostname = 'sample'
   server_order.domain = 'softlayer_api.org'
@@ -136,7 +134,7 @@ begin
   quad_intel_package.locations.each { |location| printf "%#{max_key_length}s\t\t#{location[:description]}\n",location[:keyname]}
 
   # With all the config options in place we can now construct the product order.
-  server_order = SoftLayer::BareMetalServerOrder_Package.new(client, quad_intel_package)
+  server_order = SoftLayer::BareMetalServerOrder_Package.new(quad_intel_package, client)
   server_order.location = 'FIRST_AVAILABLE'
   server_order.hostname = 'sample'
   server_order.domain = 'softlayer_api.org'

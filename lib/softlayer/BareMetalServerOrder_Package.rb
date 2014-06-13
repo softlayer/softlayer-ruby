@@ -83,8 +83,10 @@ module SoftLayer
     ##
     # You initialize a BareMetalServerOrder_Package by passing in the package that you
     # are ordering from.
-    def initialize(client, package)
-      @softlayer_client = client
+    def initialize(package, client = nil)
+      @softlayer_client = client || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !@softlayer_client
+
       @package = package
       @configuration_options = []
     end

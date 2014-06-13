@@ -88,7 +88,7 @@ module SoftLayer
     def service
       softlayer_client["SoftLayer_Product_Item_Category"].object_with_id(self.id)
     end
-    
+
     ##
     # If the category has a single option (regardless of fees) this method will return
     # that option.  If the category has more than one option, this method will

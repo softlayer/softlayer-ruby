@@ -29,6 +29,10 @@ require 'rspec'
 require 'spec_helper'
 
 describe SoftLayer::Ticket do
+  before (:each) do
+    SoftLayer::Ticket.instance_eval { @ticket_subjects = nil }
+  end
+
 	it "retrieves ticket subjects from API once" do
     fakeTicketSubjects = fixture_from_json("ticket_subjects")
 
@@ -49,7 +53,12 @@ describe SoftLayer::Ticket do
     # (so :getAllObjects on the service should not be called again)
     expect(SoftLayer::Ticket.ticket_subjects(mock_client)).to be(fakeTicketSubjects)
 	end
-  
+
+  it "raises an error if you try to get ticket subjects with no client" do
+    SoftLayer::Client.default_client = nil
+    expect {SoftLayer::Ticket.ticket_subjects() }.to raise_error
+  end
+
   it "identifies itself with the ticket service" do
     fake_ticket_data = fixture_from_json("test_tickets").first
 
@@ -61,7 +70,7 @@ describe SoftLayer::Ticket do
       # mock out call_softlayer_api_with_params so the service doesn't actually try to
       # communicate with the api endpoint
       allow(mock_service).to receive(:call_softlayer_api_with_params)
-      
+
       mock_service
     end
 

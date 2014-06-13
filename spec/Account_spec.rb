@@ -34,7 +34,8 @@ describe SoftLayer::Account do
 	end
 
   it "knows its id" do
-    test_account = SoftLayer::Account.new(nil, "id" => 232279, "firstName" => "kangaroo")
+    mock_client = SoftLayer::Client.new(:username => "fake_user", :api_key => "BADKEY")
+    test_account = SoftLayer::Account.new(mock_client, "id" => 232279, "firstName" => "kangaroo")
     expect(test_account.id).to eq(232279)
   end
 
@@ -55,7 +56,7 @@ describe SoftLayer::Account do
     expect(fake_account.service.server_object_id).to eq(12345)
     expect(fake_account.service.target.service_name).to eq "SoftLayer_Account"
   end
-  
+
   it "should allow the user to get the default account for a service" do
     test_client = double("mockClient")
     allow(test_client).to receive(:[]) do |service_name|
@@ -96,17 +97,17 @@ describe SoftLayer::Account do
   end
 
   describe "relationship to servers" do
-    before do
+    it "should respond to a request for servers" do
       fixture_account_data = fixture_from_json("test_account")
       fixture_bare_metal_data = fixture_from_json("test_bare_metal.json")
       fixture_virtual_server_data = fixture_from_json("test_virtual_servers")
 
-      @mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
-      allow(@mock_client).to receive(:[]) do |service_name|
+      mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
+      allow(mock_client).to receive(:[]) do |service_name|
         expect(service_name).to eq "Account"
 
-        if !@mock_service
-          @mock_service = SoftLayer::Service.new("SoftLayer_Account", :client => @mock_client)
+        if(!@mock_service)
+          @mock_service = SoftLayer::Service.new("SoftLayer_Account", :client => mock_client)
           allow(@mock_service).to receive(:getObject).and_return(fixture_account_data)
 
           expect(@mock_service).to receive(:getHardware).and_return(fixture_bare_metal_data)
@@ -119,10 +120,8 @@ describe SoftLayer::Account do
 
         @mock_service
       end
-    end
 
-    it "should respond to a request for servers" do
-      test_account = SoftLayer::Account.account_for_client(@mock_client)
+      test_account = SoftLayer::Account.account_for_client(mock_client)
 
       expect(test_account).to respond_to(:servers)
       expect(test_account).to_not respond_to(:servers=)
@@ -166,6 +165,27 @@ describe SoftLayer::Account do
       expect(test_account).to_not respond_to(:tickets=)
 
       tickets = test_account.tickets
+    end
+  end
+
+  describe "Account.account_for_client" do
+    it "raises an error if there is no client available" do
+      SoftLayer::Client.default_client = nil
+      expect {SoftLayer::Account.account_for_client}.to raise_error
+    end
+
+    it "uses the default client if one is available" do
+      mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
+      allow(mock_client).to receive(:[]) do |service_name|
+        mock_service = Object.new()
+        allow(mock_service).to receive(:getObject).and_return({"id" => 12345})
+        mock_service
+      end
+
+      SoftLayer::Client.default_client = mock_client
+      mock_account = SoftLayer::Account.account_for_client
+      expect(mock_account).to be_instance_of(SoftLayer::Account)
+      expect(mock_account.id).to be(12345)
     end
   end
 

@@ -122,7 +122,17 @@ module SoftLayer
     ##
     # Retrive the bare metal server with the given server ID from the
     # SoftLayer API
-    def self.server_with_id(softlayer_client, server_id, options = {})
+    #
+    # The options parameter should contain:
+    #
+    # <b>+:client+</b> - The client used to connect to the API
+    #
+    # If no client is given, then the routine will try to use Client.default_client
+    # If no client can be found the routine will raise an error.
+    def self.server_with_id(server_id, options = {})
+      softlayer_client = options[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
       hardware_service = softlayer_client["Hardware"]
       hardware_service = hardware_service.object_mask(default_object_mask.to_sl_object_mask)
 
@@ -137,6 +147,13 @@ module SoftLayer
 
     ##
     # Retrieve a list of Bare Metal servers from the account
+    #
+    # The options parameter should contain:
+    #
+    # <b>+:client+</b> - The client used to connect to the API
+    #
+    # If no client is given, then the routine will try to use Client.default_client
+    # If no client can be found the routine will raise an error.
     #
     # You may filter the list returned by adding options:
     #
@@ -155,7 +172,10 @@ module SoftLayer
     # * <b>+:object_mask+</b> (string, hash, or array) - The object mask of properties you wish to receive for the items returned If not provided, the result will use the default object mask
     # * <b>+:result_limit+</b> (hash with :limit, and :offset keys) - Limit the scope of results returned.
     #
-    def self.find_servers(softlayer_client, options_hash = {})
+    def self.find_servers(options_hash = {})
+      softlayer_client = options_hash[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
       if(options_hash.has_key? :object_filter)
         object_filter = options_hash[:object_filter]
       else

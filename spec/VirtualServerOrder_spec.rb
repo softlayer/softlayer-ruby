@@ -37,6 +37,18 @@ describe SoftLayer::VirtualServerOrder do
     SoftLayer::VirtualServerOrder.new(client)
   end
 
+  it "allows creation using the default client" do
+    SoftLayer::Client.default_client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
+    order = SoftLayer::VirtualServerOrder.new()
+    expect(order.instance_eval{ @softlayer_client}).to be(SoftLayer::Client.default_client)
+    SoftLayer::Client.default_client = nil
+  end
+
+  it "raises an error if you try to create an order with no client" do
+    SoftLayer::Client.default_client = nil
+    expect {SoftLayer::VirtualServerOrder.new()}.to raise_error
+  end
+
   it "places its :datacenter attribute into the order template" do
     expect(subject.virtual_guest_template["datacenter"]).to be_nil
     subject.datacenter = "dal05"
@@ -246,7 +258,7 @@ describe SoftLayer::VirtualServerOrder do
     let (:client) do
       client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
       virtual_guest_service = client["Virtual_Guest"]
-    allow(virtual_guest_service).to receive(:call_softlayer_api_with_params)
+      allow(virtual_guest_service).to receive(:call_softlayer_api_with_params)
 
       fake_options = fixture_from_json("Virtual_Guest_createObjectOptions")
       allow(virtual_guest_service).to receive(:getCreateObjectOptions) {
@@ -254,6 +266,10 @@ describe SoftLayer::VirtualServerOrder do
       }
 
       client
+    end
+
+    after (:each) do
+      SoftLayer::Client.default_client = nil
     end
 
     it "retrieves the set of options that can be put in the order template" do
@@ -283,6 +299,30 @@ describe SoftLayer::VirtualServerOrder do
 
     it "transmogrifies the networkComponents options for the max_port_speed attribute" do
       expect(SoftLayer::VirtualServerOrder.max_port_speed_options(client)).to eq [10, 100, 1000]
+    end
+
+    it "has options routines that can use the default client" do
+      SoftLayer::Client.default_client = client
+      expect { SoftLayer::VirtualServerOrder.create_object_options() }.to_not raise_error
+      expect { SoftLayer::VirtualServerOrder.datacenter_options() }.to_not raise_error
+      expect { SoftLayer::VirtualServerOrder.create_object_options() }.to_not raise_error
+      expect { SoftLayer::VirtualServerOrder.core_options() }.to_not raise_error
+      expect { SoftLayer::VirtualServerOrder.memory_options() }.to_not raise_error
+      expect { SoftLayer::VirtualServerOrder.disk_options() }.to_not raise_error
+      expect { SoftLayer::VirtualServerOrder.os_reference_code_options() }.to_not raise_error
+      expect { SoftLayer::VirtualServerOrder.max_port_speed_options() }.to_not raise_error
+    end
+
+    it "has options routines that raise if not given a client" do
+      SoftLayer::Client.default_client = nil
+      expect { SoftLayer::VirtualServerOrder.create_object_options() }.to raise_error
+      expect { SoftLayer::VirtualServerOrder.datacenter_options() }.to raise_error
+      expect { SoftLayer::VirtualServerOrder.create_object_options() }.to raise_error
+      expect { SoftLayer::VirtualServerOrder.core_options() }.to raise_error
+      expect { SoftLayer::VirtualServerOrder.memory_options() }.to raise_error
+      expect { SoftLayer::VirtualServerOrder.disk_options() }.to raise_error
+      expect { SoftLayer::VirtualServerOrder.os_reference_code_options() }.to raise_error
+      expect { SoftLayer::VirtualServerOrder.max_port_speed_options() }.to raise_error
     end
   end
 end

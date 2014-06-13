@@ -1,5 +1,3 @@
-$LOAD_PATH << File.join(File.dirname(__FILE__), "../lib" )
-
 #
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
@@ -25,29 +23,26 @@ $LOAD_PATH << File.join(File.dirname(__FILE__), "../lib" )
 require 'rubygems'
 require 'softlayer_api'
 require 'pp'
-
-begin
-  client = SoftLayer::Client.new(
+  
+  # We can set the default client to be our client and that way 
+  # we can avoid supplying it later
+  SoftLayer::Client.default_client = SoftLayer::Client.new(
     # :username => "joecustomer"              # enter your username here
     # :api_key => "feeddeadbeefbadf00d..."   # enter your api key here
   )
-  
-  account = SoftLayer::Account.account_for_client(client)
-  
+
+  account = SoftLayer::Account.account_for_client()
+
   # grab a list of all the servers on the account.
   servers = account.servers
-  
+
   # measure their fully qualified domain names so we can print a pretty table
   max_name_len = servers.inject(0) { |max_name, server| [max_name, server.fullyQualifiedDomainName.length].max }
 
   printf "%#{-max_name_len}s\tPrimary Public IP\n", "Server FQDN"
   printf "%#{-max_name_len}s\t-----------------\n", "-----------"
 
-  servers.each do |server| 
+  servers.each do |server|
     ip_field = server.primary_public_ip ? server.primary_public_ip : "No Public Interface"
     printf "%#{-max_name_len}s\t#{ip_field}\n", server.fullyQualifiedDomainName
   end
-
-rescue
-  puts "An unexpected exception occurred!"
-end

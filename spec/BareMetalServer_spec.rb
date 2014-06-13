@@ -32,7 +32,7 @@ describe SoftLayer::BareMetalServer do
 	let (:sample_server) do
 		mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "DEADBEEFBADF00D")
 		allow(mock_client).to receive(:[]) do |service_name|
-			service = mock_client.service_named(service_name)      
+			service = mock_client.service_named(service_name)
 			allow(service).to receive(:call_softlayer_api_with_params)
 			service
 		end
@@ -45,7 +45,7 @@ describe SoftLayer::BareMetalServer do
     expect(service.server_object_id).to eq(12345)
     expect(service.target.service_name).to eq "SoftLayer_Hardware"
   end
-  
+
 	it_behaves_like "server with port speed" do
 		let (:server) { sample_server }
 	end

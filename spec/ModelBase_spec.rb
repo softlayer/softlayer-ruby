@@ -29,12 +29,18 @@ require 'rspec'
 describe SoftLayer::ModelBase do
   describe "#initialize" do
     it "rejects hashes without an id" do
-      expect { SoftLayer::ModelBase.new(nil, {}) }.to raise_error(ArgumentError)
-      expect { SoftLayer::ModelBase.new(nil, {"id" => "someID"}) }.not_to raise_error
+      mock_client = double("Mock SoftLayer Client")
+      expect { SoftLayer::ModelBase.new(mock_client, {}) }.to raise_error(ArgumentError)
+      expect { SoftLayer::ModelBase.new(mock_client, {"id" => "someID"}) }.not_to raise_error
+    end
+
+    it "rejects models created with no client" do
+      expect { SoftLayer::ModelBase.new(nil, nil) }.to raise_error(ArgumentError)
     end
 
     it "rejects nil hashes" do
-      expect { SoftLayer::ModelBase.new(nil, nil) }.to raise_error(ArgumentError)
+      mock_client = double("Mock SoftLayer Client")
+      expect { SoftLayer::ModelBase.new(mock_client, nil) }.to raise_error(ArgumentError)
     end
 
     it "remembers its first argument as the client" do
@@ -58,13 +64,15 @@ describe SoftLayer::ModelBase do
   end
 
   it "returns nil from to_ary" do
-    test_model = SoftLayer::ModelBase.new(nil, { "id" => "12345" })
+    mock_client = double("Mock SoftLayer Client")
+    test_model = SoftLayer::ModelBase.new(mock_client, { "id" => "12345" })
     expect(test_model).to respond_to(:to_ary)
     expect(test_model.to_ary).to be_nil
   end
 
   it "realizes when low-level hash keys are added" do
-    test_model = SoftLayer::ModelBase.new(nil, { "id" => "12345" })
+    mock_client = double("Mock SoftLayer Client")
+    test_model = SoftLayer::ModelBase.new(mock_client, { "id" => "12345" })
     allow(test_model).to receive(:softlayer_properties) { { "id" => "12345", "newInfo" => "fun" } }
     expect(test_model.has_sl_property? :newInfo).to be(false)
     test_model.refresh_details()
@@ -72,7 +80,8 @@ describe SoftLayer::ModelBase do
   end
 
   it "realizes when low-level hash keys are removed" do
-    test_model = SoftLayer::ModelBase.new(nil, { "id" => "12345", "newInfo" => "fun" })
+    mock_client = double("Mock SoftLayer Client")
+    test_model = SoftLayer::ModelBase.new(mock_client, { "id" => "12345", "newInfo" => "fun" })
     allow(test_model).to receive(:softlayer_properties) { { "id" => "12345" } }
     expect(test_model.has_sl_property? :newInfo).to be(true)
     test_model.refresh_details()

@@ -1,5 +1,3 @@
-$LOAD_PATH << File.join(File.dirname(__FILE__), "../lib" )
-
 #
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #

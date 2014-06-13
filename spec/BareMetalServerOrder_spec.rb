@@ -37,6 +37,18 @@ describe SoftLayer::BareMetalServerOrder do
     SoftLayer::BareMetalServerOrder.new(client)
   end
 
+  it "allows creation using the default client" do
+    SoftLayer::Client.default_client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
+    order = SoftLayer::BareMetalServerOrder.new()
+    expect(order.instance_eval{ @softlayer_client}).to be(SoftLayer::Client.default_client)
+    SoftLayer::Client.default_client = nil
+  end
+
+  it "raises an error if you try to create an order with no client" do
+    SoftLayer::Client.default_client = nil
+    expect {SoftLayer::BareMetalServerOrder.new()}.to raise_error
+  end
+
   it "places its :datacenter attribute into the order template" do
     expect(subject.hardware_instance_template["datacenter"]).to be_nil
     subject.datacenter = "dal05"
@@ -244,6 +256,26 @@ describe SoftLayer::BareMetalServerOrder do
 
     it "transmogrifies the networkComponents create object options for the max_port_speed attribute" do
       expect(SoftLayer::BareMetalServerOrder.max_port_speed_options(client)).to eq [10, 100, 1000]
+    end
+
+    it "has options routines that can use the default client" do
+      SoftLayer::Client.default_client = client
+      expect { SoftLayer::BareMetalServerOrder.create_object_options() }.to_not raise_error
+      expect { SoftLayer::BareMetalServerOrder.datacenter_options() }.to_not raise_error
+      expect { SoftLayer::BareMetalServerOrder.core_options() }.to_not raise_error
+      expect { SoftLayer::BareMetalServerOrder.disk_options() }.to_not raise_error
+      expect { SoftLayer::BareMetalServerOrder.os_reference_code_options() }.to_not raise_error
+      expect { SoftLayer::BareMetalServerOrder.max_port_speed_options() }.to_not raise_error
+    end
+
+    it "has options routines that raise if not given a client" do
+      SoftLayer::Client.default_client = nil
+      expect { SoftLayer::BareMetalServerOrder.create_object_options() }.to raise_error
+      expect { SoftLayer::BareMetalServerOrder.datacenter_options() }.to raise_error
+      expect { SoftLayer::BareMetalServerOrder.core_options() }.to raise_error
+      expect { SoftLayer::BareMetalServerOrder.disk_options() }.to raise_error
+      expect { SoftLayer::BareMetalServerOrder.os_reference_code_options() }.to raise_error
+      expect { SoftLayer::BareMetalServerOrder.max_port_speed_options() }.to raise_error
     end
   end
 

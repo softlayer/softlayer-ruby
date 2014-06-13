@@ -85,7 +85,7 @@ module SoftLayer
     attr_reader :service_name
     attr_reader :client
 
-    def initialize(service_name, options = {})
+    def initialize (service_name, options = {})
       raise ArgumentError,"Please provide a service name" if service_name.nil? || service_name.empty?
 
       # remember the service name
@@ -134,7 +134,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     def related_service_named(service_name)
       @client.service_named(service_name)
     end
-    
+
     # Added here so that the interface of this class matches that
     # of APIParameterFilter.  In APIParameterFilter the target is
     # a service.  In a service, the target is itself.
