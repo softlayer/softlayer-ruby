@@ -35,9 +35,13 @@ module SoftLayer
     '!~'    # Does not Contain (case sensitive)
   ]
 
-  # A class whose instances represent an Object Filter operation.
+  # A class whose instances represent an Object Filter operator and the value it is applied to.
   class ObjectFilterOperation
+
+    # The operator, should be a member of the SoftLayer::OBJECT_FILTER_OPERATORS array
     attr_reader :operator
+
+    # The operand of the operator
     attr_reader :value
 
     def initialize(operator, value)
@@ -49,71 +53,105 @@ module SoftLayer
     end
 
     def to_h
-      { 'operation' => "#{operator} #{value}"}
+      result = ObjectFilter.new
+      result['operation'] = "#{operator} #{value}"
+
+      result
     end
   end
 
-  # Routines that are valid within the block provided to a call to
-  # ObjectFilter.build.
+  # This class defines the routines that are valid within the block provided to a call to
+  # ObjectFilter.build. This allows you to create object filters like:
+  #
+  # object_filter = SoftLayer::ObjectFilter.build("hardware.memory") { is_greater_than(2) }
+  #
   class ObjectFilterBlockHandler
-    # contains wihout considering case
+    # Matches when the value is found within the field
+    # the search is not case sensitive
     def contains(value)
       ObjectFilterOperation.new('*=', value)
     end
 
-    # case insensitive begins with
+    # Matches when the value is found at the beginning of the
+    # field. This search is not case sensitive
     def begins_with(value)
       ObjectFilterOperation.new('^=', value)
     end
 
-    # case insensitive ends with
+    # Matches when the value is found at the end of the
+    # field. This search is not case sensitive
     def ends_with(value)
       ObjectFilterOperation.new('$=', value)
     end
 
-    # matches exactly (ignoring case)
+    # Matches when the value in the field is exactly equal to the
+    # given value. This is a case-sensitive match
     def is(value)
       ObjectFilterOperation.new('_=', value)
     end
 
+    # Matches is the value in the field does not exactly equal
+    # the value passed in.
     def is_not(value)
       ObjectFilterOperation.new('!=', value)
     end
 
+    # Matches when the value in the field is greater than the given value
     def is_greater_than(value)
       ObjectFilterOperation.new('>', value)
     end
 
+    # Matches when the value in the field is less than the given value
     def is_less_than(value)
       ObjectFilterOperation.new('<', value)
     end
 
+    # Matches when the value in the field is greater than or equal to the given value
     def is_greater_or_equal_to(value)
       ObjectFilterOperation.new('>=', value)
     end
 
+    # Matches when the value in the field is less than or equal to the given value
     def is_less_or_equal_to(value)
       ObjectFilterOperation.new('<=', value)
     end
 
+    # Matches when the value is found within the field
+    # the search _is_ case sensitive
     def contains_exactly(value)
       ObjectFilterOperation.new('~', value)
     end
 
+    # Matches when the value is not found within the field
+    # the search _is_ case sensitive
     def does_not_contain(value)
       ObjectFilterOperation.new('!~', value)
     end
   end
 
-  # An ObjectFilter is a hash that, when asked to provide
-  # an value for an unknown key, will create a sub element
-  # at that key that is itself an object filter.  So if you
-  # start with an empty object filter and ask for <tt>object_filter["foo"]</tt>
-  # then foo will be +added+ to the object and the value of that
-  # key will be an Object Filter <tt>{ "foo" => {} }</tt>
   #
-  # This allows you to create object filters by chaining [] calls:
-  #     object_filter["foo"]["bar"]["baz"] = 3 yields {"foo" => { "bar" => {"baz" => 3}}}
+  # An ObjectFilter is a tool that, when passed to the SoftLayer API
+  # allows the API server to filter, or limit the result set for a call.
+  #
+  # Constructing ObjectFilters is an art that is currently somewhat
+  # arcane. This class tries to simplify filtering for the fundamental
+  # cases, while still allowing for more complex ObjectFilters to be
+  # created.
+  #
+  # The ObjectFilter class is implemented as a hash that, when asked to provide
+  # an value for an unknown key, will create a sub element
+  # at that key which is, itself, an object filter. This allows you to build
+  # up object filters by chaining [] dereference operations.
+  #
+  # Starting empty object filter when you ask for +object_filter["foo"]+
+  # either the value at that hash location will be returned, or a new +foo+ key
+  # will be *added* to the object.  The value of that key will be an +ObjectFilter+
+  # and that +ObjectFilter+ will be returned.
+  #
+  # By way of an example of chaining together +[]+ calls:
+  #   object_filter["foo"]["bar"]["baz"] = 3
+  # yields an object filter like this:
+  #   {"foo" => { "bar" => {"baz" => 3}}}
   #
   class ObjectFilter < Hash
     # The default initialize for a hash is overridden
@@ -146,7 +184,7 @@ module SoftLayer
       end
 
       # if there is a block, then the query will come from
-      # calling the block.  We warn in debug mode if you override a
+      # calling the block. We warn in debug mode if you override a
       # query that was passed directly with the value from a block.
       if block
         $stderr.puts "The query from the block passed to ObjectFilter:build will override the query passed as a parameter" if $DEBUG && query
@@ -154,7 +192,7 @@ module SoftLayer
         query = block_handler.instance_eval(&block)
       end
 
-      # If we have a query, we assign it's value to the last key
+      # If we have a query, we assign its value to the last key
       # otherwise, we build an emtpy filter at the bottom
       if query
         case
@@ -176,9 +214,9 @@ module SoftLayer
       result
     end
 
-    # This method tries to simplify creating a correct object filter structure
-    # by allowing the caller to provide a string in a simple query language.
-    # It then translates that string into an Object Filter operation structure
+    # This method simplifies creating correct object filter structures
+    # by defining a simple query language. It translates strings in that
+    # language into an Object Filter operations
     #
     # Object Filter comparisons are done using operators. Some operators make
     # case sensitive comparisons and some do not. The general form of an Object
@@ -187,13 +225,15 @@ module SoftLayer
     #     "*= smaug"
     #
     # The query language also accepts some aliases using asterisks
-    # in a regular-expression-like way.  Those aliases look like:
+    # in a regular-expression-like way. Those aliases look like:
     #
     #   'value'   Exact value match (translates to '_= value')
     #   'value*'  Begins with value (translates to '^= value')
     #   '*value'  Ends with value (translates to '$= value')
     #   '*value*' Contains value (translates to '*= value')
     #
+    # This method corresponds to the +query_filter+ method in the SoftLayer-Python
+    # API.
     def self.query_to_filter_operation(query)
       if query.kind_of? String then
         query.strip!

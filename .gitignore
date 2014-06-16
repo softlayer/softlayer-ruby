@@ -4,3 +4,5 @@
 .bundle/
 log/
 internal_examples/
+doc/
+Gemfile.lock

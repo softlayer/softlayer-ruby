@@ -22,16 +22,16 @@
 
 require 'rubygems'
 
-# This module is used to provide a namespace for SoftLayer code.  It also declares a number of
+# This module is used to provide a namespace for SoftLayer code. It also declares a number of
 # global variables:
-# - <tt>$SL_API_USERNAME</tt> - The default username passed by clients to the server for authentication.
+# - +$SL_API_USERNAME+ - The default username passed by clients to the server for authentication.
 #   Set this if you want to use the same username for all clients and don't want to have to specify it when the client is created
-# - <tt>$SL_API_KEY</tt> - The default API key passed by clients to the server for authentication.
+# - +$SL_API_KEY+ - The default API key passed by clients to the server for authentication.
 #   Set this if you want to use the same api for all clients and don't want to have to specify it when the client is created
-# - <tt>$SL_API_BASE_URL</tt>- The default URL used to access the SoftLayer API. This defaults to the value of <tt>SoftLayer::API_PUBLIC_ENDPOINT</tt>
+# - +$SL_API_BASE_URL+- The default URL used to access the SoftLayer API. This defaults to the value of +SoftLayer::API_PUBLIC_ENDPOINT+
 #
 module SoftLayer
-  VERSION = "2.0.1"  # version history in the CHANGELOG.textile file at the root of the source
+  VERSION = "2.1.0"  # version history in the CHANGELOG.textile file at the root of the source
 
   # The base URL of the SoftLayer API's REST-like endpoints available to the public internet.
   API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/xmlrpc/v3/'
@@ -43,12 +43,12 @@ module SoftLayer
   # These globals can be used to simplify client creation
   #
 
-  # Set this if you want to provide a default username for each service as it is created.
-  # usernames provided to the service initializer will override the global
+  # Set this if you want to provide a default username for each client as it is created.
+  # usernames provided to the client initializer will override the global
   $SL_API_USERNAME = nil
 
-  # Set this if you want to provide a default api_key for each service as it is
-  # created. API keys provided in the constructor when a service is created will
+  # Set this if you want to provide a default api_key for each client as it is
+  # created. API keys provided in the constructor when a client is created will
   # override the values in this global
   $SL_API_KEY = nil
 

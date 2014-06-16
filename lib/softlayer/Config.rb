@@ -28,7 +28,7 @@ module SoftLayer
 			result = {}
 			result[:username] =  $SL_API_USERNAME if $SL_API_USERNAME
 			result[:api_key] = $SL_API_KEY if $SL_API_KEY
-			result[:endpoint_url] = $SL_API_BASE_URL ? $SL_API_BASE_URL : API_PUBLIC_ENDPOINT
+			result[:endpoint_url] = $SL_API_BASE_URL || API_PUBLIC_ENDPOINT
 			result
 		end
 
@@ -39,7 +39,7 @@ module SoftLayer
 			result
 		end
 
-		FILE_LOCATIONS = ['/etc/softlayer.conf', '~/.softlayer']
+		FILE_LOCATIONS = ['/etc/softlayer.conf', '~/.softlayer', './.softlayer']
 
 		def Config.file_settings(*additional_files)
 			result = {}
@@ -49,7 +49,6 @@ module SoftLayer
 			search_path = search_path.map { |file_path| File.expand_path(file_path) }
 
 			search_path.each do |file_path|
-
 				if File.readable? file_path
 					config = ConfigParser.new file_path
 					softlayer_section = config["softlayer"]

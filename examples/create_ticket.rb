@@ -24,33 +24,44 @@ require 'rubygems'
 require 'softlayer_api'
 require 'pp'
 
-# We're creating more than one service so we'll use the globals to establish
-# the username and API key.
-$SL_API_USERNAME = "joecustomer"         # enter your username here
-$SL_API_KEY = "feeddeadbeefbadf00d..."   # enter your api key here
+softlayer_client = SoftLayer::Client.new(
+# :username => "joecustomer"              # enter your username here
+# :api_key => "feeddeadbeefbadf00d..."   # enter your api key here
+)
 
-softlayer_client = SoftLayer::Client.new()
 begin
-  # use an account service to get the account ID of my account
-  account_service = softlayer_client.service_named("Account")
-  my_account_id = account_service.getCurrentUser['id']
+  # To create a ticket we have to assign the ticket to some user so
+  # assign our new ticket to the current user
+  account = SoftLayer::Account.account_for_client(softlayer_client)
+  account_user = account.service.getCurrentUser
+  my_user_id = account_user["id"]
+  
+  # We also need a subject for the ticket. Subjects are specified by id
+  # This code prints out a table of all the ticket subjects with their
+  # ids:
+  ticket_subjects = SoftLayer::Ticket.ticket_subjects(softlayer_client)
+  ticket_subjects.each do |subject|
+    puts "#{subject['id']}\t#{subject['name']}"
+  end
+  
+  # For this example we'll use 'Public Network Question' as the subject.  That's id 1022
+  public_network_question_id = 1022
 
-  # Use a ticket service to create a standard support ticket, assigned to me.
-  # Note: calling for the Ticket service using the brackets is entirely equivalent
-  # go calling service_named('Ticket')
-  ticket_service = softlayer_client['Ticket']
-  new_ticket = ticket_service.createStandardTicket(
-                  {
-                    "assignedUserId" => my_account_id,
-                    "subjectId" => 1022,
-                    "notifyUserOnUpdateFlag" => true
-                  },
-                  "This is a test ticket created from a Ruby client")
+  # A title is optional, but we'll provide one and we offer the body of the ticket
+  # remember to pass the client to create_standard_ticket
+  new_ticket = SoftLayer::Ticket.create_standard_ticket(
+    :client => softlayer_client,
+    :title => "This is a test ticket, please simply close it",
+    :body => "This test ticket was created to test the Ruby API client.  Please ignore it.",
+    :subject_id => public_network_question_id,
+    :assigned_user_id => my_user_id
+  )
 
-  puts "Created a new ticket : #{new_ticket['id']} - #{new_ticket['title']}"
+  puts "Created a new ticket : #{new_ticket.id} - #{new_ticket.title}"
+  
+  # we can also add an update to the ticket:
+  new_ticket.update("This is a ticket update sent from the Ruby library")
 
-  # add an update to the newly created ticket.
-  pp ticket_service.object_with_id(new_ticket['id']).edit({}, "This is a ticket update sent from the Ruby library")
 rescue Exception => exception
   $stderr.puts "An exception occurred while trying to complete the SoftLayer API calls #{exception}"
 end

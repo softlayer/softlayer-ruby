@@ -1,4 +1,3 @@
-#
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -51,7 +50,6 @@ class XMLRPC::Client
 end
 
 module SoftLayer
-
   # = SoftLayer API Service
   #
   # Instances of this class are the runtime representation of
@@ -87,7 +85,7 @@ module SoftLayer
     attr_reader :service_name
     attr_reader :client
 
-    def initialize(service_name, options = {})
+    def initialize (service_name, options = {})
       raise ArgumentError,"Please provide a service name" if service_name.nil? || service_name.empty?
 
       # remember the service name
@@ -137,6 +135,13 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       @client.service_named(service_name)
     end
 
+    # Added here so that the interface of this class matches that
+    # of APIParameterFilter.  In APIParameterFilter the target is
+    # a service.  In a service, the target is itself.
+    def target
+      return self
+    end
+
     # Use this as part of a method call chain to identify a particular
     # object as the target of the request. The parameter is the SoftLayer
     # object identifier you are interested in. For example, this call
@@ -165,7 +170,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     # Use this as part of a method call chain to reduce the number
     # of results returned from the server. For example, if the server has a list
     # of 100 entities and you only want 5 of them, you can get the first five
-    # by using result_limit(0,5).  Then for the next 5 you would use
+    # by using result_limit(0,5). Then for the next 5 you would use
     # result_limit(5,5), then result_limit(10,5) etc.
     def result_limit(offset, limit)
       proxy = APIParameterFilter.new(self)
@@ -234,11 +239,9 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       end
 
       # Object masks go into the headers too.
-      if parameters && parameters.server_object_mask && parameters.server_object_mask.count != 0
+      if parameters && parameters.server_object_mask
         object_mask = parameters.server_object_mask
-        object_mask_string = object_mask.count == 1 ? object_mask[0] : "[#{object_mask.join(',')}]"
-
-        additional_headers.merge!("SoftLayer_ObjectMask" => { "mask" => object_mask_string }) unless object_mask_string.empty?
+        additional_headers.merge!("SoftLayer_ObjectMask" => { "mask" => object_mask }) unless object_mask.empty?
       end
 
       # Result limits go into the headers
@@ -284,7 +287,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
     # If this is not defined for Service, then when you print a service object
     # the code will try to convert it to an array and end up calling method_missing
     #
-    # We define this here to prevent odd calls to the Softlayer API
+    # We define this here to prevent odd calls to the SoftLayer API
     def to_ary
       nil
     end

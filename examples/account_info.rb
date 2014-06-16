@@ -26,13 +26,16 @@ require 'pp'
 
 begin
   softlayer_client = SoftLayer::Client.new(
-    :username => "joecustomer"              # enter your username here
-    :api_key => "feeddeadbeefbadf00d..."   # enter your api key here
+#    :username => "joecustomer"              # enter your username here
+#    :api_key => "feeddeadbeefbadf00d..."   # enter your api key here
   )
 
-	# use an account service to get a list of the open tickets and print their IDs and titles
+	# Demonstrates using the low-level capabilities of the softlayer_api
+  # gem to get directly at methods in the SoftLayer API and extract
+  # data from them.
 	account_service = softlayer_client['Account'];
 	account = account_service.getObject
+
 	pp account
 rescue Exception => exception
 	puts "Unable to retrieve account information: #{exception}"

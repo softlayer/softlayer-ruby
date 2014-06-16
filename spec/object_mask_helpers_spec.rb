@@ -26,56 +26,60 @@ require 'rubygems'
 require 'softlayer_api'
 require 'rspec'
 
-describe String, "#to_sl_object_mask_property" do
+describe String, "#_to_sl_object_mask_property" do
   it "converts to the string itself" do
-    "blah".to_sl_object_mask_property.should eql("blah")
-    " blah".to_sl_object_mask_property.should eql("blah")
-    " blah ".to_sl_object_mask_property.should eql("blah")
-    " blah \t\n".to_sl_object_mask_property.should eql("blah")
+    expect("blah"._to_sl_object_mask_property).to eql("blah")
+    expect(" blah"._to_sl_object_mask_property).to eql("blah")
+    expect(" blah "._to_sl_object_mask_property).to eql("blah")
+    expect(" blah \t\n"._to_sl_object_mask_property).to eql("blah")
   end
 
   it "echos the empty string" do
-    "".to_sl_object_mask_property.should eql("")
+    expect(""._to_sl_object_mask_property).to eql("")
   end
 end
 
-describe Array,"#to_sl_object_mask_property" do
+describe Array,"#_to_sl_object_mask_property" do
   it "converts an empty array to the empty string" do
-    [].to_sl_object_mask_property.should eql("")
+    expect([]._to_sl_object_mask_property).to eql("")
   end
 
   it "handles simple arrays" do
-    ["foo", "bar", "baz"].to_sl_object_mask_property.should eql("foo,bar,baz")
+    expect(["foo", "bar", "baz"]._to_sl_object_mask_property).to eql("foo,bar,baz")
   end
 
   it "flattens inner arrays to simple lists" do
-    ["foo", ["bar", "baz"]].to_sl_object_mask_property.should eql("foo,bar,baz")
+    expect(["foo", ["bar", "baz"]]._to_sl_object_mask_property).to eql("foo,bar,baz")
+  end
+
+  it "handles nils in the array" do
+    expect(["foo", nil, "bar"]._to_sl_object_mask_property()).to eql("foo,bar")
   end
 end
 
-describe Hash, "#to_sl_object_mask_property" do
+describe Hash, "#_to_sl_object_mask_property" do
   it "returns the empty string for an empty hash" do
-      {}.to_sl_object_mask_property.should eql("")
+      expect({}._to_sl_object_mask_property).to eql("")
   end
 
   it "constructs a dot expression for a simple string value" do
-    {"foo" => "foobar"}.to_sl_object_mask_property.should eql("foo.foobar")
+    expect({"foo" => "foobar"}._to_sl_object_mask_property).to eql("foo.foobar")
   end
 
   it "builds a bracket expression with array values" do
-    {"foo" => ["one", "two", "three"]}.to_sl_object_mask_property.should eql("foo[one,two,three]")
+    expect({"foo" => ["one", "two", "three"]}._to_sl_object_mask_property).to eql("foo[one,two,three]")
   end
 
   it "builds bracket expressions for nested hashes" do
-    {"foo" => {"sub" => "resub"}}.to_sl_object_mask_property.should eql("foo[sub.resub]")
+    expect({"foo" => {"sub" => "resub"}}._to_sl_object_mask_property).to eql("foo[sub.resub]")
   end
 
   it "resolves simple inner values to simple dot expressions" do
-    {"top" => [ "middle1", {"middle2" => "end"}]}.to_sl_object_mask_property.should eql("top[middle1,middle2.end]")
+    expect({"top" => [ "middle1", {"middle2" => "end"}]}._to_sl_object_mask_property).to eql("top[middle1,middle2.end]")
   end
 
   it "accepts an inner empty hash and returns a mask" do
-    { "ipAddress" => { "ipAddress" => {}}}.to_sl_object_mask_property.should eql("ipAddress[ipAddress]")
+    expect({ "ipAddress" => { "ipAddress" => {}}}._to_sl_object_mask_property).to eql("ipAddress[ipAddress]")
   end
 end
 
@@ -85,29 +89,29 @@ describe Hash, "#to_sl_object_mask" do
   end
 
   it "constructs a dot expression for a simple string value" do
-    {"mask" => "foobar"}.to_sl_object_mask.should eql("mask.foobar")
+    expect({"mask" => "foobar"}.to_sl_object_mask).to eql("mask.foobar")
   end
 
   it "builds a bracket expression with array values" do
-    {"mask" => ["one", "two", "three"]}.to_sl_object_mask.should eql("mask[one,two,three]")
+    expect({"mask" => ["one", "two", "three"]}.to_sl_object_mask).to eql("mask[one,two,three]")
   end
 
   it "builds bracket expressions for nested hashes" do
-    {"mask(some_type)" => {"sub" => "resub"}}.to_sl_object_mask.should eql("mask(some_type)[sub.resub]")
+    expect({"mask(some_type)" => {"sub" => "resub"}}.to_sl_object_mask).to eql("mask(some_type)[sub.resub]")
   end
 
   it "resolves simple inner values to simple dot expressions" do
-    {"mask" => [ "middle1", {"middle2" => "end"}]}.to_sl_object_mask.should eql("mask[middle1,middle2.end]")
+    expect({"mask" => [ "middle1", {"middle2" => "end"}]}.to_sl_object_mask).to eql("mask[middle1,middle2.end]")
   end
 
   it "accepts an inner empty hash and returns a mask" do
-    { "mask" => { "ipAddress" => {}}}.to_sl_object_mask.should eql("mask[ipAddress]")
+    expect({ "mask" => { "ipAddress" => {}}}.to_sl_object_mask).to eql("mask[ipAddress]")
   end
 
   it "converts masks with different roots" do
     object_mask = { "mask" => { "ipAddress" => {}},
       "mask(duck_type)" => {"webbed" => "feet"}}.to_sl_object_mask
 
-      ["[mask[ipAddress],mask(duck_type)[webbed.feet]]", "mask(duck_type)[webbed.feet],[mask[ipAddress]]"].find(object_mask).should be_true
+      expect(["[mask[ipAddress],mask(duck_type)[webbed.feet]]", "mask(duck_type)[webbed.feet],[mask[ipAddress]]"].find(object_mask)).to_not be_nil
   end
 end

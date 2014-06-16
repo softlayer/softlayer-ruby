@@ -1,18 +1,40 @@
+#
+# Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#
+
 module SoftLayer
   # Initialize an instance of the Client class. You pass in the service name
   # and optionally hash arguments specifying how the client should access the
   # SoftLayer API.
   #
   # The following symbols can be used as hash arguments to pass options to the constructor:
-  # - <tt>:username</tt> - a non-empty string providing the username to use for requests to the service
-  # - <tt>:api_key</tt> - a non-empty string providing the api key to use for requests to the service
-  # - <tt>:endpoint_url</tt> - a non-empty string providing the endpoint URL to use for requests to the service
+  # - +:username+ - a non-empty string providing the username to use for requests to the client
+  # - +:api_key+ - a non-empty string providing the api key to use for requests to the client
+  # - +:endpoint_url+ - a non-empty string providing the endpoint URL to use for requests to the client
   #
   # If any of the options above are missing then the constructor will try to use the corresponding
   # global variable declared in the SoftLayer Module:
-  # - <tt>$SL_API_USERNAME</tt>
-  # - <tt>$SL_API_KEY</tt>
-  # - <tt>$SL_API_BASE_URL</tt>
+  # - +$SL_API_USERNAME+
+  # - +$SL_API_KEY+
+  # - +$SL_API_BASE_URL+
   #
   class Client
     # A username passed as authentication for each request. Cannot be emtpy or nil.
@@ -27,6 +49,30 @@ module SoftLayer
     # A string passsed as the value for the User-Agent header when requests are sent to SoftLayer API.
     attr_accessor :user_agent
 
+    ##
+    # The client class maintains an (optional) default client. The default client
+    # will be used by many methods if you do not provide an explicit client.
+    @@default_client = nil
+
+    def self.default_client
+      return @@default_client
+    end
+
+    def self.default_client=(new_default)
+      @@default_client = new_default
+    end
+
+    ##
+    #
+    # Clients are built with a number of settings:
+    # * <b>+:username+</b> - The username of the account you wish to access through the API
+    # * <b>+:api_key+</b> - The API key used to authenticate the user with the API
+    # * <b>+:enpoint_url+</b> - The API endpoint the client should connect to.  This defaults to API_PUBLIC_ENDPOINT
+    # * <b>+:user_agent+</b> - A string that is passed along as the user agent when the client sends requests to the server
+    #
+    # If these arguments are not provided then the client will try to locate them using other
+    # sources including global variables, and the SoftLayer config file (if one exists)
+    #
     def initialize(options = {})
       @services = { }
 
@@ -64,12 +110,11 @@ module SoftLayer
     # will be returned each time it is called for by name. Otherwise the system
     # will try to construct a new service object and return that.
     #
-    #
     # If the service has to be created then the service_options will be passed
-    # along to the creative function.  However, when returning a previously created
+    # along to the creative function. However, when returning a previously created
     # Service, the service_options will be ignored.
     #
-    # If the service_name provided does not start with 'SoftLayer__' that prefix
+    # If the service_name provided does not start with 'SoftLayer_' that prefix
     # will be added
     def service_named(service_name, service_options = {})
       raise ArgumentError,"Please provide a service name" if service_name.nil? || service_name.empty?

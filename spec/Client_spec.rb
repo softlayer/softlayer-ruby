@@ -36,25 +36,25 @@ describe SoftLayer::Client do
   it 'accepts a user name from the global variable' do
     $SL_API_USERNAME = 'sample'
     client = SoftLayer::Client.new(:api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
-    client.username.should == 'sample'
+    expect(client.username).to eq 'sample'
   end
 
   it 'accepts a username in options' do
     $SL_API_USERNAME = 'sample'
     client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
-    client.username.should == 'fake_user'
+    expect(client.username).to eq 'fake_user'
   end
 
   it 'accepts an api key from the global variable' do
     $SL_API_KEY = 'sample'
     client = SoftLayer::Client.new(:username => 'fake_user', :endpoint_url => 'http://fakeurl.org/')
-    client.api_key.should == 'sample'
+    expect(client.api_key).to eq 'sample'
   end
 
   it 'accepts an api key in options' do
     $SL_API_KEY = 'sample'
     client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
-    client.api_key.should == 'fake_key'
+    expect(client.api_key).to eq 'fake_key'
   end
 
   it 'raises an error if passed an empty user name' do
@@ -98,36 +98,36 @@ describe SoftLayer::Client do
   it 'gets the default endpoint even if none is provided' do
     $SL_API_BASE_URL = nil
     client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key')
-    client.endpoint_url.should == SoftLayer::API_PUBLIC_ENDPOINT
+    expect(client.endpoint_url).to eq SoftLayer::API_PUBLIC_ENDPOINT
   end
 
   it 'allows the default endpoint to be overridden by globals' do
     $SL_API_BASE_URL = 'http://someendpoint.softlayer.com/from/globals'
     client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key')
-    client.endpoint_url.should == 'http://someendpoint.softlayer.com/from/globals'
+    expect(client.endpoint_url).to eq 'http://someendpoint.softlayer.com/from/globals'
   end
 
   it 'allows the default endpoint to be overriden by options' do
     $SL_API_BASE_URL = 'http://this/wont/be/used'
     client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
-    client.endpoint_url.should == 'http://fakeurl.org/'
+    expect(client.endpoint_url).to eq 'http://fakeurl.org/'
   end
 
   it 'has a read/write user_agent property' do
     client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
-    client.should respond_to(:user_agent)
-    client.should respond_to(:user_agent=)
+    expect(client).to respond_to(:user_agent)
+    expect(client).to respond_to(:user_agent=)
   end
 
   it 'has a reasonable default user agent string' do
     client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
-    client.user_agent.should == "softlayer_api gem/#{SoftLayer::VERSION} (Ruby #{RUBY_PLATFORM}/#{RUBY_VERSION})"
+    expect(client.user_agent).to eq "softlayer_api gem/#{SoftLayer::VERSION} (Ruby #{RUBY_PLATFORM}/#{RUBY_VERSION})"
   end
 
   it 'should allow the user agent to change' do
     client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
     client.user_agent = "Some Random User Agent"
-    client.user_agent.should == "Some Random User Agent"
+    expect(client.user_agent).to eq "Some Random User Agent"
   end
 
   describe "obtaining services" do
@@ -136,7 +136,7 @@ describe SoftLayer::Client do
     }
 
     it "should have a service_named method" do
-      test_client.should respond_to(:service_named)
+      expect(test_client).to respond_to(:service_named)
     end
 
     it "should reject empty or nil service names" do
@@ -146,23 +146,23 @@ describe SoftLayer::Client do
 
     it "should be able to construct a service" do
       test_service = test_client.service_named('Account')
-      test_service.should_not be_nil
-      test_service.service_name.should == "SoftLayer_Account"
-      test_service.client.should be(test_client)
+      expect(test_service).to_not be_nil
+      expect(test_service.service_name).to eq "SoftLayer_Account"
+      expect(test_service.client).to be(test_client)
     end
 
     it "allows bracket dereferences as an alternate service syntax" do
       test_service = test_client['Account']
-      test_service.should_not be_nil
-      test_service.service_name.should == "SoftLayer_Account"
-      test_service.client.should be(test_client)
+      expect(test_service).to_not be_nil
+      expect(test_service.service_name).to eq "SoftLayer_Account"
+      expect(test_service.client).to be(test_client)
     end
 
     it "returns the same service repeatedly when asked more than once" do
       first_account_service = test_client['Account']
       second_account_service = test_client.service_named('Account')
 
-      first_account_service.should be(second_account_service)
+      expect(first_account_service).to be(second_account_service)
     end
   end
 end

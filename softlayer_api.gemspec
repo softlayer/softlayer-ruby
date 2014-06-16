@@ -33,12 +33,14 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://sldn.softlayer.com/}
   s.license = %q{MIT}
 
-  s.files = Dir["README.textile", "LICENSE.textile", "lib/**/*.rb", "test/**/*.rb", "examples/**/*.rb"]
+  s.files = Dir["README.textile", "LICENSE.textile", "CHANGELOG.textile", "lib/**/*.rb", "test/**/*.rb", "examples/**/*.rb"]
   s.require_paths = ["lib"]
 
   s.has_rdoc = true
-  s.add_dependency 'configparser', '~> 0.1.2'
+  s.required_ruby_version = '>= 1.9.2'
+  s.add_runtime_dependency 'configparser', '~>0.1.2'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'
+  s.add_development_dependency 'rdoc', '>=2.4.2'
   s.add_development_dependency 'json', '~> 1.8', '>= 1.8.1'
 end

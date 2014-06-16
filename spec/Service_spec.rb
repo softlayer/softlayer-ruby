@@ -48,29 +48,29 @@ describe SoftLayer::Service, "#new" do
 
     it "assigns the service name for the service" do
       service = SoftLayer::Service.new("SoftLayer_Account")
-      service.service_name.should == "SoftLayer_Account"
+      expect(service.service_name).to eq "SoftLayer_Account"
     end
 
     it "construct a client, if none is given, from the API globals" do
       service = SoftLayer::Service.new("SoftLayer_Account")
-      service.client.should_not be_nil
-      service.client.username.should eq("some_default_username")
-      service.client.api_key.should eq("some_default_api_key")
-      service.client.endpoint_url.should eq(SoftLayer::API_PUBLIC_ENDPOINT)
+      expect(service.client).to_not be_nil
+      expect(service.client.username).to eq("some_default_username")
+      expect(service.client.api_key).to eq("some_default_api_key")
+      expect(service.client.endpoint_url).to eq(SoftLayer::API_PUBLIC_ENDPOINT)
     end
 
     it "construct a client with init parameters if given" do
       service = SoftLayer::Service.new("SoftLayer_Account", :username => "sample_username", :api_key => "blah")
-      service.client.should_not be_nil
-      service.client.username.should eq("sample_username")
-      service.client.api_key.should eq("blah")
-      service.client.endpoint_url.should eq(SoftLayer::API_PUBLIC_ENDPOINT)
+      expect(service.client).to_not be_nil
+      expect(service.client.username).to eq("sample_username")
+      expect(service.client.api_key).to eq("blah")
+      expect(service.client.endpoint_url).to eq(SoftLayer::API_PUBLIC_ENDPOINT)
     end
 
     it "accepts a client as an initialization parameter" do
       client = SoftLayer::Client.new() # authentication is taken from the globals
       service = SoftLayer::Service.new("SoftLayer_Account", :client => client)
-      service.client.should be(client)
+      expect(service.client).to be(client)
     end
 
     it "fails if both a client and client init options are provided" do
@@ -88,15 +88,15 @@ describe SoftLayer::Service do
 
   describe "#missing_method" do
     it "translates unknown methods into api calls" do
-      service.should_receive(:call_softlayer_api_with_params).with(:getOpenTickets, nil, ["marshmallow"])
+      expect(service).to receive(:call_softlayer_api_with_params).with(:getOpenTickets, nil, ["marshmallow"])
       response = service.getOpenTickets("marshmallow")
     end
   end
 
   describe "#object_with_id" do
     it "passes object ids to call_softlayer_api_with_params" do
-        service.should_receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter),[]) do | method_symbol, parameter_filter, other_args|
-          parameter_filter.server_object_id.should == 12345
+        expect(service).to receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter),[]) do | method_symbol, parameter_filter, other_args|
+          expect(parameter_filter.server_object_id).to eq 12345
         end
         service.object_with_id(12345).getObject
     end
@@ -104,11 +104,11 @@ describe SoftLayer::Service do
     it "creates a proxy object with just the object_with_id option" do
       ticket_proxy = service.object_with_id(123456)
 
-      ticket_proxy.server_object_id.should eql(123456)
-      service.should_receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter), []) do |method_selector, filter, arguments|
-        filter.should_not be_nil
-        filter.target.should == service
-        filter.server_object_id.should == 123456
+      expect(ticket_proxy.server_object_id).to eql(123456)
+      expect(service).to receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter), []) do |method_selector, filter, arguments|
+        expect(filter).to_not be_nil
+        expect(filter.target).to eq service
+        expect(filter.server_object_id).to eq 123456
       end
 
       ticket_proxy.getObject
@@ -117,11 +117,11 @@ describe SoftLayer::Service do
     it "doesn't change an object_mask proxy when used in a call chain with that proxy" do
       masked_proxy = service.object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]")
 
-      service.should_receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter),[])
+      expect(service).to receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter),[])
       masked_proxy.object_with_id(123456).getObject
 
-      masked_proxy.server_object_id.should be_nil
-      masked_proxy.server_object_mask.should eql(["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"])
+      expect(masked_proxy.server_object_id).to be_nil
+      expect(masked_proxy.server_object_mask).to eq "[mask[fish,cow],mask(typed)[duck,chicken]]"
     end
   end
 
@@ -129,19 +129,19 @@ describe SoftLayer::Service do
     it "constructs a parameter filter with the correct object mask" do
       filter = service.object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]")
 
-      filter.should_not be_nil
-      filter.target.should === service
-      filter.server_object_mask.should == ["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"]
+      expect(filter).to_not be_nil
+      expect(filter.target).to be(service)
+      expect(filter.server_object_mask).to eq "[mask[fish,cow],mask(typed)[duck,chicken]]"
     end
 
     it "creates a proxy object that can pass an object mask to an API call" do
       ticket_proxy = service.object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]")
 
-      ticket_proxy.server_object_mask.should eql(["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"])
-      service.should_receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter), []) do |method_selector, filter, arguments|
-        filter.should_not be_nil
-        filter.target.should == service
-        filter.server_object_mask.should == ["mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]"]
+      expect(ticket_proxy.server_object_mask).to eq "[mask[fish,cow],mask(typed)[duck,chicken]]"
+      expect(service).to receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter), []) do |method_selector, filter, arguments|
+        expect(filter).to_not be_nil
+        expect(filter.target).to eq service
+        expect(filter.server_object_mask).to eq "[mask[fish,cow],mask(typed)[duck,chicken]]"
       end
       ticket_proxy.getObject
     end
@@ -149,11 +149,11 @@ describe SoftLayer::Service do
     it "doesn't change an object_with_id proxy when used in a call chain with that proxy" do
       ticket_proxy = service.object_with_id(123456)
 
-      service.should_receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter),[])
+      expect(service).to receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter),[])
       ticket_proxy.object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]").getObject
 
-      ticket_proxy.server_object_id.should eql(123456)
-      ticket_proxy.server_object_mask.should be_nil
+      expect(ticket_proxy.server_object_id).to eql(123456)
+      expect(ticket_proxy.server_object_mask).to be_nil
     end
 
     it "rejects improperly formatted masks" do
@@ -171,14 +171,14 @@ describe SoftLayer::Service do
 
     it "constructs a parameter filter with the given ObjectFilter" do
       parameter_filter = service.object_filter(object_filter)
-      parameter_filter.should_not be_nil
-      parameter_filter.target.should == service
-      parameter_filter.server_object_filter.should == object_filter
+      expect(parameter_filter).to_not be_nil
+      expect(parameter_filter.target).to eq service
+      expect(parameter_filter.server_object_filter).to eq object_filter
     end
 
     it "passes an object filter through to an API call" do
-      service.should_receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter),[]) do |method_name, parameters, args|
-        parameters.server_object_filter.should == object_filter
+      expect(service).to receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter),[]) do |method_name, parameters, args|
+        expect(parameters.server_object_filter).to eq object_filter
       end
 
       service.object_filter(object_filter).getObject
@@ -189,18 +189,18 @@ describe SoftLayer::Service do
     it "constructs a parameter filter with the correct result limit" do
       filter = service.result_limit(10, 20)
 
-      filter.should_not be_nil
-      filter.target.should === service
-      filter.server_result_offset.should == 10
-      filter.server_result_limit.should == 20
+      expect(filter).to_not be_nil
+      expect(filter.target).to be(service)
+      expect(filter.server_result_offset).to eq 10
+      expect(filter.server_result_limit).to eq 20
     end
   end
 
   describe "#related_service_named" do
     it "can provide related services" do
       related_service = service.related_service_named("SoftLayer_Hardware")
-      related_service.service_name.should eq("SoftLayer_Hardware")
-      related_service.client.should be(service.client)
+      expect(related_service.service_name).to eq("SoftLayer_Hardware")
+      expect(related_service.client).to be(service.client)
     end
   end
 end #describe SoftLayer::Service
