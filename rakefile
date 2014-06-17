@@ -33,7 +33,7 @@ Rake::RDocTask.new do |rd|
   rd.title = "softlayer_api gem #{SoftLayer::VERSION}"
   rd.main = "README.md"
   rd.rdoc_dir = "doc"
-  rd.rdoc_files.include('lib/**/*.rb', 'README.md')
+  rd.rdoc_files.include('lib/**/*.rb', 'README.md', 'doc_src/*')
 end
 
 RSpec::Core::RakeTask.new(:spec) do |t|
