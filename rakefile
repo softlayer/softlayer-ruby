@@ -28,8 +28,12 @@ require 'rspec/core/rake_task'
 require 'rdoc/task'
 
 Rake::RDocTask.new do |rd|
-  rd.rdoc_files.include('lib/**/*.rb')
+  require 'lib/softlayer/base.rb'
+
+  rd.title = "softlayer_api gem #{SoftLayer::VERSION}"
+  rd.main = "README.md"
   rd.rdoc_dir = "doc"
+  rd.rdoc_files.include('lib/**/*.rb', 'README.md')
 end
 
 RSpec::Core::RakeTask.new(:spec) do |t|
