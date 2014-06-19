@@ -30,11 +30,8 @@ module SoftLayer
   # - +:api_key+ - a non-empty string providing the api key to use for requests to the client
   # - +:endpoint_url+ - a non-empty string providing the endpoint URL to use for requests to the client
   #
-  # If any of the options above are missing then the constructor will try to use the corresponding
-  # global variable declared in the SoftLayer Module:
-  # - +$SL_API_USERNAME+
-  # - +$SL_API_KEY+
-  # - +$SL_API_BASE_URL+
+  # If any of these are missing then the Client class will look to the SoftLayer::Config
+  # class to provide the missing information.  Please see that class for details.
   #
   class Client
     # A username passed as authentication for each request. Cannot be emtpy or nil.

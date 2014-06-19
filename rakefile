@@ -30,10 +30,13 @@ require 'rdoc/task'
 Rake::RDocTask.new do |rd|
   require 'lib/softlayer/base.rb'
 
+  puts RDoc::Markdown::DEFAULT_EXTENSIONS
+
   rd.title = "softlayer_api gem #{SoftLayer::VERSION}"
-  rd.main = "README.md"
+  rd.main = "Welcome.md"
   rd.rdoc_dir = "doc"
-  rd.rdoc_files.include('lib/**/*.rb', 'README.md', 'doc_src/*')
+  rd.rdoc_files.include('lib/**/*.rb')
+  rd.options << '--page-dir=doc_src'
 end
 
 RSpec::Core::RakeTask.new(:spec) do |t|
