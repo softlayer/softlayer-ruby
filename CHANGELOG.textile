@@ -1,3 +1,7 @@
+*2.1.1*
+* Virtual server upgrades no longer raise exceptions
+* Formalized the RDoc documentation process.  Added overview and welcome documentation and changed the README so it directs folks to the new documentation.
+
 *2.1.0*
 * Began implementing a model framework that allows Ruby developers to work with elements in the SoftLayer API in a more object-oriented fashion. The first release of this framework includes the Ticket, VirtualServer, and BareMetalServer classes.
 
