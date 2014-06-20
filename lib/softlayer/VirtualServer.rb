@@ -75,7 +75,7 @@ module SoftLayer
     #
     sl_dynamic_attr :upgrade_options do |resource|
       resource.should_update? do
-        @upgrade_items == nil
+        @upgrade_options == nil
       end
 
       resource.to_update do
@@ -365,7 +365,7 @@ module SoftLayer
     # and whose capacity matches the value given. Returns the item_price or nil
     #
     def _item_price_in_category(which_category, capacity)
-      item_prices_in_category = self.upgrade_items.select { |item_price| item_price["categories"].find { |category| category["categoryCode"] == which_category } }
+      item_prices_in_category = self.upgrade_options.select { |item_price| item_price["categories"].find { |category| category["categoryCode"] == which_category } }
       item_prices_in_category.find { |ram_item| ram_item["item"]["capacity"].to_i == capacity}
     end
 

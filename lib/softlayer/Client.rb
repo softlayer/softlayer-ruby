@@ -116,20 +116,18 @@ module SoftLayer
     def service_named(service_name, service_options = {})
       raise ArgumentError,"Please provide a service name" if service_name.nil? || service_name.empty?
 
-      # strip whitespace from service_name and
-      # ensure that it start with "SoftLayer_".
-      #
-      # if it does not, then add it
-      service_name.strip!
-      if not service_name =~ /\ASoftLayer_/
-        service_name = "SoftLayer_#{service_name}"
+      # Strip whitespace from service_name and ensure that it starts with "SoftLayer_".
+      # If it does not, then add the prefix.
+      full_name = service_name.to_s.strip
+      if not full_name =~ /\ASoftLayer_/
+        full_name = "SoftLayer_#{service_name}"
       end
 
       # if we've already created this service, just return it
       # otherwise create a new service
-      service_key = service_name.to_sym
+      service_key = full_name.to_sym
       if !@services.has_key?(service_key)
-        @services[service_key] = SoftLayer::Service.new(service_name, {:client => self}.merge(service_options))
+        @services[service_key] = SoftLayer::Service.new(full_name, {:client => self}.merge(service_options))
       end
 
       @services[service_key]
