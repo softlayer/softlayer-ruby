@@ -84,7 +84,7 @@ describe Hash, "#_to_sl_object_mask_property" do
 end
 
 describe Hash, "#to_sl_object_mask" do
-  it "rejects the empty empty hash" do
+  it "rejects the empty hash" do
       expect { {}.to_sl_object_mask }.to raise_error(RuntimeError)
   end
 
