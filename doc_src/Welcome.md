@@ -4,7 +4,7 @@ The `softlyer_api` Ruby Gem provides a convenient way to call into the SoftLayer
 
 For more information about the SoftLayer API, and the routines and data structures it offers should visit the [SoftLayer Developer Network (SLDN) website](http://sldn.softlayer.com).
 
-This document is written for Ruby developers who wish to interact with their SoftLayer accounts through Ruby scripts. SoftLayer also offers a command line tool for performing common tasks. If prefer to use that tool, we invite you to look into the [command line interface](https://softlayer-python.readthedocs.org/en/latest/cli.html) that is part of the [softlayer-python](http://github.com/softlayer/softlayer-python) project.
+This document is written for Ruby developers who wish to interact with their SoftLayer accounts through Ruby scripts. SoftLayer also offers a command line tool for performing common tasks. If prefer to use that tool, we invite you to look into the [command line interface](https://softlayer-python.readthedocs.org/en/latest/cli.html) that is part of the [git](http://github.com/softlayer/softlayer-python) project.
 
 This documentation is also written for Ruby developers who wish to contribute to the `softlayer_api` Gem. The Gem is a work in progress. We welcome the support of the SoftLayer development community to improve the Gem. The project is open source and we hope that source will serve as a useful library, stand as sample code to assist exploration, and serve as an opportunity for developers to shape it for both those needs.
 
