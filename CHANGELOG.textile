@@ -1,5 +1,7 @@
-*2.2*
+*3.0*
 * Added a method to reboot servers.
+* Added a model for Virtual Server Image Templates
+* Substantially rewrote the ObjectFilter class.
 
 *2.1.1*
 * Virtual server upgrades no longer raise exceptions

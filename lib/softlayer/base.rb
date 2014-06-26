@@ -10,7 +10,7 @@ require 'rubygems'
 # The SoftLayer module provides a namespace for SoftLayer code.
 #
 module SoftLayer
-  VERSION = "2.1.1"  # version history in the CHANGELOG.textile file at the root of the source
+  VERSION = "3.0.0"  # version history in the CHANGELOG.textile file at the root of the source
 
   # The base URL of the SoftLayer API available to the public internet.
   API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/xmlrpc/v3/'
@@ -18,9 +18,9 @@ module SoftLayer
   # The base URL of the SoftLayer API available through SoftLayer's private network
   API_PRIVATE_ENDPOINT = 'https://api.service.softlayer.com/xmlrpc/v3/'
 
-  #---
+  #--
   # These globals can be used to simplify client creation
-  #+++
+  #++
 
   # Set this if you want to provide a default username for each client as it is created.
   # usernames provided to the client initializer will override the global
