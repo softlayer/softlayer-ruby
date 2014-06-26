@@ -258,10 +258,15 @@ module SoftLayer
       softlayer_client = options_hash[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      object_filter = {}
+      if(options_hash.has_key? :object_filter)
+        object_filter = options_hash[:object_filter]
+        raise "Expected an instance of SoftLayer::ObjectFilter" unless object_filter.kind_of?(SoftLayer::ObjectFilter)
+      else
+        object_filter = ObjectFilter.new()
+      end
 
       option_to_filter_path = {
-        :cpus => "virtualGuests.maxCpu",
+        :cores => "virtualGuests.maxCpu",
         :memory => "virtualGuests.maxMemory",
         :hostname => "virtualGuests.hostname",
         :domain => "virtualGuests.domain",
@@ -280,18 +285,18 @@ module SoftLayer
       # that particular option, add a clause to the object filter that filters for the matching
       # value
       option_to_filter_path.each do |option, filter_path|
-        object_filter.merge!(SoftLayer::ObjectFilter.build(filter_path, options_hash[option])) if options_hash.has_key?(option)
+        object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option])} if options_hash[option]
       end
 
       # Tags get a much more complex object filter operation so we handle them separately
       if options_hash.has_key?(:tags)
-        object_filter.merge!(SoftLayer::ObjectFilter.build("virtualGuests.tagReferences.tag.name", {
+        object_filter.set_criteria_for_key_path("virtualGuests.tagReferences.tag.name", {
           'operation' => 'in',
           'options' => [{
             'name' => 'data',
             'value' => options_hash[:tags]
             }]
-          } ));
+          } );
       end
 
       required_properties_mask = 'mask.id'

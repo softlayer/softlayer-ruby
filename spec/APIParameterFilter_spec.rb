@@ -94,7 +94,7 @@ describe SoftLayer::APIParameterFilter do
 
     it "stores its value in server_object_filter when called" do
       test_filter = SoftLayer::ObjectFilter.new()
-      test_filter["fish"] = "cow"
+      test_filter.set_criteria_for_key_path("fish", "cow")
 
       result = filter.object_filter(test_filter)
       expect(result.server_object_filter).to eq({"fish" => "cow"})

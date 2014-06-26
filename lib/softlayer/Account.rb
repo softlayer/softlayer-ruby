@@ -113,6 +113,18 @@ module SoftLayer
       end
     end
 
+    sl_dynamic_attr :image_templates do |image_templates|
+      image_templates.should_update? do
+        @last_image_template_update ||= Time.at(0)
+        (Time.now - @last_image_template_update) > 5 * 60  # update every 5 minutes
+      end
+
+      image_templates.to_update do
+        @last_image_template_update ||= Time.now
+        ImageTemplate.find_private_templates(:client => self.softlayer_client)
+      end
+    end
+
     def service
       softlayer_client["Account"].object_with_id(self.id)
     end

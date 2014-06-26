@@ -178,8 +178,9 @@ module SoftLayer
 
       if(options_hash.has_key? :object_filter)
         object_filter = options_hash[:object_filter]
+        raise "Expected an instance of SoftLayer::ObjectFilter" unless object_filter.kind_of?(SoftLayer::ObjectFilter)
       else
-        object_filter = {}
+        object_filter = ObjectFilter.new()
       end
 
       option_to_filter_path = {
@@ -197,18 +198,18 @@ module SoftLayer
       # that particular option, add a clause to the object filter that filters for the matching
       # value
       option_to_filter_path.each do |option, filter_path|
-        object_filter.merge!(SoftLayer::ObjectFilter.build(filter_path, options_hash[option])) if options_hash.has_key?(option)
+        object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option])} if options_hash[option]
       end
 
       # Tags get a much more complex object filter operation so we handle them separately
       if options_hash.has_key?(:tags)
-        object_filter.merge!(SoftLayer::ObjectFilter.build("hardware.tagReferences.tag.name", {
+        object_filter.set_criteria_for_key_path("hardware.tagReferences.tag.name", {
           'operation' => 'in',
           'options' => [{
             'name' => 'data',
             'value' => options_hash[:tags]
             }]
-          } ));
+          } );
       end
 
       account_service = softlayer_client['Account']

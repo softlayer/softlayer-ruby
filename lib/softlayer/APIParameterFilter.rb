@@ -119,7 +119,7 @@ class APIParameterFilter
   # to specify criteria which are used to filter the results returned
   # by the server.
   def object_filter(filter)
-    raise ArgumentError, "Object mask expects mask properties" if filter.nil?
+    raise ArgumentError, "object_filter expects an instance of SoftLayer::ObjectFilter" if filter.nil? || !filter.kind_of?(SoftLayer::ObjectFilter)
 
     # we create a new object in case the user wants to store off the
     # filter chain and reuse it later
@@ -187,7 +187,7 @@ class APIParameterFilter
   ##
   # A utility method that returns the object filter (if any) stored with this filter.
   def server_object_filter
-    self.parameters[:object_filter]
+    self.parameters[:object_filter].to_h
   end
 
   ##

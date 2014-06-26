@@ -164,8 +164,9 @@ describe SoftLayer::Service do
 
   describe "#object_filter" do
     let (:object_filter) do
-      object_filter = SoftLayer::ObjectFilter.new()
-      object_filter["key"] = "value"
+      object_filter = SoftLayer::ObjectFilter.new() do |filter|
+        filter.set_criteria_for_key_path("key", "value")
+      end
       object_filter
     end
 
@@ -173,12 +174,12 @@ describe SoftLayer::Service do
       parameter_filter = service.object_filter(object_filter)
       expect(parameter_filter).to_not be_nil
       expect(parameter_filter.target).to eq service
-      expect(parameter_filter.server_object_filter).to eq object_filter
+      expect(parameter_filter.server_object_filter).to eq object_filter.to_h
     end
 
     it "passes an object filter through to an API call" do
       expect(service).to receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter),[]) do |method_name, parameters, args|
-        expect(parameters.server_object_filter).to eq object_filter
+        expect(parameters.server_object_filter).to eq object_filter.to_h
       end
 
       service.object_filter(object_filter).getObject
