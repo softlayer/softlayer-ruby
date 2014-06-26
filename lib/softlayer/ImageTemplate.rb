@@ -1,29 +1,21 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
+
 
 module SoftLayer
   ##
-  # Represents a virtual server image template.
-  # rougly corresponds to SoftLayer_Virtual_Guest_Block_Device_Template_Group
+  # A Virtual Server Image Template.
+  #
+  # This class rougly corresponds to the unwieldily named
+  # +SoftLayer_Virtual_Guest_Block_Device_Template_Group+
+  # service:
+  #
+  # http://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest_Block_Device_Template_Group
+  #
+  #
   class ImageTemplate < SoftLayer::ModelBase
     ##
     # :attr_reader:
@@ -80,7 +72,7 @@ module SoftLayer
     end
 
     ##
-    # Wait until transactions related to the image group are finsihed
+    # Wait until transactions related to the image template are finsihed
     def wait_until_ready(max_trials, seconds_between_tries = 2)
     end
 
@@ -102,8 +94,12 @@ module SoftLayer
     #
     # <b>+:client+</b> - The client used to connect to the API
     #
-    # If no client is given, then the routine will try to use Client.default_client
+    # If no client is given, then the routine will try to use Client.default_client.
     # If no client can be found the routine will raise an error.
+    #
+    # Additional options that may be provided:
+    # * <b>+:name+</b> (string) - Return templates with the given name
+    # * <b>+:global_id+</b> (string) - Return templates with the given global identfier
     def ImageTemplate.find_private_templates(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
@@ -166,9 +162,11 @@ module SoftLayer
     #
     # If no client is given, then the routine will try to use Client.default_client
     # If no client can be found the routine will raise an error.
+    #
+    # Additional options that may be provided:
+    # * <b>+:name+</b> (string) - Return templates with the given name
+    # * <b>+:global_id+</b> (string) - Return templates with the given global identfier
     def ImageTemplate.find_public_templates(options_hash = {})
-      softlayer_client = options_hash[:client] || Client.default_client
-      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
       softlayer_client = options_hash[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
@@ -223,8 +221,7 @@ module SoftLayer
 
     ##
     # Retrive the Image Template with the given ID
-    # (Note! This is the service ID, not the globalIdentifier.
-    # To find a template by global identifier, use find_templates)
+    # (Note! This is the service ID, not the globalIdentifier!)
     #
     # The options parameter should contain:
     #

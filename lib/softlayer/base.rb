@@ -1,34 +1,13 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
 
 require 'rubygems'
 
-# This module is used to provide a namespace for SoftLayer code. It also declares a number of
-# global variables:
-# - +$SL_API_USERNAME+ - The default username passed by clients to the server for authentication.
-#   Set this if you want to use the same username for all clients and don't want to have to specify it when the client is created
-# - +$SL_API_KEY+ - The default API key passed by clients to the server for authentication.
-#   Set this if you want to use the same api for all clients and don't want to have to specify it when the client is created
-# - +$SL_API_BASE_URL+- The default URL used to access the SoftLayer API. This defaults to the value of +SoftLayer::API_PUBLIC_ENDPOINT+
+##
+# The SoftLayer module provides a namespace for SoftLayer code.
 #
 module SoftLayer
   VERSION = "2.1.1"  # version history in the CHANGELOG.textile file at the root of the source
@@ -39,9 +18,9 @@ module SoftLayer
   # The base URL of the SoftLayer API available through SoftLayer's private network
   API_PRIVATE_ENDPOINT = 'https://api.service.softlayer.com/xmlrpc/v3/'
 
-  #
+  #---
   # These globals can be used to simplify client creation
-  #
+  #+++
 
   # Set this if you want to provide a default username for each client as it is created.
   # usernames provided to the client initializer will override the global
@@ -59,4 +38,4 @@ end # module SoftLayer
 #
 # History:
 #
-# The history has been moved to the CHANGELOG.textile file in the source directory
+# The history can be found in the CHANGELOG.textile file in the project root directory
