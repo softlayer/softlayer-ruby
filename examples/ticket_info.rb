@@ -34,13 +34,13 @@ begin
   # at information.  In this case we are talking directly to the ticket
   # service
   ticket_service = softlayer_client.service_named("Ticket");
-  
+
   # Retrive a particular ticket by ID (you will have to substitute an existing ticket's ID here)
   ticket_ref = ticket_service.object_with_id(12345)
 
   # Retrive very specific information about the ticket
   ticket = ticket_ref.object_mask("mask[updates[entry,createDate],assignedUserId,attachedHardware.datacenter]").getObject
-  
+
   pp ticket
 rescue Exception => exception
   puts "Unable to retrieve the ticket #{exception}"

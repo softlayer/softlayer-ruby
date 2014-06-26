@@ -109,7 +109,7 @@ describe SoftLayer::Account do
           fixture_from_json("test_virtual_servers")
         when :getObject
           fixture_from_json("test_account")
-        end            
+        end
       end
 
       test_account = SoftLayer::Account.account_for_client(mock_client)

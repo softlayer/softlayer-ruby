@@ -24,11 +24,11 @@ require 'configparser'
 
 module SoftLayer
 
-  # The SoftLayer Config class is responsible for providing the key information 
+  # The SoftLayer Config class is responsible for providing the key information
   # the library needs to communicate with the network SoftLayer API. Those three crucial
   # pieces of information are the Username, the API Key, and the endpoint_url. This information
   # is collected in a hash with the keys `:username`, `:api_key`, and `:endpoint_url` repsectively.
-  # 
+  #
   # The routine used to retrieve this information from a Config object is Config.client_settings
   #
   # There are several locations that the Config class looks for this information:
@@ -57,7 +57,7 @@ module SoftLayer
   #
   # = Environment Variables
   #
-  # The config class will search the environment variables SL_USERNAME and SL_API_KEY for 
+  # The config class will search the environment variables SL_USERNAME and SL_API_KEY for
   # the username and API key respectively. The endpoint_url may not be set thorugh
   # environment variables.
   #

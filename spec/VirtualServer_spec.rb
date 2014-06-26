@@ -68,12 +68,12 @@ describe SoftLayer::VirtualServer do
   it_behaves_like "server with mutable hostname" do
 		let (:server) { sample_server }
   end
-  
+
   describe "component upgrades" do
     let(:mock_client) do
   		mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "DEADBEEFBADF00D")
       virtual_guest_service = mock_client[:Virtual_Guest]
-    
+
       allow(virtual_guest_service).to receive(:call_softlayer_api_with_params) do |api_method, parameters, api_arguments|
         api_return = nil
 
@@ -83,7 +83,7 @@ describe SoftLayer::VirtualServer do
         else
           fail "Unexpected call to the SoftLayer_Virtual_Guest service"
         end
-        
+
         api_return
       end
 
@@ -107,21 +107,21 @@ describe SoftLayer::VirtualServer do
           expect(api_method).to_not be_empty
         end
       end
-      
+
       it "upgrades cores" do
         fake_virtual_server = SoftLayer::VirtualServer.new(mock_client, {"id" => 12345})
         fake_virtual_server.upgrade_cores!(8)
       end
-      
+
       it "upgrades ram" do
         fake_virtual_server = SoftLayer::VirtualServer.new(mock_client, {"id" => 12345})
         fake_virtual_server.upgrade_RAM!(4)
       end
-      
+
       it "upgrades max port speed" do
         fake_virtual_server = SoftLayer::VirtualServer.new(mock_client, {"id" => 12345})
         fake_virtual_server.upgrade_max_port_speed!(100)
       end
     end # individual component upgrades
-  end  
+  end
 end

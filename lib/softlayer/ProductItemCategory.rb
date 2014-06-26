@@ -48,13 +48,13 @@ module SoftLayer
   # service.
   class ProductItemCategory < ModelBase
     include ::SoftLayer::DynamicAttribute
-    
+
     ##
     # :attr_reader:
     # The categoryCode is a primary identifier for a particular
     # category.  It is a string like 'os' or 'ram'
     sl_attr :categoryCode
-    
+
     ##
     # :attr_reader:
     # The name of a category is a friendly, readable string

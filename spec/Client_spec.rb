@@ -164,20 +164,20 @@ describe SoftLayer::Client do
 
       expect(first_account_service).to be(second_account_service)
     end
-    
+
     it "recognizes a symbol as an acceptable service name" do
       account_service = test_client[:Account]
       expect(account_service).to_not be_nil
-      
+
       trying_again = test_client['Account']
       expect(trying_again).to be(account_service)
-      
+
       yet_again = test_client['SoftLayer_Account']
       expect(yet_again).to be(account_service)
-      
+
       once_more = test_client[:SoftLayer_Account]
       expect(once_more).to be(account_service)
     end
-    
+
   end
 end

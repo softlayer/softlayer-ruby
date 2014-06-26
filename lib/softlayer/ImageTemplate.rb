@@ -154,9 +154,9 @@ module SoftLayer
       end
 
       templates_data = account_service.getPrivateBlockDeviceTemplateGroups
-      templates_data.collect { |template_data| new(softlayer_client, template_data) }      
+      templates_data.collect { |template_data| new(softlayer_client, template_data) }
     end
-    
+
     ##
     # Retrieve a list of public image templates
     #
@@ -218,9 +218,9 @@ module SoftLayer
       end
 
       templates_data = template_service.getPublicImages
-      templates_data.collect { |template_data| new(softlayer_client, template_data) }      
+      templates_data.collect { |template_data| new(softlayer_client, template_data) }
     end
-    
+
     ##
     # Retrive the Image Template with the given ID
     # (Note! This is the service ID, not the globalIdentifier.

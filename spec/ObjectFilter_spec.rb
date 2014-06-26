@@ -29,55 +29,55 @@ require 'rspec'
 describe SoftLayer::ObjectFilter do
   it "calls its construction block" do
     block_called = false;
-    filter = SoftLayer::ObjectFilter.new() { 
+    filter = SoftLayer::ObjectFilter.new() {
       block_called = true;
-          }
+    }
 
     expect(block_called).to be(true)
   end
-  
+
   it "expects the methods in the ObjectFilterDefinitionContext to be available in its block" do
     stuff_defined = false;
-    filter = SoftLayer::ObjectFilter.new() { 
+    filter = SoftLayer::ObjectFilter.new() {
       stuff_defined = !!defined?(satisfies_the_raw_condition);
-        }
+    }
 
     expect(stuff_defined).to be(true)
   end
-  
+
   it "is empty when no criteria have been added" do
     filter = SoftLayer::ObjectFilter.new()
     expect(filter.empty?).to be(true)
   end
-  
+
   it "is not empty criteria have been added" do
     filter = SoftLayer::ObjectFilter.new do |filter|
       filter.accept("foobar").when_it is("baz")
     end
-    
+
     expect(filter.empty?).to be(false)
   end
-  
+
   it "returns criteria for a given key path" do
     test_hash = { 'one' => { 'two' => {'three' => 3}}}
 
     filter = SoftLayer::ObjectFilter.new()
-    filter.instance_eval do 
+    filter.instance_eval do
       @filter_hash = test_hash
     end
-    
+
     expect(filter.criteria_for_key_path("one")).to eq({'two' => {'three' => 3}})
     expect(filter.criteria_for_key_path("one.two")).to eq({'three' => 3})
     expect(filter.criteria_for_key_path("one.two.three")).to eq(3)
   end
-  
+
   it "returns nil when asked for criteria that don't exist" do
     filter = SoftLayer::ObjectFilter.new()
     filter.set_criteria_for_key_path("some.key.path", 3)
 
     expect(filter.criteria_for_key_path("some.key.path")).to eq(3)
     expect(filter.criteria_for_key_path("does.not.exist")).to be_nil
-    
+
     expect(filter.to_h).to eq({ 'some' => { 'key' => {'path' => 3}}})
   end
 
@@ -92,19 +92,19 @@ describe SoftLayer::ObjectFilter do
     filter.set_criteria_for_key_path("one.two.also_two", 2)
     expect(filter.criteria_for_key_path("one.two")).to eq({'also_two' => 2, 'three' => 3})
     expect(filter.criteria_for_key_path("one.two.also_two")).to eq(2)
-    
+
     expect(filter.to_h).to eq({"one"=>{"two"=>{"three"=>3, "also_two"=>2}}})
   end
-  
+
   it "sets criteria in the initializer with the fancy syntax" do
     filter = SoftLayer::ObjectFilter.new do |filter|
       filter.accept("some.key.path").when_it is(3)
     end
-    
+
     expect(filter.criteria_for_key_path("some.key.path")).to eq({'operation' => 3})
     expect(filter.to_h).to eq({"some"=>{"key"=>{"path"=>{"operation"=>3}}}})
   end
-  
+
   it "allows the fancy syntax in a modify block" do
     filter = SoftLayer::ObjectFilter.new()
 
@@ -113,17 +113,17 @@ describe SoftLayer::ObjectFilter do
     filter.modify do |filter|
       filter.accept("some.key.path").when_it is(3)
     end
-    
+
     expect(filter.criteria_for_key_path("some.key.path")).to eq({'operation' => 3})
 
     # can replace a criterion
     filter.modify do |filter|
       filter.accept("some.key.path").when_it is(4)
-  end
+    end
 
     expect(filter.criteria_for_key_path("some.key.path")).to eq({'operation' => 4})
   end
-    end
+end
 
 describe SoftLayer::ObjectFilterDefinitionContext do
   it "defines the is matcher" do
@@ -177,7 +177,7 @@ describe SoftLayer::ObjectFilterDefinitionContext do
 
   it "defines the does_not_contain matcher" do
     expect(SoftLayer::ObjectFilterDefinitionContext.does_not_contain(" fred  ")).to eq({ 'operation' => '!~ fred' })
-    end
+  end
 
   it "defines the is_null matcher" do
     expect(SoftLayer::ObjectFilterDefinitionContext.is_null()).to eq({ 'operation' => 'is null' })
@@ -191,27 +191,27 @@ describe SoftLayer::ObjectFilterDefinitionContext do
     expect(SoftLayer::ObjectFilterDefinitionContext.satisfies_the_raw_condition(
       { 'operation' => 'some_complex_operation_goes_here'})).to  eq({ 'operation' => 'some_complex_operation_goes_here'})
   end
-  
+
   it "allows 'matches_query' strings with operators" do
     SoftLayer::OBJECT_FILTER_OPERATORS.each do |operator|
       fake_string = "#{operator}  fred  "
       expect(SoftLayer::ObjectFilterDefinitionContext.matches_query(fake_string)).to eq({ 'operation' => "#{operator} fred"})
     end
   end
-  
+
   it "allows 'matches_query' strings for exact value match" do
-    criteria = 
+    criteria =
     expect(SoftLayer::ObjectFilterDefinitionContext.matches_query("  fred")).to eq({ 'operation' => "_= fred"})
   end
-  
+
   it "allows 'matches_query' strings for begins_with" do
     expect(SoftLayer::ObjectFilterDefinitionContext.matches_query("fred*")).to eq({ 'operation' => "^= fred"})
   end
-  
+
   it "allows 'matches_query' strings for ends_with" do
     expect(SoftLayer::ObjectFilterDefinitionContext.matches_query("*fred")).to eq({ 'operation' => "$= fred"})
   end
-  
+
   it "allows 'matches_query' strings for contains" do
     expect(SoftLayer::ObjectFilterDefinitionContext.matches_query("*fred*")).to eq({ 'operation' => "*= fred"})
   end

@@ -32,10 +32,10 @@ module SoftLayer
     # :attr_reader:
     # The ticket system maintains a fixed set of subjects for tickets that are used to ensure tickets make it to the right folks quickly
     sl_attr :subject
-    
+
     ##
     # :attr_reader:
-    # The date the ticket was last updated. 
+    # The date the ticket was last updated.
     sl_attr :lastEditDate
 
     ##
@@ -126,7 +126,7 @@ module SoftLayer
     # <b>+:client+</b> - the client in which to search for the ticket
     #
     # If a client is not provided then the routine will search Client::default_client
-    # If Client::default_client is also nil the routine will raise an error.    
+    # If Client::default_client is also nil the routine will raise an error.
     def self.open_tickets(options = {})
       softlayer_client = options[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
@@ -140,7 +140,7 @@ module SoftLayer
       open_tickets_data = softlayer_client["Account"].object_mask(object_mask).getOpenTickets
       open_tickets_data.collect { |ticket_data| new(softlayer_client, ticket_data) }
     end
-    
+
     ##
     # Find the ticket with the given ID and return it
     #

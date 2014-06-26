@@ -131,7 +131,7 @@ module SoftLayer
     def softlayer_properties(object_mask = nil)
       raise "Abstract method softlayer_properties in ModelBase was called"
     end
-    
+
     ##
     # The softlayer_hash stores the low-level information about an
     # object as it was retrieved from the SoftLayer API.

@@ -141,7 +141,7 @@ module SoftLayer
     def self.packages_with_key_name(key_name, client = nil)
       softlayer_client = client || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
-      
+
       filter = SoftLayer::ObjectFilter.new do |filter|
         filter.accept('type.keyName').when_it is(key_name)
       end
@@ -158,7 +158,7 @@ module SoftLayer
     def self.package_with_id(package_id, client = nil)
       softlayer_client = client || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
-      
+
       package_data = softlayer_client['Product_Package'].object_with_id(package_id).object_mask(self.default_object_mask('mask')).getObject
       ProductPackage.new(softlayer_client, package_data)
     end

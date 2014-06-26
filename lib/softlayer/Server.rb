@@ -82,7 +82,7 @@ module SoftLayer
         super
       end
     end
-    
+
     ##
     # Reboot the server.  This action is taken immediately.
     # Servers can be rebooted in three different ways:

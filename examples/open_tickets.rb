@@ -30,14 +30,14 @@ require 'pp'
 # $SL_API_KEY = "feeddeadbeefbadf00d..."   # enter your api key here
 
 # The client constructed here must get it's credentials from somewhere
-# In this script you might uncomment the globals above and assign your 
+# In this script you might uncomment the globals above and assign your
 # credentials there
 SoftLayer::Client.default_client = SoftLayer::Client.new()
 
 # The openTickets routine will pick up the default client established above.
 open_tickets = SoftLayer::Ticket.open_tickets()
 
-open_tickets.sort!{ |lhs, rhs| -(lhs.lastEditDate <=> rhs.lastEditDate) } 
+open_tickets.sort!{ |lhs, rhs| -(lhs.lastEditDate <=> rhs.lastEditDate) }
 open_tickets.each do |ticket|
   printf "#{ticket.id} - #{ticket.title}"
 

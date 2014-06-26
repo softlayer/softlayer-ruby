@@ -39,7 +39,7 @@ describe SoftLayer::ProductPackage do
       []
     end
 
-    SoftLayer::ProductPackage.packages_with_key_name('FAKE_KEY_NAME', client)    
+    SoftLayer::ProductPackage.packages_with_key_name('FAKE_KEY_NAME', client)
   end
 
   it "identifies itself with the Product_Package service" do
@@ -59,7 +59,7 @@ describe SoftLayer::ProductPackage do
     expect(fake_package.service.server_object_id).to eq(12345)
     expect(fake_package.service.target.service_name).to eq "SoftLayer_Product_Package"
   end
-  
+
   describe "class methods for getting to packages" do
     let(:mock_client) do
       client = SoftLayer::Client.new(:username => "fake_user", :api_key => "BADKEY")

@@ -49,7 +49,7 @@ module SoftLayer
       self.modify(&construction_block)
       self
     end
-    
+
     def empty?
       @filter_hash.empty?
     end
@@ -61,19 +61,19 @@ module SoftLayer
     def accept(key_path)
       CriteriaAcceptor.new(self, key_path)
     end
-    
+
     def to_h
       return @filter_hash.dup
     end
 
     def criteria_for_key_path(key_path)
-      raise "The key path cannot be empty when searching for criteria" if key_path.nil? || key_path.empty? 
+      raise "The key path cannot be empty when searching for criteria" if key_path.nil? || key_path.empty?
 
       current_level = @filter_hash
       keys = key_path.split('.')
-      
+
       while current_level && keys.count > 1
-        current_level = current_level[keys.shift] 
+        current_level = current_level[keys.shift]
       end
 
       if current_level
@@ -98,19 +98,19 @@ module SoftLayer
 
       current_level[current_key] = criteria
     end
-    
+
     class CriteriaAcceptor
       def initialize(filter, key_path)
         @filter = filter
         @key_path = key_path
       end
-      
+
       def when_it(criteria)
         @filter.set_criteria_for_key_path(@key_path, criteria)
       end
     end
   end # ObjectFilter
-  
+
   OBJECT_FILTER_OPERATORS = [
     '*=',   # Contains (ignoring case)
     '^=',   # Begins with (ignoring case)
@@ -147,7 +147,7 @@ module SoftLayer
     # the value passed in.
     def self.is_not(value)
       filter_criteria('!=', value)
-  end
+    end
 
     # Matches when the value is found within the field
     # the search is not case sensitive
@@ -202,17 +202,17 @@ module SoftLayer
     # the search _is_ case sensitive
     def self.does_not_contain(value)
       filter_criteria('!~', value)
-      end
+    end
 
     # Matches when the property's value is null
     def self.is_null
       { 'operation' => 'is null' }
-      end
+    end
 
     # Matches when the property's value is not null
     def self.is_not_null()
       { 'operation' => 'not null' }
-      end
+    end
 
     # This is a catch-all criteria matcher that allows for raw object filter conditions
     # not covered by the more convenient methods above. The name is intentionally, annoyingly
@@ -244,24 +244,24 @@ module SoftLayer
     def self.matches_query(query_string)
       query = query_string.to_s.strip
 
-        operator = OBJECT_FILTER_OPERATORS.find do | operator_string |
-          query[0 ... operator_string.length] == operator_string
-        end
+      operator = OBJECT_FILTER_OPERATORS.find do | operator_string |
+        query[0 ... operator_string.length] == operator_string
+      end
 
-        if operator then
+      if operator then
         filter_criteria(operator, query[operator.length..-1])
-        else
-          case query
-          when /\A\*(.*)\*\Z/
+      else
+        case query
+        when /\A\*(.*)\*\Z/
           contains($1)
-          when /\A\*(.*)/
+        when /\A\*(.*)/
           ends_with($1)
-          when /\A(.*)\*\Z/
+        when /\A(.*)\*\Z/
           begins_with($1)
-          else
+        else
           matches_ignoring_case(query)
-          end #case
-        end #if
+        end #case
+      end #if
     end
 
     private
