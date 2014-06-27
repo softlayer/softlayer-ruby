@@ -86,6 +86,15 @@ module SoftLayer
 
     def shared_with_accounts=
     end
+    
+    # ModelBase protocol methods
+    def service
+      softlayer_client['Virtual_Guest_Block_Device_Template_Group'].object_with_id(self.id)
+    end
+    
+    def softlayer_properties(object_mask = nil)
+      self.service.object_mask(self.class.default_object_mask).getObject
+    end
 
     ##
     # Retrieve a list of the private image templates from the account.
@@ -100,7 +109,7 @@ module SoftLayer
     # Additional options that may be provided:
     # * <b>+:name+</b> (string) - Return templates with the given name
     # * <b>+:global_id+</b> (string) - Return templates with the given global identfier
-    def ImageTemplate.find_private_templates(options_hash = {})
+    def self.find_private_templates(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
@@ -166,7 +175,7 @@ module SoftLayer
     # Additional options that may be provided:
     # * <b>+:name+</b> (string) - Return templates with the given name
     # * <b>+:global_id+</b> (string) - Return templates with the given global identfier
-    def ImageTemplate.find_public_templates(options_hash = {})
+    def self.find_public_templates(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
@@ -232,7 +241,7 @@ module SoftLayer
     #
     # The options may include the following keys
     # * <b>+:object_mask+</b> (string) - A object mask of properties, in addition to the default properties, that you wish to retrieve for the server
-    def ImageTemplate.template_with_id(id, options_hash = {})
+    def self.template_with_id(id, options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
@@ -249,7 +258,7 @@ module SoftLayer
 
     protected
 
-    def ImageTemplate.default_object_mask
+    def self.default_object_mask
       return "mask[id,name,note,globalIdentifier,datacenters,blockDevices,tagReferences,publicFlag,flexImageFlag]"
     end
   end
