@@ -34,6 +34,7 @@ module SoftLayer
 
     # Change the name of the template
     def rename!(new_name)
+      self.service.editObject({ "name" => new_name.to_s})
     end
 
     ##
@@ -50,32 +51,53 @@ module SoftLayer
       !!self["flexImageFlag"]
     end
 
-    def notes=
+    ##
+    # Changes the notes on an template to be the given strings
+    def notes=(new_notes)
+      # it is not a typo that this sets the "note" property.  The 
+      # property in the network api is "note", the model exposes it as
+      # 'notes' for self-consistency
+      self.service.editObject({ "note" => new_notes.to_s})
     end
 
-    # Get and set an array of the tags on the image
+    ##
+    # Returns an array of the tags set on the image
     def tags
-    end
-
-    def tags=
+      return self["tagReferences"].collect{ |tag_reference| tag_reference["tag"]["name"] }
     end
 
     ##
-    # Works with an array of data center names (short names)
-    # where the image template is available
-    #
-    # Should this be datacenters and "add_datacenters, remove_datacenters"
+    # Sets the tags on the template.  Note: a pre-existing tag will be 
+    # removed from the template if it does not appear in the array given.
+    # The list of tags must be comprehensive.
+    def tags=(tags_array)
+      as_strings = tags_array.collect { |tag| tag.to_s }      
+      self.service.setTags(as_strings.join(','))
+    end
+
+    ##
+    # Returns the an array containing the datacenters where this image is available.
     def datacenters
-    end
-
-    def datacenters=
+      self["datacenters"].collect{ |datacenter_data| SoftLayer::Datacenter.datacenter_named(datacenter_data["name"])}
     end
 
     ##
-    # Wait until transactions related to the image template are finsihed
-    def wait_until_ready(max_trials, seconds_between_tries = 2)
-    end
+    # Accepts an array of datacenters (instances of SoftLayer::Datacenter) where this
+    # image should be made available. The call will kick off transactions to make
+    # the image available in the given datacenters.  These transactions can take
+    # some time to complete.
+    #
+    # Note that the template will be REMOVED from any datacenter that does not
+    # appear in this array!  The list given must be comprehensive.
+    def datacenters=(datacenters_array)
+      datacenter_data = datacenters_array.collect do |datacenter| 
+        raise "Image templates cannot be copied to the data center #{datacenter.name}" unless datacenter.available_for_image_templates?
+        { "id" => datacenter.id }
+      end
 
+      self.service.setAvailableLocations(datacenter_data.compact)
+    end
+    
     ##
     # Works with an array of account IDs (or should use master user names i.e. "SL232279" )
     # that the image template is shared with
@@ -85,6 +107,49 @@ module SoftLayer
     end
 
     def shared_with_accounts=
+    end
+
+    ##
+    # Creates a transaction to delete the image template and
+    # all the disk images associated with it.
+    #
+    # This is a final action and cannot be undone.
+    # the transaction will proceed immediately.
+    #
+    # Call it with extreme care!
+    def delete!
+      self.service.deleteObject
+    end
+    
+    ##
+    # Wait until transactions related to the image template are finished
+    #
+    # A template is not ready until all the transactions on the template
+    # itself, and all its children are complete.
+    #
+    # At each trial, the routine will yield to a block if one is given
+    # The block is passed one parameter, a boolean flag indicating
+    # whether or not the image template is 'ready'. Interim invocations
+    # of the block should receive +false+, the final invocation should
+    # receieve +true+
+    #
+    def wait_until_ready(max_trials, seconds_between_tries = 2)
+      # pessimistically assume the server is not ready
+      num_trials = 0
+      begin
+        self.refresh_details()
+
+        parent_ready = !(has_sl_property? :transactionId) || (self[:transactionId] == "")
+        children_ready = (nil == self["children"].find { |child| child["transactionId"] != "" })
+
+        ready = parent_ready && children_ready        
+        yield ready if block_given?
+
+        num_trials = num_trials + 1
+        sleep(seconds_between_tries) if !ready && (num_trials <= max_trials)
+      end until ready || (num_trials >= max_trials)
+
+      ready
     end
     
     # ModelBase protocol methods
@@ -138,7 +203,7 @@ module SoftLayer
           'operation' => 'in',
           'options' => [{
             'name' => 'data',
-            'value' => options_hash[:tags]
+            'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
             }]
           } );
       end
@@ -204,7 +269,7 @@ module SoftLayer
           'operation' => 'in',
           'options' => [{
             'name' => 'data',
-            'value' => options_hash[:tags]
+            'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
             }]
           } );
       end
@@ -259,7 +324,7 @@ module SoftLayer
     protected
 
     def self.default_object_mask
-      return "mask[id,name,note,globalIdentifier,datacenters,blockDevices,tagReferences,publicFlag,flexImageFlag]"
+      return "mask[id,name,note,globalIdentifier,datacenters,blockDevices,tagReferences,publicFlag,flexImageFlag,transactionId,children.transactionId]"
     end
   end
 end

@@ -17,6 +17,7 @@ require 'softlayer/Service'
 
 # model classes
 require 'softlayer/ModelBase'
+require 'softlayer/Datacenter'
 require 'softlayer/DynamicAttribute'
 require 'softlayer/Account'
 require 'softlayer/Ticket'

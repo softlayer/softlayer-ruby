@@ -194,7 +194,7 @@ module SoftLayer
           'operation' => 'in',
           'options' => [{
             'name' => 'data',
-            'value' => options_hash[:tags]
+            'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
             }]
           } );
       end
