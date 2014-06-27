@@ -10,7 +10,7 @@ The details of the individual classes that for the object class hierarchy of the
 
 The ModelBase is the abstract base class of object class hierarchy that forms the Model Layer of the `softlayer_api` Gem. An instance of ModelBase represents a single entity within the SoftLayer API.
 
-In the Foundation layer, SoftLayer entities are represented as a Ruby hash whose keys and values are the are property names and property values of the entity. In the Model Layer, SoftLayer entities are represented by instances of the concrete subclasses of the Model Base class. 
+In the Foundation layer, SoftLayer entities are represented as a Ruby hash whose keys and values are the are property names and property values of the entity. In the Model Layer, SoftLayer entities are represented by instances of the concrete subclasses of the Model Base class.
 
 In implementation terms, an instance of the ModelBase class (or more accurately and instance of a concrete subclass of the ModelBase class) encapsulates the hashes of the Foundation layer defines the attributes and operations that form a convenient model for working with the underlying entity.
 
@@ -24,7 +24,7 @@ The initializer for classes in the ModelBase hierarchy are declared:
       …
     end
 
-The first argument is the client that the object may use to make requests to the network API. The second is the `network_hash`, the hash representation of the entity as returned by the network API. 
+The first argument is the client that the object may use to make requests to the network API. The second is the `network_hash`, the hash representation of the entity as returned by the network API.
 
 The hash used to initialize an instance of ModelBase *must* contain a key, `id`, whose value is the `id` of the SoftLayer entity that the object model instance will represent. Correspondingly, the ModelBase class defines the `id` as having the same value as the `id` property in the network hash.
 
@@ -43,7 +43,7 @@ The ModelBase class defines the subscript operator (`[]`) to accept a property n
     ticket = SoftLayer::Ticket.ticket_with_id(123456)
 	service_provider = ticket['serviceProvider']
 
-In this case we ask the ticket for the value of the `serviceProvider` property. Note that the argument to the subscript operator is a string containing the property name. 
+In this case we ask the ticket for the value of the `serviceProvider` property. Note that the argument to the subscript operator is a string containing the property name.
 
 This technique can only return values stored in the `softlayer_hash` encapsulated in the ModelBase class. Many classes in the Model Layer limit the information retrieved from the network (using object masks) to a subset of the full set of properties available through the network API. Scripts can check whether or not a given property is included in the underlying hash by calling the `has_sl_property?` method of ModelBase.
 

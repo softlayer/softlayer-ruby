@@ -1,26 +1,102 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
+
+
 
 module SoftLayer
+  ##
+  # An ObjectFilter is a tool that, when passed to the SoftLayer API
+  # allows the API server to filter, or limit the result set for a call.
+  #
+  # Constructing ObjectFilters is an art that is currently somewhat
+  # arcane. This class tries to simplify filtering for the fundamental
+  # cases, while still allowing for more complex ObjectFilters to be
+  # created.
+  #
+  # To construct an object filter you begin with an instance of the
+  # class. At construction time, or in a "modify" call you can change
+  # the filter criteria using a fancy DSL syntax.
+  #
+  # For example, to filter virtual servers so that you only get ones
+  # whose domains end with "layer.com" you might use:
+  #
+  #    object_filter = ObjectFilter.new do |filter|
+  #      filter.accept(virtualGuests.domain).when_it ends_with("layer.com")
+  #    end
+  #
+  # The set of criteria that can be included after "when_it" are defined
+  # by routines in the ObjectFilterDefinitionContext module.
+  class ObjectFilter
+    def initialize(&construction_block)
+      @filter_hash = {}
+      self.modify(&construction_block)
+      self
+    end
+
+    def empty?
+      @filter_hash.empty?
+    end
+
+    def modify(&construction_block)
+      ObjectFilterDefinitionContext.module_exec(self, &construction_block) if construction_block
+    end
+
+    def accept(key_path)
+      CriteriaAcceptor.new(self, key_path)
+    end
+
+    def to_h
+      return @filter_hash.dup
+    end
+
+    def criteria_for_key_path(key_path)
+      raise "The key path cannot be empty when searching for criteria" if key_path.nil? || key_path.empty?
+
+      current_level = @filter_hash
+      keys = key_path.split('.')
+
+      while current_level && keys.count > 1
+        current_level = current_level[keys.shift]
+      end
+
+      if current_level
+        current_level[keys[0]]
+      else
+        nil
+      end
+    end
+
+    def set_criteria_for_key_path(key_path, criteria)
+      current_level = @filter_hash
+      keys = key_path.split('.')
+
+      current_key = keys.shift
+      while current_level && !keys.empty?
+        if !current_level.has_key? current_key
+          current_level[current_key] = {}
+        end
+        current_level = current_level[current_key]
+        current_key = keys.shift
+      end
+
+      current_level[current_key] = criteria
+    end
+
+    class CriteriaAcceptor
+      def initialize(filter, key_path)
+        @filter = filter
+        @key_path = key_path
+      end
+
+      def when_it(criteria)
+        @filter.set_criteria_for_key_path(@key_path, criteria)
+      end
+    end
+  end # ObjectFilter
+
   OBJECT_FILTER_OPERATORS = [
     '*=',   # Contains (ignoring case)
     '^=',   # Begins with (ignoring case)
@@ -35,192 +111,109 @@ module SoftLayer
     '!~'    # Does not Contain (case sensitive)
   ]
 
-  # A class whose instances represent an Object Filter operator and the value it is applied to.
-  class ObjectFilterOperation
-
-    # The operator, should be a member of the SoftLayer::OBJECT_FILTER_OPERATORS array
-    attr_reader :operator
-
-    # The operand of the operator
-    attr_reader :value
-
-    def initialize(operator, value)
-      raise ArgumentException, "An unknown operator was given" if !OBJECT_FILTER_OPERATORS.include?(operator.strip)
-      raise ArgumentException, "Expected a value" if value.nil? || (value.respond_to?(:empty?) && value.empty?)
-
-      @operator = operator.strip
-      @value = value.strip
-    end
-
-    def to_h
-      result = ObjectFilter.new
-      result['operation'] = "#{operator} #{value}"
-
-      result
-    end
-  end
-
-  # This class defines the routines that are valid within the block provided to a call to
-  # ObjectFilter.build. This allows you to create object filters like:
+  ##
+  # The ObjectFilterDefinitionContext defines a bunch of methods
+  # that allow the property conditions of an object filter to
+  # be defined in a "pretty" way. Each method returns a block
+  # (a lambda, a proc) that, when called and pased the tail property
+  # of a property chain will generate a fragment of an object filter
+  # asking that that property match the given conditions.
   #
-  #     object_filter = SoftLayer::ObjectFilter.build("hardware.memory") { is_greater_than(2) }
-  #
-  class ObjectFilterBlockHandler
-    # Matches when the value is found within the field
-    # the search is not case sensitive
-    def contains(value)
-      ObjectFilterOperation.new('*=', value)
-    end
-
-    # Matches when the value is found at the beginning of the
-    # field. This search is not case sensitive
-    def begins_with(value)
-      ObjectFilterOperation.new('^=', value)
-    end
-
-    # Matches when the value is found at the end of the
-    # field. This search is not case sensitive
-    def ends_with(value)
-      ObjectFilterOperation.new('$=', value)
-    end
-
+  # This class, as a whole, is largely an implementation detail
+  # of object filter definitions and there is probably not
+  # a good reason to call into it directly.
+  module ObjectFilterDefinitionContext
     # Matches when the value in the field is exactly equal to the
     # given value. This is a case-sensitive match
-    def is(value)
-      ObjectFilterOperation.new('_=', value)
+    def self.is(value)
+      { 'operation' => value }
     end
 
     # Matches is the value in the field does not exactly equal
     # the value passed in.
-    def is_not(value)
-      ObjectFilterOperation.new('!=', value)
+    def self.is_not(value)
+      filter_criteria('!=', value)
+    end
+
+    # Matches when the value is found within the field
+    # the search is not case sensitive
+    def self.contains(value)
+      filter_criteria('*=', value)
+    end
+
+    # Matches when the value is found at the beginning of the
+    # field. This search is not case sensitive
+    def self.begins_with(value)
+      filter_criteria('^=', value)
+    end
+
+    # Matches when the value is found at the end of the
+    # field. This search is not case sensitive
+    def self.ends_with(value)
+      filter_criteria('$=', value)
+    end
+
+    # Maches the given value in a case-insensitive way
+    def self.matches_ignoring_case(value)
+      filter_criteria('_=', value)
     end
 
     # Matches when the value in the field is greater than the given value
-    def is_greater_than(value)
-      ObjectFilterOperation.new('>', value)
+    def self.is_greater_than(value)
+      filter_criteria('>', value)
     end
 
     # Matches when the value in the field is less than the given value
-    def is_less_than(value)
-      ObjectFilterOperation.new('<', value)
+    def self.is_less_than(value)
+      filter_criteria('<', value)
     end
 
     # Matches when the value in the field is greater than or equal to the given value
-    def is_greater_or_equal_to(value)
-      ObjectFilterOperation.new('>=', value)
+    def self.is_greater_or_equal_to(value)
+      filter_criteria('>=', value)
     end
 
     # Matches when the value in the field is less than or equal to the given value
-    def is_less_or_equal_to(value)
-      ObjectFilterOperation.new('<=', value)
+    def self.is_less_or_equal_to(value)
+      filter_criteria('<=', value)
     end
 
     # Matches when the value is found within the field
     # the search _is_ case sensitive
-    def contains_exactly(value)
-      ObjectFilterOperation.new('~', value)
+    def self.contains_exactly(value)
+      filter_criteria('~', value)
     end
 
     # Matches when the value is not found within the field
     # the search _is_ case sensitive
-    def does_not_contain(value)
-      ObjectFilterOperation.new('!~', value)
-    end
-  end
-
-  #
-  # An ObjectFilter is a tool that, when passed to the SoftLayer API
-  # allows the API server to filter, or limit the result set for a call.
-  #
-  # Constructing ObjectFilters is an art that is currently somewhat
-  # arcane. This class tries to simplify filtering for the fundamental
-  # cases, while still allowing for more complex ObjectFilters to be
-  # created.
-  #
-  # The ObjectFilter class is implemented as a hash that, when asked to provide
-  # an value for an unknown key, will create a sub element
-  # at that key which is, itself, an object filter. This allows you to build
-  # up object filters by chaining [] dereference operations.
-  #
-  # Starting empty object filter when you ask for +object_filter["foo"]+
-  # either the value at that hash location will be returned, or a new +foo+ key
-  # will be *added* to the object.  The value of that key will be an +ObjectFilter+
-  # and that +ObjectFilter+ will be returned.
-  #
-  # By way of an example of chaining together +[]+ calls:
-  #   object_filter["foo"]["bar"]["baz"] = 3
-  # yields an object filter like this:
-  #   {"foo" => { "bar" => {"baz" => 3}}}
-  #
-  class ObjectFilter < Hash
-    # The default initialize for a hash is overridden
-    # so that object filters create sub-filters when asked
-    # for missing keys.
-    def initialize
-      super do |hash, key|
-        hash[key] = ObjectFilter.new
-      end
+    def self.does_not_contain(value)
+      filter_criteria('!~', value)
     end
 
-    # Builds an object filter with the given key path, a dot separated list of property keys.
-    # The filter itself can be provided as a query string (in the query parameter)
-    # or by providing a block that calls routines in the ObjectFilterBlockHandler class.
-    def self.build(key_path, query = nil, &block)
-      raise ArgumentError, "The key path to build cannot be empty" if !key_path
-
-      # Split the keypath into its constituent parts and notify the user
-      # if there are no parts
-      keys = key_path.split('.')
-      raise ArgumentError, "The key path to build cannot be empty" if keys.empty?
-
-      # This will be the result of the build
-      result = ObjectFilter.new
-
-      # chase down the key path to the last-but-one key
-      current_level = result
-      while keys.count > 1
-        current_level = current_level[keys.shift]
-      end
-
-      # if there is a block, then the query will come from
-      # calling the block. We warn in debug mode if you override a
-      # query that was passed directly with the value from a block.
-      if block
-        $stderr.puts "The query from the block passed to ObjectFilter:build will override the query passed as a parameter" if $DEBUG && query
-        block_handler = ObjectFilterBlockHandler.new
-        query = block_handler.instance_eval(&block)
-      end
-
-      # If we have a query, we assign its value to the last key
-      # otherwise, we build an emtpy filter at the bottom
-      if query
-        case
-        when query.kind_of?(Numeric)
-          current_level[keys.shift] = { 'operation' => query }
-        when query.kind_of?(SoftLayer::ObjectFilterOperation)
-          current_level[keys.shift] = query.to_h
-        when query.kind_of?(String)
-          current_level[keys.shift] = query_to_filter_operation(query)
-        when query.kind_of?(Hash)
-          current_level[keys.shift] = query
-        else
-          current_level[keys.shift]
-        end
-      else
-        current_level[keys.shift]
-      end
-
-      result
+    # Matches when the property's value is null
+    def self.is_null
+      { 'operation' => 'is null' }
     end
 
-    # This method simplifies creating correct object filter structures
-    # by defining a simple query language. It translates strings in that
-    # language into an Object Filter operations
+    # Matches when the property's value is not null
+    def self.is_not_null()
+      { 'operation' => 'not null' }
+    end
+
+    # This is a catch-all criteria matcher that allows for raw object filter conditions
+    # not covered by the more convenient methods above. The name is intentionally, annoyingly
+    # long and you should use this routine with solid knowledge and great care.
+    def self.satisfies_the_raw_condition(condition_hash)
+      condition_hash
+    end
+
+    # Accepts a query string defined by a simple query language.
+    # It translates strings in that language into criteria blocks
     #
-    # Object Filter comparisons are done using operators. Some operators make
-    # case sensitive comparisons and some do not. The general form of an Object
-    # Filter operation is an operator follwed by the value used in the comparison.
+    # Object Filter comparisons can be done using operators.  The
+    # set of accepted operators is found in the OBJECT_FILTER_OPERATORS
+    # array.  The query string can consist of an operator followed
+    # by a space, followed by operand
     # e.g.
     #     "*= smaug"
     #
@@ -234,39 +227,48 @@ module SoftLayer
     #
     # This method corresponds to the +query_filter+ method in the SoftLayer-Python
     # API.
-    def self.query_to_filter_operation(query)
-      if query.kind_of? String then
-        query.strip!
+    def self.matches_query(query_string)
+      query = query_string.to_s.strip
 
-        begin
-          return { 'operation' => Integer(query) }
-        rescue
-        end
+      operator = OBJECT_FILTER_OPERATORS.find do | operator_string |
+        query[0 ... operator_string.length] == operator_string
+      end
 
-        operator = OBJECT_FILTER_OPERATORS.find do | operator_string |
-          query[0 ... operator_string.length] == operator_string
-        end
-
-        if operator then
-          operation = "#{operator} #{query[operator.length..-1].strip}"
-        else
-          case query
-          when /\A\*(.*)\*\Z/
-            operation = "*= #{$1}"
-          when /\A\*(.*)/
-            operation = "$= #{$1}"
-          when /\A(.*)\*\Z/
-            operation = "^= #{$1}"
-          else
-            operation = "_= #{query}"
-          end #case
-        end #if
+      if operator then
+        filter_criteria(operator, query[operator.length..-1])
       else
-        operation = query.to_i
-      end # query is string
+        case query
+        when /\A\*(.*)\*\Z/
+          contains($1)
+        when /\A\*(.*)/
+          ends_with($1)
+        when /\A(.*)\*\Z/
+          begins_with($1)
+        else
+          matches_ignoring_case(query)
+        end #case
+      end #if
+    end
 
-      { 'operation' => operation }
-    end # query_to_filter_operation
+    private
 
-  end # ObjectFilter
+    def self.cleaned_up_operand(operand)
+      # try to convert the operand to an integer.  If it works, return
+      # that integer
+      begin
+        return Integer(operand)
+      rescue
+      end
+
+      # The operand could not be converted to an integer so we try to make it a string
+      # and clean up the string
+      filter_operand = operand.to_s.strip
+    end
+
+    def self.filter_criteria(with_operator, operand)
+      filter_operand = cleaned_up_operand(operand)
+      filter_condition = "#{with_operator.to_s.strip} #{operand.to_s.strip}"
+      { 'operation' => filter_condition }
+    end
+  end
 end # SoftLayer

@@ -35,7 +35,7 @@ begin
   account = SoftLayer::Account.account_for_client(softlayer_client)
   account_user = account.service.getCurrentUser
   my_user_id = account_user["id"]
-  
+
   # We also need a subject for the ticket. Subjects are specified by id
   # This code prints out a table of all the ticket subjects with their
   # ids:
@@ -43,7 +43,7 @@ begin
   ticket_subjects.each do |subject|
     puts "#{subject['id']}\t#{subject['name']}"
   end
-  
+
   # For this example we'll use 'Public Network Question' as the subject.  That's id 1022
   public_network_question_id = 1022
 
@@ -58,7 +58,7 @@ begin
   )
 
   puts "Created a new ticket : #{new_ticket.id} - #{new_ticket.title}"
-  
+
   # we can also add an update to the ticket:
   new_ticket.update("This is a ticket update sent from the Ruby library")
 

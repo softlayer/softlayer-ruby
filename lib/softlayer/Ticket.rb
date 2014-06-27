@@ -1,24 +1,10 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
+
+
 
 module SoftLayer
 	class Ticket < SoftLayer::ModelBase
@@ -32,10 +18,10 @@ module SoftLayer
     # :attr_reader:
     # The ticket system maintains a fixed set of subjects for tickets that are used to ensure tickets make it to the right folks quickly
     sl_attr :subject
-    
+
     ##
     # :attr_reader:
-    # The date the ticket was last updated. 
+    # The date the ticket was last updated.
     sl_attr :lastEditDate
 
     ##
@@ -126,7 +112,7 @@ module SoftLayer
     # <b>+:client+</b> - the client in which to search for the ticket
     #
     # If a client is not provided then the routine will search Client::default_client
-    # If Client::default_client is also nil the routine will raise an error.    
+    # If Client::default_client is also nil the routine will raise an error.
     def self.open_tickets(options = {})
       softlayer_client = options[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
@@ -140,7 +126,7 @@ module SoftLayer
       open_tickets_data = softlayer_client["Account"].object_mask(object_mask).getOpenTickets
       open_tickets_data.collect { |ticket_data| new(softlayer_client, ticket_data) }
     end
-    
+
     ##
     # Find the ticket with the given ID and return it
     #

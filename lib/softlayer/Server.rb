@@ -1,24 +1,10 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
+
+
 
 module SoftLayer
   # Server is the base class for VirtualServer and BareMetalServer.
@@ -80,6 +66,25 @@ module SoftLayer
         raise RuntimeError, "The Server class is an abstract base class and should not be instantiated directly"
       else
         super
+      end
+    end
+
+    ##
+    # Reboot the server.  This action is taken immediately.
+    # Servers can be rebooted in three different ways:
+    # :default_reboot - (Try soft, then hard) Attempts to reboot a server using the :os_reboot technique then, if that is not successful, tries the :power_cycle method
+    # :os_reboot - (aka. soft rebot) instructs the server's host operating system to reboot
+    # :power_cycle - (aka. hard reboot) The actual (for hardware) or metaphorical (for virtual servers) equivalent to pulling the plug on the server then plugging it back in.
+    def reboot!(reboot_technique = :default_reboot)
+      case reboot_technique
+      when :default_reboot
+        self.service.rebootDefault
+      when :os_reboot
+        self.service.rebootSoft
+      when :power_cycle
+        self.service.rebootHard
+      else
+        raise RuntimeError, "Unrecognized reboot technique in SoftLayer::Server#reboot!}"
       end
     end
 

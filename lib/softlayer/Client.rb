@@ -1,31 +1,18 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
 
 module SoftLayer
-  # Initialize an instance of the Client class. You pass in the service name
-  # and optionally hash arguments specifying how the client should access the
-  # SoftLayer API.
+  # A client is responsible for storing authentication information for API calls and
+  # it serves as a centeral repository for the Service instances that call into the
+  # network API.
   #
-  # The following symbols can be used as hash arguments to pass options to the constructor:
+  # When you create a client, you pass in hash arguments specifying how the client
+  # should access the SoftLayer API.
+  #
+  # The following symbols are the keys for options you pass to the constructor:
   # - +:username+ - a non-empty string providing the username to use for requests to the client
   # - +:api_key+ - a non-empty string providing the api key to use for requests to the client
   # - +:endpoint_url+ - a non-empty string providing the endpoint URL to use for requests to the client
@@ -51,6 +38,13 @@ module SoftLayer
     # will be used by many methods if you do not provide an explicit client.
     @@default_client = nil
 
+    ##
+    # :attr_accessor:
+    # The client class can maintain a single instance of Client as the "default client"
+    # Other parts of the library that accept a client as part of their calling sequence
+    # will look for the default client if one is not provided in the call
+    #
+    # This routine returns the client set as the default client.  It can be nil
     def self.default_client
       return @@default_client
     end

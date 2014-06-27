@@ -23,8 +23,8 @@
 require 'rubygems'
 require 'softlayer_api'
 require 'pp'
-  
-  # We can set the default client to be our client and that way 
+
+  # We can set the default client to be our client and that way
   # we can avoid supplying it later
   SoftLayer::Client.default_client = SoftLayer::Client.new(
     # :username => "joecustomer"              # enter your username here
