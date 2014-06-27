@@ -1,3 +1,7 @@
+[![Gem Version](https://badge.fury.io/rb/softlayer_api.svg)](http://badge.fury.io/rb/softlayer_api)
+[![Build Status](https://travis-ci.org/softlayer/softlayer-ruby.svg?branch=master)](https://travis-ci.org/SLsthompson/softlayer-ruby)
+[![Coverage Status](https://coveralls.io/repos/softlayer/softlayer-ruby/badge.png?branch=master)](https://coveralls.io/r/SLsthompson/softlayer-ruby?branch=master)
+
 # SoftLayer API for Ruby
 
 The softlayer-ruby project creates a [Ruby Gem](http://rubygems.org/gems/softlayer_api) which provides language bindings to the [SoftLayer API](http://sldn.softlayer.com/article/The_SoftLayer_API) for the [Ruby](http://www.ruby-lang.org) programming language.
