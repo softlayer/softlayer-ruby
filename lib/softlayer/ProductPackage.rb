@@ -20,6 +20,8 @@
 # THE SOFTWARE.
 #
 
+require 'json'
+
 module SoftLayer
   ##
   # Each SoftLayer ProductPackage provides information about ordering a product
@@ -140,7 +142,7 @@ module SoftLayer
       softlayer_client = client || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
       
-      filter = SoftLayer::ObjectFilter.build('type.keyName') { is(key_name) }
+      filter = SoftLayer::ObjectFilter.build('type.keyName', key_name)
       filtered_service = softlayer_client['Product_Package'].object_filter(filter).object_mask(self.default_object_mask('mask'))
       packages_data = filtered_service.getAllObjects
       packages_data.collect { |package_data| ProductPackage.new(softlayer_client, package_data) }

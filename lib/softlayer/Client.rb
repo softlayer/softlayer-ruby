@@ -30,11 +30,8 @@ module SoftLayer
   # - +:api_key+ - a non-empty string providing the api key to use for requests to the client
   # - +:endpoint_url+ - a non-empty string providing the endpoint URL to use for requests to the client
   #
-  # If any of the options above are missing then the constructor will try to use the corresponding
-  # global variable declared in the SoftLayer Module:
-  # - +$SL_API_USERNAME+
-  # - +$SL_API_KEY+
-  # - +$SL_API_BASE_URL+
+  # If any of these are missing then the Client class will look to the SoftLayer::Config
+  # class to provide the missing information.  Please see that class for details.
   #
   class Client
     # A username passed as authentication for each request. Cannot be emtpy or nil.
@@ -119,20 +116,18 @@ module SoftLayer
     def service_named(service_name, service_options = {})
       raise ArgumentError,"Please provide a service name" if service_name.nil? || service_name.empty?
 
-      # strip whitespace from service_name and
-      # ensure that it start with "SoftLayer_".
-      #
-      # if it does not, then add it
-      service_name.strip!
-      if not service_name =~ /\ASoftLayer_/
-        service_name = "SoftLayer_#{service_name}"
+      # Strip whitespace from service_name and ensure that it starts with "SoftLayer_".
+      # If it does not, then add the prefix.
+      full_name = service_name.to_s.strip
+      if not full_name =~ /\ASoftLayer_/
+        full_name = "SoftLayer_#{service_name}"
       end
 
       # if we've already created this service, just return it
       # otherwise create a new service
-      service_key = service_name.to_sym
+      service_key = full_name.to_sym
       if !@services.has_key?(service_key)
-        @services[service_key] = SoftLayer::Service.new(service_name, {:client => self}.merge(service_options))
+        @services[service_key] = SoftLayer::Service.new(full_name, {:client => self}.merge(service_options))
       end
 
       @services[service_key]

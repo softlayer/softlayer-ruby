@@ -63,7 +63,7 @@ module SoftLayer
   # This class defines the routines that are valid within the block provided to a call to
   # ObjectFilter.build. This allows you to create object filters like:
   #
-  # object_filter = SoftLayer::ObjectFilter.build("hardware.memory") { is_greater_than(2) }
+  #     object_filter = SoftLayer::ObjectFilter.build("hardware.memory") { is_greater_than(2) }
   #
   class ObjectFilterBlockHandler
     # Matches when the value is found within the field

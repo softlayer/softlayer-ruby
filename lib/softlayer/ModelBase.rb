@@ -83,17 +83,6 @@ module SoftLayer
     end
 
     ##
-    # Subclasses should implement this method as part of enabling the
-    # refresh_details fuctionality The implementation should make a request
-    # to the SoftLayer API and retrieve an up-to-date SoftLayer hash
-    # representation of this object. That hash should be the return value
-    # of this routine.
-    #
-    def softlayer_properties(object_mask = nil)
-      raise "Abstract method softlayer_properties in ModelBase was called"
-    end
-
-    ##
     # Returns the value of of the given property as stored in the
     # softlayer_hash. This gives you access to the low-level, raw
     # properties that underly this model object.  The need for this
@@ -132,6 +121,17 @@ module SoftLayer
 
     protected
 
+    ##
+    # Subclasses should implement this method as part of enabling the
+    # refresh_details fuctionality The implementation should make a request
+    # to the SoftLayer API and retrieve an up-to-date SoftLayer hash
+    # representation of this object. That hash should be the return value
+    # of this routine.
+    #
+    def softlayer_properties(object_mask = nil)
+      raise "Abstract method softlayer_properties in ModelBase was called"
+    end
+    
     ##
     # The softlayer_hash stores the low-level information about an
     # object as it was retrieved from the SoftLayer API.

@@ -68,4 +68,60 @@ describe SoftLayer::VirtualServer do
   it_behaves_like "server with mutable hostname" do
 		let (:server) { sample_server }
   end
+  
+  describe "component upgrades" do
+    let(:mock_client) do
+  		mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "DEADBEEFBADF00D")
+      virtual_guest_service = mock_client[:Virtual_Guest]
+    
+      allow(virtual_guest_service).to receive(:call_softlayer_api_with_params) do |api_method, parameters, api_arguments|
+        api_return = nil
+
+        case api_method
+        when :getUpgradeItemPrices
+          api_return = fixture_from_json('virtual_server_upgrade_options')
+        else
+          fail "Unexpected call to the SoftLayer_Virtual_Guest service"
+        end
+        
+        api_return
+      end
+
+      mock_client
+    end
+
+    it "retrieves the item upgrades for a server from the API once" do
+      fake_virtual_server = SoftLayer::VirtualServer.new(mock_client, {"id" => 12345})
+      expect(fake_virtual_server.upgrade_options).to eq fixture_from_json('virtual_server_upgrade_options')
+
+      # once we've retrieve the options once, we shouldn't be calling back into the service to get them again
+      expect(mock_client[:Virtual_Guest]).to_not receive(:call_softlayer_api_with_params)
+      fake_virtual_server.upgrade_options
+    end
+
+    describe "individual component upgrades" do
+      before(:each) do
+        expect(mock_client[:Product_Order]).to receive(:call_softlayer_api_with_params) do |api_method, parameters, api_arguments|
+          expect(api_method).to be(:placeOrder)
+          expect(parameters).to be_nil
+          expect(api_method).to_not be_empty
+        end
+      end
+      
+      it "upgrades cores" do
+        fake_virtual_server = SoftLayer::VirtualServer.new(mock_client, {"id" => 12345})
+        fake_virtual_server.upgrade_cores!(8)
+      end
+      
+      it "upgrades ram" do
+        fake_virtual_server = SoftLayer::VirtualServer.new(mock_client, {"id" => 12345})
+        fake_virtual_server.upgrade_RAM!(4)
+      end
+      
+      it "upgrades max port speed" do
+        fake_virtual_server = SoftLayer::VirtualServer.new(mock_client, {"id" => 12345})
+        fake_virtual_server.upgrade_max_port_speed!(100)
+      end
+    end # individual component upgrades
+  end  
 end
