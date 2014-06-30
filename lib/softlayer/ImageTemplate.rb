@@ -148,32 +148,6 @@ module SoftLayer
     end
 
     ##
-    # Share this image template with another account
-    #
-    # The id of another account can usually be determined
-    # by the user name of the master user which is typically
-    # "SL<account_id>" or something similar.
-    #
-    # Note that this routine raises an exception if you call
-    # it with an account that is already in the list of
-    # shared accounts.
-    def start_sharing(with_account_id)
-      self.service.permitSharingAccess(with_account_id)
-    end
-
-    ##
-    # Stop sharing this image with the account_id given
-    def stop_sharing(with_account_id)
-      raise "You cannot stop sharing an image template with the account that owns it" if with_account_id == self["accountId"]
-      self.service.denySharingAccess(with_account_id)
-    end
-
-    ##
-    # Return an array with the id's of accounts that this image is shared with
-    def shared_with
-    end
-
-    ##
     # Creates a transaction to delete the image template and
     # all the disk images associated with it.
     #
