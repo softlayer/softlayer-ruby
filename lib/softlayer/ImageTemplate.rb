@@ -110,6 +110,43 @@ module SoftLayer
       datacenters_data.collect { |datacenter_data| SoftLayer::Datacenter.datacenter_named(datacenter_data["name"]) }
     end
 
+
+    ##
+    # Returns a list of the accounts (identified by account ID numbers)
+    # that this image is shared with
+    def shared_with_accounts
+      accounts_data = self.service.getAccountReferences
+      accounts_data.collect { |account_data| account_data["accountId"] }
+    end
+    
+    ##
+    # Change the set of accounts that this image is shared with.
+    # The parameter is an array of account ID's.
+    #
+    # Note that this routine will "unshare" with any accounts
+    # not included in the list passed in so the list should
+    # be comprehensive
+    #
+    def shared_with_accounts= (account_id_list)
+      already_sharing_with = self.shared_with_accounts
+
+      accounts_to_add = account_id_list.select { |account_id| !already_sharing_with.include?(account_id) }
+
+      # Note, using the network API, it is possible to "unshare" an image template
+      # with the account that owns it, however, this leads to a rather odd state
+      # where the image has allocated resources (that the account may be charged for)
+      # but no way to delete those resources. For that reason this model
+      # always includes the account ID that owns the image in the list of 
+      # accounts the image will be shared with.
+      my_account_id = self['accountId']
+      accounts_to_add.push(my_account_id) if !already_sharing_with.include?(my_account_id) && !accounts_to_add.include?(my_account_id)
+
+      accounts_to_remove = already_sharing_with.select { |account_id| (account_id != my_account_id) && !account_id_list.include?(account_id) }
+
+      accounts_to_add.each {|account_id| self.service.permitSharingAccess account_id }
+      accounts_to_remove.each {|account_id| self.service.denySharingAccess account_id }
+    end
+
     ##
     # Share this image template with another account
     #
@@ -134,8 +171,6 @@ module SoftLayer
     ##
     # Return an array with the id's of accounts that this image is shared with
     def shared_with
-      accounts_data = self.service.getAccountReferences
-      accounts_data.collect { |account_data| account_data["accountId"] }
     end
 
     ##
