@@ -83,15 +83,17 @@ module SoftLayer
 
     ##
     # Accepts an array of datacenters (instances of SoftLayer::Datacenter) where this
-    # image should be made available. The call will kick off transactions to make
-    # the image available in the given datacenters.  These transactions can take
+    # image should be made available. The call will kick off one or more transactions 
+    # to make the image available in the given datacenters. These transactions can take
     # some time to complete.
     #
     # Note that the template will be REMOVED from any datacenter that does not
-    # appear in this array!  The list given must be comprehensive.
+    # appear in this array! The list given must be comprehensive.
+    #
+    # The available_datacenters call returns a list of the values that are valid
+    # whithin this array.
     def datacenters=(datacenters_array)
-      datacenter_data = datacenters_array.collect do |datacenter| 
-        raise "Image templates cannot be copied to the data center #{datacenter.name}" unless datacenter.available_for_image_templates?
+      datacenter_data = datacenters_array.collect do |datacenter|
         { "id" => datacenter.id }
       end
 
@@ -99,14 +101,41 @@ module SoftLayer
     end
     
     ##
-    # Works with an array of account IDs (or should use master user names i.e. "SL232279" )
-    # that the image template is shared with
+    # Returns an array of the datacenters that this image can be stored in.
+    # This is the set of datacenters that you may choose from, when putting 
+    # together a list you will send to the datacenters= setter.
     #
-    # Should this be datacenters an "share_with_accounts, stop_sharing_with_accounts"
-    def shared_with_accounts
+    def available_datacenters
+      datacenters_data = self.service.getStorageLocations()
+      datacenters_data.collect { |datacenter_data| SoftLayer::Datacenter.datacenter_named(datacenter_data["name"]) }
     end
 
-    def shared_with_accounts=
+    ##
+    # Share this image template with another account
+    #
+    # The id of another account can usually be determined
+    # by the user name of the master user which is typically
+    # "SL<account_id>" or something similar.
+    #
+    # Note that this routine raises an exception if you call
+    # it with an account that is already in the list of
+    # shared accounts.
+    def start_sharing(with_account_id)
+      self.service.permitSharingAccess(with_account_id)
+    end
+
+    ##
+    # Stop sharing this image with the account_id given
+    def stop_sharing(with_account_id)
+      raise "You cannot stop sharing an image template with the account that owns it" if with_account_id == self["accountId"]
+      self.service.denySharingAccess(with_account_id)
+    end
+
+    ##
+    # Return an array with the id's of accounts that this image is shared with
+    def shared_with
+      accounts_data = self.service.getAccountReferences
+      accounts_data.collect { |account_data| account_data["accountId"] }
     end
 
     ##
@@ -122,16 +151,15 @@ module SoftLayer
     end
     
     ##
-    # Wait until transactions related to the image template are finished
+    # Repeatedly poll the netwokr API until transactions related to this image 
+    # template are finished
     #
-    # A template is not ready until all the transactions on the template
+    # A template is not 'ready' until all the transactions on the template
     # itself, and all its children are complete.
     #
     # At each trial, the routine will yield to a block if one is given
     # The block is passed one parameter, a boolean flag indicating
-    # whether or not the image template is 'ready'. Interim invocations
-    # of the block should receive +false+, the final invocation should
-    # receieve +true+
+    # whether or not the image template is 'ready'.
     #
     def wait_until_ready(max_trials, seconds_between_tries = 2)
       # pessimistically assume the server is not ready
@@ -324,7 +352,7 @@ module SoftLayer
     protected
 
     def self.default_object_mask
-      return "mask[id,name,note,globalIdentifier,datacenters,blockDevices,tagReferences,publicFlag,flexImageFlag,transactionId,children.transactionId]"
+      return "mask[id,accountId,name,note,globalIdentifier,datacenters,blockDevices,tagReferences,publicFlag,flexImageFlag,transactionId,children.transactionId]"
     end
   end
 end

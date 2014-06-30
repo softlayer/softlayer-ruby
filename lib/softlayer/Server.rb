@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
-
 module SoftLayer
   # Server is the base class for VirtualServer and BareMetalServer.
   # It implements some functionality common to both those classes.

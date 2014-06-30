@@ -21,17 +21,6 @@ module SoftLayer
     sl_attr :long_name, "longName"
 
     ##
-    # An array with the datacenter names of datacenters that can host
-    # image templates
-    IMAGE_TEMPLATE_DATACENTERS = ['ams01', 'dal01', 'dal05', 'dal07', 'hou02', 'sea01', 'sjc01', 'sng01', 'wdc01'];
-    
-    ##
-    # Returns true if image templates can be copied to this data center
-    def available_for_image_templates?
-      IMAGE_TEMPLATE_DATACENTERS.include?(self.name)
-    end
-
-    ##
     # Return the datacenter with the given name ('sng01' or 'dal05')
     def self.datacenter_named(name, client = nil)
       datacenters(client).find{ | datacenter | datacenter.name == name.to_s.downcase }
