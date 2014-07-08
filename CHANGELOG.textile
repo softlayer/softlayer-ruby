@@ -1,7 +1,8 @@
 *3.0*
 * Added a method to reboot servers.
-* Added a model for Virtual Server Image Templates
-* Substantially rewrote the ObjectFilter class.
+* Substantially rewrote the ObjectFilter class.  ObjectFilters used to be hashes which made it easy to manipulate their content incorrectly. The new implementation has a strict interface that makes it harder to manipulate filters incorrectly.
+* Added a model for Virtual Server Image Templates (SoftLayer::ImageTemplate) - VirtualServerOrder now requires an instance of this class rather than allowing you to provide just the global_id of an image
+* Added a model for data centers (SoftLayer::Datacenter). Bare Metal, Bare Metal Package, and Virtual server orders now use an instance of Datacenter to identify where their servers will be provisioned. The routines in those classes which used to provide lists of valid data center names now return data center objects.
 
 *2.1.1*
 * Virtual server upgrades no longer raise exceptions

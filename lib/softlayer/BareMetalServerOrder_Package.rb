@@ -28,13 +28,14 @@ module SoftLayer
   class BareMetalServerOrder_Package < Server
     # The following properties are required in a server order.
 
-    # The product package identifying the base configuration for the server.
-    # a list of Bare Metal Server product packages is returned by
+    # The product package object (an instance of SoftLayer::ProductPackage) identifying the base 
+    # configuration for the server. A list of Bare Metal Server product packages is returned by
     # SoftLayer::ProductPackage.bare_metal_server_packages
     attr_reader :package
 
-    # String, short name of the data center that will house the new virtual server (e.g. "dal05" or "sea01")
-    # A list of valid data centers can be found in ProductPackage#datacenter_options
+    # An instance of SoftLayer::Datacenter. The server will be provisioned in this data center.
+    # The set of datacenters available is determined by the package and may be obtained from
+    # the SoftLayer::ProductPackage object using the #datacenter_options method.
     attr_accessor :datacenter
 
     # The hostname of the server being created (i.e. 'sldn' is the hostname of sldn.softlayer.com).
@@ -125,8 +126,7 @@ module SoftLayer
         }
       }
 
-      product_order['location'] = @package.location_id_for_datacenter_name(@datacenter.downcase) if @datacenter
-
+      product_order['location'] = @datacenter.id if @datacenter
       product_order['sshKeys'] = [{ 'sshKeyIds' => @ssh_key_ids }] if @ssh_key_ids
       product_order['provisionScripts'] = [@provision_script_URI.to_s] if @provision_script_URI
 
@@ -142,7 +142,5 @@ module SoftLayer
 
       product_order
     end
-
   end # BareMetalServerOrder_Package
-
 end # SoftLayer

@@ -54,7 +54,7 @@ module SoftLayer
     ##
     # Changes the notes on an template to be the given strings
     def notes=(new_notes)
-      # it is not a typo that this sets the "note" property.  The 
+      # it is not a typo that this sets the "note" property.  The
       # property in the network api is "note", the model exposes it as
       # 'notes' for self-consistency
       self.service.editObject({ "note" => new_notes.to_s})
@@ -67,11 +67,11 @@ module SoftLayer
     end
 
     ##
-    # Sets the tags on the template.  Note: a pre-existing tag will be 
+    # Sets the tags on the template.  Note: a pre-existing tag will be
     # removed from the template if it does not appear in the array given.
     # The list of tags must be comprehensive.
     def tags=(tags_array)
-      as_strings = tags_array.collect { |tag| tag.to_s }      
+      as_strings = tags_array.collect { |tag| tag.to_s }
       self.service.setTags(as_strings.join(','))
     end
 
@@ -83,7 +83,7 @@ module SoftLayer
 
     ##
     # Accepts an array of datacenters (instances of SoftLayer::Datacenter) where this
-    # image should be made available. The call will kick off one or more transactions 
+    # image should be made available. The call will kick off one or more transactions
     # to make the image available in the given datacenters. These transactions can take
     # some time to complete.
     #
@@ -99,10 +99,10 @@ module SoftLayer
 
       self.service.setAvailableLocations(datacenter_data.compact)
     end
-    
+
     ##
     # Returns an array of the datacenters that this image can be stored in.
-    # This is the set of datacenters that you may choose from, when putting 
+    # This is the set of datacenters that you may choose from, when putting
     # together a list you will send to the datacenters= setter.
     #
     def available_datacenters
@@ -118,7 +118,7 @@ module SoftLayer
       accounts_data = self.service.getAccountReferences
       accounts_data.collect { |account_data| account_data["accountId"] }
     end
-    
+
     ##
     # Change the set of accounts that this image is shared with.
     # The parameter is an array of account ID's.
@@ -136,7 +136,7 @@ module SoftLayer
       # with the account that owns it, however, this leads to a rather odd state
       # where the image has allocated resources (that the account may be charged for)
       # but no way to delete those resources. For that reason this model
-      # always includes the account ID that owns the image in the list of 
+      # always includes the account ID that owns the image in the list of
       # accounts the image will be shared with.
       my_account_id = self['accountId']
       accounts_to_add.push(my_account_id) if !already_sharing_with.include?(my_account_id) && !accounts_to_add.include?(my_account_id)
@@ -158,9 +158,9 @@ module SoftLayer
     def delete!
       self.service.deleteObject
     end
-    
+
     ##
-    # Repeatedly poll the netwokr API until transactions related to this image 
+    # Repeatedly poll the netwokr API until transactions related to this image
     # template are finished
     #
     # A template is not 'ready' until all the transactions on the template
@@ -179,7 +179,7 @@ module SoftLayer
         parent_ready = !(has_sl_property? :transactionId) || (self[:transactionId] == "")
         children_ready = (nil == self["children"].find { |child| child["transactionId"] != "" })
 
-        ready = parent_ready && children_ready        
+        ready = parent_ready && children_ready
         yield ready if block_given?
 
         num_trials = num_trials + 1
@@ -188,12 +188,12 @@ module SoftLayer
 
       ready
     end
-    
+
     # ModelBase protocol methods
     def service
       softlayer_client['Virtual_Guest_Block_Device_Template_Group'].object_with_id(self.id)
     end
-    
+
     def softlayer_properties(object_mask = nil)
       self.service.object_mask(self.class.default_object_mask).getObject
     end
@@ -342,7 +342,7 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # The options may include the following keys
-    # * <b>+:object_mask+</b> (string) - A object mask of properties, in addition to the default properties, that you wish to retrieve for the server
+    # * <b>+:object_mask+</b> (string) - A object mask of properties, in addition to the default properties, that you wish to retrieve for the template
     def self.template_with_id(id, options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
@@ -358,10 +358,27 @@ module SoftLayer
       new(softlayer_client, template_data)
     end
 
+    ##
+    # Retrieve the image template with the given global ID
+    #
+    # The options parameter should contain:
+    #
+    # <b>+:client+</b> - The client used to connect to the API
+    #
+    # If no client is given, then the routine will try to use Client.default_client
+    # If no client can be found the routine will raise an error.
+    #
+    # The options may include the following keys
+    # * <b>+:object_mask+</b> (string) - A object mask of properties, in addition to the default properties, that you wish to retrieve for the template
+    def self.template_with_global_id(global_id, options_hash = {})
+      templates = find_public_templates(options_hash.merge(:global_id => global_id))
+      templates.empty? ? nil : templates[0]
+    end
+
     protected
 
     def self.default_object_mask
       return "mask[id,accountId,name,note,globalIdentifier,datacenters,blockDevices,tagReferences,publicFlag,flexImageFlag,transactionId,children.transactionId]"
     end
-  end
+  end  
 end

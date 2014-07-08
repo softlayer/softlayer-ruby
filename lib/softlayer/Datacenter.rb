@@ -8,8 +8,8 @@ module SoftLayer
   ##
   # A Data Center in the SoftLayer network
   #
-  # This class corresponds to the +SoftLayer_Location+ data type:
-  # 
+  # This class corresponds to the SoftLayer_Location++ data type:
+  #
   # http://sldn.softlayer.com/reference/datatypes/SoftLayer_Location
   #
   # Although in this context it is used to represent a data center and

@@ -32,8 +32,7 @@ module SoftLayer
     # a Bare Metal Instance
     #++
 
-    # String, short name of the data center that will house the new Bare Metal Instance (e.g. "dal05" or "sea01")
-    # Corresponds to +datacenter.name+ in the documentation for +createObject+.
+    # An instance of SoftLayer::Datacenter. The server will be provisioned in this data center
     attr_accessor :datacenter
 
     # String, The hostname to assign to the new server
@@ -152,7 +151,7 @@ module SoftLayer
 
       template["privateNetworkOnlyFlag"] = true if @private_network_only
 
-      template["datacenter"] = {"name" => @datacenter} if @datacenter
+      template["datacenter"] = {"name" => @datacenter.name} if @datacenter
       template['userData'] = [{'value' => @user_metadata}] if @user_metadata
       template['networkComponents'] = [{'maxSpeed'=> @max_port_speed}] if @max_port_speed
       template['postInstallScriptUri'] = @provision_script_URI.to_s if @provision_script_URI
@@ -184,7 +183,7 @@ module SoftLayer
     ##
     # Return a list of values that are valid for the :datacenter attribute
     def self.datacenter_options(client = nil)
-      create_object_options(client)["datacenters"].collect { |datacenter_spec| datacenter_spec['template']['datacenter']["name"] }.uniq.sort!
+      create_object_options(client)["datacenters"].collect { |datacenter_spec| Datacenter.datacenter_named(datacenter_spec['template']['datacenter']['name'], client) }.uniq
     end
 
     def self.core_options(client = nil)

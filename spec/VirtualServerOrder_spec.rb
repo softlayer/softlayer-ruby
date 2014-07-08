@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
-
 $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
 require 'rubygems'
@@ -36,8 +34,9 @@ describe SoftLayer::VirtualServerOrder do
   end
 
   it "places its :datacenter attribute into the order template" do
+    client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
     expect(subject.virtual_guest_template["datacenter"]).to be_nil
-    subject.datacenter = "dal05"
+    subject.datacenter = SoftLayer::Datacenter.new(client, 'id' => 42, 'name' => "dal05")
     expect(subject.virtual_guest_template["datacenter"]).to eq({ "name" => "dal05" })
   end
 
@@ -70,16 +69,18 @@ describe SoftLayer::VirtualServerOrder do
   end
 
   it "places an image template global identifier in the template as blockDeviceTemplateGroup.globalIdentifier" do
+    client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
     expect(subject.virtual_guest_template["blockDeviceTemplateGroup"]).to be_nil
-    subject.image_global_id = "12345-abcd-eatatjoes"
+    subject.image_template = SoftLayer::ImageTemplate.new(client, 'id' => 42, 'globalIdentifier' => '12345-abcd-eatatjoes');
     expect(subject.virtual_guest_template['blockDeviceTemplateGroup']).to eq({'globalIdentifier' => '12345-abcd-eatatjoes'})
   end
 
-  it "allows an image global id to override an os reference code when both are provided" do
+  it "allows an image template to override an os reference code when both are provided" do
     expect(subject.virtual_guest_template["blockDeviceTemplateGroup"]).to be_nil
     expect(subject.virtual_guest_template["operatingSystemReferenceCode"]).to be_nil
 
-    subject.image_global_id = "12345-abcd-eatatjoes"
+    client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
+    subject.image_template = SoftLayer::ImageTemplate.new(client, 'id' => 42, 'globalIdentifier' => '12345-abcd-eatatjoes');
     subject.os_reference_code = 'UBUNTU_12_64'
 
     expect(subject.virtual_guest_template['blockDeviceTemplateGroup']).to eq({'globalIdentifier' => '12345-abcd-eatatjoes'})
@@ -243,7 +244,7 @@ describe SoftLayer::VirtualServerOrder do
   describe "methods returning available options for attributes" do
     let (:client) do
       client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
-      virtual_guest_service = client["Virtual_Guest"]
+      virtual_guest_service = client[:Virtual_Guest]
       allow(virtual_guest_service).to receive(:call_softlayer_api_with_params)
 
       fake_options = fixture_from_json("Virtual_Guest_createObjectOptions")
@@ -264,7 +265,10 @@ describe SoftLayer::VirtualServerOrder do
     end
 
     it "transmogrifies the datacenter options for the cores attribute" do
-      expect(SoftLayer::VirtualServerOrder.datacenter_options(client)).to eq ["ams01", "dal01", "dal05", "dal06", "sea01", "sjc01", "sng01", "wdc01"]
+      datacenter_options = SoftLayer::VirtualServerOrder.datacenter_options(client)
+      datacenter_names = datacenter_options.map { |datacenter| datacenter.name }
+
+      expect(datacenter_names.sort).to eq ["ams01", "dal01", "dal05", "dal06", "sea01", "sjc01", "sng01", "wdc01"]
     end
 
     it "transmogrifies the processor options for the cores attribute" do

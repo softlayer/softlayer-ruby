@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
-
 $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
 require 'rubygems'
@@ -36,8 +34,10 @@ describe SoftLayer::BareMetalServerOrder do
   end
 
   it "places its :datacenter attribute into the order template" do
+    client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
+    
     expect(subject.hardware_instance_template["datacenter"]).to be_nil
-    subject.datacenter = "dal05"
+    subject.datacenter = SoftLayer::Datacenter.new(client, 'id' => 42, 'name' => "dal05")
     expect(subject.hardware_instance_template["datacenter"]).to eq({ "name" => "dal05" })
   end
 
@@ -211,11 +211,12 @@ describe SoftLayer::BareMetalServerOrder do
       client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
       virtual_guest_service = client["Hardware"]
       allow(virtual_guest_service).to receive(:call_softlayer_api_with_params)
+      fake_options = 
+      allow(virtual_guest_service).to receive(:getCreateObjectOptions) { fixture_from_json("Hardware_createObjectOptions") }
 
-      fake_options = fixture_from_json("Hardware_createObjectOptions")
-      allow(virtual_guest_service).to receive(:getCreateObjectOptions) {
-        fake_options
-      }
+      location_service = client[:Location]
+      allow(location_service).to receive(:call_softlayer_api_with_params)
+      allow(location_service).to receive(:getDatacenters) {fixture_from_json("datacenter_locations")}
 
       client
     end
@@ -225,7 +226,9 @@ describe SoftLayer::BareMetalServerOrder do
     end
 
     it "transmogrifies the datacenter options for the :datacenter attribute" do
-      expect(SoftLayer::BareMetalServerOrder.datacenter_options(client)).to eq ["ams01", "dal01", "dal05", "dal06", "sea01", "sjc01", "sng01", "wdc01"]
+      datacenter_options = SoftLayer::BareMetalServerOrder.datacenter_options(client)
+      datacenter_names = datacenter_options.map { |datacenter| datacenter.name }.sort
+      expect(datacenter_names).to eq ["ams01", "dal01", "dal05", "dal06", "sea01", "sjc01", "sng01", "wdc01"]
     end
 
     it "transmogrifies the processor create object options for the cores attribute" do

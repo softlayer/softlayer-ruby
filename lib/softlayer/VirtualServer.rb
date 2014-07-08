@@ -131,7 +131,7 @@ module SoftLayer
     #
     # The routine returns the instance of SoftLayer::ImageTemplate that is
     # created.  That image template will probably not be available immediately, however.
-    # You may use the wait_until_ready routine of SoftLayer::ImageTemplate to 
+    # You may use the wait_until_ready routine of SoftLayer::ImageTemplate to
     # wait on it.
     #
     def capture_image(image_name, include_attached_storage = false, image_notes = nil)
@@ -141,7 +141,7 @@ module SoftLayer
       disks = self.blockDevices.select(&disk_filter)
 
       self.service.createArchiveTransaction(image_name, disks, notes ? notes : "") if disks && !disks.empty?
-      
+
       image_templates = SoftLayer::ImageTemplate.find_private_templates(:name => image_name)
       image_templates[0] if !image_templates.empty?
     end

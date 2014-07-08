@@ -38,6 +38,11 @@ describe SoftLayer::BareMetalServerOrder_Package do
     package = SoftLayer::ProductPackage.new(client, fixture_from_json("Product_Package"))
     SoftLayer::BareMetalServerOrder_Package.new(package, client)
   end
+  
+  let (:test_datacenter) do
+    client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
+    SoftLayer::Datacenter.new(client,'id' => 224092, 'name' => 'sng01')
+  end
 
   it 'places the package id from which it was ordered into the order template' do
     expect(test_order.hardware_order["packageId"]).to eq 32
@@ -45,7 +50,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
 
   it "places its :datacenter attribute into the order template" do
     expect(test_order.hardware_order["location"]).to be_nil
-    test_order.datacenter = "sng01"
+    test_order.datacenter = test_datacenter
     expect(test_order.hardware_order["location"]).to eq 224092
   end
 
@@ -108,7 +113,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(package, client)
-    test_order.datacenter = 'sng01'
+    test_order.datacenter = test_datacenter
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
     test_order.configuration_options = { 'category' => 123 }
@@ -125,7 +130,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(package, client)
-    test_order.datacenter = 'sng01'
+    test_order.datacenter = test_datacenter
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
     test_order.configuration_options = { 'category' => 123 }
@@ -142,7 +147,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(package, client)
-    test_order.datacenter = 'sng01'
+    test_order.datacenter = test_datacenter
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
     test_order.configuration_options = { 'category' => 123 }
@@ -160,7 +165,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(package, client)
-    test_order.datacenter = 'sng01'
+    test_order.datacenter = test_datacenter
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
     test_order.configuration_options = { 'category' => 123 }

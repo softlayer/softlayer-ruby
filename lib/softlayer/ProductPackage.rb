@@ -45,7 +45,7 @@ module SoftLayer
 
     ##
     # The list of locations where this product package is available.
-    sl_attr :availableLocations
+    sl_attr :available_locations, 'availableLocations'
 
     ##
     # The set of product categories needed to make an order for this product package.
@@ -105,15 +105,7 @@ module SoftLayer
     end
 
     def datacenter_options
-      availableLocations.collect { |location_data| location_data["location"]["name"] }
-    end
-
-    ##
-    # Given a datacenter name that was returned by datacenter_options, use information
-    # in the package to retrieve a location id.
-    def location_id_for_datacenter_name(datacenter_name)
-      location_data = availableLocations.find { |location_data| location_data["location"]["name"]  == datacenter_name }
-      location_data["locationId"]
+      available_locations.collect { |location_data| Datacenter::datacenter_named(location_data["location"]["name"], self.softlayer_client) }.compact
     end
 
     def service

@@ -24,9 +24,7 @@ module SoftLayer
     # a virtual server
     #++
 
-    # String, short name of the data center that will house the new virtual server (e.g. "dal05" or "sea01")
-    # Corresponds to +datacenter.name+ in the documentation for createObject.  If not provided, the server will
-    # be provisioned in the first available data center.
+    # An instance of SoftLayer::Datacenter.  The server will be provisioned in that Datacenter.
     attr_accessor :datacenter
 
     # String, The hostname to assign to the new server
@@ -44,17 +42,18 @@ module SoftLayer
     attr_accessor :memory
 
     #--
-    # These two options are mutually exclusive, but one or the other must be provided.
-    # If you provide both, the image_global_id will be added to the order and the os_reference_code will be ignored
+    # These two options are mutually exclusive, but one of them must be provided.
+    # If you provide both, the image_template will be added to the order and the 
+    # os_reference_code will be ignored
     #++
 
     # String, An OS reference code for the operating system to install on the virtual server
     # Corresponds to +operatingSystemReferenceCode+ in the +createObject+ documentation
     attr_accessor :os_reference_code
 
-    # String, The globalIdentifier of a disk image to put on the newly created server
-    # Corresponds to +blockDeviceTemplateGroup.globalIdentifier+ in the +createObject+ documentation
-    attr_accessor :image_global_id
+    # An instance of the SoftLayer::ImageTemplate class.  Represents the image template that should
+    # be installed on the server.
+    attr_accessor :image_template
 
     #--
     # Optional attributes
@@ -159,7 +158,7 @@ module SoftLayer
       template["dedicatedAccountHostOnlyFlag"] = true if @dedicated_host_only
       template["privateNetworkOnlyFlag"] = true if @private_network_only
 
-      template["datacenter"] = {"name" => @datacenter} if @datacenter
+      template["datacenter"] = {"name" => @datacenter.name} if @datacenter
       template['userData'] = [{'value' => @user_metadata}] if @user_metadata
       template['networkComponents'] = [{'maxSpeed'=> @max_port_speed}] if @max_port_speed
       template['postInstallScriptUri'] = @provision_script_URI.to_s if @provision_script_URI
@@ -167,8 +166,8 @@ module SoftLayer
       template['primaryNetworkComponent'] = { "networkVlan" => { "id" => @public_vlan_id.to_i } } if @public_vlan_id
       template["primaryBackendNetworkComponent"] = { "networkVlan" => {"id" => @private_vlan_id.to_i } } if @private_vlan_id
 
-      if @image_global_id
-          template["blockDeviceTemplateGroup"] = {"globalIdentifier" => @image_global_id}
+      if @image_template
+          template["blockDeviceTemplateGroup"] = {"globalIdentifier" => @image_template.global_id}
       elsif @os_reference_code
           template["operatingSystemReferenceCode"] = @os_reference_code
       end
@@ -213,7 +212,7 @@ module SoftLayer
     ##
     # Return a list of values that are valid for the :datacenter attribute
     def self.datacenter_options(client = nil)
-      create_object_options(client)["datacenters"].collect { |datacenter_spec| datacenter_spec['template']['datacenter']["name"] }.uniq.sort!
+      create_object_options(client)["datacenters"].collect { |datacenter_spec| Datacenter.datacenter_named(datacenter_spec['template']['datacenter']['name'], client) }.uniq
     end
 
     ##
