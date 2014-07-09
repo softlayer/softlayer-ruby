@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
-
 require 'configparser'
 
 module SoftLayer

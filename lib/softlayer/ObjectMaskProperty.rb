@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
-
 module SoftLayer
   #
   # A class representing a SoftLayer Object's property as represented

@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
-
 module SoftLayer
   #
   # This class is used to order a hardware server using a product package.
@@ -28,7 +26,7 @@ module SoftLayer
   class BareMetalServerOrder_Package < Server
     # The following properties are required in a server order.
 
-    # The product package object (an instance of SoftLayer::ProductPackage) identifying the base 
+    # The product package object (an instance of SoftLayer::ProductPackage) identifying the base
     # configuration for the server. A list of Bare Metal Server product packages is returned by
     # SoftLayer::ProductPackage.bare_metal_server_packages
     attr_reader :package

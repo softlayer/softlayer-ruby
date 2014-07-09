@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
-
 module SoftLayer
   #
   # This class is an implementation detail of the Object Mask Parser

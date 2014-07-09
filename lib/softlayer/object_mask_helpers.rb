@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
-
 ##
 # This extension to the Hash class to allows object masks to be constructed
 # from built-in Ruby types and converted to object masks strings for presentation

@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
-
 module SoftLayer
   # This struct represents a configuration option that can be included in
   # a product order.  Strictly speaking the only information required for

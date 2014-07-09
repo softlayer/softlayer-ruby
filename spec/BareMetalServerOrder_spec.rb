@@ -35,7 +35,7 @@ describe SoftLayer::BareMetalServerOrder do
 
   it "places its :datacenter attribute into the order template" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
-    
+
     expect(subject.hardware_instance_template["datacenter"]).to be_nil
     subject.datacenter = SoftLayer::Datacenter.new(client, 'id' => 42, 'name' => "dal05")
     expect(subject.hardware_instance_template["datacenter"]).to eq({ "name" => "dal05" })
@@ -211,7 +211,7 @@ describe SoftLayer::BareMetalServerOrder do
       client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
       virtual_guest_service = client["Hardware"]
       allow(virtual_guest_service).to receive(:call_softlayer_api_with_params)
-      fake_options = 
+      fake_options =
       allow(virtual_guest_service).to receive(:getCreateObjectOptions) { fixture_from_json("Hardware_createObjectOptions") }
 
       location_service = client[:Location]

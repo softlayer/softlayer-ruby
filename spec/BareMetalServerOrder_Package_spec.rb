@@ -38,7 +38,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     package = SoftLayer::ProductPackage.new(client, fixture_from_json("Product_Package"))
     SoftLayer::BareMetalServerOrder_Package.new(package, client)
   end
-  
+
   let (:test_datacenter) do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
     SoftLayer::Datacenter.new(client,'id' => 224092, 'name' => 'sng01')

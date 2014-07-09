@@ -380,5 +380,5 @@ module SoftLayer
     def self.default_object_mask
       return "mask[id,accountId,name,note,globalIdentifier,datacenters,blockDevices,tagReferences,publicFlag,flexImageFlag,transactionId,children.transactionId]"
     end
-  end  
+  end
 end

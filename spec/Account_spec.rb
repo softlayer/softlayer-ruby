@@ -79,7 +79,7 @@ describe SoftLayer::Account do
       expect(test_account.officePhone).to eq "555.123.4567"
     end
   end
-  
+
   it "fetches a list of open tickets" do
     mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
     account_service = mock_client["Account"]

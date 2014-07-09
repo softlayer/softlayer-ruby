@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
-
 module SoftLayer
   ##
   # The SoftLayer Gem defines an Object Hierarchy representing entities in

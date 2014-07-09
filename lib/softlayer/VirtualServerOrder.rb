@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
-
 module SoftLayer
   #
   # VirtualServerOrder orders virtual servers using SoftLayer_Virtual_Guest::createObject.
@@ -43,7 +41,7 @@ module SoftLayer
 
     #--
     # These two options are mutually exclusive, but one of them must be provided.
-    # If you provide both, the image_template will be added to the order and the 
+    # If you provide both, the image_template will be added to the order and the
     # os_reference_code will be ignored
     #++
 
