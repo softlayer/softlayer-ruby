@@ -2,6 +2,13 @@
 
 The `softlayer_api` Ruby Gem is an open source project and the developers who use it have an opportunity to tailor its direction. Here are some guideposts to help contributors get started with the code and ensure that their additions fit into the structure and style of the Gem. If you are new to the project, we hope this will help you along the way, if you find something is missing, however, please open an issue in GitHub against the documentation; or, since the documentation itself is part of the open source project, please feel free to submit changes to this guide which might leave some footprints those who follow along behind you.
 
+# Contributer License Agreement
+
+Contributions to the softlayer-ruby project require the submission of a
+contributer license agreement. Individual contributers should review and
+complete the [CLA](./cla-individual.md). Contributions made of behalf of a 
+company/employer will necessitate the completion of the [CCLA](./cla-corporate.md).
+
 # Requesting Changes
 
 Any requests for enhancements, new features, or bug reports should be entered into the softlayer-ruby GitHub repository as "[issues](https://github.com/softlayer/softlayer-ruby/issues?state=open)".
