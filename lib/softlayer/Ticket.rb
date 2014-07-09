@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
-
 module SoftLayer
 	class Ticket < SoftLayer::ModelBase
 
@@ -85,7 +83,7 @@ module SoftLayer
           'awaitingUserResponseFlag',   # This comes in from the server as a Boolean value
           'serverAdministrationFlag',   # This comes in from the server as an integer :-(
         ]
-      }
+      }.to_sl_object_mask
 		end
 
     ##
@@ -103,29 +101,6 @@ module SoftLayer
 
 			@ticket_subjects
 		end
-
-    ##
-    # Returns the set of currently open tickets
-    #
-    # Options should contain:
-    #
-    # <b>+:client+</b> - the client in which to search for the ticket
-    #
-    # If a client is not provided then the routine will search Client::default_client
-    # If Client::default_client is also nil the routine will raise an error.
-    def self.open_tickets(options = {})
-      softlayer_client = options[:client] || Client.default_client
-      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
-
-      if options.has_key?(:object_mask)
-        object_mask = options[:object_mask]
-      else
-        object_mask = default_object_mask.to_sl_object_mask
-      end
-
-      open_tickets_data = softlayer_client["Account"].object_mask(object_mask).getOpenTickets
-      open_tickets_data.collect { |ticket_data| new(softlayer_client, ticket_data) }
-    end
 
     ##
     # Find the ticket with the given ID and return it

@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
-
 $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
 require 'rubygems'
@@ -17,17 +15,6 @@ require 'spec_helper'
 describe SoftLayer::Ticket do
   before (:each) do
     SoftLayer::Ticket.instance_eval { @ticket_subjects = nil }
-  end
-
-  it "fetches a list of open tickets" do
-    mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
-    account_service = mock_client["Account"]
-
-    expect(account_service).to receive(:call_softlayer_api_with_params).with(:getOpenTickets, instance_of(SoftLayer::APIParameterFilter),[]) do
-      fixture_from_json("test_tickets")
-    end
-
-    SoftLayer::Ticket.open_tickets(:client => mock_client)
   end
 
 	it "retrieves ticket subjects from API once" do

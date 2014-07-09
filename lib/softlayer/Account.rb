@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
-
 module SoftLayer
   class Account < SoftLayer::ModelBase
     include ::SoftLayer::DynamicAttribute
@@ -108,6 +106,19 @@ module SoftLayer
       image_templates.to_update do
         @last_image_template_update ||= Time.now
         ImageTemplate.find_private_templates(:client => self.softlayer_client)
+      end
+    end
+
+    sl_dynamic_attr :open_tickets do |open_tickets|
+      open_tickets.should_update? do
+        @last_open_tickets_update ||= Time.at(0)
+        (Time.now - @last_open_tickets_update) > 5 * 60  # update every 5 minutes
+      end
+
+      open_tickets.to_update do
+        @last_open_tickets_update ||= Time.now
+        open_tickets_data = self.service.object_mask(SoftLayer::Ticket.default_object_mask).getOpenTickets
+        open_tickets_data.collect { |ticket_data| SoftLayer::Ticket.new(self.softlayer_client, ticket_data) }
       end
     end
 

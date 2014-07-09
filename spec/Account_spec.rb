@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
-
 $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
 require 'rubygems'
@@ -80,6 +78,21 @@ describe SoftLayer::Account do
       expect(test_account.postalCode).to eq "778899"
       expect(test_account.officePhone).to eq "555.123.4567"
     end
+  end
+  
+  it "fetches a list of open tickets" do
+    mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
+    account_service = mock_client["Account"]
+
+    expect(account_service).to receive(:call_softlayer_api_with_params).with(:getOpenTickets, instance_of(SoftLayer::APIParameterFilter),[]) do
+      fixture_from_json("test_tickets")
+    end
+
+    test_account = SoftLayer::Account.new(mock_client, fixture_from_json("test_account"))
+    open_tickets = nil
+    expect { open_tickets = test_account.open_tickets }.to_not raise_error
+    ticket_ids = open_tickets.collect { |ticket| ticket.id }
+    expect(ticket_ids.sort).to eq [12345, 12346, 12347, 12348, 12349].sort
   end
 
   describe "relationship to servers" do
