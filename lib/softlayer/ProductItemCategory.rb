@@ -10,8 +10,7 @@ module SoftLayer
   # the product order is the price_id, the rest of the information is provided
   # to make the object friendly to humans who may be searching for the
   # meaning of a given price_id.
-  ProductConfigurationOption = Struct.new(:price_id, :description, :capacity, :units, :setupFee, :laborFee, :oneTimeFee, :recurringFee, :hourlyRecurringFee) do
-
+  class ProductConfigurationOption < Struct.new(:price_id, :description, :capacity, :units, :setupFee, :laborFee, :oneTimeFee, :recurringFee, :hourlyRecurringFee)
     # Is it evil, or just incongruous to give methods to a struct?
 
     # returns true if the configurtion option has no fees associated with it.

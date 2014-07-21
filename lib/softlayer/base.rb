@@ -10,6 +10,8 @@ require 'rubygems'
 # The SoftLayer module provides a namespace for SoftLayer code.
 #
 module SoftLayer
+  # The version number (including major, minor, and bugfix numbers)
+  # This should change in accordance with the concept of Semantic Versioning
   VERSION = "3.0.0"  # version history in the CHANGELOG.textile file at the root of the source
 
   # The base URL of the SoftLayer API available to the public internet.

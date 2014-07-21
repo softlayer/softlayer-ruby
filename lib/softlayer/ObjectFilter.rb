@@ -95,6 +95,8 @@ module SoftLayer
     end
   end # ObjectFilter
 
+  ##
+  # :nodoc:
   OBJECT_FILTER_OPERATORS = [
     '*=',   # Contains (ignoring case)
     '^=',   # Begins with (ignoring case)
