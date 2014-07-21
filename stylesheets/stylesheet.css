@@ -305,6 +305,10 @@ Full-Width Styles
   text-shadow: #111 0px 0px 10px;
 }
 
+.project_title_monospace {
+	font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+}
+
 #project_tagline {
   color: #fff;
   font-size: 24px;

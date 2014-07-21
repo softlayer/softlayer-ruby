@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class SoftLayer::VirtualServer - softlayer_api gem 3.0.0</title>
+
+<link href="../fonts.css" rel="stylesheet">
+<link href="../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/navigation.js"></script>
+<script src="../js/search_index.js"></script>
+<script src="../js/search.js"></script>
+<script src="../js/searcher.js"></script>
+<script src="../js/darkfish.js"></script>
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="Server.html">SoftLayer::Server</a>
+  
+</div>
+
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><a class="include" href="DynamicAttribute.html">SoftLayer::DynamicAttribute</a>
+  
+  
+  </ul>
+</div>
+
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li class="calls-super" ><a href="#method-c-default_object_mask">::default_object_mask</a>
+    
+    <li ><a href="#method-c-find_servers">::find_servers</a>
+    
+    <li ><a href="#method-c-server_with_id">::server_with_id</a>
+    
+    <li ><a href="#method-i-cancel-21">#cancel!</a>
+    
+    <li ><a href="#method-i-capture_image">#capture_image</a>
+    
+    <li ><a href="#method-i-service">#service</a>
+    
+    <li ><a href="#method-i-upgrade_RAM-21">#upgrade_RAM!</a>
+    
+    <li ><a href="#method-i-upgrade_cores-21">#upgrade_cores!</a>
+    
+    <li ><a href="#method-i-upgrade_max_port_speed-21">#upgrade_max_port_speed!</a>
+    
+    <li ><a href="#method-i-upgrade_options">#upgrade_options</a>
+    
+    <li ><a href="#method-i-wait_until_ready">#wait_until_ready</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-SoftLayer::VirtualServer">
+  <h1 id="class-SoftLayer::VirtualServer" class="class">
+    class SoftLayer::VirtualServer
+  </h1>
+
+  <section class="description">
+    
+<p>Instance of this class represent servers that are virtual machines in the
+<a href="../SoftLayer.html">SoftLayer</a> environment.</p>
+
+<p>This class roughly corresponds to the entity SoftLayer_Virtual_Guest in the
+API.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-activeTransaction" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">activeTransaction</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The active transaction (if any) for this virtual server. Transactions are
+used to make configuration changes to the server and only one transaction
+can be active at a time.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-blockDevices" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">blockDevices</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Storage devices attached to the server. Storage may be local to the host
+running the Virtual <a href="Server.html">Server</a>, or it may be located
+on the SAN</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-cores" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">cores</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>A count of the nubmer of virtual processing cores allocated to the server.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-lastOperatingSystemReload" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">lastOperatingSystemReload</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The last operating system reload transaction that was run for this server.
+<a href="VirtualServer.html#method-i-wait_until_ready">wait_until_ready</a>
+compares the ID of this transaction to the ID of the active transaction to
+determine if an OS reload is in progress.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-maxCpu" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">maxCpu</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>A count of the nubmer of virtual processing cores allocated to the server.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-provisionDate" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">provisionDate</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The date the Virtual <a href="Server.html">Server</a> was provisioned. 
+This attribute can be nil if the <a href="../SoftLayer.html">SoftLayer</a>
+system has not yet finished provisioning the server (consequently this
+attribute is used by the <a
+href="VirtualServer.html#method-i-wait_until_ready">wait_until_ready</a>
+method to determine when a server has been provisioned)</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-default_object_mask" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">default_object_mask</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the default object mask used when fetching servers from the API</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="Server.html#method-c-default_object_mask">SoftLayer::Server.default_object_mask</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="default_object_mask-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualServer.rb, line 327</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
+  <span class="ruby-identifier">sub_mask</span> = {
+    <span class="ruby-string">&quot;mask(SoftLayer_Virtual_Guest)&quot;</span> =<span class="ruby-operator">&gt;</span> [
+      <span class="ruby-string">&#39;createDate&#39;</span>,
+      <span class="ruby-string">&#39;modifyDate&#39;</span>,
+      <span class="ruby-string">&#39;provisionDate&#39;</span>,
+      <span class="ruby-string">&#39;dedicatedAccountHostOnlyFlag&#39;</span>,
+      <span class="ruby-string">&#39;lastKnownPowerState.name&#39;</span>,
+      <span class="ruby-string">&#39;powerState&#39;</span>,
+      <span class="ruby-string">&#39;status&#39;</span>,
+      <span class="ruby-string">&#39;maxCpu&#39;</span>,
+      <span class="ruby-string">&#39;maxMemory&#39;</span>,
+      <span class="ruby-string">&#39;activeTransaction[id, transactionStatus[friendlyName,name]]&#39;</span>,
+      <span class="ruby-string">&#39;networkComponents[id, status, speed, maxSpeed, name, macAddress, primaryIpAddress, port, primarySubnet]&#39;</span>,
+      <span class="ruby-string">&#39;lastOperatingSystemReload.id&#39;</span>,
+      <span class="ruby-string">&#39;blockDevices&#39;</span>,
+      <span class="ruby-string">&#39;blockDeviceTemplateGroup[id, name, globalIdentifier]&#39;</span>
+    ]
+  }
+
+  <span class="ruby-keyword">super</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">sub_mask</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-find_servers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">find_servers</span><span
+            class="method-args">(options_hash = {})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve a list of virtual servers from the account.</p>
+
+<p>The options parameter should contain:</p>
+
+<p><strong><code>:client</code></strong> - The client used to connect to the
+API</p>
+
+<p>If no client is given, then the routine will try to use <a
+href="Client.html#method-c-default_client">SoftLayer::Client.default_client</a>
+If no client can be found the routine will raise an error.</p>
+
+<p>You may filter the list returned by adding options:</p>
+<ul><li>
+<p><strong><code>:hourly</code></strong> (boolean) - Include servers billed
+hourly in the list</p>
+</li><li>
+<p><strong><code>:monthly</code></strong> (boolean) - Include servers billed
+monthly in the list</p>
+</li><li>
+<p><strong><code>:tags</code></strong> (array) - an array of strings
+representing tags to search for on the instances</p>
+</li><li>
+<p><strong><code>:cpus</code></strong> (int) - return virtual servers with the
+given number of (virtual) CPUs</p>
+</li><li>
+<p><strong><code>:memory</code></strong> (int) - return servers with at least
+the given amount of memory (in MB. e.g. 4096 = 4GB)</p>
+</li><li>
+<p><strong><code>:hostname</code></strong> (string) - return servers whose
+hostnames match the query string given (see
+ObjectFilter::query_to_filter_operation)</p>
+</li><li>
+<p><strong><code>:domain</code></strong> (string) - filter servers to those
+whose domain matches the query string given (see
+ObjectFilter::query_to_filter_operation)</p>
+</li><li>
+<p><strong><code>:local_disk</code></strong> (boolean) - include servers that
+do, or do not, have local disk storage</p>
+</li><li>
+<p><strong><code>:datacenter</code></strong> (string) - find servers whose
+short data center name (e.g. dal05, sjc01) matches the query string given
+(see ObjectFilter::query_to_filter_operation)</p>
+</li><li>
+<p><strong><code>:nic_speed</code></strong> (int) - include servers with the
+given nic speed (in Mbps, usually 10, 100, or 1000)</p>
+</li><li>
+<p><strong><code>:public_ip</code></strong> (string) - return servers whose
+public IP address matches the query string given (see
+ObjectFilter::query_to_filter_operation)</p>
+</li><li>
+<p><strong><code>:private_ip</code></strong> (string) - same as :public_ip,
+but for private IP addresses</p>
+</li></ul>
+
+<p>Additionally you may provide options related to the request itself:</p>
+<ul><li>
+<p><strong><code>:object_mask</code></strong> (string) - A object mask of
+properties, in addition to the default properties, that you wish to
+retrieve for the servers</p>
+</li><li>
+<p><strong><code>:result_limit</code></strong> (hash with :limit, and :offset
+keys) - Limit the scope of results returned.</p>
+</li></ul>
+          
+          
+
+          
+          <div class="method-source-code" id="find_servers-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualServer.rb, line 249</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find_servers</span>(<span class="ruby-identifier">options_hash</span> = {})
+  <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:client</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
+
+  <span class="ruby-keyword">if</span>(<span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">has_key?</span> <span class="ruby-value">:object_filter</span>)
+    <span class="ruby-identifier">object_filter</span> = <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:object_filter</span>]
+    <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;Expected an instance of SoftLayer::ObjectFilter&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">object_filter</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">ObjectFilter</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">object_filter</span> = <span class="ruby-constant">ObjectFilter</span>.<span class="ruby-identifier">new</span>()
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">option_to_filter_path</span> = {
+    <span class="ruby-value">:cores</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;virtualGuests.maxCpu&quot;</span>,
+    <span class="ruby-value">:memory</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;virtualGuests.maxMemory&quot;</span>,
+    <span class="ruby-value">:hostname</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;virtualGuests.hostname&quot;</span>,
+    <span class="ruby-value">:domain</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;virtualGuests.domain&quot;</span>,
+    <span class="ruby-value">:local_disk</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;virtualGuests.localDiskFlag&quot;</span>,
+    <span class="ruby-value">:datacenter</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;virtualGuests.datacenter.name&quot;</span>,
+    <span class="ruby-value">:nic_speed</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;virtualGuests.networkComponents.maxSpeed&quot;</span>,
+    <span class="ruby-value">:public_ip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;virtualGuests.primaryIpAddress&quot;</span>,
+    <span class="ruby-value">:private_ip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;virtualGuests.primaryBackendIpAddress&quot;</span>
+  }
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:local_disk</span>) <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:local_disk</span>] = <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:local_disk</span>] <span class="ruby-operator">?</span> <span class="ruby-value">1</span> <span class="ruby-operator">:</span> <span class="ruby-value">0</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># For each of the options in the option_to_filter_path map, if the options hash includes</span>
+  <span class="ruby-comment"># that particular option, add a clause to the object filter that filters for the matching</span>
+  <span class="ruby-comment"># value</span>
+  <span class="ruby-identifier">option_to_filter_path</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">option</span>, <span class="ruby-identifier">filter_path</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">object_filter</span>.<span class="ruby-identifier">modify</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span> <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-identifier">filter_path</span>).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-identifier">option</span>])} <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-identifier">option</span>]
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Tags get a much more complex object filter operation so we handle them separately</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:tags</span>)
+    <span class="ruby-identifier">object_filter</span>.<span class="ruby-identifier">set_criteria_for_key_path</span>(<span class="ruby-string">&quot;virtualGuests.tagReferences.tag.name&quot;</span>, {
+      <span class="ruby-string">&#39;operation&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;in&#39;</span>,
+      <span class="ruby-string">&#39;options&#39;</span> =<span class="ruby-operator">&gt;</span> [{
+        <span class="ruby-string">&#39;name&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;data&#39;</span>,
+        <span class="ruby-string">&#39;value&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
+        }]
+      } );
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">required_properties_mask</span> = <span class="ruby-string">&#39;mask.id&#39;</span>
+
+  <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">&#39;Account&#39;</span>]
+  <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">object_filter</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">object_filter</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">default_object_mask</span>.<span class="ruby-identifier">to_sl_object_mask</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">has_key?</span> <span class="ruby-value">:object_mask</span>
+    <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:object_mask</span>])
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:result_limit</span>)
+    <span class="ruby-identifier">offset</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:result_limit</span>][<span class="ruby-value">:offset</span>]
+    <span class="ruby-identifier">limit</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:result_limit</span>][<span class="ruby-value">:limit</span>]
+
+    <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">result_limit</span>(<span class="ruby-identifier">offset</span>, <span class="ruby-identifier">limit</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">case</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:hourly</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:monthly</span>]
+    <span class="ruby-identifier">virtual_server_data</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">getVirtualGuests</span>()
+  <span class="ruby-keyword">when</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:hourly</span>]
+    <span class="ruby-identifier">virtual_server_data</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">getHourlyVirtualGuests</span>()
+  <span class="ruby-keyword">when</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:monthly</span>]
+    <span class="ruby-identifier">virtual_server_data</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">getMonthlyVirtualGuests</span>()
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">virtual_server_data</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">getVirtualGuests</span>()
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">virtual_server_data</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">server_data</span><span class="ruby-operator">|</span> <span class="ruby-constant">VirtualServer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">server_data</span>) }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-server_with_id" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">server_with_id</span><span
+            class="method-args">(server_id, options = {})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Retrive the virtual server with the given server ID from the API</p>
+
+<p>The options parameter should contain:</p>
+
+<p><strong><code>:client</code></strong> - The client used to connect to the
+API</p>
+
+<p>If no client is given, then the routine will try to use <a
+href="Client.html#method-c-default_client">SoftLayer::Client.default_client</a>
+If no client can be found the routine will raise an error.</p>
+
+<p>The options may include the following keys</p>
+<ul><li>
+<p><strong><code>:object_mask</code></strong> (string) - A object mask of
+properties, in addition to the default properties, that you wish to
+retrieve for the server</p>
+</li></ul>
+          
+          
+
+          
+          <div class="method-source-code" id="server_with_id-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualServer.rb, line 205</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">server_with_id</span>(<span class="ruby-identifier">server_id</span>, <span class="ruby-identifier">options</span> = {})
+  <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:client</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
+
+  <span class="ruby-identifier">vg_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">&quot;Virtual_Guest&quot;</span>]
+  <span class="ruby-identifier">vg_service</span> = <span class="ruby-identifier">vg_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">default_object_mask</span>.<span class="ruby-identifier">to_sl_object_mask</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:object_mask</span>)
+    <span class="ruby-identifier">vg_service</span> = <span class="ruby-identifier">vg_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:object_mask</span>])
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">server_data</span> = <span class="ruby-identifier">vg_service</span>.<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">server_id</span>).<span class="ruby-identifier">getObject</span>()
+
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">VirtualServer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">server_data</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-cancel-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">cancel!</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>IMMEDIATELY cancel this virtual server</p>
+          
+          
+
+          
+          <div class="method-source-code" id="cancel-21-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualServer.rb, line 73</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">cancel!</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">deleteObject</span>()
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-capture_image" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">capture_image</span><span
+            class="method-args">(image_name, include_attached_storage = false, image_notes = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Capture a disk image of this virtual server for use with other servers.</p>
+
+<p>image_name will become the name of the image in the portal.</p>
+
+<p>If include_attached_storage is true, the images of attached storage will be
+included as well.</p>
+
+<p>The image_notes should be a string and will be added to the image as notes.</p>
+
+<p>The routine returns the instance of <a
+href="ImageTemplate.html">SoftLayer::ImageTemplate</a> that is created. 
+That image template will probably not be available immediately, however.
+You may use the <a
+href="VirtualServer.html#method-i-wait_until_ready">#wait_until_ready</a>
+routine of <a href="ImageTemplate.html">SoftLayer::ImageTemplate</a> to
+wait on it.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="capture_image-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualServer.rb, line 135</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">capture_image</span>(<span class="ruby-identifier">image_name</span>, <span class="ruby-identifier">include_attached_storage</span> = <span class="ruby-keyword">false</span>, <span class="ruby-identifier">image_notes</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">disk_filter</span> = <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">disk</span><span class="ruby-operator">|</span> <span class="ruby-identifier">disk</span>[<span class="ruby-string">&#39;device&#39;</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&#39;0&#39;</span> }
+  <span class="ruby-identifier">disk_filter</span> = <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">disk</span><span class="ruby-operator">|</span> <span class="ruby-identifier">disk</span>[<span class="ruby-string">&#39;device&#39;</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">&#39;1&#39;</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">include_attached_storage</span>
+
+  <span class="ruby-identifier">disks</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">blockDevices</span>.<span class="ruby-identifier">select</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">disk_filter</span>)
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">createArchiveTransaction</span>(<span class="ruby-identifier">image_name</span>, <span class="ruby-identifier">disks</span>, <span class="ruby-identifier">notes</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">notes</span> <span class="ruby-operator">:</span> <span class="ruby-string">&quot;&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">disks</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">disks</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-identifier">image_templates</span> = <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">ImageTemplate</span>.<span class="ruby-identifier">find_private_templates</span>(<span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">image_name</span>)
+  <span class="ruby-identifier">image_templates</span>[<span class="ruby-value">0</span>] <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">image_templates</span>.<span class="ruby-identifier">empty?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-service" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">service</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the <a href="../SoftLayer.html">SoftLayer</a> <a
+href="Service.html">Service</a> that represents calls to this object For
+VirtualServers the service is <code>SoftLayer_Virtual_Guest</code> and
+addressing this object is done by id.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="service-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualServer.rb, line 354</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">service</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">&quot;Virtual_Guest&quot;</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-upgrade_RAM-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">upgrade_RAM!</span><span
+            class="method-args">(ram_in_GB)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>This routine submits an order to change the RAM available to the virtual
+server. Pass in the desired amount of RAM for the server in Gigabytes</p>
+
+<p>The order may result in additional charges being applied to <a
+href="../SoftLayer.html">SoftLayer</a> account</p>
+
+<p>The routine returns true if the order is placed and false if it is not</p>
+          
+          
+
+          
+          <div class="method-source-code" id="upgrade_RAM-21-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualServer.rb, line 99</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">upgrade_RAM!</span>(<span class="ruby-identifier">ram_in_GB</span>)
+  <span class="ruby-identifier">upgrade_item_price</span> = <span class="ruby-identifier">_item_price_in_category</span>(<span class="ruby-string">&quot;ram&quot;</span>, <span class="ruby-identifier">ram_in_GB</span>)
+  <span class="ruby-identifier">_order_upgrade_item!</span>(<span class="ruby-identifier">upgrade_item_price</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">upgrade_item_price</span>
+  <span class="ruby-keyword">nil</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">upgrade_item_price</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-upgrade_cores-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">upgrade_cores!</span><span
+            class="method-args">(num_cores)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>This routine submits an order to upgrade the cpu count of the virtual
+server. The order may result in additional charges being applied to <a
+href="../SoftLayer.html">SoftLayer</a> account</p>
+
+<p>This routine can also “downgrade” servers (set their cpu count lower)</p>
+
+<p>The routine returns true if the order is placed and false if it is not</p>
+          
+          
+
+          
+          <div class="method-source-code" id="upgrade_cores-21-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualServer.rb, line 85</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">upgrade_cores!</span>(<span class="ruby-identifier">num_cores</span>)
+  <span class="ruby-identifier">upgrade_item_price</span> = <span class="ruby-identifier">_item_price_in_category</span>(<span class="ruby-string">&quot;guest_core&quot;</span>, <span class="ruby-identifier">num_cores</span>)
+  <span class="ruby-identifier">_order_upgrade_item!</span>(<span class="ruby-identifier">upgrade_item_price</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">upgrade_item_price</span>
+  <span class="ruby-keyword">nil</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">upgrade_item_price</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-upgrade_max_port_speed-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">upgrade_max_port_speed!</span><span
+            class="method-args">(network_speed_in_Mbps)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>This routine submits an order to change the maximum nic speed of the server
+Pass in the desired speed in Megabits per second (typically 10, 100, or
+1000) (since you may choose a slower speed this routine can also be used
+for “downgrades”)</p>
+
+<p>The order may result in additional charges being applied to <a
+href="../SoftLayer.html">SoftLayer</a> account</p>
+
+<p>The routine returns true if the order is placed and false if it is not</p>
+          
+          
+
+          
+          <div class="method-source-code" id="upgrade_max_port_speed-21-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualServer.rb, line 114</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">upgrade_max_port_speed!</span>(<span class="ruby-identifier">network_speed_in_Mbps</span>)
+  <span class="ruby-identifier">upgrade_item_price</span> = <span class="ruby-identifier">_item_price_in_category</span>(<span class="ruby-string">&quot;port_speed&quot;</span>, <span class="ruby-identifier">network_speed_in_Mbps</span>)
+  <span class="ruby-identifier">_order_upgrade_item!</span>(<span class="ruby-identifier">upgrade_item_price</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">upgrade_item_price</span>
+  <span class="ruby-keyword">nil</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">upgrade_item_price</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-upgrade_options" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">upgrade_options</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>A virtual server can find out about items that are available for upgrades.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="upgrade_options-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualServer.rb, line 60</span>
+<span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:upgrade_options</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-ivar">@upgrade_options</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[id,categories.categoryCode,item[id,capacity,units,attributes,prices]]&quot;</span>).<span class="ruby-identifier">getUpgradeItemPrices</span>(<span class="ruby-keyword">true</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-wait_until_ready" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">wait_until_ready</span><span
+            class="method-args">(max_trials, wait_for_transactions = false, seconds_between_tries = 2) { |ready| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Repeatedly polls the API to find out if this server is &#39;ready&#39;.</p>
+
+<p>The server is ready when it is provisioned and any operating system reloads
+have completed.</p>
+
+<p>If wait_for_transactions is true, then the routine will poll until all
+transactions (not just an OS Reload) have completed on the server.</p>
+
+<p>max_trials is the maximum number of times the routine will poll the API
+seconds_between_tries is the polling interval (in seconds)</p>
+
+<p>The routine returns true if the server was found to be ready. If max_trials
+is exceeded and the server is still not ready, the routine returns false</p>
+
+<p>If a block is passed to this routine it will be called on each trial with a
+boolean argument representing whether or not the server is ready</p>
+
+<p>Calling this routine will (in essence) block the thread on which the
+request is made.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="wait_until_ready-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualServer.rb, line 166</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">wait_until_ready</span>(<span class="ruby-identifier">max_trials</span>, <span class="ruby-identifier">wait_for_transactions</span> = <span class="ruby-keyword">false</span>, <span class="ruby-identifier">seconds_between_tries</span> = <span class="ruby-value">2</span>)
+  <span class="ruby-comment"># pessimistically assume the server is not ready</span>
+  <span class="ruby-identifier">num_trials</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">refresh_details</span>()
+
+    <span class="ruby-identifier">has_os_reload</span> = <span class="ruby-identifier">has_sl_property?</span> <span class="ruby-value">:lastOperatingSystemReload</span>
+    <span class="ruby-identifier">has_active_transaction</span> = <span class="ruby-identifier">has_sl_property?</span> <span class="ruby-value">:activeTransaction</span>
+
+    <span class="ruby-identifier">reloading_os</span> = <span class="ruby-identifier">has_active_transaction</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">has_os_reload</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-keyword">self</span>.<span class="ruby-identifier">lastOperatingSystemReload</span>[<span class="ruby-string">&#39;id&#39;</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">activeTransaction</span>[<span class="ruby-string">&#39;id&#39;</span>])
+    <span class="ruby-identifier">provisioned</span> = <span class="ruby-identifier">has_sl_property?</span> <span class="ruby-value">:provisionDate</span>
+
+    <span class="ruby-comment"># a server is ready when it is provisioned, not reloading the OS</span>
+    <span class="ruby-comment"># (and if wait_for_transactions is true, when there are no active transactions).</span>
+    <span class="ruby-identifier">ready</span> = <span class="ruby-identifier">provisioned</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">reloading_os</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-operator">!</span><span class="ruby-identifier">wait_for_transactions</span> <span class="ruby-operator">||</span> <span class="ruby-operator">!</span><span class="ruby-identifier">has_active_transaction</span>)
+
+    <span class="ruby-identifier">num_trials</span> = <span class="ruby-identifier">num_trials</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+
+    <span class="ruby-keyword">yield</span> <span class="ruby-identifier">ready</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
+
+    <span class="ruby-identifier">sleep</span>(<span class="ruby-identifier">seconds_between_tries</span>) <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">ready</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">num_trials</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">max_trials</span>)
+  <span class="ruby-keyword">end</span> <span class="ruby-keyword">until</span> <span class="ruby-identifier">ready</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">num_trials</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">max_trials</span>)
+
+  <span class="ruby-identifier">ready</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

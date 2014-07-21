@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class SoftLayer::ObjectMaskToken - softlayer_api gem 3.0.0</title>
+
+<link href="../fonts.css" rel="stylesheet">
+<link href="../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/navigation.js"></script>
+<script src="../js/search_index.js"></script>
+<script src="../js/search.js"></script>
+<script src="../js/searcher.js"></script>
+<script src="../js/darkfish.js"></script>
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Object
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-error_for_unexpected_token">::error_for_unexpected_token</a>
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-end_of_string-3F">#end_of_string?</a>
+    
+    <li ><a href="#method-i-eql-3F">#eql?</a>
+    
+    <li ><a href="#method-i-inspect">#inspect</a>
+    
+    <li ><a href="#method-i-invalid-3F">#invalid?</a>
+    
+    <li ><a href="#method-i-mask_root_marker-3F">#mask_root_marker?</a>
+    
+    <li ><a href="#method-i-valid_property_name-3F">#valid_property_name?</a>
+    
+    <li ><a href="#method-i-valid_property_type-3F">#valid_property_type?</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-SoftLayer::ObjectMaskToken">
+  <h1 id="class-SoftLayer::ObjectMaskToken" class="class">
+    class SoftLayer::ObjectMaskToken
+  </h1>
+
+  <section class="description">
+    
+<p>This class is an implementation detail of the Object Mask Parser It
+represents a single semantic token as parsed out of an Object Mask <a
+href="../String.html">String</a></p>
+
+<p>The class also generates error messages that the parser can use when it
+encounters an unexpected token</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="KnownTokenTypes">KnownTokenTypes
+        
+        <dd>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-type" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">type</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-value" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">value</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-error_for_unexpected_token" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">error_for_unexpected_token</span><span
+            class="method-args">(token)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="error_for_unexpected_token-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 65</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">error_for_unexpected_token</span>(<span class="ruby-identifier">token</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">token</span>.<span class="ruby-identifier">type</span>
+   <span class="ruby-keyword">when</span> <span class="ruby-value">:invalid_token</span>
+     <span class="ruby-node">&quot;Unrecognized token &#39;#{token.value}&#39;&quot;</span>
+   <span class="ruby-keyword">when</span> <span class="ruby-value">:eos</span>
+     <span class="ruby-string">&quot;Unexpected end of string&quot;</span>
+   <span class="ruby-keyword">when</span> <span class="ruby-value">:identifier</span>
+     <span class="ruby-node">&quot;Unexpected identifier &#39;#{token.value}&#39;&quot;</span>
+   <span class="ruby-keyword">when</span> <span class="ruby-value">:property_set_start</span>
+     <span class="ruby-string">&quot;Unexpected &#39;[&#39;&quot;</span>
+   <span class="ruby-keyword">when</span> <span class="ruby-value">:property_set_separator</span>
+     <span class="ruby-string">&quot;Unexpected &#39;,&#39;&quot;</span>
+   <span class="ruby-keyword">when</span> <span class="ruby-value">:property_set_end</span>
+     <span class="ruby-string">&quot;Unexpected &#39;]&#39;&quot;</span>
+   <span class="ruby-keyword">when</span> <span class="ruby-value">:property_type_start</span>
+     <span class="ruby-string">&quot;Unexpected &#39;(&#39;&quot;</span>
+   <span class="ruby-keyword">when</span> <span class="ruby-value">:property_type_end</span>
+     <span class="ruby-string">&quot;Unexpected &#39;)&#39;&quot;</span>
+   <span class="ruby-keyword">when</span> <span class="ruby-value">:property_child_separator</span>
+     <span class="ruby-string">&quot;Unexpected &#39;.&#39;&quot;</span>
+   <span class="ruby-keyword">else</span>
+     <span class="ruby-string">&quot;Unexpected value (invalid token type)&quot;</span>
+ <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(token_type, token_value = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 32</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">token_type</span>, <span class="ruby-identifier">token_value</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-ivar">@type</span> = <span class="ruby-identifier">token_type</span>
+  <span class="ruby-ivar">@value</span> = <span class="ruby-identifier">token_value</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-end_of_string-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">end_of_string?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="end_of_string-3F-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 49</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">end_of_string?</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:eos</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-eql-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">eql?</span><span
+            class="method-args">(other_token)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="eql-3F-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 41</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">other_token</span>)
+  <span class="ruby-ivar">@type</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">other_token</span>.<span class="ruby-identifier">type</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@value</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">other_token</span>.<span class="ruby-identifier">value</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-inspect" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">inspect</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="inspect-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 37</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">inspect</span>
+  <span class="ruby-node">&quot;&lt;#{@type.inspect}, #{@value.inspect}&gt;&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-invalid-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">invalid?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="invalid-3F-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 45</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">invalid?</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@type</span> = <span class="ruby-value">:invalid_token</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-mask_root_marker-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">mask_root_marker?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="mask_root_marker-3F-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 53</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">mask_root_marker?</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:identifier</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-ivar">@value</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;mask&quot;</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@value</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;filterMask&quot;</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-valid_property_name-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">valid_property_name?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="valid_property_name-3F-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 57</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">valid_property_name?</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:identifier</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@value</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/\A[a-z][a-z0-9]*\z/i</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-valid_property_type-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">valid_property_type?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="valid_property_type-3F-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 61</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">valid_property_type?</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:identifier</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@value</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/\A[a-z][a-z0-9]*(_[a-z][a-z0-9]*)*\z/i</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

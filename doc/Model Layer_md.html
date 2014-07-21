@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>Model Layer - softlayer_api gem 3.0.0</title>
+
+<link href="./fonts.css" rel="stylesheet">
+<link href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/navigation.js"></script>
+<script src="./js/search_index.js"></script>
+<script src="./js/search.js"></script>
+<script src="./js/searcher.js"></script>
+<script src="./js/darkfish.js"></script>
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#label-softlayer_api+Model+Layer"><code>softlayer_api</code> Model Layer</a>
+    <li><a href="#label-The+ModelBase+Class">The ModelBase Class</a>
+    <li><a href="#label-Initializing+Instances">Initializing Instances</a>
+    <li><a href="#label-Updating+Instances+from+the+Network">Updating Instances from the Network</a>
+    <li><a href="#label-Bridging+to+the+Foundation+layer">Bridging to the Foundation layer</a>
+    <li><a href="#label-Accessing+Properties">Accessing Properties</a>
+    <li><a href="#label-Calling+Network+API+routines">Calling Network API routines</a>
+    <li><a href="#label-The+rest+of+the+model">The rest of the model</a>
+  </ul>
+</div>
+
+
+  <div id="project-metadata">
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./Contribution Guide_md.html">Contribution Guide</a>
+  
+    <li><a href="./Foundation_md.html">Foundation</a>
+  
+    <li><a href="./Model Layer_md.html">Model Layer</a>
+  
+    <li><a href="./Welcome_md.html">Welcome</a>
+  
+    <li><a href="./cla-corporate_md.html">cla-corporate</a>
+  
+    <li><a href="./cla-individual_md.html">cla-individual</a>
+  
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page Model Layer.md">
+
+<h1 id="label-softlayer_api+Model+Layer"><code>softlayer_api</code> Model Layer<span><a href="#label-softlayer_api+Model+Layer">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+
+<p>The Model Layer builds upon the <a href="Foundation_md.html">Foundation</a>
+layer and offers abstractions of the entities in the <a
+href="SoftLayer.html">SoftLayer</a> environment. For example, computing
+assets in the <a href="SoftLayer.html">SoftLayer</a> environment are found
+in two separate services <a
+href="http://sldn.softlayer.com/reference/services/SoftLayer_Hardware">SoftLayer_Hardware</a>
+and <a
+href="http://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest">SoftLayer_Virtual_Guest</a>.
+The Model Layer, however, creates a Server abstraction on top of those
+services. By doing so, a Ruby script can work with an instance of the <a
+href="SoftLayer/Server.html">SoftLayer::Server</a> object class, send that
+object the “cancel!” message, and trust the underlying object framework to
+route the message to the appropriate service and routine within the network
+API.</p>
+
+<p>The Model Layer is not meant to be complete. In fact, it models just a few
+key elements of the <a href="SoftLayer.html">SoftLayer</a> environment at
+this point, however we hope the Model Layer will grow and encompass more of
+the entities found in the API over time. In the interim, however, the
+current framework includes some convenient bridges that allow Ruby scripts
+to move from working with the abstractions of the Model Layer to the
+lower-level routines of the <a href="Foundation_md.html">Foundation</a> API
+easily.</p>
+
+<p>The details of the individual classes that for the object class hierarchy
+of the Model layer are included in the API documentation. This document
+will discuss some of the general features of the Model Layer and the
+bridges that are in place to help code move between the <a
+href="Foundation_md.html">Foundation</a> and Model Layers.</p>
+
+<h1 id="label-The+ModelBase+Class">The ModelBase Class<span><a href="#label-The+ModelBase+Class">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+
+<p>The ModelBase is the abstract base class of object class hierarchy that
+forms the Model Layer of the <code>softlayer_api</code> Gem. An instance of
+ModelBase represents a single entity within the <a
+href="SoftLayer.html">SoftLayer</a> API.</p>
+
+<p>In the <a href="Foundation_md.html">Foundation</a> layer, <a
+href="SoftLayer.html">SoftLayer</a> entities are represented as a Ruby hash
+whose keys and values are the are property names and property values of the
+entity. In the Model Layer, <a href="SoftLayer.html">SoftLayer</a> entities
+are represented by instances of the concrete subclasses of the Model Base
+class.</p>
+
+<p>In implementation terms, an instance of the ModelBase class (or more
+accurately and instance of a concrete subclass of the ModelBase class)
+encapsulates the hashes of the <a href="Foundation_md.html">Foundation</a>
+layer defines the attributes and operations that form a convenient model
+for working with the underlying entity.</p>
+
+<p>Here we will discuss the general features that all concrete subclasses of
+ModelBase share.</p>
+
+<h2 id="label-Initializing+Instances">Initializing Instances<span><a href="#label-Initializing+Instances">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
+
+<p>The initializer for classes in the ModelBase hierarchy are declared:</p>
+
+<pre class="ruby"><span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">network_hash</span>)
+  <span class="ruby-identifier">…</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>The first argument is the client that the object may use to make requests
+to the network API. The second is the <code>network_hash</code>, the hash
+representation of the entity as returned by the network API.</p>
+
+<p>The hash used to initialize an instance of ModelBase <em>must</em> contain
+a key, <code>id</code>, whose value is the <code>id</code> of the <a
+href="SoftLayer.html">SoftLayer</a> entity that the object model instance
+will represent. Correspondingly, the ModelBase class defines the
+<code>id</code> as having the same value as the <code>id</code> property in
+the network hash.</p>
+
+<h2 id="label-Updating+Instances+from+the+Network">Updating Instances from the Network<span><a href="#label-Updating+Instances+from+the+Network">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
+
+<p>If you wish to ask an instance of ModelBase to update itself with the
+latest information from the <a href="SoftLayer.html">SoftLayer</a> network
+API, you may call the <code>refresh_details</code> method defined in the
+ModelBase class. This method is likely to make one or more calls through to
+the network API and will, consequently, incur the overhead of network
+communication. (Note: subclasses should not override
+<code>refresh_details</code> but should, instead, override the
+<code>softlayer_properties</code> method. Correspondingly, the
+softlayer_properties method is an implementation detail of ModelBase and is
+not intended to be called by outside code.)</p>
+
+<h2 id="label-Bridging+to+the+Foundation+layer">Bridging to the <a href="Foundation_md.html">Foundation</a> layer<span><a href="#label-Bridging+to+the+Foundation+layer">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
+
+<p>Because the Model Layer offers limited coverage of the vast expanse of
+functionality found in the network API, it is often necessary to move from
+an object instance in the Model Layer to the implementation details from
+the <a href="Foundation_md.html">Foundation</a> layer. The Model Base class
+includes several features to help bridge the between layers gap.</p>
+
+<h3 id="label-Accessing+Properties">Accessing Properties<span><a href="#label-Accessing+Properties">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
+
+<p>The ModelBase class defines the subscript operator (<code>[]</code>) to
+accept a property name as a string and return that property of the
+underlying hash. For example, given a ticket, represented by an instance of
+the <a href="SoftLayer/Ticket.html">SoftLayer::Ticket</a> model layer
+class, there is no Model Layer representation corresponding to the
+<code>serviceProvider</code> property of the <a
+href="SoftLayer.html">SoftLayer</a> ticket entity. However, the subscript
+operator can be used to access that property from a model layer object:</p>
+
+<pre>ticket = SoftLayer::Ticket.ticket_with_id(123456)
+    service_provider = ticket[&#39;serviceProvider&#39;]</pre>
+
+<p>In this case we ask the ticket for the value of the
+<code>serviceProvider</code> property. Note that the argument to the
+subscript operator is a string containing the property name.</p>
+
+<p>This technique can only return values stored in the
+<code>softlayer_hash</code> encapsulated in the ModelBase class. Many
+classes in the Model Layer limit the information retrieved from the network
+(using object masks) to a subset of the full set of properties available
+through the network API. Scripts can check whether or not a given property
+is included in the underlying hash by calling the
+<code>has_sl_property?</code> method of ModelBase.</p>
+
+<h3 id="label-Calling+Network+API+routines">Calling Network API routines<span><a href="#label-Calling+Network+API+routines">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
+
+<p>Where possible, each subclass of ModelBase should provide a
+<code>service</code> attribute. The value of that attribute should be an
+instance of <a href="SoftLayer/Service.html">SoftLayer::Service</a>, with
+Service Helpers applied, suitable for addressing the <a
+href="SoftLayer.html">SoftLayer</a> entity represented by the object
+through the network API. For example, consider an instance of the Model
+Layer class <a href="SoftLayer/Ticket.html">SoftLayer::Ticket</a> which
+represents a service ticket within the network API. The Ticket class
+defines the <code>service</code> attribute of that instance to be the
+value:</p>
+
+<pre>self.softlayer_client[&#39;Ticket&#39;].object_with_id(self.id)</pre>
+
+<p>because this service object includes <code>object_with_id</code> service
+helper the result can be used to call through to the network API and that
+call will be directed at the SoftLayer_Ticket entity with the same id as
+the model object. For example:</p>
+
+<pre>ticket_object.service.getAttachedFile(file_id)</pre>
+
+<p>calls the <code>getAttachedFile</code> method of the SoftLayer_Ticket
+service which is not yet available in the <a
+href="SoftLayer/Ticket.html">SoftLayer::Ticket</a> object model class.</p>
+
+<h2 id="label-The+rest+of+the+model">The rest of the model<span><a href="#label-The+rest+of+the+model">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
+
+<p>The ModelBase class is literally the tip of the iceberg for the Model
+Layer, the bulk of functionality found in this layer is defined by concrete
+classes like <a href="SoftLayer/Ticket.html">SoftLayer::Ticket</a> and <a
+href="SoftLayer/BareMetalServer.html">SoftLayer::BareMetalServer</a>, and
+in other abstract base classes like <a
+href="SoftLayer/Server.html">SoftLayer::Server</a>. To understand the model
+presented by each class, we invite you to explore the API documentation.</p>
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
