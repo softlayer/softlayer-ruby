@@ -82,30 +82,5 @@ describe SoftLayer::VirtualServer do
       expect(mock_client[:Virtual_Guest]).to_not receive(:call_softlayer_api_with_params)
       fake_virtual_server.upgrade_options
     end
-
-    describe "individual component upgrades" do
-      before(:each) do
-        expect(mock_client[:Product_Order]).to receive(:call_softlayer_api_with_params) do |api_method, parameters, api_arguments|
-          expect(api_method).to be(:placeOrder)
-          expect(parameters).to be_nil
-          expect(api_method).to_not be_empty
-        end
-      end
-
-      it "upgrades cores" do
-        fake_virtual_server = SoftLayer::VirtualServer.new(mock_client, {"id" => 12345})
-        fake_virtual_server.upgrade_cores!(8)
-      end
-
-      it "upgrades ram" do
-        fake_virtual_server = SoftLayer::VirtualServer.new(mock_client, {"id" => 12345})
-        fake_virtual_server.upgrade_RAM!(4)
-      end
-
-      it "upgrades max port speed" do
-        fake_virtual_server = SoftLayer::VirtualServer.new(mock_client, {"id" => 12345})
-        fake_virtual_server.upgrade_max_port_speed!(100)
-      end
-    end # individual component upgrades
   end
 end

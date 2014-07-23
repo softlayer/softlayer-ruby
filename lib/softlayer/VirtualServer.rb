@@ -4,8 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-require 'time'
-
 module SoftLayer
   ##
   # Instance of this class represent servers that are virtual machines in the
@@ -72,49 +70,6 @@ module SoftLayer
     #
     def cancel!
       self.service.deleteObject()
-    end
-
-    ##
-    # This routine submits an order to upgrade the cpu count of the virtual server.
-    # The order may result in additional charges being applied to SoftLayer account
-    #
-    # This routine can also "downgrade" servers (set their cpu count lower)
-    #
-    # The routine returns true if the order is placed and false if it is not
-    #
-    def upgrade_cores!(num_cores)
-      upgrade_item_price = _item_price_in_category("guest_core", num_cores)
-      _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
-      nil != upgrade_item_price
-    end
-
-    ##
-    # This routine submits an order to change the RAM available to the virtual server.
-    # Pass in the desired amount of RAM for the server in Gigabytes
-    #
-    # The order may result in additional charges being applied to SoftLayer account
-    #
-    # The routine returns true if the order is placed and false if it is not
-    #
-    def upgrade_RAM!(ram_in_GB)
-      upgrade_item_price = _item_price_in_category("ram", ram_in_GB)
-      _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
-      nil != upgrade_item_price
-    end
-
-    ##
-    # This routine submits an order to change the maximum nic speed of the server
-    # Pass in the desired speed in Megabits per second (typically 10, 100, or 1000)
-    # (since you may choose a slower speed this routine can also be used for "downgrades")
-    #
-    # The order may result in additional charges being applied to SoftLayer account
-    #
-    # The routine returns true if the order is placed and false if it is not
-    #
-    def upgrade_max_port_speed!(network_speed_in_Mbps)
-      upgrade_item_price = _item_price_in_category("port_speed", network_speed_in_Mbps)
-      _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
-      nil != upgrade_item_price
     end
 
     ##
@@ -353,33 +308,6 @@ module SoftLayer
     # addressing this object is done by id.
     def service
       return softlayer_client["Virtual_Guest"].object_with_id(self.id)
-    end
-
-    private
-
-    ##
-    # Searches through the upgrade items pricess known to this server for the one that is in a particular category
-    # and whose capacity matches the value given. Returns the item_price or nil
-    #
-    def _item_price_in_category(which_category, capacity)
-      item_prices_in_category = self.upgrade_options.select { |item_price| item_price["categories"].find { |category| category["categoryCode"] == which_category } }
-      item_prices_in_category.find { |ram_item| ram_item["item"]["capacity"].to_i == capacity}
-    end
-
-    ##
-    # Constructs an upgrade order to order the given item price.
-    # The order is built to execute immediately
-    #
-    def _order_upgrade_item!(upgrade_item_price)
-      # put together an order
-      upgrade_order = {
-        'complexType' => 'SoftLayer_Container_Product_Order_Virtual_Guest_Upgrade',
-        'virtualGuests' => [{'id' => self.id }],
-        'properties' => [{'name' => 'MAINTENANCE_WINDOW', 'value' => Time.now.iso8601}],
-        'prices' => [ upgrade_item_price ]
-      }
-
-      self.softlayer_client["Product_Order"].placeOrder(upgrade_order)
     end
   end #class VirtualServer
 end
