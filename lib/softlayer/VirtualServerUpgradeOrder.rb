@@ -4,7 +4,6 @@
 # For licensing information see the LICENSE.md file in the project root.
 #++
 
-
 module SoftLayer
   # This class is used to order changes to a virtual server.  Although
   # the class is named "upgrade" this class can also be used for "downgrades"
@@ -35,11 +34,21 @@ module SoftLayer
     # will be performed immediately
     attr_accessor :upgrade_at
     
+    ##
+    # Create an upgrade order for the virtual server provided.
+    #
     def initialize(virtual_server)
       raise "A virtual server must be provided at the time a virtual server order is created" if !virtual_server || !virtual_server.kind_of?(SoftLayer::VirtualServer)
       @virtual_server = virtual_server
     end
 
+    ##
+    # Sends the order represented by this object to SoftLayer for validation.
+    #
+    # If a block is passed to verify, the code will send the order template
+    # being constructed to the block before the order is actually sent for
+    # validation.
+    #
     def verify()
       if has_order_items?
         order_object = self.order_object
@@ -49,6 +58,13 @@ module SoftLayer
       end
     end
 
+    ##
+    # Places the order represented by this object.  This is likely to 
+    # involve a change to the charges on an account.
+    #
+    # If a block is passed to this routine, the code will send the order template
+    # being constructed to that block before the order is sent
+    #
     def place_order!()
       if has_order_items?
         order_object = self.order_object
@@ -78,10 +94,16 @@ module SoftLayer
 
     private
 
+    ##
+    # Returns true if this order object has any upgrades specified
+    #
     def has_order_items?
       @cores != nil || @ram != nil || @max_port_speed != nil
     end
 
+    ##
+    # Returns a list of the update item prices, in the given category, for the server
+    #
     def _item_prices_in_category(which_category)
       @virtual_server.upgrade_options.select { |item_price| item_price["categories"].find { |category| category["categoryCode"] == which_category } }
     end
@@ -94,6 +116,9 @@ module SoftLayer
       self._item_prices_in_category(which_category).find { |item_price| item_price["item"]["capacity"].to_i == capacity}
     end
     
+    ## 
+    # construct an order object
+    #
     def order_object
       prices = []
       
