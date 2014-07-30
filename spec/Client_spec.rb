@@ -95,6 +95,16 @@ describe SoftLayer::Client do
     end.to raise_error
   end
 
+  it 'initializes by default with nil as the timeout' do
+    client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
+    expect(client.network_timeout).to be_nil
+  end
+
+  it 'Accepts a timeout given as a config parameter' do
+    client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/', :timeout => 60)
+    expect(client.network_timeout).to eq 60
+  end
+  
   it 'gets the default endpoint even if none is provided' do
     $SL_API_BASE_URL = nil
     client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key')
