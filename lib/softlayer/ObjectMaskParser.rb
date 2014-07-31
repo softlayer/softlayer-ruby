@@ -58,7 +58,7 @@ module SoftLayer
 
       recognize_token(@tokenizer, :eos, "Extraneous text after object mask: ")
 
-      if property && (property.name != "mask" && propertyName != "filterMask")
+      if property && (property.name != "mask" && property.name != "filterMask")
         raise ObjectMaskParserError, "Object Mask must begin with a 'mask' or 'filterMask' root property"
       end
 

@@ -54,6 +54,27 @@ describe SoftLayer::ObjectMaskParser, "#parse_property_set" do
     expect { result = subject.parse("mask[two,children], bob") }.to raise_error
   end
 
+  it "should parse a mask with fiterMask" do
+    result = nil
+    expect { result = subject.parse("filterMask.simple1") }.to_not raise_error
+
+    expect(result.name).to eq 'filterMask'
+    expect(result.children[0].name).to eq 'simple1'
+  end
+  
+  it "should parse a mask set with fiterMask" do
+    result = nil
+    expect { result = subject.parse("[filterMask.simple1, filterMask.simple2]") }.to_not raise_error
+
+    expect(result.count).to eq 2
+    expect(result[0].name).to eq 'filterMask'
+    expect(result[0].children.count).to eq 1
+    expect(result[0].children[0].name).to eq "simple1"
+
+    expect(result[1].name).to eq 'filterMask'
+    expect(result[1].children.count).to eq 1
+    expect(result[1].children[0].name).to eq "simple2"
+  end  
 end
 
 describe SoftLayer::ObjectMaskParser, "#parse_property_set" do
