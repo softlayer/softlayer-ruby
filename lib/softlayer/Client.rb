@@ -32,6 +32,11 @@ module SoftLayer
 
     # A string passsed as the value for the User-Agent header when requests are sent to SoftLayer API.
     attr_accessor :user_agent
+    
+    # An integer value (in seconds). The number of seconds to wait for HTTP requests to the network API
+    # until they timeout. This value can be nil in which case the timeout will be the default value for
+    # the library handling network communication (often 30 seconds)
+    attr_reader :network_timeout
 
     ##
     # The client class maintains an (optional) default client. The default client
@@ -60,6 +65,7 @@ module SoftLayer
     # * <b>+:api_key+</b> - The API key used to authenticate the user with the API
     # * <b>+:enpoint_url+</b> - The API endpoint the client should connect to.  This defaults to API_PUBLIC_ENDPOINT
     # * <b>+:user_agent+</b> - A string that is passed along as the user agent when the client sends requests to the server
+    # * <b>+:timeout+</b> - An integer number of seconds to wait until network requests time out.  Corresponds to the network_timeout property of the client
     #
     # If these arguments are not provided then the client will try to locate them using other
     # sources including global variables, and the SoftLayer config file (if one exists)
@@ -79,6 +85,8 @@ module SoftLayer
       @endpoint_url = settings[:endpoint_url] || API_PUBLIC_ENDPOINT
 
       @user_agent = settings[:user_agent] || "softlayer_api gem/#{SoftLayer::VERSION} (Ruby #{RUBY_PLATFORM}/#{RUBY_VERSION})"
+      
+      @network_timeout = settings[:timeout] if settings.has_key?(:timeout)
 
       raise "A SoftLayer Client requires a username" if !@username || @username.empty?
       raise "A SoftLayer Client requires an api_key" if !@api_key || @api_key.empty?

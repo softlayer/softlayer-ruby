@@ -38,6 +38,7 @@ module SoftLayer
   #      [softlayer]
   #      username = joeusername
   #      api_key = DEADBEEFBADF00D
+  #      timeout = 60
   #
   # = Environment Variables
   #
@@ -94,6 +95,7 @@ module SoftLayer
 						result[:username] = softlayer_section['username'] if softlayer_section['username']
 						result[:endpoint_url] = softlayer_section['endpoint_url'] if softlayer_section['endpoint_url']
 						result[:api_key] = softlayer_section['api_key'] if softlayer_section['api_key']
+						result[:timeout] = softlayer_section['timeout'] if softlayer_section['timeout']
 					end
 				end
 			end
