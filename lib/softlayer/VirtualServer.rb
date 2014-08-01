@@ -143,13 +143,15 @@ module SoftLayer
     #
     # The image_notes should be a string and will be added to the image as notes.
     #
-    def capture_image(image_name, include_attached_storage = false, image_notes = nil)
+    def capture_image(image_name, include_attached_storage = false, image_notes = '')
+      image_notes = '' if !image_notes
+
       disk_filter = lambda { |disk| disk['device'] == '0' }
-      disk_filter = lambda { |disk| disk['device'] == '1' } if include_attached_storage
+      disk_filter = lambda { |disk| disk['device'] != '1' } if include_attached_storage
 
       disks = self.blockDevices.select(&disk_filter)
 
-      self.service.createArchiveTransaction(image_name, disks, notes) if disks && !disks.empty?
+      self.service.createArchiveTransaction(image_name, disks, image_notes) if disks && !disks.empty?
     end
 
     ##
