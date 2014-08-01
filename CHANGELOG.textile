@@ -7,7 +7,8 @@
 * The routine to retreive the open tickets on an account has been moved from the Ticket class. The set of open tickets is now a dynamic property of an account object.
 
 *2.2*
-* Added the ability to set a timout for network requests.  The timeout is given when a client is created by passing the :timeout hash parameter when creating a client. The value of the parameter is an integer number of seconds.
+* Added the ability to set a timout for network requests. The timeout is given when a client is created by passing the :timeout hash parameter when creating a client. The value of the parameter is an integer number of seconds.
+* Fixed a bug in VirtualServer#capture_image
 
 *2.1.1*
 * Virtual server upgrades no longer raise exceptions

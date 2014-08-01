@@ -87,13 +87,16 @@ module SoftLayer
     # You may use the wait_until_ready routine of SoftLayer::ImageTemplate to
     # wait on it.
     #
-    def capture_image(image_name, include_attached_storage = false, image_notes = nil)
+    def capture_image(image_name, include_attached_storage = false, image_notes = '')
+      image_notes = '' if !image_notes
+      image_name = 'Captured Image' if !image_name
+
       disk_filter = lambda { |disk| disk['device'] == '0' }
       disk_filter = lambda { |disk| disk['device'] != '1' } if include_attached_storage
 
       disks = self.blockDevices.select(&disk_filter)
 
-      self.service.createArchiveTransaction(image_name, disks, notes ? notes : "") if disks && !disks.empty?
+      self.service.createArchiveTransaction(image_name, disks, image_notes) if disks && !disks.empty?
 
       image_templates = SoftLayer::ImageTemplate.find_private_templates(:name => image_name)
       image_templates[0] if !image_templates.empty?
