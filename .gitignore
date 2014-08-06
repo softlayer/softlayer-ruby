@@ -5,4 +5,5 @@
 log/
 internal_examples/
 doc/
+coverage/
 Gemfile.lock

@@ -296,9 +296,9 @@ using either client.service_named('<service_name_here>') or client['<service_nam
 
     def xmlrpc_client()
       if !@xmlrpc_client
-        @xmlrpc_client = XMLRPC::Client.new2(URI.join(@client.endpoint_url,@service_name).to_s)
+        @xmlrpc_client = XMLRPC::Client.new2(URI.join(@client.endpoint_url,@service_name).to_s, nil, @client.network_timeout)
 
-        # this is a workaround for a bug in later versions of the XML-RPC client in Ruby Core.
+        # This is a workaround for a bug in later versions of the XML-RPC client in Ruby Core.
         # see https://bugs.ruby-lang.org/issues/8182
         @xmlrpc_client.http_header_extra = {
           "Accept-Encoding" => "identity",

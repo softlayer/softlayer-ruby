@@ -77,11 +77,23 @@ describe SoftLayer::Service, "#new" do
       client = SoftLayer::Client.new() # authentication is taken from the globals
       expect { SoftLayer::Service.new("SoftLayer_Account", :client => client, :username => "sample_username", :api_key => "blah") }.to raise_error(RuntimeError)
     end
-
   end #describe #new
 end
 
-describe SoftLayer::Service do
+describe SoftLayer::Service, "xmlrpc client" do
+  before(:each) do
+    SoftLayer::Service.send(:public, :xmlrpc_client)
+  end
+  
+  it "Constructs an XMLRPC client with a given timeout value based on the timeout of the client" do
+    client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :timeout => 60)
+    ticket_service = client[:Ticket]
+    xmlrpc = ticket_service.xmlrpc_client()
+    expect(xmlrpc.timeout).to eq 60
+  end
+end
+
+describe SoftLayer::Service, "parameter filters" do
   let (:service) do
     SoftLayer::Service.new("SoftLayer_Ticket", :username => "sample_username", :api_key => "blah")
   end
