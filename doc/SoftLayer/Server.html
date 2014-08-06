@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class SoftLayer::Server - softlayer_api gem 2.2.0</title>
+
+<link href="../fonts.css" rel="stylesheet">
+<link href="../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/navigation.js"></script>
+<script src="../js/search_index.js"></script>
+<script src="../js/search.js"></script>
+<script src="../js/searcher.js"></script>
+<script src="../js/darkfish.js"></script>
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="ModelBase.html">SoftLayer::ModelBase</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-default_object_mask">::default_object_mask</a>
+    
+    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-change_port_speed">#change_port_speed</a>
+    
+    <li ><a href="#method-i-notes-3D">#notes=</a>
+    
+    <li ><a href="#method-i-reload_os-21">#reload_os!</a>
+    
+    <li ><a href="#method-i-set_domain-21">#set_domain!</a>
+    
+    <li ><a href="#method-i-set_hostname-21">#set_hostname!</a>
+    
+    <li ><a href="#method-i-softlayer_properties">#softlayer_properties</a>
+    
+    <li class="calls-super" ><a href="#method-i-to_s">#to_s</a>
+    
+    <li ><a href="#method-i-user_metadata-3D">#user_metadata=</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-SoftLayer::Server">
+  <h1 id="class-SoftLayer::Server" class="class">
+    class SoftLayer::Server
+  </h1>
+
+  <section class="description">
+    
+<p><a href="Server.html">Server</a> is the base class for <a
+href="VirtualServer.html">VirtualServer</a> and <a
+href="BareMetalServer.html">BareMetalServer</a>. It implements some
+functionality common to both those classes.</p>
+
+<p><a href="Server.html">Server</a> is an abstract class and you should not
+create them directly.</p>
+
+<p>While <a href="VirtualServer.html">VirtualServer</a> and <a
+href="BareMetalServer.html">BareMetalServer</a> each have analogs in the <a
+href="../SoftLayer.html">SoftLayer</a> API, those analogs do not share a
+direct ancestry.  As a result there is no <a
+href="../SoftLayer.html">SoftLayer</a> API analog to this class.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-datacenter" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">datacenter</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The data center where the server is located</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-domain" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">domain</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The domain name <a href="../SoftLayer.html">SoftLayer</a> has stored for
+the server</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-fullyQualifiedDomainName" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">fullyQualifiedDomainName</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>A convenience attribute that combines the hostname and domain name</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-hostname" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">hostname</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The host name <a href="../SoftLayer.html">SoftLayer</a> has stored for the
+server</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-notes" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">notes</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Notes about these server (for use by the customer)</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-primaryBackendIpAddress" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">primaryBackendIpAddress</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The IP address of the primary private interface for the server</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-primaryIpAddress" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">primaryIpAddress</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The IP address of the primary public interface for the server</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-primary_private_ip" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">primary_private_ip</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The IP address of the primary private interface for the server</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-primary_public_ip" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">primary_public_ip</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The IP address of the primary public interface for the server</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(softlayer_client, network_hash)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Construct a server from the given client using the network data found in
+<code>network_hash</code></p>
+
+<p>Most users should not have to call this method directly. Instead you should
+access the servers property of an <a href="Account.html">Account</a>
+object, or use methods like BareMetalServer#find_servers or
+VirtualServer#find_servers</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="ModelBase.html#method-c-new">SoftLayer::ModelBase.new</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 78</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">network_hash</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Server</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">RuntimeError</span>, <span class="ruby-string">&quot;The Server class is an abstract base class and should not be instantiated directly&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">super</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="protected-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Protected Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-default_object_mask" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">default_object_mask</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>returns the default object mask for all servers structured as a hash so
+that the classes <a href="BareMetalServer.html">BareMetalServer</a> and <a
+href="VirtualServer.html">VirtualServer</a> can use hash construction
+techniques to specialize the mask for their use.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="default_object_mask-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 216</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
+  { <span class="ruby-string">&quot;mask&quot;</span> =<span class="ruby-operator">&gt;</span> [
+      <span class="ruby-string">&#39;id&#39;</span>,
+      <span class="ruby-string">&#39;globalIdentifier&#39;</span>,
+      <span class="ruby-string">&#39;notes&#39;</span>,
+      <span class="ruby-string">&#39;hostname&#39;</span>,
+      <span class="ruby-string">&#39;domain&#39;</span>,
+      <span class="ruby-string">&#39;fullyQualifiedDomainName&#39;</span>,
+      <span class="ruby-string">&#39;datacenter&#39;</span>,
+      <span class="ruby-string">&#39;primaryIpAddress&#39;</span>,
+      <span class="ruby-string">&#39;primaryBackendIpAddress&#39;</span>,
+      { <span class="ruby-string">&#39;operatingSystem&#39;</span> =<span class="ruby-operator">&gt;</span> {
+          <span class="ruby-string">&#39;softwareLicense.softwareDescription&#39;</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">&#39;manufacturer&#39;</span>, <span class="ruby-string">&#39;name&#39;</span>, <span class="ruby-string">&#39;version&#39;</span>,<span class="ruby-string">&#39;referenceCode&#39;</span>],
+          <span class="ruby-string">&#39;passwords&#39;</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">&#39;username&#39;</span>,<span class="ruby-string">&#39;password&#39;</span>]
+        }
+      },
+      <span class="ruby-string">&#39;privateNetworkOnlyFlag&#39;</span>,
+      <span class="ruby-string">&#39;userData&#39;</span>,
+      <span class="ruby-string">&#39;networkComponents.primarySubnet[id, netmask, broadcastAddress, networkIdentifier, gateway]&#39;</span>,
+      <span class="ruby-string">&#39;billingItem[id,recurringFee]&#39;</span>,
+      <span class="ruby-string">&#39;hourlyBillingFlag&#39;</span>,
+      <span class="ruby-string">&#39;tagReferences[id,tag[name,id]]&#39;</span>,
+      <span class="ruby-string">&#39;networkVlans[id,vlanNumber,networkSpace]&#39;</span>,
+      <span class="ruby-string">&#39;postInstallScriptUri&#39;</span>
+    ]
+  }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-change_port_speed" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">change_port_speed</span><span
+            class="method-args">(new_speed, public = true)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Change the current port speed of the server</p>
+
+<p><code>new_speed</code> is expressed Mbps and should be 0, 10, 100, or 1000.
+Ports have a maximum speed that will limit the actual speed set on the
+port.</p>
+
+<p>Set <code>public</code> to <code>false</code> in order to change the speed
+of the primary private network interface.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="change_port_speed-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 168</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">change_port_speed</span>(<span class="ruby-identifier">new_speed</span>, <span class="ruby-identifier">public</span> = <span class="ruby-keyword">true</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">public</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">setPublicNetworkInterfaceSpeed</span>(<span class="ruby-identifier">new_speed</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">setPrivateNetworkInterfaceSpeed</span>(<span class="ruby-identifier">new_speed</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">refresh_details</span>()
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-notes-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">notes=</span><span
+            class="method-args">(new_notes)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Change the notes of the server raises ArgumentError if you pass nil as the
+notes</p>
+          
+          
+
+          
+          <div class="method-source-code" id="notes-3D-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 104</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">notes=</span>(<span class="ruby-identifier">new_notes</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;The new notes cannot be nil&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">new_notes</span>
+
+  <span class="ruby-identifier">edit_template</span> = {
+    <span class="ruby-string">&quot;notes&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">new_notes</span>
+  }
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">editObject</span>(<span class="ruby-identifier">edit_template</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">refresh_details</span>()
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-reload_os-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">reload_os!</span><span
+            class="method-args">(token = '', provisioning_script_uri = nil, ssh_keys = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Begins an OS reload on this server.</p>
+
+<p>The OS reload can wipe out the data on your server so this method uses a
+confirmation mechanism built into the underlying <a
+href="../SoftLayer.html">SoftLayer</a> API. If you call this method once
+without a token, it will not actually start the reload. Instead it will
+return a token to you. That token is good for 10 minutes. If you call this
+method again and pass that token *<strong>then</strong>* the OS reload will
+actually begin.</p>
+
+<p>If you wish to force the OS Reload and bypass the token safety mechanism
+pass the token &#39;FORCE&#39; as the first parameter. If you do so the
+reload will proceed immediately.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="reload_os-21-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 193</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">reload_os!</span>(<span class="ruby-identifier">token</span> = <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-identifier">provisioning_script_uri</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">ssh_keys</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">configuration</span> = {}
+
+  <span class="ruby-identifier">configuration</span>[<span class="ruby-string">&#39;customProvisionScriptUri&#39;</span>] = <span class="ruby-identifier">provisioning_script_uri</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">provisioning_script_uri</span>
+  <span class="ruby-identifier">configuration</span>[<span class="ruby-string">&#39;sshKeyIds&#39;</span>] = <span class="ruby-identifier">ssh_keys</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">ssh_keys</span>
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">reloadOperatingSystem</span>(<span class="ruby-identifier">token</span>, <span class="ruby-identifier">configuration</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-set_domain-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_domain!</span><span
+            class="method-args">(new_domain)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Change the domain of this server</p>
+
+<p>Raises an ArgumentError if the new domain is nil or empty no further
+validation is done on the domain name</p>
+          
+          
+
+          
+          <div class="method-source-code" id="set_domain-21-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 146</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_domain!</span>(<span class="ruby-identifier">new_domain</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;The new hostname cannot be nil&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">new_domain</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;The new hostname cannot be empty&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">new_domain</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-identifier">edit_template</span> = {
+    <span class="ruby-string">&quot;domain&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">new_domain</span>
+  }
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">editObject</span>(<span class="ruby-identifier">edit_template</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">refresh_details</span>()
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-set_hostname-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_hostname!</span><span
+            class="method-args">(new_hostname)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Change the hostname of this server Raises an ArgumentError if the new
+hostname is nil or empty</p>
+          
+          
+
+          
+          <div class="method-source-code" id="set_hostname-21-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 128</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_hostname!</span>(<span class="ruby-identifier">new_hostname</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;The new hostname cannot be nil&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">new_hostname</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;The new hostname cannot be empty&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">new_hostname</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-identifier">edit_template</span> = {
+    <span class="ruby-string">&quot;hostname&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">new_hostname</span>
+  }
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">editObject</span>(<span class="ruby-identifier">edit_template</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">refresh_details</span>()
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-softlayer_properties" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">softlayer_properties</span><span
+            class="method-args">(object_mask = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Make an API request to <a href="../SoftLayer.html">SoftLayer</a> and return
+the latest properties hash for this object.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="softlayer_properties-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 89</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">softlayer_properties</span>(<span class="ruby-identifier">object_mask</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">my_service</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>
+
+  <span class="ruby-keyword">if</span>(<span class="ruby-identifier">object_mask</span>)
+    <span class="ruby-identifier">my_service</span> = <span class="ruby-identifier">my_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">object_mask</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">my_service</span> = <span class="ruby-identifier">my_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">default_object_mask</span>.<span class="ruby-identifier">to_sl_object_mask</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">my_service</span>.<span class="ruby-identifier">getObject</span>()
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-to_s" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">to_s</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              
+            </div>
+          
+
+          
+          <div class="method-source-code" id="to_s-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 202</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
+  <span class="ruby-identifier">result</span> = <span class="ruby-keyword">super</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:hostname</span>) <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">result</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-string">&#39;&gt;&#39;</span>, <span class="ruby-node">&quot;, #{hostname}&gt;&quot;</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">result</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-user_metadata-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">user_metadata=</span><span
+            class="method-args">(new_metadata)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Change the user metadata for the server.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="user_metadata-3D-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 118</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">user_metadata=</span>(<span class="ruby-identifier">new_metadata</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;Cannot set user metadata to nil&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">new_metadata</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">setUserMetadata</span>([<span class="ruby-identifier">new_metadata</span>])
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">refresh_details</span>()
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
