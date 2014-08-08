@@ -16,6 +16,7 @@ module SoftLayer
   # ancestry.  As a result there is no SoftLayer API analog
   # to this class.
   class Server  < SoftLayer::ModelBase
+    include ::SoftLayer::DynamicAttribute
 
     ##
     # :attr_reader:
@@ -51,6 +52,17 @@ module SoftLayer
     # :attr_reader:
     # Notes about these server (for use by the customer)
     sl_attr :notes
+
+    sl_dynamic_attr :primary_network_component do |primary_component|
+      primary_component.should_update? do
+        return @primary_network_component == nil
+      end
+
+      primary_component.to_update do
+        component_data = self.service.getPrimaryNetworkComponent();
+        SoftLayer::NetworkComponent.new(self.softlayer_client, component_data)
+      end
+    end
 
     ##
     # Construct a server from the given client using the network data found in +network_hash+

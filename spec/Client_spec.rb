@@ -104,7 +104,7 @@ describe SoftLayer::Client do
     client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/', :timeout => 60)
     expect(client.network_timeout).to eq 60
   end
-  
+
   it 'gets the default endpoint even if none is provided' do
     $SL_API_BASE_URL = nil
     client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key')

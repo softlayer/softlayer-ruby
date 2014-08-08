@@ -80,32 +80,75 @@ module SoftLayer
         # Run though the categories and for each one that's in our config, create a SoftLayer::ProductItemCategory object.
         # Conveniently the +keys+ of the required_by_category_code gives us a list of the category codes in the configuration
         config_categories = required_by_category_code.keys
-        categories_data.collect do |category_data|
+
+        # collect all the categories into an array
+        @categories = categories_data.collect do |category_data|
           if config_categories.include? category_data['categoryCode']
             SoftLayer::ProductItemCategory.new(softlayer_client, category_data, required_by_category_code[category_data['categoryCode']])
           else
-            nil
+            SoftLayer::ProductItemCategory.new(softlayer_client, category_data, false)
           end
         end.compact
+
+        # The configuration consists of only those categories that are required.
+        @categories.select { |category| category.required? }
+      end # to_update
+    end # configuration
+
+    ##
+    # The full set of product categories contained in the package
+    #
+    sl_dynamic_attr :categories do |resource|
+      resource.should_update? do
+        @categories == nil
+      end
+
+      resource.to_update do
+        # This is a bit ugly, but what we do is ask for the configuration
+        # which updates all the categories for the package (and marks those
+        # that are required)
+        self.configuration
+
+        # return the value constructed by the configuraiton
+        @categories
       end
     end
 
     ##
     # Returns an array of the required categories in this package
     def required_categories
-      configuration.select { |category| category.required? }
+      configuration
     end
 
     ##
     # Returns the product category with the given category code (or nil if one cannot be found)
     def category(category_code)
-      configuration.find { |category| category.categoryCode == category_code }
+      categories.find { |category| category.categoryCode == category_code }
     end
 
+    ##
+    # Returns a list of the datacenters that this package is available in
     def datacenter_options
       available_locations.collect { |location_data| Datacenter::datacenter_named(location_data["location"]["name"], self.softlayer_client) }.compact
     end
 
+    ##
+    # Returns the package items with the given description
+    # Currently this is returning the low-level hash representation directly from the Network API
+    #
+    def items_with_description(expected_description)
+      filter = ObjectFilter.new { |filter| filter.accept("items.description").when_it is(expected_description) }
+      items_data = self.service.object_filter(filter).getItems()
+      
+      items_data.collect do |item_data|
+        first_price = item_data['prices'][0]
+        ProductConfigurationOption.new(item_data, first_price)
+      end
+    end
+
+    ##
+    # Returns the service for interacting with this package through the network API
+    #
     def service
       softlayer_client['Product_Package'].object_with_id(self.id)
     end
@@ -166,6 +209,13 @@ module SoftLayer
     # 'BARE_METAL_CPU' is a "well known" constant for this purpose
     def self.bare_metal_server_packages(client = nil)
       packages_with_key_name('BARE_METAL_CPU', client)
+    end
+
+    ##
+    # The "Additional Products" package is a grab-bag of products
+    # and services.  It has a "well known" id of 0
+    def self.additional_products_package(client = nil)
+      return package_with_id(0, client)
     end
 
     protected

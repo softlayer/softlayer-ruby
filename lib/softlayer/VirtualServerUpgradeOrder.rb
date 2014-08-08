@@ -15,25 +15,25 @@ module SoftLayer
   class VirtualServerUpgradeOrder
     # The virtual server that this order is designed to upgrade.
     attr_reader :virtual_server
-    
+
     # The number of cores the server should have after the upgrade.
     # If this is nil, the the number of cores will not change
     attr_accessor :cores
-    
+
     # The amount of RAM (in GB) that the server should have after the upgrade
     # If this is nil, the ram will not change
     attr_accessor :ram
-    
+
     # The port speed (in Mega bits per second) that the server should have
     # after the upgrade.  This is typically a value like 100, or 1000
     # If this is nil, the port speeds will not change
     attr_accessor :max_port_speed
-    
+
     # The date and time when you would like the upgrade to be processed.
     # This should simply be a Time object.  If nil then the upgrade
     # will be performed immediately
     attr_accessor :upgrade_at
-    
+
     ##
     # Create an upgrade order for the virtual server provided.
     #
@@ -59,7 +59,7 @@ module SoftLayer
     end
 
     ##
-    # Places the order represented by this object.  This is likely to 
+    # Places the order represented by this object.  This is likely to
     # involve a change to the charges on an account.
     #
     # If a block is passed to this routine, the code will send the order template
@@ -107,7 +107,7 @@ module SoftLayer
     def _item_prices_in_category(which_category)
       @virtual_server.upgrade_options.select { |item_price| item_price["categories"].find { |category| category["categoryCode"] == which_category } }
     end
-    
+
     ##
     # Searches through the upgrade items pricess known to this server for the one that is in a particular category
     # and whose capacity matches the value given. Returns the item_price or nil
@@ -115,17 +115,17 @@ module SoftLayer
     def _item_price_with_capacity(which_category, capacity)
       self._item_prices_in_category(which_category).find { |item_price| item_price["item"]["capacity"].to_i == capacity}
     end
-    
-    ## 
+
+    ##
     # construct an order object
     #
     def order_object
       prices = []
-      
+
       cores_price_item = @cores ? _item_price_with_capacity("guest_core", @cores) : nil
       ram_price_item = @ram ? _item_price_with_capacity("ram", @ram) : nil
       max_port_speed_price_item = @max_port_speed ? _item_price_with_capacity("port_speed", @max_port_speed) : nil
-      
+
       prices << { "id" => cores_price_item["id"] } if cores_price_item
       prices << { "id" => ram_price_item["id"] } if ram_price_item
       prices << { "id" => max_port_speed_price_item["id"] } if max_port_speed_price_item

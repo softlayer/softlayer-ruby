@@ -20,6 +20,19 @@
 
 require 'xmlrpc/client'
 
+# utility routine for swapping constants without warnings.
+def with_warnings(flag)
+  old_verbose, $VERBOSE = $VERBOSE, flag
+  yield
+ensure
+  $VERBOSE = old_verbose
+end
+
+# enable parsing of "nil" values in structures returned from the API
+with_warnings(nil) {
+  XMLRPC::Config.const_set('ENABLE_NIL_PARSER', true)
+}
+
 # The XML-RPC spec calls for the "faultCode" in faults to be an integer
 # but the SoftLayer XML-RPC API can return strings as the "faultCode"
 #
@@ -36,16 +49,6 @@ module XMLRPC::Convert
     else
       super
     end
-  end
-end
-
-# The XMLRPC client uses a fixed user agent string, but we want to
-# supply our own, so we add a method to XMLRPC::Client that lets
-# us change it.
-class XMLRPC::Client
-  def self.set_user_agent(new_agent)
-    remove_const(:USER_AGENT) if const_defined?(:USER_AGENT)
-    const_set(:USER_AGENT, new_agent)
   end
 end
 
@@ -233,7 +236,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       # The client knows about authentication, so ask him for the auth headers
       authentication_headers = self.client.authentication_headers
       additional_headers.merge!(authentication_headers)
-
+      
       if parameters && parameters.server_object_filter
         additional_headers.merge!("#{@service_name}ObjectFilter" => parameters.server_object_filter)
       end
@@ -315,10 +318,11 @@ using either client.service_named('<service_name_here>') or client['<service_nam
           end
 
           @xmlrpc_client.http.set_debug_output($stderr)
+          @xmlrpc_client.http.instance_variable_set(:@verify_mode, OpenSSL::SSL::VERIFY_NONE)
         end # $DEBUG
       end
 
       @xmlrpc_client
     end
-  end # Service class
+  end # Service class  
 end # module SoftLayer

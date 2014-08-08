@@ -173,7 +173,7 @@ class APIParameterFilter
   ##
   # A utility method that returns the object filter (if any) stored with this filter.
   def server_object_filter
-    self.parameters[:object_filter].to_h
+    self.parameters[:object_filter].to_h if self.parameters.has_key?(:object_filter)
   end
 
   ##

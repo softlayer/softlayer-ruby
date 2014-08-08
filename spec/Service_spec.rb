@@ -68,7 +68,7 @@ describe SoftLayer::Service, "xmlrpc client" do
   before(:each) do
     SoftLayer::Service.send(:public, :xmlrpc_client)
   end
-  
+
   it "Constructs an XMLRPC client with a given timeout value based on the timeout of the client" do
     client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :timeout => 60)
     ticket_service = client[:Ticket]
