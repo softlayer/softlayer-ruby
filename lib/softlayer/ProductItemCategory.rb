@@ -26,7 +26,7 @@ module SoftLayer
       self.recurringFee = price_item_data['recurringFee'] ? price_item_data['recurringFee'].to_f : 0.0
       self.hourlyRecurringFee = price_item_data['hourlyRecurringFee'] ? price_item_data['hourlyRecurringFee'].to_f : 0.0
     end
-    
+
     # returns true if the configurtion option has no fees associated with it.
     def free?
       self.setupFee == 0 && self.laborFee == 0 && self.oneTimeFee == 0 && self.recurringFee == 0 && self.hourlyRecurringFee == 0

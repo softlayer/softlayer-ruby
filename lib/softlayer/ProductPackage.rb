@@ -139,7 +139,7 @@ module SoftLayer
     def items_with_description(expected_description)
       filter = ObjectFilter.new { |filter| filter.accept("items.description").when_it is(expected_description) }
       items_data = self.service.object_filter(filter).getItems()
-      
+
       items_data.collect do |item_data|
         first_price = item_data['prices'][0]
         ProductConfigurationOption.new(item_data, first_price)

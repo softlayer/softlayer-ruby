@@ -5,7 +5,6 @@
 #++
 
 module SoftLayer
-  
   ##
   # The ServerFirewall class represents a firewall in the 
   # SoftLayer environment that exists in a 1 to 1 relationship
@@ -18,6 +17,14 @@ module SoftLayer
   #
 	class ServerFirewall < SoftLayer::ModelBase
     include ::SoftLayer::DynamicAttribute
+
+    ##
+    # :attr_reader:
+    # The state of the firewall, includes whether or not the rules are 
+    # editable and whether or not the firewall rules are applied or bypassed
+    # Can at least be 'allow_edit', 'bypass' or 'no_edit'.  
+    # This list may not be exhaustive
+    sl_attr :status
 
     ##
     # :attr_reader:
@@ -34,10 +41,10 @@ module SoftLayer
       firewall_rules.to_update do
         rules_data = self.service.object_mask(self.class.default_rules_mask).getRules()
 
-        # For some reason (at the time of this writing) the object mask is not
-        # applied to the rules properly. (this has been reported as a bug to the
-        # proper development team). This extra step does filtering that should
-        # have been done by the object mask.
+        # At the time of this writing, the object mask sent to getRules is not
+        # applied properly. This has been reported as a bug to the proper 
+        # development team. In the mean time, this extra step does filtering 
+        # that should have been done by the object mask.
         rules_keys = self.class.default_rules_mask_keys
         new_rules = rules_data.inject([]) do |new_rules, current_rule|
           new_rule = current_rule.delete_if { |key, value| !(rules_keys.include? key) }
@@ -71,6 +78,9 @@ module SoftLayer
       end
     end
 
+    ##
+    # Calls super to initialize the object then initializes some
+    # properties
     def initialize(client, network_hash)
       super(client, network_hash)
       @protected_server = nil
@@ -102,11 +112,10 @@ module SoftLayer
       self.softlayer_client[:Network_Firewall_Update_Request].createObject(change_object)
     end
 
-
     ##
     # Locate and return all the server firewalls in the environment.
     # 
-    # These are a bit trick to track down. The strategy we take here is
+    # These are a bit tricky to track down. The strategy we take here is
     # to look at the account and find all the VLANs that do NOT have their
     # "dedicatedFirewallFlag" set.
     #
@@ -132,10 +141,10 @@ module SoftLayer
       bare_metal_firewalls_data = []
       virtual_firewalls_data = []
 
-      shared_vlans = softlayer_client[:Account].object_mask("mask[firewallNetworkComponents[id,status,networkComponent[downlinkComponent[hardwareId]]],firewallGuestNetworkComponents[id,status,guestNetworkComponent[id,guest.id]]]").object_filter(shared_vlans_filter).getNetworkVlans
+      shared_vlans = softlayer_client[:Account].object_mask(network_vlan_mask).object_filter(shared_vlans_filter).getNetworkVlans
       shared_vlans.each do |vlan_data|
-        bare_metal_firewalls_data.concat vlan_data["firewallNetworkComponents"].select { |network_component| network_component['status'] == 'allow_edit'}
-        virtual_firewalls_data.concat vlan_data["firewallGuestNetworkComponents"].select { |network_component| network_component['status'] == 'allow_edit'}
+        bare_metal_firewalls_data.concat vlan_data["firewallNetworkComponents"].select { |network_component| network_component['status'] != 'no_edit'}
+        virtual_firewalls_data.concat vlan_data["firewallGuestNetworkComponents"].select { |network_component| network_component['status'] != 'no_edit'}
       end
 
       bare_metal_firewalls = bare_metal_firewalls_data.collect { |bare_metal_firewall_data|
@@ -152,8 +161,23 @@ module SoftLayer
     def service
       self.softlayer_client[:Network_Component_Firewall].object_with_id(self.id)
     end
+    
+    def softlayer_properties(object_mask = nil)
+      service = self.service
+      service = service.object_mask(object_mask) if object_mask
+      
+      if self.has_sl_property?('networkComponent')
+        service.object_mask("mask[id,status,networkComponent.downlinkComponent.hardwareId]").getObject
+      else
+        service.object_mask("mask[id,status,guestNetworkComponent.guest.id]").getObject
+      end
+    end
 
     private
+
+    def self.network_vlan_mask
+      "mask[firewallNetworkComponents[id,status,networkComponent.downlinkComponent.hardwareId],firewallGuestNetworkComponents[id,status,guestNetworkComponent.guest.id]]"
+    end
 
     def self.default_rules_mask
       return { "mask" => default_rules_mask_keys }.to_sl_object_mask

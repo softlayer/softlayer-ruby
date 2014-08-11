@@ -10,8 +10,8 @@ require 'rubygems'
 require 'softlayer_api'
 require 'rspec'
 
-describe SoftLayer::Firewall do
+describe SoftLayer::VLANFirewall do
   it "should have a class representing a firewall" do
-    expect{ SoftLayer::Firewall.new("not really a client", { "id" => 12345 }) }.to_not raise_error
+    expect{ SoftLayer::VLANFirewall.new("not really a client", { "id" => 12345 }) }.to_not raise_error
   end
 end

@@ -236,7 +236,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
       # The client knows about authentication, so ask him for the auth headers
       authentication_headers = self.client.authentication_headers
       additional_headers.merge!(authentication_headers)
-      
+
       if parameters && parameters.server_object_filter
         additional_headers.merge!("#{@service_name}ObjectFilter" => parameters.server_object_filter)
       end
@@ -324,5 +324,5 @@ using either client.service_named('<service_name_here>') or client['<service_nam
 
       @xmlrpc_client
     end
-  end # Service class  
+  end # Service class
 end # module SoftLayer
