@@ -1,0 +1,166 @@
+#--
+# Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
+#
+# For licensing information see the LICENSE.md file in the project root.
+#++
+
+module SoftLayer
+  
+  ##
+  # The ServerFirewall class represents a firewall in the 
+  # SoftLayer environment that exists in a 1 to 1 relationship
+  # with a particular server (either Bare Metal or Virtual).
+  #
+  # This is also called a "Shared Firewall" in some documentation
+  #
+  # Instances of this class rougly correspond to instances of the 
+  # SoftLayer_Network_Component_Firewall service entity
+  #
+	class ServerFirewall < SoftLayer::ModelBase
+    include ::SoftLayer::DynamicAttribute
+
+    ##
+    # :attr_reader:
+    # The firewall rules assigned to this firewall.  These rules will
+    # be read from the network API every time you ask for the value
+    # of this property.  To change the rules on the server use the
+    # asymmetric method change_rules!
+    sl_dynamic_attr :rules do |firewall_rules|
+      firewall_rules.should_update? do
+        # firewall rules update every time you ask for them.
+        return true
+      end
+
+      firewall_rules.to_update do
+        rules_data = self.service.object_mask(self.class.default_rules_mask).getRules()
+
+        # For some reason (at the time of this writing) the object mask is not
+        # applied to the rules properly. (this has been reported as a bug to the
+        # proper development team). This extra step does filtering that should
+        # have been done by the object mask.
+        rules_keys = self.class.default_rules_mask_keys
+        new_rules = rules_data.inject([]) do |new_rules, current_rule|
+          new_rule = current_rule.delete_if { |key, value| !(rules_keys.include? key) }
+          new_rules << new_rule
+        end
+
+        new_rules.sort { |lhs, rhs| lhs['orderValue'] <=> rhs['orderValue'] }
+      end
+    end
+
+    ##
+    # :attr_reader:
+    # The server that this firewall is attached to. The result may be
+    # either a bare metal or virtual server.
+    #
+    sl_dynamic_attr :protected_server do |protected_server|
+      protected_server.should_update? do
+        @protected_server == nil
+      end
+
+      protected_server.to_update do
+        if has_sl_property?('networkComponent')
+          @protected_server = SoftLayer::BareMetalServer.server_with_id(self['networkComponent']['downlinkComponent']['hardwareId'], :client => softlayer_client)
+        end
+
+        if has_sl_property?('guestNetworkComponent')
+          @protected_server = SoftLayer::VirtualServer.server_with_id(self['guestNetworkComponent']['guest']['id'], :client => softlayer_client)
+        end
+
+        @protected_server
+      end
+    end
+
+    def initialize(client, network_hash)
+      super(client, network_hash)
+      @protected_server = nil
+    end
+
+    ##
+    # Change the set of rules for the firewall.
+    # The rules_data parameter should be an array of hashes where
+    # each hash gives the conditions of the rule. The keys of the
+    # hashes should be entries from the array returned by
+    # SoftLayer::ServerFirewall.default_rules_mask_keys
+    #
+    # *NOTE!* The rules themselves have an "orderValue" property.
+    # It is this property, and *not* the order that the rules are
+    # found in the rules_data array, which will determine in which
+    # order the firewall applies it's rules to incomming traffic.
+    #
+    # *NOTE!* Changes to the rules are not applied immediately
+    # on the server side.  Instead, they are enqueued by the
+    # firewall update service and updated periodically. A typical
+    # update will take about one minute to apply, but times may vary
+    # depending on the system load and other circumstances.
+    def change_rules!(rules_data)
+      change_object = {
+        "networkComponentFirewallId" => self.id,
+        "rules" => rules_data
+      }
+
+      self.softlayer_client[:Network_Firewall_Update_Request].createObject(change_object)
+    end
+
+
+    ##
+    # Locate and return all the server firewalls in the environment.
+    # 
+    # These are a bit trick to track down. The strategy we take here is
+    # to look at the account and find all the VLANs that do NOT have their
+    # "dedicatedFirewallFlag" set.
+    #
+    # With the list of VLANs in hand we check each to see if it has an
+    # firewallNetworkComponents (corresponding to bare metal servers) or 
+    # firewallGuestNetworkComponents (corresponding to virtual servers) that
+    # have a status of "allow_edit". Each such component is a firewall
+    # interface on the VLAN with rules that the customer can edit.
+    #
+    # The collection of all those VLANs becomes the set of firewalls
+    # for the account.
+    #
+    def self.find_firewalls(client)
+      softlayer_client = client || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
+      # Note that the dedicatedFirewallFlag is actually an integer and not a boolean
+      # so we compare it against 0
+      shared_vlans_filter = SoftLayer::ObjectFilter.new() { |filter|
+        filter.accept("networkVlans.dedicatedFirewallFlag").when_it is(0)
+      }
+
+      bare_metal_firewalls_data = []
+      virtual_firewalls_data = []
+
+      shared_vlans = softlayer_client[:Account].object_mask("mask[firewallNetworkComponents[id,status,networkComponent[downlinkComponent[hardwareId]]],firewallGuestNetworkComponents[id,status,guestNetworkComponent[id,guest.id]]]").object_filter(shared_vlans_filter).getNetworkVlans
+      shared_vlans.each do |vlan_data|
+        bare_metal_firewalls_data.concat vlan_data["firewallNetworkComponents"].select { |network_component| network_component['status'] == 'allow_edit'}
+        virtual_firewalls_data.concat vlan_data["firewallGuestNetworkComponents"].select { |network_component| network_component['status'] == 'allow_edit'}
+      end
+
+      bare_metal_firewalls = bare_metal_firewalls_data.collect { |bare_metal_firewall_data|
+        self.new(softlayer_client, bare_metal_firewall_data)
+      }
+
+      virtual_server_firewalls = virtual_firewalls_data.collect { |virtual_firewall_data|
+        self.new(softlayer_client, virtual_firewall_data)
+      }
+
+      return bare_metal_firewalls + virtual_server_firewalls
+    end
+
+    def service
+      self.softlayer_client[:Network_Component_Firewall].object_with_id(self.id)
+    end
+
+    private
+
+    def self.default_rules_mask
+      return { "mask" => default_rules_mask_keys }.to_sl_object_mask
+    end
+
+    def self.default_rules_mask_keys
+      ['orderValue','action','destinationIpAddress','destinationIpSubnetMask',"protocol","destinationPortRangeStart","destinationPortRangeEnd",'sourceIpAddress',"sourceIpSubnetMask","version"]
+    end
+  end # ServerFirewall class
+end # SoftLayer module
