@@ -123,7 +123,7 @@ module SoftLayer
     end
 
     def service
-      softlayer_client["Account"].object_with_id(self.id)
+      softlayer_client[:Account].object_with_id(self.id)
     end
 
     ##
@@ -134,7 +134,7 @@ module SoftLayer
       softlayer_client = client || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      account_service = softlayer_client['Account']
+      account_service = softlayer_client[:Account]
       network_hash = account_service.getObject()
       new(softlayer_client, network_hash)
     end

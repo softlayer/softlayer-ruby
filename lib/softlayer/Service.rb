@@ -43,9 +43,9 @@ module XMLRPC::Convert
   def self.fault(hash)
     if hash.kind_of? Hash and hash.size == 2 and
       hash.has_key? "faultCode" and hash.has_key? "faultString" and
-      (hash["faultCode"].kind_of?(Integer) || hash["faultCode"].kind_of?(String)) and hash["faultString"].kind_of? String
+      (hash['faultCode'].kind_of?(Integer) || hash['faultCode'].kind_of?(String)) and hash['faultString'].kind_of? String
 
-      XMLRPC::FaultException.new(hash["faultCode"], hash["faultString"])
+      XMLRPC::FaultException.new(hash['faultCode'], hash['faultString'])
     else
       super
     end
@@ -65,7 +65,7 @@ module SoftLayer
   #
   #     client = SoftLayer::Client.new(:username => "Joe", :api_key=>"feeddeadbeefbadfood...")
   #     account_service = client.service_named("Account") # returns the SoftLayer_Account service
-  #     account_service = client['Account'] # Exactly the same as above
+  #     account_service = client[:Account] # Exactly the same as above
   #
   # For backward compatibility, a service can be constructed by passing
   # client initialization options, however if you do so you will need to

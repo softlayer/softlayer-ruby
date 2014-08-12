@@ -58,7 +58,7 @@ module SoftLayer
 
     # An array of the ids of SSH keys to install on the server upon provisioning
     # To obtain a list of existing SSH keys, call getSshKeys on the SoftLayer_Account service:
-    #     client['Account'].getSshKeys()
+    #     client[:Account].getSshKeys()
     attr_accessor :ssh_key_ids
 
     # The URI of a script to execute on the server after it has been provisioned. This may be
@@ -88,7 +88,7 @@ module SoftLayer
     def verify
       product_order = hardware_order
       product_order = yield product_order if block_given?
-      softlayer_client["Product_Order"].verifyOrder(product_order)
+      softlayer_client[:Product_Order].verifyOrder(product_order)
     end
 
     ##
@@ -106,7 +106,7 @@ module SoftLayer
     def place_order!
       product_order = hardware_order
       product_order = yield product_order if block_given?
-      softlayer_client["Product_Order"].placeOrder(product_order)
+      softlayer_client[:Product_Order].placeOrder(product_order)
     end
 
     protected

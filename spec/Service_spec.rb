@@ -84,7 +84,7 @@ describe SoftLayer::Service, "parameter filters" do
 
   describe "#missing_method" do
     it "translates unknown methods into api calls" do
-      expect(service).to receive(:call_softlayer_api_with_params).with(:getOpenTickets, nil, ["marshmallow"])
+      expect(service).to receive(:call_softlayer_api_with_params).with(:getOpenTickets, nil, ['marshmallow'])
       response = service.getOpenTickets("marshmallow")
     end
   end

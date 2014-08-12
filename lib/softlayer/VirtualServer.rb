@@ -164,7 +164,7 @@ module SoftLayer
       softlayer_client = options[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      vg_service = softlayer_client["Virtual_Guest"]
+      vg_service = softlayer_client[:Virtual_Guest]
       vg_service = vg_service.object_mask(default_object_mask.to_sl_object_mask)
 
       if options.has_key?(:object_mask)
@@ -251,7 +251,7 @@ module SoftLayer
 
       required_properties_mask = 'mask.id'
 
-      account_service = softlayer_client['Account']
+      account_service = softlayer_client[:Account]
       account_service = account_service.object_filter(object_filter) unless object_filter.empty?
       account_service = account_service.object_mask(default_object_mask.to_sl_object_mask)
 
@@ -310,7 +310,7 @@ module SoftLayer
     # For VirtualServers the service is +SoftLayer_Virtual_Guest+ and
     # addressing this object is done by id.
     def service
-      return softlayer_client["Virtual_Guest"].object_with_id(self.id)
+      return softlayer_client[:Virtual_Guest].object_with_id(self.id)
     end
   end #class VirtualServer
 end

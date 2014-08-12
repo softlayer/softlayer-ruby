@@ -162,14 +162,14 @@ describe SoftLayer::Client do
     end
 
     it "allows bracket dereferences as an alternate service syntax" do
-      test_service = test_client['Account']
+      test_service = test_client[:Account]
       expect(test_service).to_not be_nil
       expect(test_service.service_name).to eq "SoftLayer_Account"
       expect(test_service.client).to be(test_client)
     end
 
     it "returns the same service repeatedly when asked more than once" do
-      first_account_service = test_client['Account']
+      first_account_service = test_client[:Account]
       second_account_service = test_client.service_named('Account')
 
       expect(first_account_service).to be(second_account_service)
@@ -179,10 +179,10 @@ describe SoftLayer::Client do
       account_service = test_client[:Account]
       expect(account_service).to_not be_nil
 
-      trying_again = test_client['Account']
+      trying_again = test_client[:Account]
       expect(trying_again).to be(account_service)
 
-      yet_again = test_client['SoftLayer_Account']
+      yet_again = test_client[:SoftLayer_Account]
       expect(yet_again).to be(account_service)
 
       once_more = test_client[:SoftLayer_Account]

@@ -36,68 +36,68 @@ describe SoftLayer::BareMetalServerOrder do
   it "places its :datacenter attribute into the order template" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
 
-    expect(subject.hardware_instance_template["datacenter"]).to be_nil
+    expect(subject.hardware_instance_template['datacenter']).to be_nil
     subject.datacenter = SoftLayer::Datacenter.new(client, 'id' => 42, 'name' => "dal05")
-    expect(subject.hardware_instance_template["datacenter"]).to eq({ "name" => "dal05" })
+    expect(subject.hardware_instance_template['datacenter']).to eq({ "name" => "dal05" })
   end
 
   it "places its :hostname attribute into the order template" do
-    expect(subject.hardware_instance_template["hostname"]).to be_nil
+    expect(subject.hardware_instance_template['hostname']).to be_nil
     subject.hostname = "testhostname"
-    expect(subject.hardware_instance_template["hostname"]).to eq "testhostname"
+    expect(subject.hardware_instance_template['hostname']).to eq "testhostname"
   end
 
   it "places its :domain attribute into the order template" do
-    expect(subject.hardware_instance_template["domain"]).to be_nil
+    expect(subject.hardware_instance_template['domain']).to be_nil
     subject.domain = "softlayer.com"
-    expect(subject.hardware_instance_template["domain"]).to eq "softlayer.com"
+    expect(subject.hardware_instance_template['domain']).to eq "softlayer.com"
   end
 
   it "places its :cores attribute into the order template as startCpus" do
     subject.cores = 4
-    expect(subject.hardware_instance_template["processorCoreAmount"]).to eq 4
+    expect(subject.hardware_instance_template['processorCoreAmount']).to eq 4
   end
 
   it "places the :memory attrbute in the template as memoryCapacity" do
     subject.memory = 4
-    expect(subject.hardware_instance_template["memoryCapacity"]).to eq 4
+    expect(subject.hardware_instance_template['memoryCapacity']).to eq 4
   end
 
   it "places an OS identifier into the order template as the operatingSystemReferenceCode" do
-    expect(subject.hardware_instance_template["operatingSystemReferenceCode"]).to be_nil
+    expect(subject.hardware_instance_template['operatingSystemReferenceCode']).to be_nil
     subject.os_reference_code = 'UBUNTU_12_64'
     expect(subject.hardware_instance_template['operatingSystemReferenceCode']).to eq 'UBUNTU_12_64'
   end
 
   it "places the attribute :hourly into the template as hourlyBillingFlag converting the value to a boolean constant" do
     # note, we don't want the flag to be nil we want it to be eotjer false or true
-    expect(subject.hardware_instance_template["hourlyBillingFlag"]).to be(false)
+    expect(subject.hardware_instance_template['hourlyBillingFlag']).to be(false)
 
     subject.hourly = true
-    expect(subject.hardware_instance_template["hourlyBillingFlag"]).to be(true)
+    expect(subject.hardware_instance_template['hourlyBillingFlag']).to be(true)
 
     subject.hourly = false
-    expect(subject.hardware_instance_template["hourlyBillingFlag"]).to be(false)
+    expect(subject.hardware_instance_template['hourlyBillingFlag']).to be(false)
   end
 
   it "puts the public VLAN id into an order template as primaryNetworkComponent.networkVlan.id" do
-    expect(subject.hardware_instance_template["primaryNetworkComponent"]).to be_nil
+    expect(subject.hardware_instance_template['primaryNetworkComponent']).to be_nil
     subject.public_vlan_id = 12345
-    expect(subject.hardware_instance_template["primaryNetworkComponent"]).to eq({ "networkVlan" => { "id" => 12345 } })
+    expect(subject.hardware_instance_template['primaryNetworkComponent']).to eq({ "networkVlan" => { "id" => 12345 } })
   end
 
   it "puts the private VLAN id into an order template as primaryBackendNetworkComponent.networkVlan.id" do
-    expect(subject.hardware_instance_template["primaryBackendNetworkComponent"]).to be_nil
+    expect(subject.hardware_instance_template['primaryBackendNetworkComponent']).to be_nil
     subject.private_vlan_id = 12345
-    expect(subject.hardware_instance_template["primaryBackendNetworkComponent"]).to eq({ "networkVlan" => { "id" => 12345 } })
+    expect(subject.hardware_instance_template['primaryBackendNetworkComponent']).to eq({ "networkVlan" => { "id" => 12345 } })
   end
 
   it "sets up disks in the order template as hardDrives" do
-    expect(subject.hardware_instance_template["hardDrives"]).to be_nil
+    expect(subject.hardware_instance_template['hardDrives']).to be_nil
     subject.disks = [2, 25, 50]
 
     # note that device id 1 should be skipped as SoftLayer reserves that id for OS swap space.
-    expect(subject.hardware_instance_template["hardDrives"]).to eq [
+    expect(subject.hardware_instance_template['hardDrives']).to eq [
       {"capacity"=>2},
       {"capacity"=>25},
       {"capacity"=>50}
@@ -105,37 +105,37 @@ describe SoftLayer::BareMetalServerOrder do
   end
 
   it "puts the :ssh_key_ids in the template as sshKeys and breaks out the ids into objects" do
-    expect(subject.hardware_instance_template["sshKeys"]).to be_nil
+    expect(subject.hardware_instance_template['sshKeys']).to be_nil
     subject.ssh_key_ids = [123, 456, 789]
     expect(subject.hardware_instance_template['sshKeys']).to eq [{'id' => 123}, {'id' => 456}, {'id' => 789}]
   end
 
   it "puts the :provision_script_URI property into the template as postInstallScriptUri" do
-    expect(subject.hardware_instance_template["postInstallScriptUri"]).to be_nil
+    expect(subject.hardware_instance_template['postInstallScriptUri']).to be_nil
     subject.provision_script_URI = 'http:/provisionhome.mydomain.com/fancyscript.sh'
     expect(subject.hardware_instance_template['postInstallScriptUri']).to eq 'http:/provisionhome.mydomain.com/fancyscript.sh'
   end
 
   it "accepts URI objects for the provision script URI" do
-    expect(subject.hardware_instance_template["postInstallScriptUri"]).to be_nil
+    expect(subject.hardware_instance_template['postInstallScriptUri']).to be_nil
     subject.provision_script_URI = URI.parse('http:/provisionhome.mydomain.com/fancyscript.sh')
     expect(subject.hardware_instance_template['postInstallScriptUri']).to eq 'http:/provisionhome.mydomain.com/fancyscript.sh'
   end
 
   it "places the private_network_only attribute in the template as privateNetworkOnlyFlag" do
-    expect(subject.hardware_instance_template["privateNetworkOnlyFlag"]).to be_nil
+    expect(subject.hardware_instance_template['privateNetworkOnlyFlag']).to be_nil
     subject.private_network_only = true
-    expect(subject.hardware_instance_template["privateNetworkOnlyFlag"]).to be(true)
+    expect(subject.hardware_instance_template['privateNetworkOnlyFlag']).to be(true)
   end
 
   it "puts the user metadata string into the template as userData" do
-    expect(subject.hardware_instance_template["userData"]).to be_nil
+    expect(subject.hardware_instance_template['userData']).to be_nil
     subject.user_metadata = "MetadataValue"
     expect(subject.hardware_instance_template['userData']).to eq [{'value' => 'MetadataValue'}]
   end
 
   it "puts the max_port_speed attribute into the template as networkComponents.maxSpeed" do
-    expect(subject.hardware_instance_template["networkComponents"]).to be_nil
+    expect(subject.hardware_instance_template['networkComponents']).to be_nil
     subject.max_port_speed = 1000
     expect(subject.hardware_instance_template['networkComponents']).to eq [{'maxSpeed' => 1000}]
   end
@@ -149,7 +149,7 @@ describe SoftLayer::BareMetalServerOrder do
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
 
-    hardware_service = client["Hardware"]
+    hardware_service = client[:Hardware]
     allow(hardware_service).to receive(:call_softlayer_api_with_params)
 
     expect(hardware_service).to receive(:generateOrderTemplate).with(test_order.hardware_instance_template)
@@ -165,7 +165,7 @@ describe SoftLayer::BareMetalServerOrder do
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
 
-    hardware_service = client["Hardware"]
+    hardware_service = client[:Hardware]
     allow(hardware_service).to receive(:call_softlayer_api_with_params)
 
     expect(hardware_service).to receive(:createObject).with(test_order.hardware_instance_template)
@@ -181,7 +181,7 @@ describe SoftLayer::BareMetalServerOrder do
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
 
-    hardware_service = client["Hardware"]
+    hardware_service = client[:Hardware]
     allow(hardware_service).to receive(:call_softlayer_api_with_params)
 
     substituted_order_template = { 'aFake' => 'andBogusOrderTemplate' }
@@ -198,7 +198,7 @@ describe SoftLayer::BareMetalServerOrder do
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
 
-    hardware_service = client["Hardware"]
+    hardware_service = client[:Hardware]
     allow(hardware_service).to receive(:call_softlayer_api_with_params)
 
     substituted_order_template = { 'aFake' => 'andBogusOrderTemplate' }
@@ -209,7 +209,7 @@ describe SoftLayer::BareMetalServerOrder do
   describe "methods returning available options for attributes" do
     let (:client) do
       client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
-      virtual_guest_service = client["Hardware"]
+      virtual_guest_service = client[:Hardware]
       allow(virtual_guest_service).to receive(:call_softlayer_api_with_params)
       fake_options =
       allow(virtual_guest_service).to receive(:getCreateObjectOptions) { fixture_from_json("Hardware_createObjectOptions") }

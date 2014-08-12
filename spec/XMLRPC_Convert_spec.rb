@@ -16,7 +16,7 @@ describe XMLRPC::Convert,"::fault" do
     expect { XMLRPC::Convert.fault(fault_hash) }.not_to raise_error
     exception = XMLRPC::Convert.fault(fault_hash)
     expect(exception).to be_kind_of(XMLRPC::FaultException)
-    expect(exception.faultCode).to eq(fault_hash["faultCode"])
-    expect(exception.faultString).to eq(fault_hash["faultString"])
+    expect(exception.faultCode).to eq(fault_hash['faultCode'])
+    expect(exception.faultString).to eq(fault_hash['faultString'])
   end
 end

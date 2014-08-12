@@ -84,7 +84,7 @@ module SoftLayer
     end
 
     def service
-      softlayer_client["SoftLayer_Product_Item_Category"].object_with_id(self.id)
+      softlayer_client[:SoftLayer_Product_Item_Category].object_with_id(self.id)
     end
 
     ##

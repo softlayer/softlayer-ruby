@@ -6,13 +6,13 @@
 
 module SoftLayer
   ##
-  # The ServerFirewall class represents a firewall in the 
+  # The ServerFirewall class represents a firewall in the
   # SoftLayer environment that exists in a 1 to 1 relationship
   # with a particular server (either Bare Metal or Virtual).
   #
   # This is also called a "Shared Firewall" in some documentation
   #
-  # Instances of this class rougly correspond to instances of the 
+  # Instances of this class rougly correspond to instances of the
   # SoftLayer_Network_Component_Firewall service entity
   #
 	class ServerFirewall < SoftLayer::ModelBase
@@ -20,9 +20,9 @@ module SoftLayer
 
     ##
     # :attr_reader:
-    # The state of the firewall, includes whether or not the rules are 
+    # The state of the firewall, includes whether or not the rules are
     # editable and whether or not the firewall rules are applied or bypassed
-    # Can at least be 'allow_edit', 'bypass' or 'no_edit'.  
+    # Can at least be 'allow_edit', 'bypass' or 'no_edit'.
     # This list may not be exhaustive
     sl_attr :status
 
@@ -42,8 +42,8 @@ module SoftLayer
         rules_data = self.service.object_mask(self.class.default_rules_mask).getRules()
 
         # At the time of this writing, the object mask sent to getRules is not
-        # applied properly. This has been reported as a bug to the proper 
-        # development team. In the mean time, this extra step does filtering 
+        # applied properly. This has been reported as a bug to the proper
+        # development team. In the mean time, this extra step does filtering
         # that should have been done by the object mask.
         rules_keys = self.class.default_rules_mask_keys
         new_rules = rules_data.inject([]) do |new_rules, current_rule|
@@ -114,13 +114,13 @@ module SoftLayer
 
     ##
     # Locate and return all the server firewalls in the environment.
-    # 
+    #
     # These are a bit tricky to track down. The strategy we take here is
     # to look at the account and find all the VLANs that do NOT have their
     # "dedicatedFirewallFlag" set.
     #
     # With the list of VLANs in hand we check each to see if it has an
-    # firewallNetworkComponents (corresponding to bare metal servers) or 
+    # firewallNetworkComponents (corresponding to bare metal servers) or
     # firewallGuestNetworkComponents (corresponding to virtual servers) that
     # have a status of "allow_edit". Each such component is a firewall
     # interface on the VLAN with rules that the customer can edit.
@@ -143,8 +143,8 @@ module SoftLayer
 
       shared_vlans = softlayer_client[:Account].object_mask(network_vlan_mask).object_filter(shared_vlans_filter).getNetworkVlans
       shared_vlans.each do |vlan_data|
-        bare_metal_firewalls_data.concat vlan_data["firewallNetworkComponents"].select { |network_component| network_component['status'] != 'no_edit'}
-        virtual_firewalls_data.concat vlan_data["firewallGuestNetworkComponents"].select { |network_component| network_component['status'] != 'no_edit'}
+        bare_metal_firewalls_data.concat vlan_data['firewallNetworkComponents'].select { |network_component| network_component['status'] != 'no_edit'}
+        virtual_firewalls_data.concat vlan_data['firewallGuestNetworkComponents'].select { |network_component| network_component['status'] != 'no_edit'}
       end
 
       bare_metal_firewalls = bare_metal_firewalls_data.collect { |bare_metal_firewall_data|
@@ -158,14 +158,18 @@ module SoftLayer
       return bare_metal_firewalls + virtual_server_firewalls
     end
 
+    #--
+    # Methods for the SoftLayer model
+    #++
+
     def service
       self.softlayer_client[:Network_Component_Firewall].object_with_id(self.id)
     end
-    
+
     def softlayer_properties(object_mask = nil)
       service = self.service
       service = service.object_mask(object_mask) if object_mask
-      
+
       if self.has_sl_property?('networkComponent')
         service.object_mask("mask[id,status,networkComponent.downlinkComponent.hardwareId]").getObject
       else
@@ -173,6 +177,8 @@ module SoftLayer
       end
     end
 
+    #--
+    #++
     private
 
     def self.network_vlan_mask

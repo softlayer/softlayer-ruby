@@ -8,10 +8,10 @@ module SoftLayer
   # The VLANFirewall class represents the firewall that protects
   # all the servers on a VLAN in the SoftLayer Environment.  It is
   # also known as a "Dedicated Firewall" in some documentation.
-  # 
-  # Instances of this class are a bit odd because they actually represent 
-  # VLANs (the VLAN protected by the firewall) and not the physical hardware 
-  # implementing the firewall itself. (although the device is accessible as 
+  #
+  # Instances of this class are a bit odd because they actually represent
+  # VLANs (the VLAN protected by the firewall) and not the physical hardware
+  # implementing the firewall itself. (although the device is accessible as
   # the "networkVlanFirewall" property)
   #
   # As a result, instances of this class correspond to certain instances
@@ -19,7 +19,7 @@ module SoftLayer
   #
 	class VLANFirewall < SoftLayer::ModelBase
     include ::SoftLayer::DynamicAttribute
-    
+
     ##
     #:attr_reader:
     #
@@ -35,8 +35,8 @@ module SoftLayer
     # time you ask it for the rules.
     #
     # The code will sort the rules by their "orderValue" which is the
-    # order that the firewall applies the rules, however please see 
-    # the important note in change_rules! concerning the "orderValue" 
+    # order that the firewall applies the rules, however please see
+    # the important note in change_rules! concerning the "orderValue"
     # property of the rules.
     sl_dynamic_attr :rules do |firewall_rules|
       firewall_rules.should_update? do
@@ -120,7 +120,12 @@ module SoftLayer
       vlan_firewalls = client[:Account].object_mask(vlan_firewall_mask).object_filter(vlan_firewall_filter).getNetworkVlans
       vlan_firewalls.collect { |firewall_data| SoftLayer::VLANFirewall.new(client, firewall_data)}
     end
-    
+
+
+    #--
+    # Methods for the SoftLayer model
+    #++
+
     def service
       # Objects of this class are a bit odd because they actually represent VLANs (the VLAN protected by the firewall)
       # and not the physical hardware implementing the firewall itself.  (although the device is accessible as the
@@ -134,6 +139,8 @@ module SoftLayer
       service.object_mask(self.class.vlan_firewall_mask).getObject
     end
 
+    #--
+    #++
     private
 
     # Searches the set of access control lists for the firewall device in order to locate the one that

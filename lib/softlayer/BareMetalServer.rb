@@ -27,7 +27,7 @@ module SoftLayer
     #
     def bare_metal_instance?
       if has_sl_property?(:bareMetalInstanceFlag)
-        self["bareMetalInstanceFlag"] != 0
+        self['bareMetalInstanceFlag'] != 0
       else
         false
       end
@@ -47,10 +47,10 @@ module SoftLayer
       if !bare_metal_instance? then
         cancellation_reasons = self.class.cancellation_reasons()
         cancel_reason = cancellation_reasons[reason] || cancellation_reasons[:unneeded]
-        softlayer_client["Ticket"].createCancelServerTicket(self.id, cancel_reason, comment, true, 'HARDWARE')
+        softlayer_client[:Ticket].createCancelServerTicket(self.id, cancel_reason, comment, true, 'HARDWARE')
       else
         # Note that reason and comment are ignored in this case, unfortunately
-        softlayer_client['Billing_Item'].object_with_id(self.billingItem['id'].to_i).cancelService()
+        softlayer_client[:Billing_Item].object_with_id(self.billingItem['id'].to_i).cancelService()
       end
     end
 
@@ -59,7 +59,7 @@ module SoftLayer
     # For Bare Metal Servers that is +SoftLayer_Hardware+ though in some special cases
     # you may have to use +SoftLayer_Hardware_Server+ as a type or service.
     def service
-      return softlayer_client["Hardware"].object_with_id(self.id)
+      return softlayer_client[:Hardware].object_with_id(self.id)
     end
 
     ##
@@ -120,7 +120,7 @@ module SoftLayer
       softlayer_client = options[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      hardware_service = softlayer_client["Hardware"]
+      hardware_service = softlayer_client[:Hardware]
       hardware_service = hardware_service.object_mask(default_object_mask.to_sl_object_mask)
 
       if options.has_key?(:object_mask)
@@ -199,7 +199,7 @@ module SoftLayer
           } );
       end
 
-      account_service = softlayer_client['Account']
+      account_service = softlayer_client[:Account]
       account_service = account_service.object_filter(object_filter) unless object_filter.empty?
       account_service = account_service.object_mask(default_object_mask.to_sl_object_mask)
 

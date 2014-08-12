@@ -89,7 +89,7 @@ module SoftLayer
 			search_path.each do |file_path|
 				if File.readable? file_path
 					config = ConfigParser.new file_path
-					softlayer_section = config["softlayer"]
+					softlayer_section = config['softlayer']
 
 					if softlayer_section
 						result[:username] = softlayer_section['username'] if softlayer_section['username']

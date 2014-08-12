@@ -26,7 +26,7 @@ describe SoftLayer::Account do
   it "identifies itself with the Account service" do
     mock_client = SoftLayer::Client.new(:username => "fake_user", :api_key => "BADKEY")
     allow(mock_client).to receive(:[]) do |service_name|
-      expect(service_name).to eq "Account"
+      expect(service_name).to eq :Account
       mock_service = SoftLayer::Service.new("SoftLayer_Account", :client => mock_client)
 
       # mock out call_softlayer_api_with_params so the service doesn't actually try to
@@ -44,7 +44,7 @@ describe SoftLayer::Account do
   it "should allow the user to get the default account for a service" do
     test_client = double("mockClient")
     allow(test_client).to receive(:[]) do |service_name|
-      expect(service_name).to eq "Account"
+      expect(service_name).to eq :Account
 
       test_service = double("mockService")
       allow(test_service).to receive(:getObject) do
@@ -82,7 +82,7 @@ describe SoftLayer::Account do
 
   it "fetches a list of open tickets" do
     mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
-    account_service = mock_client["Account"]
+    account_service = mock_client[:Account]
 
     expect(account_service).to receive(:call_softlayer_api_with_params).with(:getOpenTickets, instance_of(SoftLayer::APIParameterFilter),[]) do
       fixture_from_json("test_tickets")
@@ -98,7 +98,7 @@ describe SoftLayer::Account do
   describe "relationship to servers" do
     it "should respond to a request for servers" do
       mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
-      account_service = mock_client["Account"]
+      account_service = mock_client[:Account]
       allow(account_service).to receive(:getObject).and_return(fixture_from_json("test_account"))
       allow(account_service).to receive(:call_softlayer_api_with_params) do |api_method, api_filter, arguments|
         case api_method

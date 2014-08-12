@@ -39,7 +39,7 @@ describe SoftLayer::BareMetalServer do
 	it "can be cancelled" do
 		mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "DEADBEEFBADF00D")
 		allow(mock_client).to receive(:[]) do |service_name|
-			expect(service_name).to eq "Ticket"
+			expect(service_name).to eq :Ticket
 
 			service = mock_client.service_named(service_name)
 			expect(service).to receive(:createCancelServerTicket).with(12345, 'Migrating to larger server', 'moving on up!', true, 'HARDWARE')

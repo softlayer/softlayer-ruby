@@ -54,7 +54,7 @@ module SoftLayer
         order_object = self.order_object
         order_object = yield order_object if block_given?
 
-        @virtual_server.softlayer_client["Product_Order"].verifyOrder(order_object)
+        @virtual_server.softlayer_client[:Product_Order].verifyOrder(order_object)
       end
     end
 
@@ -70,26 +70,26 @@ module SoftLayer
         order_object = self.order_object
         order_object = yield order_object if block_given?
 
-        @virtual_server.softlayer_client["Product_Order"].placeOrder(order_object)
+        @virtual_server.softlayer_client[:Product_Order].placeOrder(order_object)
       end
     end
 
     ##
     # Return a list of values that are valid for the :cores attribute
     def core_options()
-      self._item_prices_in_category("guest_core").map { |item_price| item_price["item"]["capacity"].to_i}.sort.uniq
+      self._item_prices_in_category("guest_core").map { |item_price| item_price['item']['capacity'].to_i}.sort.uniq
     end
 
     ##
     # Return a list of values that are valid for the :memory attribute
     def memory_options()
-      self._item_prices_in_category("ram").map { |item_price| item_price["item"]["capacity"].to_i}.sort.uniq
+      self._item_prices_in_category("ram").map { |item_price| item_price['item']['capacity'].to_i}.sort.uniq
     end
 
     ##
     # Returns a list of valid values for max_port_speed
     def max_port_speed_options(client = nil)
-      self._item_prices_in_category("port_speed").map { |item_price| item_price["item"]["capacity"].to_i}.sort.uniq
+      self._item_prices_in_category("port_speed").map { |item_price| item_price['item']['capacity'].to_i}.sort.uniq
     end
 
     private
@@ -105,7 +105,7 @@ module SoftLayer
     # Returns a list of the update item prices, in the given category, for the server
     #
     def _item_prices_in_category(which_category)
-      @virtual_server.upgrade_options.select { |item_price| item_price["categories"].find { |category| category["categoryCode"] == which_category } }
+      @virtual_server.upgrade_options.select { |item_price| item_price['categories'].find { |category| category['categoryCode'] == which_category } }
     end
 
     ##
@@ -113,7 +113,7 @@ module SoftLayer
     # and whose capacity matches the value given. Returns the item_price or nil
     #
     def _item_price_with_capacity(which_category, capacity)
-      self._item_prices_in_category(which_category).find { |item_price| item_price["item"]["capacity"].to_i == capacity}
+      self._item_prices_in_category(which_category).find { |item_price| item_price['item']['capacity'].to_i == capacity}
     end
 
     ##
@@ -126,9 +126,9 @@ module SoftLayer
       ram_price_item = @ram ? _item_price_with_capacity("ram", @ram) : nil
       max_port_speed_price_item = @max_port_speed ? _item_price_with_capacity("port_speed", @max_port_speed) : nil
 
-      prices << { "id" => cores_price_item["id"] } if cores_price_item
-      prices << { "id" => ram_price_item["id"] } if ram_price_item
-      prices << { "id" => max_port_speed_price_item["id"] } if max_port_speed_price_item
+      prices << { "id" => cores_price_item['id'] } if cores_price_item
+      prices << { "id" => ram_price_item['id'] } if ram_price_item
+      prices << { "id" => max_port_speed_price_item['id'] } if max_port_speed_price_item
 
       # put together an order
       upgrade_order = {

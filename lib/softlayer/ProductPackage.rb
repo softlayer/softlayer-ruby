@@ -65,7 +65,7 @@ module SoftLayer
         # filtering mechanism on the server side to give us a list of the categories, groups, and prices that are valid for the current
         # account at the current time. We construct the ProductItemCategory objects from the results we get back.
         #
-        configuration_data = softlayer_client['Product_Package'].object_with_id(self.id).object_mask("mask[isRequired,itemCategory.categoryCode]").getConfiguration()
+        configuration_data = softlayer_client[:Product_Package].object_with_id(self.id).object_mask("mask[isRequired,itemCategory.categoryCode]").getConfiguration()
 
         # We sort of invert the information and create a map from category codes to a boolean representing
         # whether or not they are required.
@@ -75,7 +75,7 @@ module SoftLayer
         end
 
         # This call to getCategories is the one that does lots of fancy back-end filtering for us
-        categories_data = softlayer_client['Product_Package'].object_with_id(self.id).getCategories()
+        categories_data = softlayer_client[:Product_Package].object_with_id(self.id).getCategories()
 
         # Run though the categories and for each one that's in our config, create a SoftLayer::ProductItemCategory object.
         # Conveniently the +keys+ of the required_by_category_code gives us a list of the category codes in the configuration
@@ -129,7 +129,7 @@ module SoftLayer
     ##
     # Returns a list of the datacenters that this package is available in
     def datacenter_options
-      available_locations.collect { |location_data| Datacenter::datacenter_named(location_data["location"]["name"], self.softlayer_client) }.compact
+      available_locations.collect { |location_data| Datacenter::datacenter_named(location_data['location']['name'], self.softlayer_client) }.compact
     end
 
     ##
@@ -150,7 +150,7 @@ module SoftLayer
     # Returns the service for interacting with this package through the network API
     #
     def service
-      softlayer_client['Product_Package'].object_with_id(self.id)
+      softlayer_client[:Product_Package].object_with_id(self.id)
     end
 
     ##
@@ -165,7 +165,7 @@ module SoftLayer
         filter.accept('type.keyName').when_it is(key_name)
       end
 
-      filtered_service = softlayer_client['Product_Package'].object_filter(filter).object_mask(self.default_object_mask('mask'))
+      filtered_service = softlayer_client[:Product_Package].object_filter(filter).object_mask(self.default_object_mask('mask'))
       packages_data = filtered_service.getAllObjects
       packages_data.collect { |package_data| ProductPackage.new(softlayer_client, package_data) }
     end
@@ -178,7 +178,7 @@ module SoftLayer
       softlayer_client = client || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      package_data = softlayer_client['Product_Package'].object_with_id(package_id).object_mask(self.default_object_mask('mask')).getObject
+      package_data = softlayer_client[:Product_Package].object_with_id(package_id).object_mask(self.default_object_mask('mask')).getObject
       ProductPackage.new(softlayer_client, package_data)
     end
 

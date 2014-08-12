@@ -69,10 +69,10 @@ describe SoftLayer::VirtualServerUpgradeOrder do
     sample_order.core_options.each do |num_cores|
       sample_order.cores = num_cores
       test_template = sample_order.order_object
-      expect(sample_order.order_object["prices"].length).to be(1)
+      expect(sample_order.order_object['prices'].length).to be(1)
 
       item = sample_order._item_price_with_capacity("guest_core", num_cores)
-      expect(test_template["prices"].first["id"]).to eq item["id"]
+      expect(test_template['prices'].first['id']).to eq item['id']
     end
   end
 
@@ -81,10 +81,10 @@ describe SoftLayer::VirtualServerUpgradeOrder do
     sample_order.memory_options.each do |ram_in_GB|
       sample_order.ram = ram_in_GB
       test_template = sample_order.order_object
-      expect(sample_order.order_object["prices"].length).to be(1)
+      expect(sample_order.order_object['prices'].length).to be(1)
 
       item = sample_order._item_price_with_capacity("ram", ram_in_GB)
-      expect(test_template["prices"].first["id"]).to eq item["id"]
+      expect(test_template['prices'].first['id']).to eq item['id']
     end
   end
 
@@ -93,10 +93,10 @@ describe SoftLayer::VirtualServerUpgradeOrder do
     sample_order.max_port_speed_options.each do |port_speed|
       sample_order.max_port_speed = port_speed
       test_template = sample_order.order_object
-      expect(sample_order.order_object["prices"].length).to be(1)
+      expect(sample_order.order_object['prices'].length).to be(1)
 
       item = sample_order._item_price_with_capacity("port_speed", port_speed)
-      expect(test_template["prices"].first["id"]).to eq item["id"]
+      expect(test_template['prices'].first['id']).to eq item['id']
     end
   end
 
@@ -105,9 +105,9 @@ describe SoftLayer::VirtualServerUpgradeOrder do
     sample_order.cores = 2
     test_template = sample_order.order_object
 
-    expect(sample_order.order_object["properties"].first["name"]).to eq('MAINTENANCE_WINDOW')
+    expect(sample_order.order_object['properties'].first['name']).to eq('MAINTENANCE_WINDOW')
 
-    time_string = sample_order.order_object["properties"].first["value"]
+    time_string = sample_order.order_object['properties'].first['value']
     maintenance_time = Time.iso8601(time_string)
 
     expect((Time.now - maintenance_time) <= 1.0).to be(true)
@@ -122,9 +122,9 @@ describe SoftLayer::VirtualServerUpgradeOrder do
 
     test_template = sample_order.order_object
 
-    expect(sample_order.order_object["properties"].first["name"]).to eq('MAINTENANCE_WINDOW')
+    expect(sample_order.order_object['properties'].first['name']).to eq('MAINTENANCE_WINDOW')
 
-    time_string = sample_order.order_object["properties"].first["value"]
+    time_string = sample_order.order_object['properties'].first['value']
     expect(time_string).to eq upgrade_time.iso8601
   end
 
