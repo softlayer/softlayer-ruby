@@ -17,7 +17,7 @@ module SoftLayer
     def initialize (server)
       @server = server
 
-      raise ArgumentError.new("Server does not have an active Public interface") if server.firewall_port_speed == 0
+      raise ArgumentError, "Server does not have an active Public interface" if server.firewall_port_speed == 0
     end
 
     ##

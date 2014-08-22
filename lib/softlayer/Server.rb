@@ -94,7 +94,7 @@ module SoftLayer
       when :power_cycle
         self.service.rebootHard
       else
-        raise RuntimeError, "Unrecognized reboot technique in SoftLayer::Server#reboot!}"
+        raise ArgumentError, "Unrecognized reboot technique in SoftLayer::Server#reboot!}"
       end
     end
 
@@ -117,7 +117,7 @@ module SoftLayer
     # Change the notes of the server
     # raises ArgumentError if you pass nil as the notes
     def notes=(new_notes)
-      raise ArgumentError.new("The new notes cannot be nil") unless new_notes
+      raise ArgumentError, "The new notes cannot be nil" unless new_notes
 
       edit_template = {
         "notes" => new_notes
@@ -131,7 +131,7 @@ module SoftLayer
     # Change the user metadata for the server.
     #
     def user_metadata=(new_metadata)
-      raise ArgumentError.new("Cannot set user metadata to nil") unless new_metadata
+      raise ArgumentError, "Cannot set user metadata to nil" unless new_metadata
       self.service.setUserMetadata([new_metadata])
       self.refresh_details()
     end
@@ -141,8 +141,8 @@ module SoftLayer
     # Raises an ArgumentError if the new hostname is nil or empty
     #
     def set_hostname!(new_hostname)
-      raise ArgumentError.new("The new hostname cannot be nil") unless new_hostname
-      raise ArgumentError.new("The new hostname cannot be empty") if new_hostname.empty?
+      raise ArgumentError, "The new hostname cannot be nil" unless new_hostname
+      raise ArgumentError, "The new hostname cannot be empty" if new_hostname.empty?
 
       edit_template = {
         "hostname" => new_hostname
@@ -159,8 +159,8 @@ module SoftLayer
     # no further validation is done on the domain name
     #
     def set_domain!(new_domain)
-      raise ArgumentError.new("The new hostname cannot be nil") unless new_domain
-      raise ArgumentError.new("The new hostname cannot be empty") if new_domain.empty?
+      raise ArgumentError, "The new hostname cannot be nil" unless new_domain
+      raise ArgumentError, "The new hostname cannot be empty" if new_domain.empty?
 
       edit_template = {
         "domain" => new_domain
@@ -188,11 +188,16 @@ module SoftLayer
     # on the port.
     #
     # Set +public+ to +false+ in order to change the speed of the
-    # primary private network interface.
-    #
-    # This is an abstract method implemented by subclasses
+    # private network interface.
     def change_port_speed(new_speed, public = true)
-      raise "The abstract change_port_speed method of SoftLayer::Server was called. Subclasses should implement the method for their particular service"
+      if public
+        self.service.setPublicNetworkInterfaceSpeed(new_speed)
+      else
+        self.service.setPrivateNetworkInterfaceSpeed(new_speed)
+      end
+
+      self.refresh_details()
+      self
     end
 
     ##

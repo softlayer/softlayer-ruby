@@ -60,15 +60,7 @@ module SoftLayer
     # you may have to use +SoftLayer_Hardware_Server+ as a type or service.  That
     # service object is available thorugh the hardware_server_service method
     def service
-      return softlayer_client[:Hardware].object_with_id(self.id)
-    end
-
-    ##
-    # Returns the SoftLayer_Hardware_Server service for this bare metal server
-    # This service is used less often than SoftLayer_Hardware, but may be required
-    # for some operations
-    def hardware_server_service
-      self.softlayer_client[:Hardware_Server].object_with_id(self.id)
+      return softlayer_client[:Hardware_Server].object_with_id(self.id)
     end
 
     ##
@@ -146,27 +138,6 @@ module SoftLayer
     end
 
     ##
-    # Change the current port speed of the server
-    #
-    # +new_speed+ is expressed Mbps and should be 0, 10, 100, or 1000.
-    # Ports have a maximum speed that will limit the actual speed set
-    # on the port.
-    #
-    # Set +public+ to +false+ in order to change the speed of the
-    # primary private network interface.
-    #
-    def change_port_speed(new_speed, public = true)
-      if public
-        self.hardware_server_service.setPublicNetworkInterfaceSpeed(new_speed)
-      else
-        self.hardware_server_service.setPrivateNetworkInterfaceSpeed(new_speed)
-      end
-
-      self.refresh_details()
-      self
-    end
-
-    ##
     # Retrive the bare metal server with the given server ID from the
     # SoftLayer API
     #
@@ -180,7 +151,7 @@ module SoftLayer
       softlayer_client = options[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      hardware_service = softlayer_client[:Hardware]
+      hardware_service = softlayer_client[:Hardware_Server]
       hardware_service = hardware_service.object_mask(default_object_mask.to_sl_object_mask)
 
       if options.has_key?(:object_mask)

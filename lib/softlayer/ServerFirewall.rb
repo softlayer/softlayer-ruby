@@ -113,6 +113,40 @@ module SoftLayer
     end
 
     ##
+    # This method asks the firewall to ignore its rule set and pass all traffic
+    # through the firewall. Compare the behavior of this routine with
+    # change_routing_bypass!
+    #
+    # It is important to note that changing the bypass to :bypass_firewall_rules 
+    # removes ALL the protection offered by the firewall. This routine should be 
+    # used with extreme discretion.
+    #
+    # Note that this routine queues a rule change and rule changes may take
+    # time to process. The change will probably not take effect immediately
+    #
+    # The two symbols accepted as arguments by this routine are:
+    # :apply_firewall_rules - The rules of the firewall are applied to traffic. This is the default operating mode of the firewall
+    # :bypass_firewall_rules - The rules of the firewall are ignored. In this configuration the firewall provides no protection.
+    #
+    def change_rules_bypass!(bypass_symbol)
+      change_object = {
+        "networkComponentFirewallId" => self.id,
+        "rules" => self.rules
+      }
+
+      case bypass_symbol
+      when :apply_firewall_rules
+        change_object['bypassFlag'] = false
+        self.softlayer_client[:Network_Firewall_Update_Request].createObject(change_object)
+      when :bypass_firewall_rules
+        change_object['bypassFlag'] = true
+        self.softlayer_client[:Network_Firewall_Update_Request].createObject(change_object)
+      else
+        raise ArgumentError, "An invalid parameter was sent to #{__method__}. It accepts :apply_firewall_rules and :bypass_firewall_rules"
+      end
+    end
+
+    ##
     # Locate and return all the server firewalls in the environment.
     #
     # These are a bit tricky to track down. The strategy we take here is
@@ -128,7 +162,7 @@ module SoftLayer
     # The collection of all those VLANs becomes the set of firewalls
     # for the account.
     #
-    def self.find_firewalls(client)
+    def self.find_firewalls(client = nil)
       softlayer_client = client || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 

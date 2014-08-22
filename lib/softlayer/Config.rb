@@ -72,8 +72,8 @@ module SoftLayer
 
 		def Config.environment_settings
 			result = {}
-			result[:username] =  ENV["SL_USERNAME"] if ENV["SL_USERNAME"]
-			result[:api_key] = ENV["SL_API_KEY"] if ENV["SL_API_KEY"]
+			result[:username] =  ENV['SL_USERNAME'] if ENV['SL_USERNAME']
+			result[:api_key] = ENV['SL_API_KEY'] if ENV['SL_API_KEY']
 			result
 		end
 

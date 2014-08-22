@@ -66,27 +66,6 @@ module SoftLayer
     end
 
     ##
-    # Change the current port speed of the server
-    #
-    # +new_speed+ is expressed Mbps and should be 0, 10, 100, or 1000.
-    # Ports have a maximum speed that will limit the actual speed set
-    # on the port.
-    #
-    # Set +public+ to +false+ in order to change the speed of the
-    # primary private network interface.
-    #
-    def change_port_speed(new_speed, public = true)
-      if public
-        self.service.setPublicNetworkInterfaceSpeed(new_speed)
-      else
-        self.service.setPrivateNetworkInterfaceSpeed(new_speed)
-      end
-
-      self.refresh_details()
-      self
-    end
-
-    ##
     # IMMEDIATELY cancel this virtual server
     #
     def cancel!

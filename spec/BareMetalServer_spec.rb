@@ -26,16 +26,20 @@ describe SoftLayer::BareMetalServer do
 		SoftLayer::BareMetalServer.new(mock_client, { "id" => 12345 })
 	end
 
-  it "identifies itself with the SoftLayer_Hardware service" do
+  it "identifies itself with the SoftLayer_Hardware_Server service" do
     service = sample_server.service
     expect(service.server_object_id).to eq(12345)
-    expect(service.target.service_name).to eq "SoftLayer_Hardware"
+    expect(service.target.service_name).to eq "SoftLayer_Hardware_Server"
   end
 
 	it_behaves_like "server with port speed" do
 		let (:server) { sample_server }
 	end
 
+  it_behaves_like "server with mutable hostname" do
+		let (:server) { sample_server }
+  end
+  
 	it "can be cancelled" do
 		mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "DEADBEEFBADF00D")
 		allow(mock_client).to receive(:[]) do |service_name|
