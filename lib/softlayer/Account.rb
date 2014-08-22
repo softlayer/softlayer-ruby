@@ -143,7 +143,7 @@ module SoftLayer
       vlan_data = self.service.object_mask("mask[id,vlanNumber,primaryRouter,networkSpace]").object_filter(filter).getNetworkVlans
       return vlan_data
     end
-    
+
     ##
     # Using the login credentials in the client, retrieve
     # the account associated with those credentials.

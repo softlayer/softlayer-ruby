@@ -52,6 +52,32 @@ module SoftLayer
     end
 
     ##
+    # Returns the name of the primary router the firewall is attached to.
+    # This is often a "customer router" in one of the datacenters.
+    def primaryRouter
+      return self['primaryRouter']['hostname']
+    end
+
+    ##
+    # The fully qualified domain name of the physical device the
+    # firewall is implemented by.
+    def fullyQualifiedDomainName
+      if self.has_sl_property?('networkVlanFirewall')
+        return self['networkVlanFirewall']['fullyQualifiedDomainName']
+      else
+        return @softlayer_hash
+      end
+    end
+
+    ##
+    # Returns true if this is a "high availability" firewall, that is a firewall
+    # that exists as one member of a redundant pair.
+    def high_availability?
+      # note that highAvailabilityFirewallFlag is a boolean in the softlayer hash
+      return self.has_sl_property?('highAvailabilityFirewallFlag') && self['highAvailabilityFirewallFlag']
+    end
+
+    ##
     # Cancel the firewall
     #
     # This method cancels the firewall and releases its
@@ -168,32 +194,6 @@ module SoftLayer
       else
         raise ArgumentError, "An invalid parameter was sent to #{__method__}. It accepts :route_through_firewall and :route_around_firewall"
       end
-    end
-
-    ##
-    # Returns the name of the primary router the firewall is attached to.
-    # This is often a "customer router" in one of the datacenters.
-    def primaryRouter
-      return self['primaryRouter']['hostname']
-    end
-
-    ##
-    # The fully qualified domain name of the physical device the
-    # firewall is implemented by.
-    def fullyQualifiedDomainName
-      if self.has_sl_property?('networkVlanFirewall')
-        return self['networkVlanFirewall']['fullyQualifiedDomainName']
-      else
-        return @softlayer_hash
-      end
-    end
-
-    ##
-    # Returns true if this is a "high availability" firewall, that is a firewall
-    # that exists as one member of a redundant pair.
-    def high_availability?
-      # note that highAvailabilityFirewallFlag is a boolean in the softlayer hash
-      return self.has_sl_property?('highAvailabilityFirewallFlag') && self['highAvailabilityFirewallFlag']
     end
 
     ##
