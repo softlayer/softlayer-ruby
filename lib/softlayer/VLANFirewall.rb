@@ -52,6 +52,34 @@ module SoftLayer
     end
 
     ##
+    # Cancel the firewall
+    #
+    # This method cancels the firewall and releases its
+    # resources.  The cancellation is processed immediately!
+    # Call this method with careful deliberation!
+    #
+    # Notes is a string that describes the reason for the
+    # cancellation. If empty or nil, a default string will
+    # be added
+    #
+    def cancel!(notes = nil)
+      user = self.softlayer_client[:Account].object_mask("mask[id,account.id]").getCurrentUser
+      notes = "Cancelled by a call to #{__method__} in the softlayer_api gem" if notes == nil || notes == ""
+
+      cancellation_request = {
+        'accountId' => user['account']['id'],
+        'userId'    => user['id'],
+        'items' => [ {
+          'billingItemId' => self['networkVlanFirewall']['billingItem']['id'],
+          'immediateCancellationFlag' => true
+          } ],
+        'notes' => notes
+      }
+
+      self.softlayer_client[:Billing_Item_Cancellation_Request].createObject(cancellation_request)
+    end
+
+    ##
     # Change the set of rules for the firewall.
     # The rules_data parameter should be an array of hashes where
     # each hash gives the conditions of the rule. The keys of the
@@ -82,8 +110,8 @@ module SoftLayer
     # through the firewall. Compare the behavior of this routine with
     # change_routing_bypass!
     #
-    # It is important to note that changing the bypass to :bypass_firewall_rules 
-    # removes ALL the protection offered by the firewall. This routine should be 
+    # It is important to note that changing the bypass to :bypass_firewall_rules
+    # removes ALL the protection offered by the firewall. This routine should be
     # used with extreme discretion.
     #
     # Note that this routine queues a rule change and rule changes may take
@@ -117,7 +145,7 @@ module SoftLayer
     # change_rules_bypass!
     #
     # It is important to note that changing the routing to :route_around_firewall
-    # removes ALL the protection offered by the firewall. This routine should be 
+    # removes ALL the protection offered by the firewall. This routine should be
     # used with extreme discretion.
     #
     # Note that this routine constructs a transaction. The Routing change
@@ -224,7 +252,7 @@ module SoftLayer
     def self.vlan_firewall_mask
       return "mask[primaryRouter,highAvailabilityFirewallFlag," +
         "firewallInterfaces.firewallContextAccessControlLists," +
-        "networkVlanFirewall[id, datacenter, primaryIpAddress, firewallType, fullyQualifiedDomainName]]"
+        "networkVlanFirewall[id,datacenter,primaryIpAddress,firewallType,fullyQualifiedDomainName,billingItem.id]]"
     end
 
     def self.default_rules_mask

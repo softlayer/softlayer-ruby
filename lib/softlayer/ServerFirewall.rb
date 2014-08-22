@@ -87,6 +87,34 @@ module SoftLayer
     end
 
     ##
+    # Cancel the firewall
+    #
+    # This method cancels the firewall and releases its
+    # resources.  The cancellation is processed immediately!
+    # Call this method with careful deliberation!
+    #
+    # Notes is a string that describes the reason for the
+    # cancellation. If empty or nil, a default string will
+    # be added
+    #
+    def cancel!(notes = nil)
+      user = self.softlayer_client[:Account].object_mask("mask[id,account]").getCurrentUser
+      notes = "Cancelled by a call to #{__method__} in the softlayer_api gem" if notes == nil || notes == ""
+
+      cancellation_request = {
+        'accountId' => user['account']['id'],
+        'userId'    => user['id'],
+        'items' => [ {
+          'billingItemId' => self['billingItem']['id'],
+          'immediateCancellationFlag' => true
+          } ],
+        'notes' => notes
+      }
+
+      self.softlayer_client[:Billing_Item_Cancellation_Request].createObject(cancellation_request)
+    end
+
+    ##
     # Change the set of rules for the firewall.
     # The rules_data parameter should be an array of hashes where
     # each hash gives the conditions of the rule. The keys of the
@@ -117,9 +145,9 @@ module SoftLayer
     # through the firewall. Compare the behavior of this routine with
     # change_routing_bypass!
     #
-    # It is important to note that changing the bypass to :bypass_firewall_rules 
-    # removes ALL the protection offered by the firewall. This routine should be 
-    # used with extreme discretion.
+    # It is important to note that changing the bypass to :bypass_firewall_rules
+    # removes ALL the protection offered by the firewall. This routine should be
+    # used with careful deliberation.
     #
     # Note that this routine queues a rule change and rule changes may take
     # time to process. The change will probably not take effect immediately
@@ -205,9 +233,9 @@ module SoftLayer
       service = service.object_mask(object_mask) if object_mask
 
       if self.has_sl_property?('networkComponent')
-        service.object_mask("mask[id,status,networkComponent.downlinkComponent.hardwareId]").getObject
+        service.object_mask("mask[id,status,billingItem.id,networkComponent.downlinkComponent.hardwareId]").getObject
       else
-        service.object_mask("mask[id,status,guestNetworkComponent.guest.id]").getObject
+        service.object_mask("mask[id,status,billingItem.id,guestNetworkComponent.guest.id]").getObject
       end
     end
 
@@ -216,7 +244,7 @@ module SoftLayer
     private
 
     def self.network_vlan_mask
-      "mask[firewallNetworkComponents[id,status,networkComponent.downlinkComponent.hardwareId],firewallGuestNetworkComponents[id,status,guestNetworkComponent.guest.id]]"
+      "mask[firewallNetworkComponents[id,status,billingItem.id,networkComponent.downlinkComponent.hardwareId],firewallGuestNetworkComponents[id,status,billingItem.id,guestNetworkComponent.guest.id]]"
     end
 
     def self.default_rules_mask
