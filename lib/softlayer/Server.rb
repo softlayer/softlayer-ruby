@@ -171,6 +171,16 @@ module SoftLayer
     end
 
     ##
+    # Returns the max port speed of the public network interfaces of the server taking into account
+    # bound interface pairs (redundant network cards).
+    def firewall_port_speed
+      network_components = self.service.object_mask("mask[id,maxSpeed]").getFrontendNetworkComponents()
+      max_speeds = network_components.collect { |component| component['maxSpeed'] }
+
+      max_speeds.empty? ? 0 : max_speeds.max
+    end
+
+    ##
     # Change the current port speed of the server
     #
     # +new_speed+ is expressed Mbps and should be 0, 10, 100, or 1000.
@@ -180,15 +190,9 @@ module SoftLayer
     # Set +public+ to +false+ in order to change the speed of the
     # primary private network interface.
     #
+    # This is an abstract method implemented by subclasses
     def change_port_speed(new_speed, public = true)
-      if public
-        self.service.setPublicNetworkInterfaceSpeed(new_speed)
-      else
-        self.service.setPrivateNetworkInterfaceSpeed(new_speed)
-      end
-
-      self.refresh_details()
-      self
+      raise "The abstract change_port_speed method of SoftLayer::Server was called. Subclasses should implement the method for their particular service"
     end
 
     ##

@@ -44,6 +44,13 @@ class APIParameterFilter
   end
 
   ##
+  # API Parameter filters will call through to a particular service
+  # but that service is defined by their target
+  def service_name
+    return @target.service_name
+  end
+
+  ##
   # Adds an API filter that narrows the scope of a call to an object with
   # a particular ID. For example, if you want to get the ticket
   # with an ID of 12345 from the ticket service you might use

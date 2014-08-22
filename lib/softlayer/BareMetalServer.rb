@@ -55,11 +55,20 @@ module SoftLayer
     end
 
     ##
-    # Returns the SoftLayer Service used to work with this Server
+    # Returns the typical Service used to work with this Server
     # For Bare Metal Servers that is +SoftLayer_Hardware+ though in some special cases
-    # you may have to use +SoftLayer_Hardware_Server+ as a type or service.
+    # you may have to use +SoftLayer_Hardware_Server+ as a type or service.  That
+    # service object is available thorugh the hardware_server_service method
     def service
       return softlayer_client[:Hardware].object_with_id(self.id)
+    end
+
+    ##
+    # Returns the SoftLayer_Hardware_Server service for this bare metal server
+    # This service is used less often than SoftLayer_Hardware, but may be required
+    # for some operations
+    def hardware_server_service
+      self.softlayer_client[:Hardware_Server].object_with_id(self.id)
     end
 
     ##
@@ -104,6 +113,57 @@ module SoftLayer
         :sales => 'Sales process / upgrades',
         :moving => 'Moving to competitor',
       }
+    end
+
+    ##
+    # Returns the max port speed of the public network interfaces of the server taking into account
+    # bound interface pairs (redundant network cards).
+    def firewall_port_speed
+      network_components = self.service.object_mask("mask[id,maxSpeed,networkComponentGroup.networkComponents]").getFrontendNetworkComponents()
+
+      # Split the interfaces into grouped and ungrouped interfaces. The max speed of a group will be the sum
+      # of the individual speeds in that group.  The max speed of ungrouped interfaces is simply the max speed
+      # of that interface.
+      grouped_interfaces, ungrouped_interfaces = network_components.partition{ |interface| interface.has_key?("networkComponentGroup") }
+
+      if !grouped_interfaces.empty?
+        group_speeds = grouped_interfaces.collect do |interface|
+          interface['networkComponentGroup']['networkComponents'].inject(0) {|total_speed, component| total_speed += component['maxSpeed']}
+        end
+
+        max_group_speed = group_speeds.max
+      else
+        max_group_speed = 0
+      end
+
+      if !ungrouped_interfaces.empty?
+        max_ungrouped_speed = ungrouped_interfaces.collect { |interface| interface['maxSpeed']}.max
+      else
+        max_ungrouped_speed = 0
+      end
+
+      return [max_group_speed, max_ungrouped_speed].max
+    end
+
+    ##
+    # Change the current port speed of the server
+    #
+    # +new_speed+ is expressed Mbps and should be 0, 10, 100, or 1000.
+    # Ports have a maximum speed that will limit the actual speed set
+    # on the port.
+    #
+    # Set +public+ to +false+ in order to change the speed of the
+    # primary private network interface.
+    #
+    def change_port_speed(new_speed, public = true)
+      if public
+        self.hardware_server_service.setPublicNetworkInterfaceSpeed(new_speed)
+      else
+        self.hardware_server_service.setPrivateNetworkInterfaceSpeed(new_speed)
+      end
+
+      self.refresh_details()
+      self
     end
 
     ##

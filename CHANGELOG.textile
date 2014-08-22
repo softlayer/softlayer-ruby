@@ -1,10 +1,11 @@
 *3.0*
 * Substantially rewrote the ObjectFilter class. ObjectFilters used to be hashes which made it easy to manipulate their content incorrectly. The new implementation has a strict interface that makes it harder to manipulate filters incorrectly.
-* Added a model for Virtual Server Image Templates (SoftLayer::ImageTemplate) - VirtualServerOrder now requires an instance of this class rather than allowing you to provide just the global_id of an image
+* Added a model for Virtual Server Image Templates (SoftLayer::ImageTemplate) - VirtualServerOrder now requires an instance of this class rather than allowing you to provide the global_id of an image
 * Added a model for data centers (SoftLayer::Datacenter). Bare Metal, Bare Metal Package, and Virtual server orders now use an instance of Datacenter to identify where their servers will be provisioned. The routines in those classes which used to provide lists of valid data center names now return data center objects.
 * Virtual Server Upgrades are now handled by the VirtualServerUpgradeOrder class and not the VirtualServer class. This change was made for several reasons. Firt and foremost, it allows multiple aspects of a virtual server to be upgraded at once without having to wait on separate transactions to complete between upgrades. Secondly it opens the door for additional upgrades (for example, to disk configuration) to be added in the future.
 * Added a method to reboot servers.
 * The routine to retreive the open tickets on an account has been moved from the Ticket class. The set of open tickets is now a dynamic property of an account object.
+* The Model Layer now includes models for Server (aka. Shared) and VLAN (aka. Dedicated) firewalls in the ServerFirewall, and VLANFireall classes respectively.  There are corresponding classes for ordering firewalls (ServerFirewallOrder and VLANFirewallOrder).  To facilitate the process of locating the 'id' for a firewall, the Account class includes the find_VLAN_with_number routine which lets you look up the segments of a firewall from the VLAN nubmer.
 
 *2.2*
 * Added the ability to set a timout for network requests. The timeout is given when a client is created by passing the :timeout hash parameter when creating a client. The value of the parameter is an integer number of seconds.
