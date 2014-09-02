@@ -9,10 +9,10 @@ module SoftLayer
   # all the servers on a VLAN in the SoftLayer Environment.  It is
   # also known as a "Dedicated Firewall" in some documentation.
   #
-  # Instances of this class are a bit odd because they actually represent
-  # VLANs (the VLAN protected by the firewall) and not the physical hardware
-  # implementing the firewall itself. (although the device is accessible as
-  # the "networkVlanFirewall" property)
+  # Instances of this class are a bit odd because they actually represent a
+  # VLAN (the VLAN protected by the firewall to be specific), and not the 
+  # physical hardware implementing the firewall itself. (although the device 
+  # is accessible as the "networkVlanFirewall" property)
   #
   # As a result, instances of this class correspond to certain instances
   # in the SoftLayer_Network_Vlan service.
@@ -23,7 +23,7 @@ module SoftLayer
     ##
     #:attr_reader:
     #
-    # The number of the VLAN protected by this firewall
+    # The number of the VLAN protected by this firewall.
     #
     sl_attr :VLAN_number, 'vlanNumber'
 
@@ -81,12 +81,12 @@ module SoftLayer
     # Cancel the firewall
     #
     # This method cancels the firewall and releases its
-    # resources.  The cancellation is processed immediately!
+    # resources. The cancellation is processed immediately!
     # Call this method with careful deliberation!
     #
     # Notes is a string that describes the reason for the
     # cancellation. If empty or nil, a default string will
-    # be added
+    # be added.
     #
     def cancel!(notes = nil)
       user = self.softlayer_client[:Account].object_mask("mask[id,account.id]").getCurrentUser
@@ -112,10 +112,15 @@ module SoftLayer
     # hashes should be entries from the array returned by
     # SoftLayer::ServerFirewall.default_rules_mask_keys
     #
+    # *NOTE!* When changing the rules on the firewall, you must
+    # pass in a complete set of rules each time. The rules you
+    # submit will replace the entire ruleset on the destination
+    # firewall.
+    #
     # *NOTE!* The rules themselves have an "orderValue" property.
     # It is this property, and *not* the order that the rules are
     # found in the rules_data array, which will determine in which
-    # order the firewall applies it's rules to incomming traffic.
+    # order the firewall applies its rules to incomming traffic.
     #
     # *NOTE!* Changes to the rules are not applied immediately
     # on the server side. Instead, they are enqueued by the
@@ -141,7 +146,7 @@ module SoftLayer
     # used with extreme discretion.
     #
     # Note that this routine queues a rule change and rule changes may take
-    # time to process. The change will probably not take effect immediately
+    # time to process. The change will probably not take effect immediately.
     #
     # The two symbols accepted as arguments by this routine are:
     # :apply_firewall_rules - The rules of the firewall are applied to traffic. This is the default operating mode of the firewall

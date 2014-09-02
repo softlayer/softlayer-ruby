@@ -10,10 +10,10 @@ module SoftLayer
   # SoftLayer environment that exists in a 1 to 1 relationship
   # with a particular server (either Bare Metal or Virtual).
   #
-  # This is also called a "Shared Firewall" in some documentation
+  # This is also called a "Shared Firewall" in some documentation.
   #
   # Instances of this class rougly correspond to instances of the
-  # SoftLayer_Network_Component_Firewall service entity
+  # SoftLayer_Network_Component_Firewall service entity.
   #
 	class ServerFirewall < SoftLayer::ModelBase
     include ::SoftLayer::DynamicAttribute
@@ -28,9 +28,9 @@ module SoftLayer
 
     ##
     # :attr_reader:
-    # The firewall rules assigned to this firewall.  These rules will
+    # The firewall rules assigned to this firewall. These rules will
     # be read from the network API every time you ask for the value
-    # of this property.  To change the rules on the server use the
+    # of this property. To change the rules on the server use the
     # asymmetric method change_rules!
     sl_dynamic_attr :rules do |firewall_rules|
       firewall_rules.should_update? do
@@ -90,7 +90,7 @@ module SoftLayer
     # Cancel the firewall
     #
     # This method cancels the firewall and releases its
-    # resources.  The cancellation is processed immediately!
+    # resources. The cancellation is processed immediately!
     # Call this method with careful deliberation!
     #
     # Notes is a string that describes the reason for the
@@ -121,13 +121,18 @@ module SoftLayer
     # hashes should be entries from the array returned by
     # SoftLayer::ServerFirewall.default_rules_mask_keys
     #
+    # *NOTE!* When changing the rules on the firewall, you must
+    # pass in a complete set of rules each time. The rules you
+    # submit will replace the entire ruleset on the destination
+    # firewall.
+    #
     # *NOTE!* The rules themselves have an "orderValue" property.
     # It is this property, and *not* the order that the rules are
     # found in the rules_data array, which will determine in which
     # order the firewall applies it's rules to incomming traffic.
     #
     # *NOTE!* Changes to the rules are not applied immediately
-    # on the server side.  Instead, they are enqueued by the
+    # on the server side. Instead, they are enqueued by the
     # firewall update service and updated periodically. A typical
     # update will take about one minute to apply, but times may vary
     # depending on the system load and other circumstances.
@@ -150,7 +155,7 @@ module SoftLayer
     # used with careful deliberation.
     #
     # Note that this routine queues a rule change and rule changes may take
-    # time to process. The change will probably not take effect immediately
+    # time to process. The change will probably not take effect immediately.
     #
     # The two symbols accepted as arguments by this routine are:
     # :apply_firewall_rules - The rules of the firewall are applied to traffic. This is the default operating mode of the firewall
