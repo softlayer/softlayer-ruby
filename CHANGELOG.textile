@@ -1,4 +1,4 @@
-*2.2.1*
+*2.2.2*
 * Fixed a bug in BareMetalServerOrder_Package.rb where the order template did not use an array for the "hardware" key.  This lead to an order template that would be accepted by verifyOrder, but rejected by placeOrder.  An internal issue to review verifyOrder has also been generated. (reported by Rohit Singh)
 
 *2.2*
