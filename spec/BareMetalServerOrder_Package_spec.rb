@@ -55,15 +55,15 @@ describe SoftLayer::BareMetalServerOrder_Package do
   end
 
   it "places its :hostname attribute into the hardware template in the order" do
-    expect(test_order.hardware_order['hardware']['hostname']).to be_nil
+    expect(test_order.hardware_order['hardware'][0]['hostname']).to be_nil
     test_order.hostname = "testhostname"
-    expect(test_order.hardware_order['hardware']['hostname']).to eq "testhostname"
+    expect(test_order.hardware_order['hardware'][0]['hostname']).to eq "testhostname"
   end
 
   it "places its :domain attribute into into the hardware template in the order" do
-    expect(test_order.hardware_order['hardware']['domain']).to be_nil
+    expect(test_order.hardware_order['hardware'][0]['domain']).to be_nil
     test_order.domain = "softlayer.com"
-    expect(test_order.hardware_order['hardware']['domain']).to eq "softlayer.com"
+    expect(test_order.hardware_order['hardware'][0]['domain']).to eq "softlayer.com"
   end
 
   it "places config options as prices in the order" do

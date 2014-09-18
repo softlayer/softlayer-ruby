@@ -118,10 +118,10 @@ module SoftLayer
       product_order = {
         'packageId' => @package.id,
         'useHourlyPricing' => false,
-        'hardware' => {
+        'hardware' => [{
           'hostname' => @hostname,
           'domain' => @domain
-        }
+          }]
       }
 
       product_order['location'] = @datacenter.id if @datacenter
