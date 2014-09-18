@@ -133,10 +133,10 @@ module SoftLayer
       product_order = {
         'packageId' => @package.id,
         'useHourlyPricing' => false,
-        'hardware' => {
+        'hardware' => [{
           'hostname' => @hostname,
           'domain' => @domain
-        }
+          }]
       }
 
       product_order['location'] = @package.location_id_for_datacenter_name(@datacenter.downcase) if @datacenter
