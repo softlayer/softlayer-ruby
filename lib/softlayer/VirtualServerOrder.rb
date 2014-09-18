@@ -119,7 +119,7 @@ module SoftLayer
       order_template = virtual_guest_template
       order_template = yield order_template if block_given?
 
-      @softlayer_client["Virtual_Guest"].generateOrderTemplate(order_template)
+      @softlayer_client[:Virtual_Guest].generateOrderTemplate(order_template)
     end
 
     # Calls the SoftLayer API to place an order for a new virtual server based on the template in this
@@ -132,8 +132,8 @@ module SoftLayer
       order_template = virtual_guest_template
       order_template = yield order_template if block_given?
 
-      virtual_server_hash = @softlayer_client["Virtual_Guest"].createObject(order_template)
-      SoftLayer::VirtualServer.server_with_id(virtual_server_hash["id"], :client => @softlayer_client) if virtual_server_hash
+      virtual_server_hash = @softlayer_client[:Virtual_Guest].createObject(order_template)
+      SoftLayer::VirtualServer.server_with_id(virtual_server_hash['id'], :client => @softlayer_client) if virtual_server_hash
     end
 
     protected
@@ -153,21 +153,21 @@ module SoftLayer
         "hourlyBillingFlag" => !!@hourly
       }
 
-      template["dedicatedAccountHostOnlyFlag"] = true if @dedicated_host_only
-      template["privateNetworkOnlyFlag"] = true if @private_network_only
+      template['dedicatedAccountHostOnlyFlag'] = true if @dedicated_host_only
+      template['privateNetworkOnlyFlag'] = true if @private_network_only
 
-      template["datacenter"] = {"name" => @datacenter.name} if @datacenter
+      template['datacenter'] = {"name" => @datacenter.name} if @datacenter
       template['userData'] = [{'value' => @user_metadata}] if @user_metadata
       template['networkComponents'] = [{'maxSpeed'=> @max_port_speed}] if @max_port_speed
       template['postInstallScriptUri'] = @provision_script_URI.to_s if @provision_script_URI
       template['sshKeys'] = @ssh_key_ids.collect { |ssh_key_id| {'id'=> ssh_key_id.to_i } } if @ssh_key_ids
       template['primaryNetworkComponent'] = { "networkVlan" => { "id" => @public_vlan_id.to_i } } if @public_vlan_id
-      template["primaryBackendNetworkComponent"] = { "networkVlan" => {"id" => @private_vlan_id.to_i } } if @private_vlan_id
+      template['primaryBackendNetworkComponent'] = { "networkVlan" => {"id" => @private_vlan_id.to_i } } if @private_vlan_id
 
       if @image_template
-          template["blockDeviceTemplateGroup"] = {"globalIdentifier" => @image_template.global_id}
+          template['blockDeviceTemplateGroup'] = {"globalIdentifier" => @image_template.global_id}
       elsif @os_reference_code
-          template["operatingSystemReferenceCode"] = @os_reference_code
+          template['operatingSystemReferenceCode'] = @os_reference_code
       end
 
       if @disks && !@disks.empty?
@@ -196,7 +196,7 @@ module SoftLayer
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
       @@create_object_options ||= nil
-      @@create_object_options = softlayer_client["Virtual_Guest"].getCreateObjectOptions() if !@@create_object_options
+      @@create_object_options = softlayer_client[:Virtual_Guest].getCreateObjectOptions() if !@@create_object_options
       @@create_object_options
     end
 
@@ -210,37 +210,37 @@ module SoftLayer
     ##
     # Return a list of values that are valid for the :datacenter attribute
     def self.datacenter_options(client = nil)
-      create_object_options(client)["datacenters"].collect { |datacenter_spec| Datacenter.datacenter_named(datacenter_spec['template']['datacenter']['name'], client) }.uniq
+      create_object_options(client)['datacenters'].collect { |datacenter_spec| Datacenter.datacenter_named(datacenter_spec['template']['datacenter']['name'], client) }.uniq
     end
 
     ##
     # Return a list of values that are valid for the :cores attribute
     def self.core_options(client = nil)
-      create_object_options(client)["processors"].collect { |processor_spec| processor_spec['template']['startCpus'] }.uniq.sort!
+      create_object_options(client)['processors'].collect { |processor_spec| processor_spec['template']['startCpus'] }.uniq.sort!
     end
 
     ##
     # Return a list of values that are valid for the :memory attribute
     def self.memory_options(client = nil)
-      create_object_options(client)["memory"].collect { |memory_spec| memory_spec['template']['maxMemory'].to_i / 1024}.uniq.sort!
+      create_object_options(client)['memory'].collect { |memory_spec| memory_spec['template']['maxMemory'].to_i / 1024}.uniq.sort!
     end
 
     ##
     # Return a list of values that are valid the array given to the :disks
     def self.disk_options(client = nil)
-      create_object_options(client)["blockDevices"].collect { |block_device_spec| block_device_spec['template']['blockDevices'][0]['diskImage']['capacity']}.uniq.sort!
+      create_object_options(client)['blockDevices'].collect { |block_device_spec| block_device_spec['template']['blockDevices'][0]['diskImage']['capacity']}.uniq.sort!
     end
 
     ##
     # Returns a list of the valid :os_refrence_codes
     def self.os_reference_code_options(client = nil)
-      create_object_options(client)["operatingSystems"].collect { |os_spec| os_spec['template']['operatingSystemReferenceCode'] }.uniq.sort!
+      create_object_options(client)['operatingSystems'].collect { |os_spec| os_spec['template']['operatingSystemReferenceCode'] }.uniq.sort!
     end
 
     ##
     # Returns a list of the :max_port_speeds
     def self.max_port_speed_options(client = nil)
-      create_object_options(client)["networkComponents"].collect { |component_spec| component_spec['template']['networkComponents'][0]['maxSpeed'] }
+      create_object_options(client)['networkComponents'].collect { |component_spec| component_spec['template']['networkComponents'][0]['maxSpeed'] }
     end
   end # class VirtualServerOrder
 end # module SoftLayer

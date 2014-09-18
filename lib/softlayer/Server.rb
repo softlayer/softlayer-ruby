@@ -16,6 +16,7 @@ module SoftLayer
   # ancestry.  As a result there is no SoftLayer API analog
   # to this class.
   class Server  < SoftLayer::ModelBase
+    include ::SoftLayer::DynamicAttribute
 
     ##
     # :attr_reader:
@@ -52,6 +53,17 @@ module SoftLayer
     # Notes about these server (for use by the customer)
     sl_attr :notes
 
+    sl_dynamic_attr :primary_network_component do |primary_component|
+      primary_component.should_update? do
+        return @primary_network_component == nil
+      end
+
+      primary_component.to_update do
+        component_data = self.service.getPrimaryNetworkComponent();
+        SoftLayer::NetworkComponent.new(self.softlayer_client, component_data)
+      end
+    end
+
     ##
     # Construct a server from the given client using the network data found in +network_hash+
     #
@@ -82,7 +94,7 @@ module SoftLayer
       when :power_cycle
         self.service.rebootHard
       else
-        raise RuntimeError, "Unrecognized reboot technique in SoftLayer::Server#reboot!}"
+        raise ArgumentError, "Unrecognized reboot technique in SoftLayer::Server#reboot!}"
       end
     end
 
@@ -105,7 +117,7 @@ module SoftLayer
     # Change the notes of the server
     # raises ArgumentError if you pass nil as the notes
     def notes=(new_notes)
-      raise ArgumentError.new("The new notes cannot be nil") unless new_notes
+      raise ArgumentError, "The new notes cannot be nil" unless new_notes
 
       edit_template = {
         "notes" => new_notes
@@ -119,7 +131,7 @@ module SoftLayer
     # Change the user metadata for the server.
     #
     def user_metadata=(new_metadata)
-      raise ArgumentError.new("Cannot set user metadata to nil") unless new_metadata
+      raise ArgumentError, "Cannot set user metadata to nil" unless new_metadata
       self.service.setUserMetadata([new_metadata])
       self.refresh_details()
     end
@@ -129,8 +141,8 @@ module SoftLayer
     # Raises an ArgumentError if the new hostname is nil or empty
     #
     def set_hostname!(new_hostname)
-      raise ArgumentError.new("The new hostname cannot be nil") unless new_hostname
-      raise ArgumentError.new("The new hostname cannot be empty") if new_hostname.empty?
+      raise ArgumentError, "The new hostname cannot be nil" unless new_hostname
+      raise ArgumentError, "The new hostname cannot be empty" if new_hostname.empty?
 
       edit_template = {
         "hostname" => new_hostname
@@ -147,8 +159,8 @@ module SoftLayer
     # no further validation is done on the domain name
     #
     def set_domain!(new_domain)
-      raise ArgumentError.new("The new hostname cannot be nil") unless new_domain
-      raise ArgumentError.new("The new hostname cannot be empty") if new_domain.empty?
+      raise ArgumentError, "The new hostname cannot be nil" unless new_domain
+      raise ArgumentError, "The new hostname cannot be empty" if new_domain.empty?
 
       edit_template = {
         "domain" => new_domain
@@ -159,6 +171,16 @@ module SoftLayer
     end
 
     ##
+    # Returns the max port speed of the public network interfaces of the server taking into account
+    # bound interface pairs (redundant network cards).
+    def firewall_port_speed
+      network_components = self.service.object_mask("mask[id,maxSpeed]").getFrontendNetworkComponents()
+      max_speeds = network_components.collect { |component| component['maxSpeed'] }
+
+      max_speeds.empty? ? 0 : max_speeds.max
+    end
+
+    ##
     # Change the current port speed of the server
     #
     # +new_speed+ is expressed Mbps and should be 0, 10, 100, or 1000.
@@ -166,8 +188,7 @@ module SoftLayer
     # on the port.
     #
     # Set +public+ to +false+ in order to change the speed of the
-    # primary private network interface.
-    #
+    # private network interface.
     def change_port_speed(new_speed, public = true)
       if public
         self.service.setPublicNetworkInterfaceSpeed(new_speed)

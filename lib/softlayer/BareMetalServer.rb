@@ -27,7 +27,7 @@ module SoftLayer
     #
     def bare_metal_instance?
       if has_sl_property?(:bareMetalInstanceFlag)
-        self["bareMetalInstanceFlag"] != 0
+        self['bareMetalInstanceFlag'] != 0
       else
         false
       end
@@ -47,19 +47,20 @@ module SoftLayer
       if !bare_metal_instance? then
         cancellation_reasons = self.class.cancellation_reasons()
         cancel_reason = cancellation_reasons[reason] || cancellation_reasons[:unneeded]
-        softlayer_client["Ticket"].createCancelServerTicket(self.id, cancel_reason, comment, true, 'HARDWARE')
+        softlayer_client[:Ticket].createCancelServerTicket(self.id, cancel_reason, comment, true, 'HARDWARE')
       else
         # Note that reason and comment are ignored in this case, unfortunately
-        softlayer_client['Billing_Item'].object_with_id(self.billingItem['id'].to_i).cancelService()
+        softlayer_client[:Billing_Item].object_with_id(self.billingItem['id'].to_i).cancelService()
       end
     end
 
     ##
-    # Returns the SoftLayer Service used to work with this Server
+    # Returns the typical Service used to work with this Server
     # For Bare Metal Servers that is +SoftLayer_Hardware+ though in some special cases
-    # you may have to use +SoftLayer_Hardware_Server+ as a type or service.
+    # you may have to use +SoftLayer_Hardware_Server+ as a type or service.  That
+    # service object is available thorugh the hardware_server_service method
     def service
-      return softlayer_client["Hardware"].object_with_id(self.id)
+      return softlayer_client[:Hardware_Server].object_with_id(self.id)
     end
 
     ##
@@ -107,6 +108,36 @@ module SoftLayer
     end
 
     ##
+    # Returns the max port speed of the public network interfaces of the server taking into account
+    # bound interface pairs (redundant network cards).
+    def firewall_port_speed
+      network_components = self.service.object_mask("mask[id,maxSpeed,networkComponentGroup.networkComponents]").getFrontendNetworkComponents()
+
+      # Split the interfaces into grouped and ungrouped interfaces. The max speed of a group will be the sum
+      # of the individual speeds in that group.  The max speed of ungrouped interfaces is simply the max speed
+      # of that interface.
+      grouped_interfaces, ungrouped_interfaces = network_components.partition{ |interface| interface.has_key?("networkComponentGroup") }
+
+      if !grouped_interfaces.empty?
+        group_speeds = grouped_interfaces.collect do |interface|
+          interface['networkComponentGroup']['networkComponents'].inject(0) {|total_speed, component| total_speed += component['maxSpeed']}
+        end
+
+        max_group_speed = group_speeds.max
+      else
+        max_group_speed = 0
+      end
+
+      if !ungrouped_interfaces.empty?
+        max_ungrouped_speed = ungrouped_interfaces.collect { |interface| interface['maxSpeed']}.max
+      else
+        max_ungrouped_speed = 0
+      end
+
+      return [max_group_speed, max_ungrouped_speed].max
+    end
+
+    ##
     # Retrive the bare metal server with the given server ID from the
     # SoftLayer API
     #
@@ -120,7 +151,7 @@ module SoftLayer
       softlayer_client = options[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      hardware_service = softlayer_client["Hardware"]
+      hardware_service = softlayer_client[:Hardware_Server]
       hardware_service = hardware_service.object_mask(default_object_mask.to_sl_object_mask)
 
       if options.has_key?(:object_mask)
@@ -199,7 +230,7 @@ module SoftLayer
           } );
       end
 
-      account_service = softlayer_client['Account']
+      account_service = softlayer_client[:Account]
       account_service = account_service.object_filter(object_filter) unless object_filter.empty?
       account_service = account_service.object_mask(default_object_mask.to_sl_object_mask)
 

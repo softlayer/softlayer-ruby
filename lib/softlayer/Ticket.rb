@@ -25,14 +25,14 @@ module SoftLayer
     ##
     # Returns true if the ticket has "unread" updates
     def has_updates?
-      self["newUpdatesFlag"]
+      self['newUpdatesFlag']
     end
 
     ##
     # Returns true if the ticket is a server admin ticket
     def server_admin_ticket?
       # note that serverAdministrationFlag comes from the server as an Integer (0, or 1)
-      self["serverAdministrationFlag"] != 0
+      self['serverAdministrationFlag'] != 0
     end
 
 		##
@@ -46,7 +46,7 @@ module SoftLayer
     # Override of service from ModelBase. Returns the SoftLayer_Ticket service
     # set up to talk to the ticket with my ID.
     def service
-      return softlayer_client["Ticket"].object_with_id(self.id)
+      return softlayer_client[:Ticket].object_with_id(self.id)
     end
 
     ##
@@ -96,7 +96,7 @@ module SoftLayer
         softlayer_client = client || Client.default_client
         raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-				@ticket_subjects = softlayer_client['Ticket_Subject'].getAllObjects();
+				@ticket_subjects = softlayer_client[:Ticket_Subject].getAllObjects();
 			end
 
 			@ticket_subjects
@@ -122,7 +122,7 @@ module SoftLayer
         object_mask = default_object_mask.to_sl_object_mask
       end
 
-      ticket_data = softlayer_client["Ticket"].object_with_id(ticket_id).object_mask(object_mask).getObject()
+      ticket_data = softlayer_client[:Ticket].object_with_id(ticket_id).object_mask(object_mask).getObject()
 
       return new(softlayer_client, ticket_data)
     end
@@ -153,8 +153,8 @@ module SoftLayer
       assigned_user_id = options[:assigned_user_id]
 
       if(nil == assigned_user_id)
-        current_user = softlayer_client["Account"].object_mask("id").getCurrentUser()
-        assigned_user_id = current_user["id"]
+        current_user = softlayer_client[:Account].object_mask("id").getCurrentUser()
+        assigned_user_id = current_user['id']
       end
 
       new_ticket = {
@@ -164,7 +164,7 @@ module SoftLayer
         'title' => title
       }
 
-      ticket_data = softlayer_client["Ticket"].createStandardTicket(new_ticket, body)
+      ticket_data = softlayer_client[:Ticket].createStandardTicket(new_ticket, body)
       return new(softlayer_client, ticket_data)
     end
 	end

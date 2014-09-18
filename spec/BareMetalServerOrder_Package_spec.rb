@@ -45,13 +45,13 @@ describe SoftLayer::BareMetalServerOrder_Package do
   end
 
   it 'places the package id from which it was ordered into the order template' do
-    expect(test_order.hardware_order["packageId"]).to eq 32
+    expect(test_order.hardware_order['packageId']).to eq 32
   end
 
   it "places its :datacenter attribute into the order template" do
-    expect(test_order.hardware_order["location"]).to be_nil
+    expect(test_order.hardware_order['location']).to be_nil
     test_order.datacenter = test_datacenter
-    expect(test_order.hardware_order["location"]).to eq 224092
+    expect(test_order.hardware_order['location']).to eq 224092
   end
 
   it "places its :hostname attribute into the hardware template in the order" do
@@ -109,7 +109,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
     package = SoftLayer::ProductPackage.new(client, fixture_from_json("Product_Package"))
 
-    order_service = client["Product_Order"]
+    order_service = client[:Product_Order]
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(package, client)
@@ -126,7 +126,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
     package = SoftLayer::ProductPackage.new(client, fixture_from_json("Product_Package"))
 
-    order_service = client["Product_Order"]
+    order_service = client[:Product_Order]
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(package, client)
@@ -143,7 +143,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
     package = SoftLayer::ProductPackage.new(client, fixture_from_json("Product_Package"))
 
-    order_service = client["Product_Order"]
+    order_service = client[:Product_Order]
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(package, client)
@@ -161,7 +161,7 @@ describe SoftLayer::BareMetalServerOrder_Package do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
     package = SoftLayer::ProductPackage.new(client, fixture_from_json("Product_Package"))
 
-    order_service = client["Product_Order"]
+    order_service = client[:Product_Order]
     allow(order_service).to receive(:call_softlayer_api_with_params)
 
     test_order = SoftLayer::BareMetalServerOrder_Package.new(package, client)

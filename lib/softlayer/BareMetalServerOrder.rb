@@ -111,7 +111,7 @@ module SoftLayer
       order_template = hardware_instance_template
       order_template = yield order_template if block_given?
 
-      @softlayer_client["Hardware"].generateOrderTemplate(order_template)
+      @softlayer_client[:Hardware].generateOrderTemplate(order_template)
     end
 
     ##
@@ -124,8 +124,8 @@ module SoftLayer
       order_template = hardware_instance_template
       order_template = yield order_template if block_given?
 
-      server_hash = @softlayer_client["Hardware"].createObject(order_template)
-      SoftLayer::BareMetalServer.server_with_id(server_hash["id"], :client => @softlayer_client) if server_hash
+      server_hash = @softlayer_client[:Hardware].createObject(order_template)
+      SoftLayer::BareMetalServer.server_with_id(server_hash['id'], :client => @softlayer_client) if server_hash
     end
 
     protected
@@ -147,15 +147,15 @@ module SoftLayer
         "hourlyBillingFlag" => !!@hourly
       }
 
-      template["privateNetworkOnlyFlag"] = true if @private_network_only
+      template['privateNetworkOnlyFlag'] = true if @private_network_only
 
-      template["datacenter"] = {"name" => @datacenter.name} if @datacenter
+      template['datacenter'] = {"name" => @datacenter.name} if @datacenter
       template['userData'] = [{'value' => @user_metadata}] if @user_metadata
       template['networkComponents'] = [{'maxSpeed'=> @max_port_speed}] if @max_port_speed
       template['postInstallScriptUri'] = @provision_script_URI.to_s if @provision_script_URI
       template['sshKeys'] = @ssh_key_ids.collect { |ssh_key| {'id'=> ssh_key.to_i } } if @ssh_key_ids
       template['primaryNetworkComponent'] = { "networkVlan" => { "id" => @public_vlan_id.to_i } } if @public_vlan_id
-      template["primaryBackendNetworkComponent"] = { "networkVlan" => {"id" => @private_vlan_id.to_i } } if @private_vlan_id
+      template['primaryBackendNetworkComponent'] = { "networkVlan" => {"id" => @private_vlan_id.to_i } } if @private_vlan_id
 
       if @disks && !@disks.empty?
         template['hardDrives'] = @disks.collect do |disk|
@@ -174,36 +174,36 @@ module SoftLayer
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
       @@create_object_options ||= nil
-      @@create_object_options = softlayer_client["Hardware"].getCreateObjectOptions() if !@@create_object_options
+      @@create_object_options = softlayer_client[:Hardware].getCreateObjectOptions() if !@@create_object_options
       @@create_object_options
     end
 
     ##
     # Return a list of values that are valid for the :datacenter attribute
     def self.datacenter_options(client = nil)
-      create_object_options(client)["datacenters"].collect { |datacenter_spec| Datacenter.datacenter_named(datacenter_spec['template']['datacenter']['name'], client) }.uniq
+      create_object_options(client)['datacenters'].collect { |datacenter_spec| Datacenter.datacenter_named(datacenter_spec['template']['datacenter']['name'], client) }.uniq
     end
 
     def self.core_options(client = nil)
-      create_object_options(client)["processors"].collect { |processor_spec| processor_spec['template']['processorCoreAmount'] }.uniq.sort!
+      create_object_options(client)['processors'].collect { |processor_spec| processor_spec['template']['processorCoreAmount'] }.uniq.sort!
     end
 
     ##
     # Return a list of values that are valid the array given to the :disks
     def self.disk_options(client = nil)
-      create_object_options(client)["hardDrives"].collect { |disk_spec| disk_spec['template']['hardDrives'][0]['capacity'].to_i}.uniq.sort!
+      create_object_options(client)['hardDrives'].collect { |disk_spec| disk_spec['template']['hardDrives'][0]['capacity'].to_i}.uniq.sort!
     end
 
     ##
     # Returns a list of the valid :os_refrence_codes
     def self.os_reference_code_options(client = nil)
-      create_object_options(client)["operatingSystems"].collect { |os_spec| os_spec['template']['operatingSystemReferenceCode'] }.uniq.sort!
+      create_object_options(client)['operatingSystems'].collect { |os_spec| os_spec['template']['operatingSystemReferenceCode'] }.uniq.sort!
     end
 
     ##
     # Returns a list of the :max_port_speeds
     def self.max_port_speed_options(client = nil)
-      create_object_options(client)["networkComponents"].collect { |component_spec| component_spec['template']['networkComponents'][0]['maxSpeed'] }
+      create_object_options(client)['networkComponents'].collect { |component_spec| component_spec['template']['networkComponents'][0]['maxSpeed'] }
     end
 
   end # class BareMetalServerOrder

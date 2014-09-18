@@ -10,8 +10,22 @@ module SoftLayer
   # the product order is the price_id, the rest of the information is provided
   # to make the object friendly to humans who may be searching for the
   # meaning of a given price_id.
-  class ProductConfigurationOption < Struct.new(:price_id, :description, :capacity, :units, :setupFee, :laborFee, :oneTimeFee, :recurringFee, :hourlyRecurringFee)
+  class ProductConfigurationOption < Struct.new(:price_id, :description, :capacity, :units, :setupFee, :laborFee,
+     :oneTimeFee, :recurringFee, :hourlyRecurringFee)
     # Is it evil, or just incongruous to give methods to a struct?
+
+    def initialize(package_item_data, price_item_data)
+      self.description = package_item_data['description']
+      self.capacity = package_item_data['capacity']
+      self.units = package_item_data['units']
+
+      self.price_id = price_item_data['id']
+      self.setupFee = price_item_data['setupFee'] ? price_item_data['setupFee'].to_f : 0.0
+      self.laborFee = price_item_data['laborFee'] ? price_item_data['laborFee'].to_f : 0.0
+      self.oneTimeFee = price_item_data['oneTimeFee'] ? price_item_data['oneTimeFee'].to_f : 0.0
+      self.recurringFee = price_item_data['recurringFee'] ? price_item_data['recurringFee'].to_f : 0.0
+      self.hourlyRecurringFee = price_item_data['hourlyRecurringFee'] ? price_item_data['hourlyRecurringFee'].to_f : 0.0
+    end
 
     # returns true if the configurtion option has no fees associated with it.
     def free?
@@ -63,24 +77,14 @@ module SoftLayer
         # web UI), but this code collapses the groups.
         self['groups'].collect do |group|
           group['prices'].sort{|lhs,rhs| lhs['sort'] <=> rhs['sort']}.collect do |price_item|
-            ProductConfigurationOption.new(
-              price_item['id'],
-              price_item['item']['description'],
-              price_item['item']['capacity'],
-              price_item['item']['units'],
-              price_item['setupFee'] ? price_item['setupFee'].to_f : 0.0,
-              price_item['laborFee'] ? price_item['laborFee'].to_f : 0.0,
-              price_item['oneTimeFee'] ? price_item['oneTimeFee'].to_f : 0.0,
-              price_item['recurringFee'] ? price_item['recurringFee'].to_f : 0.0,
-              price_item['hourlyRecurringFee'] ? price_item['hourlyRecurringFee'].to_f : 0.0
-              )
+            ProductConfigurationOption.new(price_item['item'], price_item)
           end
         end.flatten # flatten out the individual group arrays.
       end
     end
 
     def service
-      softlayer_client["SoftLayer_Product_Item_Category"].object_with_id(self.id)
+      softlayer_client[:SoftLayer_Product_Item_Category].object_with_id(self.id)
     end
 
     ##

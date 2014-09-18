@@ -72,8 +72,8 @@ module SoftLayer
 
 		def Config.environment_settings
 			result = {}
-			result[:username] =  ENV["SL_USERNAME"] if ENV["SL_USERNAME"]
-			result[:api_key] = ENV["SL_API_KEY"] if ENV["SL_API_KEY"]
+			result[:username] =  ENV['SL_USERNAME'] if ENV['SL_USERNAME']
+			result[:api_key] = ENV['SL_API_KEY'] if ENV['SL_API_KEY']
 			result
 		end
 
@@ -89,7 +89,7 @@ module SoftLayer
 			search_path.each do |file_path|
 				if File.readable? file_path
 					config = ConfigParser.new file_path
-					softlayer_section = config["softlayer"]
+					softlayer_section = config['softlayer']
 
 					if softlayer_section
 						result[:username] = softlayer_section['username'] if softlayer_section['username']

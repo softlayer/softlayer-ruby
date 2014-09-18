@@ -42,7 +42,7 @@ describe SoftLayer::APIParameterFilter do
     end
 
     it "rejects calls that pass things other than strings" do
-      expect { filter.object_mask(["anArray"]) }.to raise_error
+      expect { filter.object_mask(['anArray']) }.to raise_error
       expect { filter.object_mask({"a" => "hash"}) }.to raise_error
       expect { filter.object_mask(Object.new) }.to raise_error
     end
@@ -90,7 +90,7 @@ describe SoftLayer::APIParameterFilter do
       target = double("method_missing_target")
 
       filter = SoftLayer::APIParameterFilter.new(target).object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]").object_with_id(12345)
-      expect(target).to receive(:call_softlayer_api_with_params).with(:getObject, filter, ["marshmallow"])
+      expect(target).to receive(:call_softlayer_api_with_params).with(:getObject, filter, ['marshmallow'])
 
       filter.getObject("marshmallow")
     end

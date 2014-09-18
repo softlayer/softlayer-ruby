@@ -32,7 +32,7 @@ module SoftLayer
 
     # A string passsed as the value for the User-Agent header when requests are sent to SoftLayer API.
     attr_accessor :user_agent
-    
+
     # An integer value (in seconds). The number of seconds to wait for HTTP requests to the network API
     # until they timeout. This value can be nil in which case the timeout will be the default value for
     # the library handling network communication (often 30 seconds)
@@ -84,8 +84,10 @@ module SoftLayer
       # and the endpoint url
       @endpoint_url = settings[:endpoint_url] || API_PUBLIC_ENDPOINT
 
+      # set the user agent to the one provided, or set it to a default one
       @user_agent = settings[:user_agent] || "softlayer_api gem/#{SoftLayer::VERSION} (Ruby #{RUBY_PLATFORM}/#{RUBY_VERSION})"
-      
+
+      # and assign a time out if the settings offer one
       @network_timeout = settings[:timeout] if settings.has_key?(:timeout)
 
       raise "A SoftLayer Client requires a username" if !@username || @username.empty?

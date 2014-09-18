@@ -13,7 +13,7 @@ require 'rspec'
 describe SoftLayer::ProductPackage do
   it "requests packages by key name" do
     client = SoftLayer::Client.new(:username => "fake_user", :api_key => "BADKEY")
-    product_package_service = client['Product_Package']
+    product_package_service = client[:Product_Package]
 
     expect(product_package_service).to receive(:call_softlayer_api_with_params) do |method_name, parameters, args|
       expect(method_name).to be(:getAllObjects)
@@ -29,7 +29,7 @@ describe SoftLayer::ProductPackage do
   it "identifies itself with the Product_Package service" do
     mock_client = SoftLayer::Client.new(:username => "fake_user", :api_key => "BADKEY")
     allow(mock_client).to receive(:[]) do |service_name|
-      expect(service_name).to eq "Product_Package"
+      expect(service_name).to eq :Product_Package
       mock_service = SoftLayer::Service.new("SoftLayer_Product_Package", :client => mock_client)
 
       # mock out call_softlayer_api_with_params so the service doesn't actually try to
@@ -47,7 +47,7 @@ describe SoftLayer::ProductPackage do
   describe "class methods for getting to packages" do
     let(:mock_client) do
       client = SoftLayer::Client.new(:username => "fake_user", :api_key => "BADKEY")
-      product_package_service = client['Product_Package']
+      product_package_service = client[:Product_Package]
 
       allow(product_package_service).to receive(:call_softlayer_api_with_params).with(:getAllObjects, instance_of(SoftLayer::APIParameterFilter), []).and_return([fixture_from_json("Product_Package")])
       client

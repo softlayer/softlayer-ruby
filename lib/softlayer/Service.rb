@@ -20,6 +20,19 @@
 
 require 'xmlrpc/client'
 
+# utility routine for swapping constants without warnings.
+def with_warnings(flag)
+  old_verbose, $VERBOSE = $VERBOSE, flag
+  yield
+ensure
+  $VERBOSE = old_verbose
+end
+
+# enable parsing of "nil" values in structures returned from the API
+with_warnings(nil) {
+  XMLRPC::Config.const_set('ENABLE_NIL_PARSER', true)
+}
+
 # The XML-RPC spec calls for the "faultCode" in faults to be an integer
 # but the SoftLayer XML-RPC API can return strings as the "faultCode"
 #
@@ -30,22 +43,12 @@ module XMLRPC::Convert
   def self.fault(hash)
     if hash.kind_of? Hash and hash.size == 2 and
       hash.has_key? "faultCode" and hash.has_key? "faultString" and
-      (hash["faultCode"].kind_of?(Integer) || hash["faultCode"].kind_of?(String)) and hash["faultString"].kind_of? String
+      (hash['faultCode'].kind_of?(Integer) || hash['faultCode'].kind_of?(String)) and hash['faultString'].kind_of? String
 
-      XMLRPC::FaultException.new(hash["faultCode"], hash["faultString"])
+      XMLRPC::FaultException.new(hash['faultCode'], hash['faultString'])
     else
       super
     end
-  end
-end
-
-# The XMLRPC client uses a fixed user agent string, but we want to
-# supply our own, so we add a method to XMLRPC::Client that lets
-# us change it.
-class XMLRPC::Client
-  def self.set_user_agent(new_agent)
-    remove_const(:USER_AGENT) if const_defined?(:USER_AGENT)
-    const_set(:USER_AGENT, new_agent)
   end
 end
 
@@ -62,7 +65,7 @@ module SoftLayer
   #
   #     client = SoftLayer::Client.new(:username => "Joe", :api_key=>"feeddeadbeefbadfood...")
   #     account_service = client.service_named("Account") # returns the SoftLayer_Account service
-  #     account_service = client['Account'] # Exactly the same as above
+  #     account_service = client[:Account] # Exactly the same as above
   #
   # For backward compatibility, a service can be constructed by passing
   # client initialization options, however if you do so you will need to
@@ -315,6 +318,7 @@ using either client.service_named('<service_name_here>') or client['<service_nam
           end
 
           @xmlrpc_client.http.set_debug_output($stderr)
+          @xmlrpc_client.http.instance_variable_set(:@verify_mode, OpenSSL::SSL::VERIFY_NONE)
         end # $DEBUG
       end
 

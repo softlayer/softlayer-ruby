@@ -22,7 +22,7 @@ describe SoftLayer::Ticket do
 
 	  mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key=> 'fakekey')
     allow(mock_client).to receive(:[]) do |service_name|
-      expect(service_name).to eq "Ticket_Subject"
+      expect(service_name).to eq :Ticket_Subject
 
       mock_service = SoftLayer::Service.new("SoftLayer_Ticket_Subject", :client => mock_client)
       expect(mock_service).to receive(:getAllObjects).once.and_return(fakeTicketSubjects)
@@ -48,7 +48,7 @@ describe SoftLayer::Ticket do
 
 	  mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key=> 'fakekey')
     allow(mock_client).to receive(:[]) do |service_name|
-      expect(service_name).to eq "Ticket"
+      expect(service_name).to eq :Ticket
       mock_service = SoftLayer::Service.new("SoftLayer_Ticket", :client => mock_client)
 
       # mock out call_softlayer_api_with_params so the service doesn't actually try to

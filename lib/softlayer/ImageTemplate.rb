@@ -41,14 +41,14 @@ module SoftLayer
     # true if the image template is a flex image
     # Note that the publicFlag property comes back as an integer (0 or 1)
     def public?
-      self["publicFlag"] != 0
+      self['publicFlag'] != 0
     end
 
     ##
     # true if the image template is a flex image
     # Note that the flexImageFlag property comes back as a boolean
     def flex_image?
-      !!self["flexImageFlag"]
+      !!self['flexImageFlag']
     end
 
     ##
@@ -63,7 +63,7 @@ module SoftLayer
     ##
     # Returns an array of the tags set on the image
     def tags
-      return self["tagReferences"].collect{ |tag_reference| tag_reference["tag"]["name"] }
+      return self['tagReferences'].collect{ |tag_reference| tag_reference['tag']['name'] }
     end
 
     ##
@@ -78,7 +78,7 @@ module SoftLayer
     ##
     # Returns the an array containing the datacenters where this image is available.
     def datacenters
-      self["datacenters"].collect{ |datacenter_data| SoftLayer::Datacenter.datacenter_named(datacenter_data["name"])}
+      self['datacenters'].collect{ |datacenter_data| SoftLayer::Datacenter.datacenter_named(datacenter_data['name'])}
     end
 
     ##
@@ -107,7 +107,7 @@ module SoftLayer
     #
     def available_datacenters
       datacenters_data = self.service.getStorageLocations()
-      datacenters_data.collect { |datacenter_data| SoftLayer::Datacenter.datacenter_named(datacenter_data["name"]) }
+      datacenters_data.collect { |datacenter_data| SoftLayer::Datacenter.datacenter_named(datacenter_data['name']) }
     end
 
 
@@ -116,7 +116,7 @@ module SoftLayer
     # that this image is shared with
     def shared_with_accounts
       accounts_data = self.service.getAccountReferences
-      accounts_data.collect { |account_data| account_data["accountId"] }
+      accounts_data.collect { |account_data| account_data['accountId'] }
     end
 
     ##
@@ -177,7 +177,7 @@ module SoftLayer
         self.refresh_details()
 
         parent_ready = !(has_sl_property? :transactionId) || (self[:transactionId] == "")
-        children_ready = (nil == self["children"].find { |child| child["transactionId"] != "" })
+        children_ready = (nil == self['children'].find { |child| child['transactionId'] != "" })
 
         ready = parent_ready && children_ready
         yield ready if block_given?
@@ -191,7 +191,7 @@ module SoftLayer
 
     # ModelBase protocol methods
     def service
-      softlayer_client['Virtual_Guest_Block_Device_Template_Group'].object_with_id(self.id)
+      softlayer_client[:Virtual_Guest_Block_Device_Template_Group].object_with_id(self.id)
     end
 
     def softlayer_properties(object_mask = nil)
@@ -245,7 +245,7 @@ module SoftLayer
           } );
       end
 
-      account_service = softlayer_client['Account']
+      account_service = softlayer_client[:Account]
       account_service = account_service.object_filter(object_filter) unless object_filter.empty?
       account_service = account_service.object_mask(default_object_mask)
 
@@ -311,7 +311,7 @@ module SoftLayer
           } );
       end
 
-      template_service = softlayer_client['Virtual_Guest_Block_Device_Template_Group']
+      template_service = softlayer_client[:Virtual_Guest_Block_Device_Template_Group]
       template_service = template_service.object_filter(object_filter) unless object_filter.empty?
       template_service = template_service.object_mask(default_object_mask)
 
@@ -347,7 +347,7 @@ module SoftLayer
       softlayer_client = options_hash[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      service = softlayer_client['Virtual_Guest_Block_Device_Template_Group'].object_with_id(id)
+      service = softlayer_client[:Virtual_Guest_Block_Device_Template_Group].object_with_id(id)
       service.object_mask(default_object_mask)
 
       if options_hash.has_key? :object_mask

@@ -47,7 +47,7 @@ module SoftLayer
     # a particular entity in the SoftLayer_Ticket service.  The particular
     # entity is identified by its id so the Ticket class would return
     #
-    #     softlayer_client["Ticket"].object_with_id
+    #     softlayer_client[:Ticket].object_with_id
     #
     # which is a service which would allow calls to the ticket service
     # through that particular object.
