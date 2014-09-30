@@ -1,24 +1,10 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
+
+
 
 module SoftLayer
   #
@@ -27,6 +13,7 @@ module SoftLayer
   # +SoftLayer_Hardware_Server+ services in the SoftLayer API
   #
   # http://sldn.softlayer.com/reference/datatypes/SoftLayer_Hardware
+  #
   # http://sldn.softlayer.com/reference/datatypes/SoftLayer_Hardware_Server
   #
   class BareMetalServer < Server
@@ -40,7 +27,7 @@ module SoftLayer
     #
     def bare_metal_instance?
       if has_sl_property?(:bareMetalInstanceFlag)
-        self["bareMetalInstanceFlag"] != 0
+        self['bareMetalInstanceFlag'] != 0
       else
         false
       end
@@ -51,7 +38,7 @@ module SoftLayer
     # removed from the account).
     #
     # The +cancellation_reason+ parameter should be a key from the hash returned
-    # by +BareMetalServer::cancellation_reasons+.
+    # by BareMetalServer::cancellation_reasons.
     #
     # You may add your own, more specific reasons for cancelling a server in the
     # +comments+ parameter.
@@ -60,19 +47,20 @@ module SoftLayer
       if !bare_metal_instance? then
         cancellation_reasons = self.class.cancellation_reasons()
         cancel_reason = cancellation_reasons[reason] || cancellation_reasons[:unneeded]
-        softlayer_client["Ticket"].createCancelServerTicket(self.id, cancel_reason, comment, true, 'HARDWARE')
+        softlayer_client[:Ticket].createCancelServerTicket(self.id, cancel_reason, comment, true, 'HARDWARE')
       else
         # Note that reason and comment are ignored in this case, unfortunately
-        softlayer_client['Billing_Item'].object_with_id(self.billingItem['id'].to_i).cancelService()
+        softlayer_client[:Billing_Item].object_with_id(self.billingItem['id'].to_i).cancelService()
       end
     end
 
     ##
-    # Returns the SoftLayer Service used to work with this Server
+    # Returns the typical Service used to work with this Server
     # For Bare Metal Servers that is +SoftLayer_Hardware+ though in some special cases
-    # you may have to use +SoftLayer_Hardware_Server+ as a type or service.
+    # you may have to use +SoftLayer_Hardware_Server+ as a type or service.  That
+    # service object is available thorugh the hardware_server_service method
     def service
-      return softlayer_client["Hardware"].object_with_id(self.id)
+      return softlayer_client[:Hardware_Server].object_with_id(self.id)
     end
 
     ##
@@ -120,6 +108,36 @@ module SoftLayer
     end
 
     ##
+    # Returns the max port speed of the public network interfaces of the server taking into account
+    # bound interface pairs (redundant network cards).
+    def firewall_port_speed
+      network_components = self.service.object_mask("mask[id,maxSpeed,networkComponentGroup.networkComponents]").getFrontendNetworkComponents()
+
+      # Split the interfaces into grouped and ungrouped interfaces. The max speed of a group will be the sum
+      # of the individual speeds in that group.  The max speed of ungrouped interfaces is simply the max speed
+      # of that interface.
+      grouped_interfaces, ungrouped_interfaces = network_components.partition{ |interface| interface.has_key?("networkComponentGroup") }
+
+      if !grouped_interfaces.empty?
+        group_speeds = grouped_interfaces.collect do |interface|
+          interface['networkComponentGroup']['networkComponents'].inject(0) {|total_speed, component| total_speed += component['maxSpeed']}
+        end
+
+        max_group_speed = group_speeds.max
+      else
+        max_group_speed = 0
+      end
+
+      if !ungrouped_interfaces.empty?
+        max_ungrouped_speed = ungrouped_interfaces.collect { |interface| interface['maxSpeed']}.max
+      else
+        max_ungrouped_speed = 0
+      end
+
+      return [max_group_speed, max_ungrouped_speed].max
+    end
+
+    ##
     # Retrive the bare metal server with the given server ID from the
     # SoftLayer API
     #
@@ -133,7 +151,7 @@ module SoftLayer
       softlayer_client = options[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      hardware_service = softlayer_client["Hardware"]
+      hardware_service = softlayer_client[:Hardware_Server]
       hardware_service = hardware_service.object_mask(default_object_mask.to_sl_object_mask)
 
       if options.has_key?(:object_mask)
@@ -178,8 +196,9 @@ module SoftLayer
 
       if(options_hash.has_key? :object_filter)
         object_filter = options_hash[:object_filter]
+        raise "Expected an instance of SoftLayer::ObjectFilter" unless object_filter.kind_of?(SoftLayer::ObjectFilter)
       else
-        object_filter = {}
+        object_filter = ObjectFilter.new()
       end
 
       option_to_filter_path = {
@@ -197,21 +216,21 @@ module SoftLayer
       # that particular option, add a clause to the object filter that filters for the matching
       # value
       option_to_filter_path.each do |option, filter_path|
-        object_filter.merge!(SoftLayer::ObjectFilter.build(filter_path, options_hash[option])) if options_hash.has_key?(option)
+        object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option])} if options_hash[option]
       end
 
       # Tags get a much more complex object filter operation so we handle them separately
       if options_hash.has_key?(:tags)
-        object_filter.merge!(SoftLayer::ObjectFilter.build("hardware.tagReferences.tag.name", {
+        object_filter.set_criteria_for_key_path("hardware.tagReferences.tag.name", {
           'operation' => 'in',
           'options' => [{
             'name' => 'data',
-            'value' => options_hash[:tags]
+            'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
             }]
-          } ));
+          } );
       end
 
-      account_service = softlayer_client['Account']
+      account_service = softlayer_client[:Account]
       account_service = account_service.object_filter(object_filter) unless object_filter.empty?
       account_service = account_service.object_mask(default_object_mask.to_sl_object_mask)
 

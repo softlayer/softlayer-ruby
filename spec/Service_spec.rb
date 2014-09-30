@@ -1,24 +1,8 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
 
 $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
@@ -84,7 +68,7 @@ describe SoftLayer::Service, "xmlrpc client" do
   before(:each) do
     SoftLayer::Service.send(:public, :xmlrpc_client)
   end
-  
+
   it "Constructs an XMLRPC client with a given timeout value based on the timeout of the client" do
     client = SoftLayer::Client.new(:username => 'fake_user', :api_key => 'fake_key', :timeout => 60)
     ticket_service = client[:Ticket]
@@ -100,7 +84,7 @@ describe SoftLayer::Service, "parameter filters" do
 
   describe "#missing_method" do
     it "translates unknown methods into api calls" do
-      expect(service).to receive(:call_softlayer_api_with_params).with(:getOpenTickets, nil, ["marshmallow"])
+      expect(service).to receive(:call_softlayer_api_with_params).with(:getOpenTickets, nil, ['marshmallow'])
       response = service.getOpenTickets("marshmallow")
     end
   end
@@ -176,8 +160,9 @@ describe SoftLayer::Service, "parameter filters" do
 
   describe "#object_filter" do
     let (:object_filter) do
-      object_filter = SoftLayer::ObjectFilter.new()
-      object_filter["key"] = "value"
+      object_filter = SoftLayer::ObjectFilter.new() do |filter|
+        filter.set_criteria_for_key_path("key", "value")
+      end
       object_filter
     end
 
@@ -185,12 +170,12 @@ describe SoftLayer::Service, "parameter filters" do
       parameter_filter = service.object_filter(object_filter)
       expect(parameter_filter).to_not be_nil
       expect(parameter_filter.target).to eq service
-      expect(parameter_filter.server_object_filter).to eq object_filter
+      expect(parameter_filter.server_object_filter).to eq object_filter.to_h
     end
 
     it "passes an object filter through to an API call" do
       expect(service).to receive(:call_softlayer_api_with_params).with(:getObject, an_instance_of(SoftLayer::APIParameterFilter),[]) do |method_name, parameters, args|
-        expect(parameters.server_object_filter).to eq object_filter
+        expect(parameters.server_object_filter).to eq object_filter.to_h
       end
 
       service.object_filter(object_filter).getObject

@@ -1,34 +1,18 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
 
 require 'configparser'
 
 module SoftLayer
 
-  # The SoftLayer Config class is responsible for providing the key information 
+  # The SoftLayer Config class is responsible for providing the key information
   # the library needs to communicate with the network SoftLayer API. Those three crucial
   # pieces of information are the Username, the API Key, and the endpoint_url. This information
   # is collected in a hash with the keys `:username`, `:api_key`, and `:endpoint_url` repsectively.
-  # 
+  #
   # The routine used to retrieve this information from a Config object is Config.client_settings
   #
   # There are several locations that the Config class looks for this information:
@@ -58,7 +42,7 @@ module SoftLayer
   #
   # = Environment Variables
   #
-  # The config class will search the environment variables SL_USERNAME and SL_API_KEY for 
+  # The config class will search the environment variables SL_USERNAME and SL_API_KEY for
   # the username and API key respectively. The endpoint_url may not be set thorugh
   # environment variables.
   #
@@ -88,8 +72,8 @@ module SoftLayer
 
 		def Config.environment_settings
 			result = {}
-			result[:username] =  ENV["SL_USERNAME"] if ENV["SL_USERNAME"]
-			result[:api_key] = ENV["SL_API_KEY"] if ENV["SL_API_KEY"]
+			result[:username] =  ENV['SL_USERNAME'] if ENV['SL_USERNAME']
+			result[:api_key] = ENV['SL_API_KEY'] if ENV['SL_API_KEY']
 			result
 		end
 
@@ -105,7 +89,7 @@ module SoftLayer
 			search_path.each do |file_path|
 				if File.readable? file_path
 					config = ConfigParser.new file_path
-					softlayer_section = config["softlayer"]
+					softlayer_section = config['softlayer']
 
 					if softlayer_section
 						result[:username] = softlayer_section['username'] if softlayer_section['username']

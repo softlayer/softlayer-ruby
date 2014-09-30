@@ -129,11 +129,11 @@ begin
   # We have a configuration for the server, we also need a location for the new server.
   # The package can give us a list of locations. Let's print out that list
   puts "\nData Centers for '#{quad_intel_package.name}':"
-  quad_intel_package.datacenter_options.each { |location| puts "\t#{location}"}
+  quad_intel_package.datacenter_options.each { |datacenter| puts "\t#{datacenter.name}"}
 
   # With all the config options in place we can now construct the product order.
   server_order = SoftLayer::BareMetalServerOrder_Package.new(quad_intel_package, client)
-  server_order.datacenter = 'sng01'
+  server_order.datacenter = SoftLayer::Datacenter.datacenter_named 'sng01', client
   server_order.hostname = 'sample'
   server_order.domain = 'softlayerapi.org'
   server_order.configuration_options = config_options

@@ -1,24 +1,8 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
 
 $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
@@ -33,23 +17,12 @@ describe SoftLayer::Ticket do
     SoftLayer::Ticket.instance_eval { @ticket_subjects = nil }
   end
 
-  it "fetches a list of open tickets" do
-    mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "fake_api_key")
-    account_service = mock_client["Account"]
-
-    expect(account_service).to receive(:call_softlayer_api_with_params).with(:getOpenTickets, instance_of(SoftLayer::APIParameterFilter),[]) do
-      fixture_from_json("test_tickets")
-    end
-
-    SoftLayer::Ticket.open_tickets(:client => mock_client)
-  end
-
 	it "retrieves ticket subjects from API once" do
     fakeTicketSubjects = fixture_from_json("ticket_subjects")
 
 	  mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key=> 'fakekey')
     allow(mock_client).to receive(:[]) do |service_name|
-      expect(service_name).to eq "Ticket_Subject"
+      expect(service_name).to eq :Ticket_Subject
 
       mock_service = SoftLayer::Service.new("SoftLayer_Ticket_Subject", :client => mock_client)
       expect(mock_service).to receive(:getAllObjects).once.and_return(fakeTicketSubjects)
@@ -75,7 +48,7 @@ describe SoftLayer::Ticket do
 
 	  mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key=> 'fakekey')
     allow(mock_client).to receive(:[]) do |service_name|
-      expect(service_name).to eq "Ticket"
+      expect(service_name).to eq :Ticket
       mock_service = SoftLayer::Service.new("SoftLayer_Ticket", :client => mock_client)
 
       # mock out call_softlayer_api_with_params so the service doesn't actually try to

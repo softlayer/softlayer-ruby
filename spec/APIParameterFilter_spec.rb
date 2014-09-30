@@ -1,24 +1,8 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
 
 $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
@@ -58,7 +42,7 @@ describe SoftLayer::APIParameterFilter do
     end
 
     it "rejects calls that pass things other than strings" do
-      expect { filter.object_mask(["anArray"]) }.to raise_error
+      expect { filter.object_mask(['anArray']) }.to raise_error
       expect { filter.object_mask({"a" => "hash"}) }.to raise_error
       expect { filter.object_mask(Object.new) }.to raise_error
     end
@@ -94,7 +78,7 @@ describe SoftLayer::APIParameterFilter do
 
     it "stores its value in server_object_filter when called" do
       test_filter = SoftLayer::ObjectFilter.new()
-      test_filter["fish"] = "cow"
+      test_filter.set_criteria_for_key_path("fish", "cow")
 
       result = filter.object_filter(test_filter)
       expect(result.server_object_filter).to eq({"fish" => "cow"})
@@ -106,7 +90,7 @@ describe SoftLayer::APIParameterFilter do
       target = double("method_missing_target")
 
       filter = SoftLayer::APIParameterFilter.new(target).object_mask("mask.fish", "mask[cow]", "mask(typed).duck", "mask(typed)[chicken]").object_with_id(12345)
-      expect(target).to receive(:call_softlayer_api_with_params).with(:getObject, filter, ["marshmallow"])
+      expect(target).to receive(:call_softlayer_api_with_params).with(:getObject, filter, ['marshmallow'])
 
       filter.getObject("marshmallow")
     end

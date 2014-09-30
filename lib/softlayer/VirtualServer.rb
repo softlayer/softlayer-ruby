@@ -1,26 +1,8 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
-
-require 'time'
+# For licensing information see the LICENSE.md file in the project root.
+#++
 
 module SoftLayer
   ##
@@ -91,49 +73,6 @@ module SoftLayer
     end
 
     ##
-    # This routine submits an order to upgrade the cpu count of the virtual server.
-    # The order may result in additional charges being applied to SoftLayer account
-    #
-    # This routine can also "downgrade" servers (set their cpu count lower)
-    #
-    # The routine returns true if the order is placed and false if it is not
-    #
-    def upgrade_cores!(num_cores)
-      upgrade_item_price = _item_price_in_category("guest_core", num_cores)
-      _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
-      nil != upgrade_item_price
-    end
-
-    ##
-    # This routine submits an order to change the RAM available to the virtual server.
-    # Pass in the desired amount of RAM for the server in Gigabytes
-    #
-    # The order may result in additional charges being applied to SoftLayer account
-    #
-    # The routine returns true if the order is placed and false if it is not
-    #
-    def upgrade_RAM!(ram_in_GB)
-      upgrade_item_price = _item_price_in_category("ram", ram_in_GB)
-      _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
-      nil != upgrade_item_price
-    end
-
-    ##
-    # This routine submits an order to change the maximum nic speed of the server
-    # Pass in the desired speed in Megabits per second (typically 10, 100, or 1000)
-    # (since you may choose a slower speed this routine can also be used for "downgrades")
-    #
-    # The order may result in additional charges being applied to SoftLayer account
-    #
-    # The routine returns true if the order is placed and false if it is not
-    #
-    def upgrade_max_port_speed!(network_speed_in_Mbps)
-      upgrade_item_price = _item_price_in_category("port_speed", network_speed_in_Mbps)
-      _order_upgrade_item!(upgrade_item_price) if upgrade_item_price
-      nil != upgrade_item_price
-    end
-
-    ##
     # Capture a disk image of this virtual server for use with other servers.
     #
     # image_name will become the name of the image in the portal.
@@ -143,8 +82,14 @@ module SoftLayer
     #
     # The image_notes should be a string and will be added to the image as notes.
     #
+    # The routine returns the instance of SoftLayer::ImageTemplate that is
+    # created.  That image template will probably not be available immediately, however.
+    # You may use the wait_until_ready routine of SoftLayer::ImageTemplate to
+    # wait on it.
+    #
     def capture_image(image_name, include_attached_storage = false, image_notes = '')
       image_notes = '' if !image_notes
+      image_name = 'Captured Image' if !image_name
 
       disk_filter = lambda { |disk| disk['device'] == '0' }
       disk_filter = lambda { |disk| disk['device'] != '1' } if include_attached_storage
@@ -152,6 +97,9 @@ module SoftLayer
       disks = self.blockDevices.select(&disk_filter)
 
       self.service.createArchiveTransaction(image_name, disks, image_notes) if disks && !disks.empty?
+
+      image_templates = SoftLayer::ImageTemplate.find_private_templates(:name => image_name)
+      image_templates[0] if !image_templates.empty?
     end
 
     ##
@@ -216,7 +164,7 @@ module SoftLayer
       softlayer_client = options[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      vg_service = softlayer_client["Virtual_Guest"]
+      vg_service = softlayer_client[:Virtual_Guest]
       vg_service = vg_service.object_mask(default_object_mask.to_sl_object_mask)
 
       if options.has_key?(:object_mask)
@@ -260,10 +208,15 @@ module SoftLayer
       softlayer_client = options_hash[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      object_filter = {}
+      if(options_hash.has_key? :object_filter)
+        object_filter = options_hash[:object_filter]
+        raise "Expected an instance of SoftLayer::ObjectFilter" unless object_filter.kind_of?(SoftLayer::ObjectFilter)
+      else
+        object_filter = ObjectFilter.new()
+      end
 
       option_to_filter_path = {
-        :cpus => "virtualGuests.maxCpu",
+        :cores => "virtualGuests.maxCpu",
         :memory => "virtualGuests.maxMemory",
         :hostname => "virtualGuests.hostname",
         :domain => "virtualGuests.domain",
@@ -282,23 +235,23 @@ module SoftLayer
       # that particular option, add a clause to the object filter that filters for the matching
       # value
       option_to_filter_path.each do |option, filter_path|
-        object_filter.merge!(SoftLayer::ObjectFilter.build(filter_path, options_hash[option])) if options_hash.has_key?(option)
+        object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option])} if options_hash[option]
       end
 
       # Tags get a much more complex object filter operation so we handle them separately
       if options_hash.has_key?(:tags)
-        object_filter.merge!(SoftLayer::ObjectFilter.build("virtualGuests.tagReferences.tag.name", {
+        object_filter.set_criteria_for_key_path("virtualGuests.tagReferences.tag.name", {
           'operation' => 'in',
           'options' => [{
             'name' => 'data',
-            'value' => options_hash[:tags]
+            'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
             }]
-          } ));
+          } );
       end
 
       required_properties_mask = 'mask.id'
 
-      account_service = softlayer_client['Account']
+      account_service = softlayer_client[:Account]
       account_service = account_service.object_filter(object_filter) unless object_filter.empty?
       account_service = account_service.object_mask(default_object_mask.to_sl_object_mask)
 
@@ -357,34 +310,7 @@ module SoftLayer
     # For VirtualServers the service is +SoftLayer_Virtual_Guest+ and
     # addressing this object is done by id.
     def service
-      return softlayer_client["Virtual_Guest"].object_with_id(self.id)
-    end
-
-    private
-
-    ##
-    # Searches through the upgrade items pricess known to this server for the one that is in a particular category
-    # and whose capacity matches the value given. Returns the item_price or nil
-    #
-    def _item_price_in_category(which_category, capacity)
-      item_prices_in_category = self.upgrade_options.select { |item_price| item_price["categories"].find { |category| category["categoryCode"] == which_category } }
-      item_prices_in_category.find { |ram_item| ram_item["item"]["capacity"].to_i == capacity}
-    end
-
-    ##
-    # Constructs an upgrade order to order the given item price.
-    # The order is built to execute immediately
-    #
-    def _order_upgrade_item!(upgrade_item_price)
-      # put together an order
-      upgrade_order = {
-        'complexType' => 'SoftLayer_Container_Product_Order_Virtual_Guest_Upgrade',
-        'virtualGuests' => [{'id' => self.id }],
-        'properties' => [{'name' => 'MAINTENANCE_WINDOW', 'value' => Time.now.iso8601}],
-        'prices' => [ upgrade_item_price ]
-      }
-
-      self.softlayer_client["Product_Order"].placeOrder(upgrade_order)
+      return softlayer_client[:Virtual_Guest].object_with_id(self.id)
     end
   end #class VirtualServer
 end

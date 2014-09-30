@@ -1,24 +1,8 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
 
 module SoftLayer
   #
@@ -42,13 +26,14 @@ module SoftLayer
   class BareMetalServerOrder_Package < Server
     # The following properties are required in a server order.
 
-    # The product package identifying the base configuration for the server.
-    # a list of Bare Metal Server product packages is returned by
+    # The product package object (an instance of SoftLayer::ProductPackage) identifying the base
+    # configuration for the server. A list of Bare Metal Server product packages is returned by
     # SoftLayer::ProductPackage.bare_metal_server_packages
     attr_reader :package
 
-    # String, short name of the data center that will house the new virtual server (e.g. "dal05" or "sea01")
-    # A list of valid data centers can be found in ProductPackage#datacenter_options
+    # An instance of SoftLayer::Datacenter. The server will be provisioned in this data center.
+    # The set of datacenters available is determined by the package and may be obtained from
+    # the SoftLayer::ProductPackage object using the #datacenter_options method.
     attr_accessor :datacenter
 
     # The hostname of the server being created (i.e. 'sldn' is the hostname of sldn.softlayer.com).
@@ -73,7 +58,7 @@ module SoftLayer
 
     # An array of the ids of SSH keys to install on the server upon provisioning
     # To obtain a list of existing SSH keys, call getSshKeys on the SoftLayer_Account service:
-    #     client['Account'].getSshKeys()
+    #     client[:Account].getSshKeys()
     attr_accessor :ssh_key_ids
 
     # The URI of a script to execute on the server after it has been provisioned. This may be
@@ -103,7 +88,7 @@ module SoftLayer
     def verify
       product_order = hardware_order
       product_order = yield product_order if block_given?
-      softlayer_client["Product_Order"].verifyOrder(product_order)
+      softlayer_client[:Product_Order].verifyOrder(product_order)
     end
 
     ##
@@ -121,7 +106,7 @@ module SoftLayer
     def place_order!
       product_order = hardware_order
       product_order = yield product_order if block_given?
-      softlayer_client["Product_Order"].placeOrder(product_order)
+      softlayer_client[:Product_Order].placeOrder(product_order)
     end
 
     protected
@@ -139,8 +124,7 @@ module SoftLayer
           }]
       }
 
-      product_order['location'] = @package.location_id_for_datacenter_name(@datacenter.downcase) if @datacenter
-
+      product_order['location'] = @datacenter.id if @datacenter
       product_order['sshKeys'] = [{ 'sshKeyIds' => @ssh_key_ids }] if @ssh_key_ids
       product_order['provisionScripts'] = [@provision_script_URI.to_s] if @provision_script_URI
 
@@ -156,7 +140,5 @@ module SoftLayer
 
       product_order
     end
-
   end # BareMetalServerOrder_Package
-
 end # SoftLayer

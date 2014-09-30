@@ -26,6 +26,10 @@ This software is written by the SoftLayer Development Team [sldn@softlayer.com](
 
 Please join us in the [SoftLayer Developer Network forums](http://forums.softlayer.com/forum/softlayer-developer-network)
 
+# Contributer License Agreement
+
+Contributions to the softlayer-ruby project require the submission of a contributer license agreement. Please generate the documentation and carefully refer to the Contribution Guide to participate.
+
 # Copyright and License
 
 The `softlayer_api` Ruby Gem and it's source files are Copyright &copy; 2010-2014 [SoftLayer Technologies, Inc](http://www.softlayer.com/).  The software is provided under an MIT license. Details of that license can be found in the embedded LICENSE.md file.

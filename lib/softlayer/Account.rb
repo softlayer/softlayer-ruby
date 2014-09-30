@@ -1,24 +1,8 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
 
 module SoftLayer
   class Account < SoftLayer::ModelBase
@@ -113,8 +97,51 @@ module SoftLayer
       end
     end
 
+    sl_dynamic_attr :image_templates do |image_templates|
+      image_templates.should_update? do
+        @last_image_template_update ||= Time.at(0)
+        (Time.now - @last_image_template_update) > 5 * 60  # update every 5 minutes
+      end
+
+      image_templates.to_update do
+        @last_image_template_update ||= Time.now
+        ImageTemplate.find_private_templates(:client => self.softlayer_client)
+      end
+    end
+
+    sl_dynamic_attr :open_tickets do |open_tickets|
+      open_tickets.should_update? do
+        @last_open_tickets_update ||= Time.at(0)
+        (Time.now - @last_open_tickets_update) > 5 * 60  # update every 5 minutes
+      end
+
+      open_tickets.to_update do
+        @last_open_tickets_update ||= Time.now
+        open_tickets_data = self.service.object_mask(SoftLayer::Ticket.default_object_mask).getOpenTickets
+        open_tickets_data.collect { |ticket_data| SoftLayer::Ticket.new(self.softlayer_client, ticket_data) }
+      end
+    end
+
     def service
-      softlayer_client["Account"].object_with_id(self.id)
+      softlayer_client[:Account].object_with_id(self.id)
+    end
+
+    ##
+    # Searches the account's list of VLANs for the ones with the given
+    # vlan number. This may return multiple results because a VLAN can
+    # span different routers and you will get a separate segment for
+    # each router.
+    #
+    # The IDs of the different segments can be helpful for ordering
+    # firewalls.
+    #
+    def find_VLAN_with_number(vlan_number)
+      filter = SoftLayer::ObjectFilter.new() { |filter|
+        filter.accept('networkVlans.vlanNumber').when_it is vlan_number
+      }
+
+      vlan_data = self.service.object_mask("mask[id,vlanNumber,primaryRouter,networkSpace]").object_filter(filter).getNetworkVlans
+      return vlan_data
     end
 
     ##
@@ -125,7 +152,7 @@ module SoftLayer
       softlayer_client = client || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      account_service = softlayer_client['Account']
+      account_service = softlayer_client[:Account]
       network_hash = account_service.getObject()
       new(softlayer_client, network_hash)
     end

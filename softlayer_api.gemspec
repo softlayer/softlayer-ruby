@@ -27,5 +27,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rdoc', '>=2.4.2'
   s.add_development_dependency 'json', '~> 1.8', '>= 1.8.1'
-  s.add_development_dependency 'coveralls' 
+  s.add_development_dependency 'coveralls'
 end

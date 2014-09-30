@@ -15,7 +15,7 @@ Any requests for enhancements, new features, or bug reports should be entered in
 
 # Development Environment
 
-As a Ruby project, your first step will be to install the [Ruby Programming Language](https://www.ruby-lang.org/en/). Many Unix-derived environments, including Mac OS X, have a version or Ruby installed by default, however, the default version may be out-of-date. Please visit the main Ruby language [site](https://www.ruby-lang.org/en/) for instructions on installing an up-to-date build of Ruby for your computing environment. 
+As a Ruby project, your first step will be to install the [Ruby Programming Language](https://www.ruby-lang.org/en/). Many Unix-derived environments, including Mac OS X, have a version or Ruby installed by default, however, the default version may be out-of-date. Please visit the main Ruby language [site](https://www.ruby-lang.org/en/) for instructions on installing an up-to-date build of Ruby for your computing environment.
 
 The Gem supports multiple versions of Ruby, and we recommend using Ruby 2.0 or later. The [Ruby Version Manager (rvm)](https://rvm.io) is an invaluable tool to help keep track of multiple versions of Ruby. The Gem no longer supports Ruby 1.8.7.  Support for Ruby 1.9 will continue for a time, but the Core Ruby team is already withdrawing their support for that version.
 
@@ -100,7 +100,7 @@ The basic directory structure for the source tree is as follows
 	  softlayer   # Folder containing most of the gem's actual source code
 	log			  # RVM will create a log folder when running commands across multiple ruby versions.
 	pkg			  # Created when the gem is built, contains built versions of the gem
-	spec		  # Source directory for the RSpec testing specifications 
+	spec		  # Source directory for the RSpec testing specifications
 	  fixtures    # Files used by the unit tests to mock responses from the SoftLayer network API
 
 Most of the source files that implement the gem are found in `lib/softlayer`.  If you wish to add new functionality, or edit existing functionality, you will probably edit the class files in this directory. Unit tests using Rspec are found in the spec folder and should generally follow the naming convention of <Class>_spec.rb

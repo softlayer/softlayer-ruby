@@ -21,7 +21,7 @@ SoftLayer provides two different endpoint URLs to scripts. One is associated wit
 
     # The base URL of the SoftLayer API available to the public internet.
     API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/xmlrpc/v3/'
-    
+
     # The base URL of the SoftLayer API available through SoftLayer's private network
     API_PRIVATE_ENDPOINT = 'https://api.service.softlayer.com/xmlrpc/v3/'
 
@@ -65,7 +65,7 @@ The open_tickets variable should receive an array of hashes representing the ope
 
     softlayer_client = SoftLayer::Client.new( :username => "joecustomer", api_key => "feeddeadbeefbadf00d...)
     open_tickets = softlayer_client["Account"].getOpenTickets
-    
+
     open_tickets.each { |ticket_hash| puts ticket_hash["title"] }
 
 This short example shows the essence of working with the Foundation API, you create a client, obtain a service, and make calls to the network SoftLayer API through that service.
@@ -82,7 +82,7 @@ Calls to the network SoftLayer API that result in errors being returned by the s
 
 ## Troubleshooting
 
-Communication with the SoftLayer servers is handled through the XML-RPC client that is built into the Ruby Core library. As a consequence the network communication is also handled by Core library classes. 
+Communication with the SoftLayer servers is handled through the XML-RPC client that is built into the Ruby Core library. As a consequence the network communication is also handled by Core library classes.
 
 One aspect of network communication that the `softlayer_api` relies on the Ruby Core library to provide is SSL certificate authentication. Problems with this authentication often arise if your Ruby environment is not properly configured with SSL root certificates. If you find you are having trouble communicating with the network SoftLayer API, and the error messages point to SSL certificate authentication, please consider a web search using your specific error message as a search string. This will often reveal answers that can help you resolve networking issues your Ruby environment.
 

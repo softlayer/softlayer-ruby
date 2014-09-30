@@ -1,24 +1,8 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
 
 $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
@@ -61,7 +45,7 @@ describe SoftLayer::ObjectMaskParser, "#parse_property_set" do
     expect(result.name).to eq 'filterMask'
     expect(result.children[0].name).to eq 'simple1'
   end
-  
+
   it "should parse a mask set with fiterMask" do
     result = nil
     expect { result = subject.parse("[filterMask.simple1, filterMask.simple2]") }.to_not raise_error
@@ -74,7 +58,7 @@ describe SoftLayer::ObjectMaskParser, "#parse_property_set" do
     expect(result[1].name).to eq 'filterMask'
     expect(result[1].children.count).to eq 1
     expect(result[1].children[0].name).to eq "simple2"
-  end  
+  end
 end
 
 describe SoftLayer::ObjectMaskParser, "#parse_property_set" do

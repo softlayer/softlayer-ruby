@@ -1,24 +1,8 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
 
 module SoftLayer
   # This struct represents a configuration option that can be included in
@@ -26,9 +10,22 @@ module SoftLayer
   # the product order is the price_id, the rest of the information is provided
   # to make the object friendly to humans who may be searching for the
   # meaning of a given price_id.
-  ProductConfigurationOption = Struct.new(:price_id, :description, :capacity, :units, :setupFee, :laborFee, :oneTimeFee, :recurringFee, :hourlyRecurringFee) do
-
+  class ProductConfigurationOption < Struct.new(:price_id, :description, :capacity, :units, :setupFee, :laborFee,
+     :oneTimeFee, :recurringFee, :hourlyRecurringFee)
     # Is it evil, or just incongruous to give methods to a struct?
+
+    def initialize(package_item_data, price_item_data)
+      self.description = package_item_data['description']
+      self.capacity = package_item_data['capacity']
+      self.units = package_item_data['units']
+
+      self.price_id = price_item_data['id']
+      self.setupFee = price_item_data['setupFee'] ? price_item_data['setupFee'].to_f : 0.0
+      self.laborFee = price_item_data['laborFee'] ? price_item_data['laborFee'].to_f : 0.0
+      self.oneTimeFee = price_item_data['oneTimeFee'] ? price_item_data['oneTimeFee'].to_f : 0.0
+      self.recurringFee = price_item_data['recurringFee'] ? price_item_data['recurringFee'].to_f : 0.0
+      self.hourlyRecurringFee = price_item_data['hourlyRecurringFee'] ? price_item_data['hourlyRecurringFee'].to_f : 0.0
+    end
 
     # returns true if the configurtion option has no fees associated with it.
     def free?
@@ -48,13 +45,13 @@ module SoftLayer
   # service.
   class ProductItemCategory < ModelBase
     include ::SoftLayer::DynamicAttribute
-    
+
     ##
     # :attr_reader:
     # The categoryCode is a primary identifier for a particular
     # category.  It is a string like 'os' or 'ram'
     sl_attr :categoryCode
-    
+
     ##
     # :attr_reader:
     # The name of a category is a friendly, readable string
@@ -80,24 +77,14 @@ module SoftLayer
         # web UI), but this code collapses the groups.
         self['groups'].collect do |group|
           group['prices'].sort{|lhs,rhs| lhs['sort'] <=> rhs['sort']}.collect do |price_item|
-            ProductConfigurationOption.new(
-              price_item['id'],
-              price_item['item']['description'],
-              price_item['item']['capacity'],
-              price_item['item']['units'],
-              price_item['setupFee'] ? price_item['setupFee'].to_f : 0.0,
-              price_item['laborFee'] ? price_item['laborFee'].to_f : 0.0,
-              price_item['oneTimeFee'] ? price_item['oneTimeFee'].to_f : 0.0,
-              price_item['recurringFee'] ? price_item['recurringFee'].to_f : 0.0,
-              price_item['hourlyRecurringFee'] ? price_item['hourlyRecurringFee'].to_f : 0.0
-              )
+            ProductConfigurationOption.new(price_item['item'], price_item)
           end
         end.flatten # flatten out the individual group arrays.
       end
     end
 
     def service
-      softlayer_client["SoftLayer_Product_Item_Category"].object_with_id(self.id)
+      softlayer_client[:SoftLayer_Product_Item_Category].object_with_id(self.id)
     end
 
     ##

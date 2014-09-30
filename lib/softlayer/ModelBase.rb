@@ -1,24 +1,8 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
 
 module SoftLayer
   ##
@@ -63,7 +47,7 @@ module SoftLayer
     # a particular entity in the SoftLayer_Ticket service.  The particular
     # entity is identified by its id so the Ticket class would return
     #
-    #     softlayer_client["Ticket"].object_with_id
+    #     softlayer_client[:Ticket].object_with_id
     #
     # which is a service which would allow calls to the ticket service
     # through that particular object.
@@ -131,7 +115,7 @@ module SoftLayer
     def softlayer_properties(object_mask = nil)
       raise "Abstract method softlayer_properties in ModelBase was called"
     end
-    
+
     ##
     # The softlayer_hash stores the low-level information about an
     # object as it was retrieved from the SoftLayer API.

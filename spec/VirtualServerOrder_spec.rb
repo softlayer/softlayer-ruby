@@ -1,24 +1,8 @@
-#
+#--
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# For licensing information see the LICENSE.md file in the project root.
+#++
 
 $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 
@@ -50,50 +34,53 @@ describe SoftLayer::VirtualServerOrder do
   end
 
   it "places its :datacenter attribute into the order template" do
-    expect(subject.virtual_guest_template["datacenter"]).to be_nil
-    subject.datacenter = "dal05"
-    expect(subject.virtual_guest_template["datacenter"]).to eq({ "name" => "dal05" })
+    client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
+    expect(subject.virtual_guest_template['datacenter']).to be_nil
+    subject.datacenter = SoftLayer::Datacenter.new(client, 'id' => 42, 'name' => "dal05")
+    expect(subject.virtual_guest_template['datacenter']).to eq({ "name" => "dal05" })
   end
 
   it "places its :hostname attribute into the order template" do
-    expect(subject.virtual_guest_template["hostname"]).to be_nil
+    expect(subject.virtual_guest_template['hostname']).to be_nil
     subject.hostname = "testhostname"
-    expect(subject.virtual_guest_template["hostname"]).to eq "testhostname"
+    expect(subject.virtual_guest_template['hostname']).to eq "testhostname"
   end
 
   it "places its :domain attribute into the order template" do
-    expect(subject.virtual_guest_template["domain"]).to be_nil
+    expect(subject.virtual_guest_template['domain']).to be_nil
     subject.domain = "softlayer.com"
-    expect(subject.virtual_guest_template["domain"]).to eq "softlayer.com"
+    expect(subject.virtual_guest_template['domain']).to eq "softlayer.com"
   end
 
   it "places its :cores attribute into the order template as startCpus" do
     subject.cores = 4
-    expect(subject.virtual_guest_template["startCpus"]).to eq 4
+    expect(subject.virtual_guest_template['startCpus']).to eq 4
   end
 
   it "places the MB value of the :memory attrbute in the template as maxMemory" do
     subject.memory = 4
-    expect(subject.virtual_guest_template["maxMemory"]).to eq 4096
+    expect(subject.virtual_guest_template['maxMemory']).to eq 4096
   end
 
   it "places an OS identifier into the order template as the operatingSystemReferenceCode" do
-    expect(subject.virtual_guest_template["operatingSystemReferenceCode"]).to be_nil
+    expect(subject.virtual_guest_template['operatingSystemReferenceCode']).to be_nil
     subject.os_reference_code = 'UBUNTU_12_64'
     expect(subject.virtual_guest_template['operatingSystemReferenceCode']).to eq 'UBUNTU_12_64'
   end
 
   it "places an image template global identifier in the template as blockDeviceTemplateGroup.globalIdentifier" do
-    expect(subject.virtual_guest_template["blockDeviceTemplateGroup"]).to be_nil
-    subject.image_global_id = "12345-abcd-eatatjoes"
+    client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
+    expect(subject.virtual_guest_template['blockDeviceTemplateGroup']).to be_nil
+    subject.image_template = SoftLayer::ImageTemplate.new(client, 'id' => 42, 'globalIdentifier' => '12345-abcd-eatatjoes');
     expect(subject.virtual_guest_template['blockDeviceTemplateGroup']).to eq({'globalIdentifier' => '12345-abcd-eatatjoes'})
   end
 
-  it "allows an image global id to override an os reference code when both are provided" do
-    expect(subject.virtual_guest_template["blockDeviceTemplateGroup"]).to be_nil
-    expect(subject.virtual_guest_template["operatingSystemReferenceCode"]).to be_nil
+  it "allows an image template to override an os reference code when both are provided" do
+    expect(subject.virtual_guest_template['blockDeviceTemplateGroup']).to be_nil
+    expect(subject.virtual_guest_template['operatingSystemReferenceCode']).to be_nil
 
-    subject.image_global_id = "12345-abcd-eatatjoes"
+    client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
+    subject.image_template = SoftLayer::ImageTemplate.new(client, 'id' => 42, 'globalIdentifier' => '12345-abcd-eatatjoes');
     subject.os_reference_code = 'UBUNTU_12_64'
 
     expect(subject.virtual_guest_template['blockDeviceTemplateGroup']).to eq({'globalIdentifier' => '12345-abcd-eatatjoes'})
@@ -102,50 +89,50 @@ describe SoftLayer::VirtualServerOrder do
 
   it "places the attribute :hourly into the template as hourlyBillingFlag converting the value to a boolean constant" do
     # note, we don't want the flag to be nil we want it to be eotjer false or true
-    expect(subject.virtual_guest_template["hourlyBillingFlag"]).to be(false)
+    expect(subject.virtual_guest_template['hourlyBillingFlag']).to be(false)
 
     subject.hourly = true
-    expect(subject.virtual_guest_template["hourlyBillingFlag"]).to be(true)
+    expect(subject.virtual_guest_template['hourlyBillingFlag']).to be(true)
 
     subject.hourly = false
-    expect(subject.virtual_guest_template["hourlyBillingFlag"]).to be(false)
+    expect(subject.virtual_guest_template['hourlyBillingFlag']).to be(false)
   end
 
   it "places the attribute :use_local_disk in the template as the localDiskFlag" do
     # note, we don't want the flag to be nil we want it to be false or true
-    expect(subject.virtual_guest_template["localDiskFlag"]).to be(false)
+    expect(subject.virtual_guest_template['localDiskFlag']).to be(false)
 
     subject.use_local_disk = true
-    expect(subject.virtual_guest_template["localDiskFlag"]).to be(true)
+    expect(subject.virtual_guest_template['localDiskFlag']).to be(true)
 
     subject.use_local_disk = false
-    expect(subject.virtual_guest_template["localDiskFlag"]).to be(false)
+    expect(subject.virtual_guest_template['localDiskFlag']).to be(false)
   end
 
   it "places the attribute :dedicated_host_only in the template as dedicatedAccountHostOnlyFlag" do
-    expect(subject.virtual_guest_template["dedicatedAccountHostOnlyFlag"]).to be_nil
+    expect(subject.virtual_guest_template['dedicatedAccountHostOnlyFlag']).to be_nil
     subject.dedicated_host_only = true
-    expect(subject.virtual_guest_template["dedicatedAccountHostOnlyFlag"]).to be(true)
+    expect(subject.virtual_guest_template['dedicatedAccountHostOnlyFlag']).to be(true)
   end
 
   it "puts the public VLAN id into an order template as primaryNetworkComponent.networkVlan.id" do
-    expect(subject.virtual_guest_template["primaryNetworkComponent"]).to be_nil
+    expect(subject.virtual_guest_template['primaryNetworkComponent']).to be_nil
     subject.public_vlan_id = 12345
-    expect(subject.virtual_guest_template["primaryNetworkComponent"]).to eq({ "networkVlan" => { "id" => 12345 } })
+    expect(subject.virtual_guest_template['primaryNetworkComponent']).to eq({ "networkVlan" => { "id" => 12345 } })
   end
 
   it "puts the private VLAN id into an order template as primaryBackendNetworkComponent.networkVlan.id" do
-    expect(subject.virtual_guest_template["primaryBackendNetworkComponent"]).to be_nil
+    expect(subject.virtual_guest_template['primaryBackendNetworkComponent']).to be_nil
     subject.private_vlan_id = 12345
-    expect(subject.virtual_guest_template["primaryBackendNetworkComponent"]).to eq({ "networkVlan" => { "id" => 12345 } })
+    expect(subject.virtual_guest_template['primaryBackendNetworkComponent']).to eq({ "networkVlan" => { "id" => 12345 } })
   end
 
   it "sets up disks in the order template as blockDevices" do
-    expect(subject.virtual_guest_template["blockDevices"]).to be_nil
+    expect(subject.virtual_guest_template['blockDevices']).to be_nil
     subject.disks = [2, 25, 50]
 
     # note that device id 1 should be skipped as SoftLayer reserves that id for OS swap space.
-    expect(subject.virtual_guest_template["blockDevices"]).to eq [
+    expect(subject.virtual_guest_template['blockDevices']).to eq [
       {"device"=>"0", "diskImage"=>{"capacity"=>2}},
       {"device"=>"2", "diskImage"=>{"capacity"=>25}},
       {"device"=>"3", "diskImage"=>{"capacity"=>50}}
@@ -153,37 +140,37 @@ describe SoftLayer::VirtualServerOrder do
   end
 
   it "puts the :ssh_key_ids in the template as sshKeys and breaks out the ids into objects" do
-    expect(subject.virtual_guest_template["sshKeys"]).to be_nil
+    expect(subject.virtual_guest_template['sshKeys']).to be_nil
     subject.ssh_key_ids = [123, 456, 789]
     expect(subject.virtual_guest_template['sshKeys']).to eq [{'id' => 123}, {'id' => 456}, {'id' => 789}]
   end
 
   it "puts the :provision_script_URI property into the template as postInstallScriptUri" do
-    expect(subject.virtual_guest_template["postInstallScriptUri"]).to be_nil
+    expect(subject.virtual_guest_template['postInstallScriptUri']).to be_nil
     subject.provision_script_URI = 'http:/provisionhome.mydomain.com/fancyscript.sh'
     expect(subject.virtual_guest_template['postInstallScriptUri']).to eq 'http:/provisionhome.mydomain.com/fancyscript.sh'
   end
 
   it "accepts URI objects for the provision script URI" do
-    expect(subject.virtual_guest_template["postInstallScriptUri"]).to be_nil
+    expect(subject.virtual_guest_template['postInstallScriptUri']).to be_nil
     subject.provision_script_URI = URI.parse('http:/provisionhome.mydomain.com/fancyscript.sh')
     expect(subject.virtual_guest_template['postInstallScriptUri']).to eq 'http:/provisionhome.mydomain.com/fancyscript.sh'
   end
 
   it "places the private_network_only attribute in the template as privateNetworkOnlyFlag" do
-    expect(subject.virtual_guest_template["privateNetworkOnlyFlag"]).to be_nil
+    expect(subject.virtual_guest_template['privateNetworkOnlyFlag']).to be_nil
     subject.private_network_only = true
-    expect(subject.virtual_guest_template["privateNetworkOnlyFlag"]).to be(true)
+    expect(subject.virtual_guest_template['privateNetworkOnlyFlag']).to be(true)
   end
 
   it "puts the user metadata string into the template as userData" do
-    expect(subject.virtual_guest_template["userData"]).to be_nil
+    expect(subject.virtual_guest_template['userData']).to be_nil
     subject.user_metadata = "MetadataValue"
     expect(subject.virtual_guest_template['userData']).to eq [{'value' => 'MetadataValue'}]
   end
 
   it "puts the max_port_speed attribute into the template as networkComponents.maxSpeed" do
-    expect(subject.virtual_guest_template["networkComponents"]).to be_nil
+    expect(subject.virtual_guest_template['networkComponents']).to be_nil
     subject.max_port_speed = 1000
     expect(subject.virtual_guest_template['networkComponents']).to eq [{'maxSpeed' => 1000}]
   end
@@ -197,7 +184,7 @@ describe SoftLayer::VirtualServerOrder do
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
 
-    virtual_guest_service = client["Virtual_Guest"]
+    virtual_guest_service = client[:Virtual_Guest]
     allow(virtual_guest_service).to receive(:call_softlayer_api_with_params)
 
     expect(virtual_guest_service).to receive(:generateOrderTemplate).with(test_order.virtual_guest_template)
@@ -213,7 +200,7 @@ describe SoftLayer::VirtualServerOrder do
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
 
-    virtual_guest_service = client["Virtual_Guest"]
+    virtual_guest_service = client[:Virtual_Guest]
     allow(virtual_guest_service).to receive(:call_softlayer_api_with_params)
 
     expect(virtual_guest_service).to receive(:createObject).with(test_order.virtual_guest_template)
@@ -229,7 +216,7 @@ describe SoftLayer::VirtualServerOrder do
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
 
-    virtual_guest_service = client["Virtual_Guest"]
+    virtual_guest_service = client[:Virtual_Guest]
     allow(virtual_guest_service).to receive(:call_softlayer_api_with_params)
 
     substituted_order_template = { 'aFake' => 'andBogusOrderTemplate' }
@@ -246,7 +233,7 @@ describe SoftLayer::VirtualServerOrder do
     test_order.hostname = "ruby-client-test"
     test_order.domain = "kitchentools.com"
 
-    virtual_guest_service = client["Virtual_Guest"]
+    virtual_guest_service = client[:Virtual_Guest]
     allow(virtual_guest_service).to receive(:call_softlayer_api_with_params)
 
     substituted_order_template = { 'aFake' => 'andBogusOrderTemplate' }
@@ -257,7 +244,7 @@ describe SoftLayer::VirtualServerOrder do
   describe "methods returning available options for attributes" do
     let (:client) do
       client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
-      virtual_guest_service = client["Virtual_Guest"]
+      virtual_guest_service = client[:Virtual_Guest]
       allow(virtual_guest_service).to receive(:call_softlayer_api_with_params)
 
       fake_options = fixture_from_json("Virtual_Guest_createObjectOptions")
@@ -278,7 +265,10 @@ describe SoftLayer::VirtualServerOrder do
     end
 
     it "transmogrifies the datacenter options for the cores attribute" do
-      expect(SoftLayer::VirtualServerOrder.datacenter_options(client)).to eq ["ams01", "dal01", "dal05", "dal06", "sea01", "sjc01", "sng01", "wdc01"]
+      datacenter_options = SoftLayer::VirtualServerOrder.datacenter_options(client)
+      datacenter_names = datacenter_options.map { |datacenter| datacenter.name }
+
+      expect(datacenter_names.sort).to eq ["ams01", "dal01", "dal05", "dal06", "sea01", "sjc01", "sng01", "wdc01"]
     end
 
     it "transmogrifies the processor options for the cores attribute" do
