@@ -47,7 +47,7 @@ begin
 
   # The list will look something like ["ams01", "dal01", "dal05",...
   # Let's put our server in the 'dal05' (Dallas 5) datacenter
-  server_order.datacenter = 'dal05'
+  server_order.datacenter = SoftLayer::Datacenter.datacenter_named 'dal05', client
 
   # The order must know how many computing cores we want in our virtual
   # server.  Again we can ask the class for options.  The result will
