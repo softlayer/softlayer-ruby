@@ -56,14 +56,27 @@ module SoftLayer
     # The following properties are optional, but allow further fine tuning of
     # the server
 
+    # Boolean, If true, an hourly server will be ordered, otherwise a monthly server will be ordered
+    # Corresponds to +useHourlyPricing+ in the SoftLayer_Container_Product_Order_Hardware_Server container
+    # documentation
+    attr_accessor :hourly
+
+    # An instance of the SoftLayer::ImageTemplate class.  Represents the image template that should
+    # be installed on the server.
+    attr_accessor :image_template
+
+    # The URI of a script to execute on the server after it has been provisioned. This may be
+    # any object which accepts the to_s message. The resulting string will be passed to SoftLayer API.
+    attr_accessor :provision_script_URI
+
     # An array of the ids of SSH keys to install on the server upon provisioning
     # To obtain a list of existing SSH keys, call getSshKeys on the SoftLayer_Account service:
     #     client[:Account].getSshKeys()
     attr_accessor :ssh_key_ids
 
-    # The URI of a script to execute on the server after it has been provisioned. This may be
-    # any object which accepts the to_s message. The resulting string will be passed to SoftLayer API.
-    attr_accessor :provision_script_URI
+    # String, User metadata associated with the instance
+    # Corresponds to +userData+ in the +SoftLayer_Hardware_Server+ documentation
+    attr_accessor :user_metadata
 
     ##
     # You initialize a BareMetalServerOrder_Package by passing in the package that you
@@ -116,17 +129,21 @@ module SoftLayer
     # based on the configuration options given.
     def hardware_order
       product_order = {
-        'packageId' => @package.id,
-        'useHourlyPricing' => false,
-        'hardware' => [{
-          'hostname' => @hostname,
-          'domain' => @domain
-          }]
+        'packageId'        => @package.id,
+        'hardware'         => [{
+                                 'domain'   => @domain,
+                                 'hostname' => @hostname
+                               }],
+        'useHourlyPricing' => !!@hourly
       }
 
-      product_order['location'] = @datacenter.id if @datacenter
-      product_order['sshKeys'] = [{ 'sshKeyIds' => @ssh_key_ids }] if @ssh_key_ids
-      product_order['provisionScripts'] = [@provision_script_URI.to_s] if @provision_script_URI
+      #Note that the use of image_template and SoftLayer::ProductPackage os/guest_diskX configuration category
+      #item prices is mutually exclusive.
+      product_order['hardware'][0]['userData']       = @user_metadata                    if @user_metadata
+      product_order['imageTemplateGlobalIdentifier'] = @image_template.global_id         if @image_template
+      product_order['location']                      = @datacenter.id                    if @datacenter
+      product_order['provisionScripts']              = [@provision_script_URI.to_s]      if @provision_script_URI
+      product_order['sshKeys']                       = [{ 'sshKeyIds' => @ssh_key_ids }] if @ssh_key_ids
 
       product_order['prices'] = @configuration_options.collect do |key, value|
         if value.respond_to?(:price_id)
