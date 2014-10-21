@@ -65,14 +65,18 @@ module SoftLayer
     # be installed on the server.
     attr_accessor :image_template
 
+    # The URI of a script to execute on the server after it has been provisioned. This may be
+    # any object which accepts the to_s message. The resulting string will be passed to SoftLayer API.
+    attr_accessor :provision_script_URI
+
     # An array of the ids of SSH keys to install on the server upon provisioning
     # To obtain a list of existing SSH keys, call getSshKeys on the SoftLayer_Account service:
     #     client[:Account].getSshKeys()
     attr_accessor :ssh_key_ids
 
-    # The URI of a script to execute on the server after it has been provisioned. This may be
-    # any object which accepts the to_s message. The resulting string will be passed to SoftLayer API.
-    attr_accessor :provision_script_URI
+    # String, User metadata associated with the instance
+    # Corresponds to +userData+ in the +SoftLayer_Virtual_Guest+ documentation
+    attr_accessor :user_metadata
 
     ##
     # You initialize a VirtualServerOrder_Package by passing in the package that you
@@ -139,6 +143,7 @@ module SoftLayer
       product_order['location']                      = @datacenter.id                    if @datacenter
       product_order['provisionScripts']              = [@provision_script_URI.to_s]      if @provision_script_URI
       product_order['sshKeys']                       = [{ 'sshKeyIds' => @ssh_key_ids }] if @ssh_key_ids
+      product_order['virtualGuests'][0]['userData']  = @user_metadata                    if @user_metadata
 
       product_order['prices'] = @configuration_options.collect do |key, value|
         if value.respond_to?(:price_id)
