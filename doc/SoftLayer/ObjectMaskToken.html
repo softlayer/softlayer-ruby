@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::ObjectMaskToken - softlayer_api gem 2.2.0</title>
+<title>class SoftLayer::ObjectMaskToken - softlayer_api gem 3.0.0</title>
 
 <link href="../fonts.css" rel="stylesheet">
 <link href="../rdoc.css" rel="stylesheet">
@@ -61,7 +61,7 @@
   <h3>Parent</h3>
 
   
-  <p class="link">Object
+  <p class="link"><a href="../Object.html">Object</a>
   
 </div>
 
@@ -104,9 +104,10 @@
 
   <section class="description">
     
-<p>This class is an implementation detail of the Object Mask Parser It
-represents a single semantic token as parsed out of an Object Mask <a
-href="../String.html">String</a></p>
+<p>This class is an implementation detail of the <a
+href="../Object.html">Object</a> Mask Parser It represents a single
+semantic token as parsed out of an <a href="../Object.html">Object</a> Mask
+<a href="../String.html">String</a></p>
 
 <p>The class also generates error messages that the parser can use when it
 encounters an unexpected token</p>
@@ -199,7 +200,7 @@ encounters an unexpected token</p>
 
           
           <div class="method-source-code" id="error_for_unexpected_token-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 81</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 65</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">error_for_unexpected_token</span>(<span class="ruby-identifier">token</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">token</span>.<span class="ruby-identifier">type</span>
    <span class="ruby-keyword">when</span> <span class="ruby-value">:invalid_token</span>
@@ -253,7 +254,7 @@ encounters an unexpected token</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 48</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 32</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">token_type</span>, <span class="ruby-identifier">token_value</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-ivar">@type</span> = <span class="ruby-identifier">token_type</span>
   <span class="ruby-ivar">@value</span> = <span class="ruby-identifier">token_value</span>
@@ -295,7 +296,7 @@ encounters an unexpected token</p>
 
           
           <div class="method-source-code" id="end_of_string-3F-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 65</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 49</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">end_of_string?</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:eos</span>
 <span class="ruby-keyword">end</span></pre>
@@ -328,7 +329,7 @@ encounters an unexpected token</p>
 
           
           <div class="method-source-code" id="eql-3F-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 57</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 41</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">other_token</span>)
   <span class="ruby-ivar">@type</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">other_token</span>.<span class="ruby-identifier">type</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@value</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">other_token</span>.<span class="ruby-identifier">value</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -361,7 +362,7 @@ encounters an unexpected token</p>
 
           
           <div class="method-source-code" id="inspect-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 53</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 37</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">inspect</span>
   <span class="ruby-node">&quot;&lt;#{@type.inspect}, #{@value.inspect}&gt;&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -394,7 +395,7 @@ encounters an unexpected token</p>
 
           
           <div class="method-source-code" id="invalid-3F-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 61</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 45</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">invalid?</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@type</span> = <span class="ruby-value">:invalid_token</span>
 <span class="ruby-keyword">end</span></pre>
@@ -427,7 +428,7 @@ encounters an unexpected token</p>
 
           
           <div class="method-source-code" id="mask_root_marker-3F-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 69</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 53</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">mask_root_marker?</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:identifier</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-ivar">@value</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;mask&quot;</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@value</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;filterMask&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -460,7 +461,7 @@ encounters an unexpected token</p>
 
           
           <div class="method-source-code" id="valid_property_name-3F-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 73</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 57</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">valid_property_name?</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:identifier</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@value</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/\A[a-z][a-z0-9]*\z/i</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -493,7 +494,7 @@ encounters an unexpected token</p>
 
           
           <div class="method-source-code" id="valid_property_type-3F-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 77</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskToken.rb, line 61</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">valid_property_type?</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:identifier</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@value</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/\A[a-z][a-z0-9]*(_[a-z][a-z0-9]*)*\z/i</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -515,7 +516,7 @@ encounters an unexpected token</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

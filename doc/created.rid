@@ -1,31 +1,39 @@
-Wed, 06 Aug 2014 13:10:47 -0500
-lib/softlayer/APIParameterFilter.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/Account.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/BareMetalServer.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/BareMetalServerOrder.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/BareMetalServerOrder_Package.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/Client.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/Config.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/DynamicAttribute.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/ModelBase.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/ObjectFilter.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/ObjectMaskParser.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/ObjectMaskProperty.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/ObjectMaskToken.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/ObjectMaskTokenizer.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/ProductItemCategory.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/ProductPackage.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/Server.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/Service.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/Ticket.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/VirtualServer.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/VirtualServerOrder.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/base.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer/object_mask_helpers.rb	Wed, 06 Aug 2014 13:10:42 -0500
-lib/softlayer_api.rb	Wed, 06 Aug 2014 13:10:42 -0500
-/Users/scott/Projects/Ruby/SoftLayer/softlayer-ruby/doc_src/cla-corporate.md	Wed, 06 Aug 2014 13:10:42 -0500
-/Users/scott/Projects/Ruby/SoftLayer/softlayer-ruby/doc_src/cla-individual.md	Wed, 06 Aug 2014 13:10:42 -0500
-/Users/scott/Projects/Ruby/SoftLayer/softlayer-ruby/doc_src/Contribution Guide.md	Wed, 06 Aug 2014 13:10:42 -0500
-/Users/scott/Projects/Ruby/SoftLayer/softlayer-ruby/doc_src/Foundation.md	Wed, 06 Aug 2014 13:10:42 -0500
-/Users/scott/Projects/Ruby/SoftLayer/softlayer-ruby/doc_src/Model Layer.md	Wed, 06 Aug 2014 13:10:42 -0500
-/Users/scott/Projects/Ruby/SoftLayer/softlayer-ruby/doc_src/Welcome.md	Wed, 06 Aug 2014 13:10:42 -0500
+Tue, 21 Oct 2014 15:20:50 -0500
+lib/softlayer/APIParameterFilter.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/Account.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/BareMetalServer.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/BareMetalServerOrder.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/BareMetalServerOrder_Package.rb	Tue, 21 Oct 2014 15:20:13 -0500
+lib/softlayer/Client.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/Config.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/Datacenter.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/DynamicAttribute.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/ImageTemplate.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/ModelBase.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/NetworkComponent.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/ObjectFilter.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/ObjectMaskParser.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/ObjectMaskProperty.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/ObjectMaskToken.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/ObjectMaskTokenizer.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/ProductItemCategory.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/ProductPackage.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/Server.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/ServerFirewall.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/ServerFirewallOrder.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/Service.rb	Tue, 21 Oct 2014 15:20:24 -0500
+lib/softlayer/Ticket.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/VLANFirewall.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/VLANFirewallOrder.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/VirtualServer.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/VirtualServerOrder.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/VirtualServerUpgradeOrder.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/base.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer/object_mask_helpers.rb	Tue, 21 Oct 2014 15:15:42 -0500
+lib/softlayer_api.rb	Tue, 21 Oct 2014 15:15:42 -0500
+/Users/sthompson/Projects/Ruby/SoftLayer/softlayer-ruby/doc_src/cla-corporate.md	Tue, 21 Oct 2014 15:15:42 -0500
+/Users/sthompson/Projects/Ruby/SoftLayer/softlayer-ruby/doc_src/cla-individual.md	Tue, 21 Oct 2014 15:15:42 -0500
+/Users/sthompson/Projects/Ruby/SoftLayer/softlayer-ruby/doc_src/Contribution Guide.md	Tue, 21 Oct 2014 15:15:42 -0500
+/Users/sthompson/Projects/Ruby/SoftLayer/softlayer-ruby/doc_src/Foundation.md	Tue, 21 Oct 2014 15:15:42 -0500
+/Users/sthompson/Projects/Ruby/SoftLayer/softlayer-ruby/doc_src/Model Layer.md	Tue, 21 Oct 2014 15:15:42 -0500
+/Users/sthompson/Projects/Ruby/SoftLayer/softlayer-ruby/doc_src/Welcome.md	Tue, 21 Oct 2014 15:15:42 -0500

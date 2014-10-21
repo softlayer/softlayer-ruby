@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::APIParameterFilter - softlayer_api gem 2.2.0</title>
+<title>class SoftLayer::APIParameterFilter - softlayer_api gem 3.0.0</title>
 
 <link href="../fonts.css" rel="stylesheet">
 <link href="../rdoc.css" rel="stylesheet">
@@ -61,7 +61,7 @@
   <h3>Parent</h3>
 
   
-  <p class="link">Object
+  <p class="link"><a href="../Object.html">Object</a>
   
 </div>
 
@@ -95,6 +95,8 @@
     
     <li ><a href="#method-i-server_result_offset">#server_result_offset</a>
     
+    <li ><a href="#method-i-service_name">#service_name</a>
+    
   </ul>
 </div>
 
@@ -112,17 +114,16 @@
 understands how to accept the other API parameter filters and carry their
 values to <a
 href="APIParameterFilter.html#method-i-method_missing">#method_missing</a>
-in <a href="Service.html">Service</a>. Instances of this class are created
-internally by the <a href="Service.html">Service</a> in its handling of a
-method call and you should not have to create instances of this class
-directly.</p>
+in Service. Instances of this class are created internally by the Service
+in its handling of a method call and you should not have to create
+instances of this class directly.</p>
 
 <p>Instead, to use an API filter, you add a filter method to the call chain
-when you call a method through a <a href="Service.html">Service</a></p>
+when you call a method through a Service</p>
 
-<p>For example, given a <a href="Service.html">Service</a> instance called
-<code>account_service</code> you could take advantage of the API filter
-that identifies a particular object known to that service using the <a
+<p>For example, given a Service instance called <code>account_service</code>
+you could take advantage of the API filter that identifies a particular
+object known to that service using the <a
 href="APIParameterFilter.html#method-i-object_with_id">#object_with_id</a>
 method :</p>
 
@@ -180,7 +181,7 @@ is forwarding a message.</p>
 unknown method call, <a
 href="APIParameterFilter.html#method-i-method_missing">#method_missing</a>
 will forward the call on to the target. This is supposed to be an instance
-of the <a href="Service.html">SoftLayer::Service</a> class.</p>
+of the SoftLayer::Service class.</p>
         
         </div>
       </div>
@@ -214,7 +215,7 @@ of the <a href="Service.html">SoftLayer::Service</a> class.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 55</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 41</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">target</span>, <span class="ruby-identifier">starting_parameters</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-ivar">@target</span> = <span class="ruby-identifier">target</span>
   <span class="ruby-ivar">@parameters</span> = <span class="ruby-identifier">starting_parameters</span> <span class="ruby-operator">||</span> {}
@@ -252,8 +253,7 @@ of the <a href="Service.html">SoftLayer::Service</a> class.</p>
           
           <p>This allows the filters to be used at the end of a long chain of calls that
 ends at a service.  It forwards the message and the parameters to the
-target of this method (presumably a <a href="Service.html">Service</a>
-instance)</p>
+target of this method (presumably a Service instance)</p>
           
           
             <div class="method-calls-super">
@@ -264,7 +264,7 @@ instance)</p>
 
           
           <div class="method-source-code" id="method_missing-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 197</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 190</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">method_missing</span>(<span class="ruby-identifier">method_name</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;SoftLayer::APIParameterFilter#method_missing called #{method_name}, #{args.inspect}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">$DEBUG</span>
 
@@ -299,16 +299,17 @@ instance)</p>
           
           <p>Adds an <a
 href="APIParameterFilter.html#method-i-object_filter">#object_filter</a> to
-the result. An Object Filter allows you to specify criteria which are used
-to filter the results returned by the server.</p>
+the result. An <a href="../Object.html">Object</a> Filter allows you to
+specify criteria which are used to filter the results returned by the
+server.</p>
           
           
 
           
           <div class="method-source-code" id="object_filter-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 121</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 114</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">filter</span>)
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;Object mask expects mask properties&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">nil?</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;object_filter expects an instance of SoftLayer::ObjectFilter&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-operator">!</span><span class="ruby-identifier">filter</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">ObjectFilter</span>)
 
   <span class="ruby-comment"># we create a new object in case the user wants to store off the</span>
   <span class="ruby-comment"># filter chain and reuse it later</span>
@@ -338,8 +339,8 @@ to filter the results returned by the server.</p>
         <div class="method-description">
           
           <p>Use this as part of a method call chain to add an object mask to the
-request. The arguments to object mask should be well formed Extended Object
-Mask strings:</p>
+request. The arguments to object mask should be well formed Extended <a
+href="../Object.html">Object</a> Mask strings:</p>
 
 <pre>ticket_service.object_mask(
   &quot;mask[createDate, modifyDate]&quot;,
@@ -355,7 +356,7 @@ strings immediately before the mask is used in a call</p>
 
           
           <div class="method-source-code" id="object_mask-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 87</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 80</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">object_mask</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;object_mask expects object mask strings&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">||</span> (<span class="ruby-value">1</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>])
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;object_mask expects strings&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">find</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">arg</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-identifier">arg</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">String</span>) }
@@ -401,7 +402,7 @@ particular ID. For example, if you want to get the ticket with an ID of
 
           
           <div class="method-source-code" id="object_with_id-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 67</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 60</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">value</span>)
   <span class="ruby-comment"># we create a new object in case the user wants to store off the</span>
   <span class="ruby-comment"># filter chain and reuse it later</span>
@@ -444,7 +445,7 @@ starting with the tenth item in the open tickets list you might call</p>
 
           
           <div class="method-source-code" id="result_limit-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 111</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 104</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">result_limit</span>(<span class="ruby-identifier">offset</span>, <span class="ruby-identifier">limit</span>)
   <span class="ruby-comment"># we create a new object in case the user wants to store off the</span>
   <span class="ruby-comment"># filter chain and reuse it later</span>
@@ -480,9 +481,9 @@ filter.</p>
 
           
           <div class="method-source-code" id="server_object_filter-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 189</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 182</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">server_object_filter</span>
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parameters</span>[<span class="ruby-value">:object_filter</span>]
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parameters</span>[<span class="ruby-value">:object_filter</span>].<span class="ruby-identifier">to_h</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parameters</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:object_filter</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -514,7 +515,7 @@ parameter set.</p>
 
           
           <div class="method-source-code" id="server_object_id-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 132</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 125</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">server_object_id</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parameters</span>[<span class="ruby-value">:server_object_id</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -548,7 +549,7 @@ parameter set.</p>
 
           
           <div class="method-source-code" id="server_object_mask-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 139</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 132</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">server_object_mask</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">parameters</span>[<span class="ruby-value">:object_mask</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">parameters</span>[<span class="ruby-value">:object_mask</span>].<span class="ruby-identifier">empty?</span>
 
@@ -612,7 +613,7 @@ any) stored in this parameter set.</p>
 
           
           <div class="method-source-code" id="server_result_limit-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 176</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 169</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">server_result_limit</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parameters</span>[<span class="ruby-value">:result_limit</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -646,9 +647,43 @@ any) stored in this parameter set.</p>
 
           
           <div class="method-source-code" id="server_result_offset-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 183</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 176</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">server_result_offset</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parameters</span>[<span class="ruby-value">:result_offset</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-service_name" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">service_name</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>API Parameter filters will call through to a particular service but that
+service is defined by their target</p>
+          
+          
+
+          
+          <div class="method-source-code" id="service_name-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/APIParameterFilter.rb, line 49</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">service_name</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@target</span>.<span class="ruby-identifier">service_name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -668,7 +703,7 @@ any) stored in this parameter set.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

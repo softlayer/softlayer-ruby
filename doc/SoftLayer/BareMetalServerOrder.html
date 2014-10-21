@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::BareMetalServerOrder - softlayer_api gem 2.2.0</title>
+<title>class SoftLayer::BareMetalServerOrder - softlayer_api gem 3.0.0</title>
 
 <link href="../fonts.css" rel="stylesheet">
 <link href="../rdoc.css" rel="stylesheet">
@@ -61,7 +61,7 @@
   <h3>Parent</h3>
 
   
-  <p class="link">Object
+  <p class="link"><a href="../Object.html">Object</a>
   
 </div>
 
@@ -108,9 +108,8 @@
     
 <p>This class allows you to order a Bare Metal <a
 href="Server.html">Server</a> by providing a simple set of attributes for
-the newly created server. The <a href="../SoftLayer.html">SoftLayer</a>
-system will select a server that matches the attributes provided and
-provision it or will report an error.</p>
+the newly created server. The SoftLayer system will select a server that
+matches the attributes provided and provision it or will report an error.</p>
 
 <p>If you wish to have more exacting control over the set of options that go
 into configuring the server, please see the <a
@@ -168,10 +167,8 @@ here.</p>
 
         <div class="method-description">
         
-        <p><a href="../String.html">String</a>, short name of the data center that
-will house the new Bare Metal Instance (e.g. “dal05” or “sea01”)
-Corresponds to <code>datacenter.name</code> in the documentation for
-<code>createObject</code>.</p>
+        <p>An instance of <a href="Datacenter.html">SoftLayer::Datacenter</a>. The
+server will be provisioned in this data center</p>
         
         </div>
       </div>
@@ -321,10 +318,10 @@ documentation</p>
 
         <div class="method-description">
         
-        <p>Object responding to to_s and providing a valid URI, The URI of a post
-provisioning script to run on this server once it is created. Corresponds
-to <code>postInstallScriptUri</code> in the <code>createObject</code>
-documentation</p>
+        <p><a href="../Object.html">Object</a> responding to to_s and providing a
+valid URI, The URI of a post provisioning script to run on this server once
+it is created. Corresponds to <code>postInstallScriptUri</code> in the
+<code>createObject</code> documentation</p>
         
         </div>
       </div>
@@ -403,7 +400,7 @@ instance Corresponds to <code>userData.value</code> in the
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 114</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 97</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> (<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-ivar">@softlayer_client</span> = <span class="ruby-identifier">client</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@softlayer_client</span>
@@ -445,9 +442,9 @@ instance Corresponds to <code>userData.value</code> in the
 
           
           <div class="method-source-code" id="core_options-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 204</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 187</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">core_options</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&quot;processors&quot;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">processor_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">processor_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;processorCoreAmount&#39;</span>] }.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort!</span>
+  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&#39;processors&#39;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">processor_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">processor_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;processorCoreAmount&#39;</span>] }.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort!</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -480,13 +477,13 @@ result. On subsequent calls it returns the remembered result.</p>
 
           
           <div class="method-source-code" id="create_object_options-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 189</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 172</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">client</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
 
   <span class="ruby-identifier">@@create_object_options</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">nil</span>
-  <span class="ruby-identifier">@@create_object_options</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">&quot;Hardware&quot;</span>].<span class="ruby-identifier">getCreateObjectOptions</span>() <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">@@create_object_options</span>
+  <span class="ruby-identifier">@@create_object_options</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Hardware</span>].<span class="ruby-identifier">getCreateObjectOptions</span>() <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">@@create_object_options</span>
   <span class="ruby-identifier">@@create_object_options</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -518,9 +515,9 @@ result. On subsequent calls it returns the remembered result.</p>
 
           
           <div class="method-source-code" id="datacenter_options-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 200</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 183</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">datacenter_options</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&quot;datacenters&quot;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">datacenter_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">datacenter_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;datacenter&#39;</span>][<span class="ruby-string">&quot;name&quot;</span>] }.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort!</span>
+  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&#39;datacenters&#39;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">datacenter_spec</span><span class="ruby-operator">|</span> <span class="ruby-constant">Datacenter</span>.<span class="ruby-identifier">datacenter_named</span>(<span class="ruby-identifier">datacenter_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;datacenter&#39;</span>][<span class="ruby-string">&#39;name&#39;</span>], <span class="ruby-identifier">client</span>) }.<span class="ruby-identifier">uniq</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -551,9 +548,9 @@ result. On subsequent calls it returns the remembered result.</p>
 
           
           <div class="method-source-code" id="disk_options-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 210</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 193</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">disk_options</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&quot;hardDrives&quot;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">disk_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">disk_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;hardDrives&#39;</span>][<span class="ruby-value">0</span>][<span class="ruby-string">&#39;capacity&#39;</span>].<span class="ruby-identifier">to_i</span>}.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort!</span>
+  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&#39;hardDrives&#39;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">disk_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">disk_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;hardDrives&#39;</span>][<span class="ruby-value">0</span>][<span class="ruby-string">&#39;capacity&#39;</span>].<span class="ruby-identifier">to_i</span>}.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort!</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -584,9 +581,9 @@ result. On subsequent calls it returns the remembered result.</p>
 
           
           <div class="method-source-code" id="max_port_speed_options-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 222</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 205</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">max_port_speed_options</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&quot;networkComponents&quot;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">component_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">component_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;networkComponents&#39;</span>][<span class="ruby-value">0</span>][<span class="ruby-string">&#39;maxSpeed&#39;</span>] }
+  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&#39;networkComponents&#39;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">component_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">component_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;networkComponents&#39;</span>][<span class="ruby-value">0</span>][<span class="ruby-string">&#39;maxSpeed&#39;</span>] }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -617,9 +614,9 @@ result. On subsequent calls it returns the remembered result.</p>
 
           
           <div class="method-source-code" id="os_reference_code_options-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 216</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 199</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">os_reference_code_options</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&quot;operatingSystems&quot;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">os_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">os_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;operatingSystemReferenceCode&#39;</span>] }.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort!</span>
+  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&#39;operatingSystems&#39;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">os_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">os_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;operatingSystemReferenceCode&#39;</span>] }.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort!</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -652,9 +649,9 @@ result. On subsequent calls it returns the remembered result.</p>
 
         <div class="method-description">
           
-          <p>Calls the <a href="../SoftLayer.html">SoftLayer</a> API to place an order
-for a new server based on the template in this order. If this succeeds then
-you will be billed for the new server.</p>
+          <p>Calls the SoftLayer API to place an order for a new server based on the
+template in this order. If this succeeds then you will be billed for the
+new server.</p>
 
 <p>If you provide a block, it will receive the order template as a parameter
 and the block may make changes to the template before it is submitted.</p>
@@ -663,13 +660,13 @@ and the block may make changes to the template before it is submitted.</p>
 
           
           <div class="method-source-code" id="place_order-21-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 140</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 123</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">place_order!</span>()
   <span class="ruby-identifier">order_template</span> = <span class="ruby-identifier">hardware_instance_template</span>
   <span class="ruby-identifier">order_template</span> = <span class="ruby-keyword">yield</span> <span class="ruby-identifier">order_template</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
 
-  <span class="ruby-identifier">server_hash</span> = <span class="ruby-ivar">@softlayer_client</span>[<span class="ruby-string">&quot;Hardware&quot;</span>].<span class="ruby-identifier">createObject</span>(<span class="ruby-identifier">order_template</span>)
-  <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">BareMetalServer</span>.<span class="ruby-identifier">server_with_id</span>(<span class="ruby-identifier">server_hash</span>[<span class="ruby-string">&quot;id&quot;</span>], <span class="ruby-value">:client</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@softlayer_client</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">server_hash</span>
+  <span class="ruby-identifier">server_hash</span> = <span class="ruby-ivar">@softlayer_client</span>[<span class="ruby-value">:Hardware</span>].<span class="ruby-identifier">createObject</span>(<span class="ruby-identifier">order_template</span>)
+  <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">BareMetalServer</span>.<span class="ruby-identifier">server_with_id</span>(<span class="ruby-identifier">server_hash</span>[<span class="ruby-string">&#39;id&#39;</span>], <span class="ruby-value">:client</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@softlayer_client</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">server_hash</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -694,9 +691,9 @@ and the block may make changes to the template before it is submitted.</p>
 
         <div class="method-description">
           
-          <p>Calls the <a href="../SoftLayer.html">SoftLayer</a> API to verify that the
-template provided by this order is valid This routine will return the order
-template generated by the API or will throw an exception</p>
+          <p>Calls the SoftLayer API to verify that the template provided by this order
+is valid This routine will return the order template generated by the API
+or will throw an exception</p>
 
 <p>This routine will not actually create a Bare Metal Instance and will not
 affect billing.</p>
@@ -708,12 +705,12 @@ and the block may make changes to the template before it is submitted.</p>
 
           
           <div class="method-source-code" id="verify-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 127</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 110</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">verify</span>()
   <span class="ruby-identifier">order_template</span> = <span class="ruby-identifier">hardware_instance_template</span>
   <span class="ruby-identifier">order_template</span> = <span class="ruby-keyword">yield</span> <span class="ruby-identifier">order_template</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
 
-  <span class="ruby-ivar">@softlayer_client</span>[<span class="ruby-string">&quot;Hardware&quot;</span>].<span class="ruby-identifier">generateOrderTemplate</span>(<span class="ruby-identifier">order_template</span>)
+  <span class="ruby-ivar">@softlayer_client</span>[<span class="ruby-value">:Hardware</span>].<span class="ruby-identifier">generateOrderTemplate</span>(<span class="ruby-identifier">order_template</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -746,15 +743,14 @@ and the block may make changes to the template before it is submitted.</p>
 
         <div class="method-description">
           
-          <p>Returns a hash of the creation options formatted to be sent to the <a
-href="../SoftLayer.html">SoftLayer</a> API for either verification or
-completion</p>
+          <p>Returns a hash of the creation options formatted to be sent to the
+SoftLayer API for either verification or completion</p>
           
           
 
           
           <div class="method-source-code" id="hardware_instance_template-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 153</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder.rb, line 136</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">hardware_instance_template</span>
   <span class="ruby-identifier">template</span> = {
     <span class="ruby-string">&quot;processorCoreAmount&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@cores</span>.<span class="ruby-identifier">to_i</span>,
@@ -769,15 +765,15 @@ completion</p>
     <span class="ruby-string">&quot;hourlyBillingFlag&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-ivar">@hourly</span>
   }
 
-  <span class="ruby-identifier">template</span>[<span class="ruby-string">&quot;privateNetworkOnlyFlag&quot;</span>] = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@private_network_only</span>
+  <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;privateNetworkOnlyFlag&#39;</span>] = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@private_network_only</span>
 
-  <span class="ruby-identifier">template</span>[<span class="ruby-string">&quot;datacenter&quot;</span>] = {<span class="ruby-string">&quot;name&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@datacenter</span>} <span class="ruby-keyword">if</span> <span class="ruby-ivar">@datacenter</span>
+  <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;datacenter&#39;</span>] = {<span class="ruby-string">&quot;name&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@datacenter</span>.<span class="ruby-identifier">name</span>} <span class="ruby-keyword">if</span> <span class="ruby-ivar">@datacenter</span>
   <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;userData&#39;</span>] = [{<span class="ruby-string">&#39;value&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@user_metadata</span>}] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user_metadata</span>
   <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;networkComponents&#39;</span>] = [{<span class="ruby-string">&#39;maxSpeed&#39;</span>=<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@max_port_speed</span>}] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@max_port_speed</span>
   <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;postInstallScriptUri&#39;</span>] = <span class="ruby-ivar">@provision_script_URI</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@provision_script_URI</span>
   <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;sshKeys&#39;</span>] = <span class="ruby-ivar">@ssh_key_ids</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">ssh_key</span><span class="ruby-operator">|</span> {<span class="ruby-string">&#39;id&#39;</span>=<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ssh_key</span>.<span class="ruby-identifier">to_i</span> } } <span class="ruby-keyword">if</span> <span class="ruby-ivar">@ssh_key_ids</span>
   <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;primaryNetworkComponent&#39;</span>] = { <span class="ruby-string">&quot;networkVlan&quot;</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-string">&quot;id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@public_vlan_id</span>.<span class="ruby-identifier">to_i</span> } } <span class="ruby-keyword">if</span> <span class="ruby-ivar">@public_vlan_id</span>
-  <span class="ruby-identifier">template</span>[<span class="ruby-string">&quot;primaryBackendNetworkComponent&quot;</span>] = { <span class="ruby-string">&quot;networkVlan&quot;</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-string">&quot;id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@private_vlan_id</span>.<span class="ruby-identifier">to_i</span> } } <span class="ruby-keyword">if</span> <span class="ruby-ivar">@private_vlan_id</span>
+  <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;primaryBackendNetworkComponent&#39;</span>] = { <span class="ruby-string">&quot;networkVlan&quot;</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-string">&quot;id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@private_vlan_id</span>.<span class="ruby-identifier">to_i</span> } } <span class="ruby-keyword">if</span> <span class="ruby-ivar">@private_vlan_id</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@disks</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@disks</span>.<span class="ruby-identifier">empty?</span>
     <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;hardDrives&#39;</span>] = <span class="ruby-ivar">@disks</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">disk</span><span class="ruby-operator">|</span>
@@ -805,7 +801,7 @@ completion</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

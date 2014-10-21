@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Foundation - softlayer_api gem 2.2.0</title>
+<title>Foundation - softlayer_api gem 3.0.0</title>
 
 <link href="./fonts.css" rel="stylesheet">
 <link href="./rdoc.css" rel="stylesheet">
@@ -106,44 +106,40 @@
 
 <p>The <a href="Foundation_md.html">Foundation</a> Layer of the
 <code>softlayer_api</code> Gem handles communication, authentication, and
-direct interaction with the <a href="SoftLayer.html">SoftLayer</a> API. The
-majority of this functionality is embodied in the
-<code>SoftLayer::Client</code> and <code>SoftLayer::Service</code> classes.
-Tools are added to those to support important features of the <a
-href="SoftLayer.html">SoftLayer</a> API such as Object Masks, Result
-Limits, and Object Filters. This document explains what developers must do
-to connect to, and interact with, the <a
-href="SoftLayer.html">SoftLayer</a> API using this Gem.</p>
+direct interaction with the SoftLayer API. The majority of this
+functionality is embodied in the <code>SoftLayer::Client</code> and
+<code>SoftLayer::Service</code> classes. Tools are added to those to
+support important features of the SoftLayer API such as <a
+href="Object.html">Object</a> Masks, Result Limits, and <a
+href="Object.html">Object</a> Filters. This document explains what
+developers must do to connect to, and interact with, the SoftLayer API
+using this Gem.</p>
 
 <h1 id="label-Getting+Started">Getting Started<span><a href="#label-Getting+Started">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
 
-<p>Getting started with the <a href="SoftLayer.html">SoftLayer</a> API is
-fairly straightforward. There is some key information that you will have to
-provide to the Gem in order to connect to the <a
-href="SoftLayer.html">SoftLayer</a> API. You provide that information to
-classes instantiated from the Gem&#39;s source and use those instances to
-make calls into the API.</p>
+<p>Getting started with the SoftLayer API is fairly straightforward. There is
+some key information that you will have to provide to the Gem in order to
+connect to the SoftLayer API. You provide that information to classes
+instantiated from the Gem&#39;s source and use those instances to make
+calls into the API.</p>
 
 <h2 id="label-Key+Information">Key Information<span><a href="#label-Key+Information">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 
-<p>In order to communicate with the <a href="SoftLayer.html">SoftLayer</a>
-API, the system needs to have three key pieces of information:</p>
+<p>In order to communicate with the SoftLayer API, the system needs to have
+three key pieces of information:</p>
 <ul><li>
-<p>User name — a user name for the <a href="SoftLayer.html">SoftLayer</a>
-account you wish to work with.</p>
+<p>User name — a user name for the SoftLayer account you wish to work with.</p>
 </li><li>
-<p>API key — API keys are obtained through the <a
-href="SoftLayer.html">SoftLayer</a> web portal.</p>
+<p>API key — API keys are obtained through the SoftLayer web portal.</p>
 </li><li>
-<p>Endpoint URL — A URL to the <a href="SoftLayer.html">SoftLayer</a> Endpoint
-your code would like to communicate with.</p>
+<p>Endpoint URL — A URL to the SoftLayer Endpoint your code would like to
+communicate with.</p>
 </li></ul>
 
 <p>The user name is simply the name of one of the user accounts created within
-your <a href="SoftLayer.html">SoftLayer</a> account. While it is possible
-to use the Master User account we recommend that you create one or more
-dedicated API user accounts so that you can carefully control account
-permissions for your API access.</p>
+your SoftLayer account. While it is possible to use the Master User account
+we recommend that you create one or more dedicated API user accounts so
+that you can carefully control account permissions for your API access.</p>
 
 <p>The API key must be generated for the user account you use to access the
 API. Information on generating API keys can be found in the <a
@@ -152,10 +148,9 @@ to the SoftLayer API</a> article on SLDN under the heading, <em>Generating
 Your API Key</em>. Please remember, your API key is privileged information
 and you should protect carefully as you would a password.</p>
 
-<p><a href="SoftLayer.html">SoftLayer</a> provides two different endpoint URLs
-to scripts. One is associated with the public internet and may be accessed
-from anywhere. These two URLs are available as global variables in the <a
-href="SoftLayer.html">SoftLayer</a> module:</p>
+<p>SoftLayer provides two different endpoint URLs to scripts. One is
+associated with the public internet and may be accessed from anywhere.
+These two URLs are available as global variables in the SoftLayer module:</p>
 
 <pre># The base URL of the SoftLayer API available to the public internet.
 API_PUBLIC_ENDPOINT = &#39;https://api.softlayer.com/xmlrpc/v3/&#39;
@@ -194,10 +189,10 @@ class.</p>
 <h2 id="label-Obtaining+a+Service">Obtaining a Service<span><a href="#label-Obtaining+a+Service">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 
 <p>With a fully configured client, the next step is to obtain an instance of
-the <code>SoftLayer::Service</code> class. Calls to the network <a
-href="SoftLayer.html">SoftLayer</a> API are done through Service objects.
-The Services of the network <a href="SoftLayer.html">SoftLayer</a> API are
-documented on the <a href="http://sldn.softlayer.com">SLDN</a> web site.</p>
+the <code>SoftLayer::Service</code> class. Calls to the network SoftLayer
+API are done through Service objects. The Services of the network SoftLayer
+API are documented on the <a href="http://sldn.softlayer.com">SLDN</a> web
+site.</p>
 
 <p>In this example we will use the <code>SoftLayer_Account</code> service.
 Given the variable <code>softlayer_client</code> which is a properly
@@ -215,10 +210,9 @@ service is done as follows:</p>
 
 <h2 id="label-Working+with+the+network+API">Working with the network API<span><a href="#label-Working+with+the+network+API">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 
-<p>With a service in hand, calling thorough to the network <a
-href="SoftLayer.html">SoftLayer</a> API is straightforward. Using the
-<code>account_service</code> created above we may call the
-<code>getOpenTickets</code> method in that service directly:</p>
+<p>With a service in hand, calling thorough to the network SoftLayer API is
+straightforward. Using the <code>account_service</code> created above we
+may call the <code>getOpenTickets</code> method in that service directly:</p>
 
 <pre>open_tickets = account_service.getOpenTickets()</pre>
 
@@ -236,49 +230,46 @@ open_tickets.each { |ticket_hash| puts ticket_hash[&quot;</span><span class="rub
 
 <p>This short example shows the essence of working with the <a
 href="Foundation_md.html">Foundation</a> API, you create a client, obtain a
-service, and make calls to the network <a
-href="SoftLayer.html">SoftLayer</a> API through that service.</p>
+service, and make calls to the network SoftLayer API through that service.</p>
 
 <h2 id="label-Request+Results">Request Results<span><a href="#label-Request+Results">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 
-<p>Most of the information you get back from the network <a
-href="SoftLayer.html">SoftLayer</a> API at the foundation level is returned
-as Hashes, or arrays of hashes. These structures are often nested. The keys
-of the hashes will be strings and use the property name specified in the <a
-href="http://sldn.softlayer.com">SLDN documentation</a>. The values in the
-hashes vary depending on the data type of the property represented by the
-hash key. In the example above, the <code>getOpenTickets</code> call
-returns an array of hashes. Each hash offers information about a single
-ticket in the account&#39;s open ticket list.</p>
+<p>Most of the information you get back from the network SoftLayer API at the
+foundation level is returned as Hashes, or arrays of hashes. These
+structures are often nested. The keys of the hashes will be strings and use
+the property name specified in the <a href="http://sldn.softlayer.com">SLDN
+documentation</a>. The values in the hashes vary depending on the data type
+of the property represented by the hash key. In the example above, the
+<code>getOpenTickets</code> call returns an array of hashes. Each hash
+offers information about a single ticket in the account&#39;s open ticket
+list.</p>
 
-<p>The network <a href="SoftLayer.html">SoftLayer</a> API provides helpful
-techniques for limiting and filtering the result set from calls to the
-network and the <code>softlayer_api</code> offers helpful routines for
-making use of these. Please see the section on Service Helpers below.</p>
+<p>The network SoftLayer API provides helpful techniques for limiting and
+filtering the result set from calls to the network and the
+<code>softlayer_api</code> offers helpful routines for making use of these.
+Please see the section on Service Helpers below.</p>
 
 <h2 id="label-Error+reporting">Error reporting<span><a href="#label-Error+reporting">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 
-<p>Calls to the network <a href="SoftLayer.html">SoftLayer</a> API that result
-in errors being returned by the server are caught in the XML-RPC layer and
-passed back to scripts as Exceptions. It is prudent to wrap your calls in
-exception handling code.</p>
+<p>Calls to the network SoftLayer API that result in errors being returned by
+the server are caught in the XML-RPC layer and passed back to scripts as
+Exceptions. It is prudent to wrap your calls in exception handling code.</p>
 
 <h2 id="label-Troubleshooting">Troubleshooting<span><a href="#label-Troubleshooting">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 
-<p>Communication with the <a href="SoftLayer.html">SoftLayer</a> servers is
-handled through the XML-RPC client that is built into the Ruby Core
-library. As a consequence the network communication is also handled by Core
-library classes.</p>
+<p>Communication with the SoftLayer servers is handled through the XML-RPC
+client that is built into the Ruby Core library. As a consequence the
+network communication is also handled by Core library classes.</p>
 
 <p>One aspect of network communication that the <code>softlayer_api</code>
 relies on the Ruby Core library to provide is SSL certificate
 authentication. Problems with this authentication often arise if your Ruby
 environment is not properly configured with SSL root certificates. If you
-find you are having trouble communicating with the network <a
-href="SoftLayer.html">SoftLayer</a> API, and the error messages point to
-SSL certificate authentication, please consider a web search using your
-specific error message as a search string. This will often reveal answers
-that can help you resolve networking issues your Ruby environment.</p>
+find you are having trouble communicating with the network SoftLayer API,
+and the error messages point to SSL certificate authentication, please
+consider a web search using your specific error message as a search string.
+This will often reveal answers that can help you resolve networking issues
+your Ruby environment.</p>
 
 <p>Another valuable tool for troubleshooting is the global <code>$DEBUG</code>
 variable. This variable can be set to <code>true</code> explicitly in your
@@ -329,11 +320,10 @@ whose id is 12345 since both the Ticket service, and the applied helper
 
 <h2 id="label-object_with_id"><code>object_with_id</code><span><a href="#label-object_with_id">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 
-<p>Entities in the <a href="SoftLayer.html">SoftLayer</a> environment are
-uniquely identified by the Service in which they are found, and their
-object <code>id</code>. The <code>object_with_id</code> service helper is
-used to direct a network request to a particular object in the <a
-href="SoftLayer.html">SoftLayer</a> Environment.</p>
+<p>Entities in the SoftLayer environment are uniquely identified by the
+Service in which they are found, and their object <code>id</code>. The
+<code>object_with_id</code> service helper is used to direct a network
+request to a particular object in the SoftLayer Environment.</p>
 
 <p>Examples of using <code>object_with_id</code> to direct a network API
 request to a particular object (in this case a ticket) are given in the
@@ -342,15 +332,15 @@ introduction to the Service Helpers section above.</p>
 <p>A particular calling sequence should only include one invocation of the
 <code>object_with_id</code> service helper.</p>
 
-<h2 id="label-Object+Masks">Object Masks<span><a href="#label-Object+Masks">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
+<h2 id="label-Object+Masks"><a href="Object.html">Object</a> Masks<span><a href="#label-Object+Masks">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 
-<p>Object Masks offer a way for a script to limit the results of a particular
-call so that the result includes particular properties of the objects
-returned by the call. For example, if a problem&#39;s solution required the
-list of open tickets for an account, including each ticket&#39;s title and
-a count of the updates made to the ticket, A script could limit the
-information returned for each ticket to the title and update count using an
-object mask:</p>
+<p><a href="Object.html">Object</a> Masks offer a way for a script to limit
+the results of a particular call so that the result includes particular
+properties of the objects returned by the call. For example, if a
+problem&#39;s solution required the list of open tickets for an account,
+including each ticket&#39;s title and a count of the updates made to the
+ticket, A script could limit the information returned for each ticket to
+the title and update count using an object mask:</p>
 
 <pre>softlayer_client[&quot;Account&quot;].object_mask(&quot;mask[title,updateCount]&quot;).getOpenTickets()</pre>
 
@@ -390,14 +380,15 @@ tickets.</p>
 <p>Only one call to the <code>result_limit</code> helper should be included in
 any calling sequence.</p>
 
-<h2 id="label-Object+Filters">Object Filters<span><a href="#label-Object+Filters">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
+<h2 id="label-Object+Filters"><a href="Object.html">Object</a> Filters<span><a href="#label-Object+Filters">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
 
-<p>Object Filters ask the server to filter the result set using a set of
-criteria before returning its results. Unfortunately, at the time of this
-writing, constructing object filters is not a well documented process.
-Luckily, the <code>softlayer_api</code> Ruby Gem, offers some convenience
-functionality to help you create simple object filters. If you want help
-crafting a particular object filter, we suggest you ask in the <a
+<p><a href="Object.html">Object</a> Filters ask the server to filter the
+result set using a set of criteria before returning its results.
+Unfortunately, at the time of this writing, constructing object filters is
+not a well documented process. Luckily, the <code>softlayer_api</code> Ruby
+Gem, offers some convenience functionality to help you create simple object
+filters. If you want help crafting a particular object filter, we suggest
+you ask in the <a
 href="https://forums.softlayer.com/forum/softlayer-developer-network">SLDN
 Forums</a> for assistance.</p>
 
@@ -444,7 +435,7 @@ Other matchers can be found in as the instance methods of the
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

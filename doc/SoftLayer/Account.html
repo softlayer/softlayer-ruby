@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::Account - softlayer_api gem 2.2.0</title>
+<title>class SoftLayer::Account - softlayer_api gem 3.0.0</title>
 
 <link href="../fonts.css" rel="stylesheet">
 <link href="../rdoc.css" rel="stylesheet">
@@ -87,6 +87,8 @@
     <li ><a href="#method-c-account_for_client">::account_for_client</a>
     
     <li ><a href="#method-i-bare_metal_servers">#bare_metal_servers</a>
+    
+    <li ><a href="#method-i-find_VLAN_with_number">#find_VLAN_with_number</a>
     
     <li ><a href="#method-i-servers">#servers</a>
     
@@ -291,12 +293,12 @@ with those credentials.</p>
 
           
           <div class="method-source-code" id="account_for_client-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 124</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 151</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">account_for_client</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">client</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
 
-  <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">&#39;Account&#39;</span>]
+  <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Account</span>]
   <span class="ruby-identifier">network_hash</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">getObject</span>()
   <span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">network_hash</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -342,7 +344,7 @@ minutes.</p>
 
           
           <div class="method-source-code" id="bare_metal_servers-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 86</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 70</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:bare_metal_servers</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">bare_metal</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">bare_metal</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@last_bare_metal_update</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">at</span>(<span class="ruby-value">0</span>)
@@ -353,6 +355,48 @@ minutes.</p>
     <span class="ruby-ivar">@last_bare_metal_update</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
     <span class="ruby-constant">BareMetalServer</span>.<span class="ruby-identifier">find_servers</span>(<span class="ruby-value">:client</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_client</span>)
   <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-find_VLAN_with_number" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">find_VLAN_with_number</span><span
+            class="method-args">(vlan_number)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Searches the account&#39;s list of VLANs for the ones with the given vlan
+number. This may return multiple results because a VLAN can span different
+routers and you will get a separate segment for each router.</p>
+
+<p>The IDs of the different segments can be helpful for ordering firewalls.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="find_VLAN_with_number-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 138</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_VLAN_with_number</span>(<span class="ruby-identifier">vlan_number</span>)
+  <span class="ruby-identifier">filter</span> = <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">ObjectFilter</span>.<span class="ruby-identifier">new</span>() { <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-string">&#39;networkVlans.vlanNumber&#39;</span>).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span> <span class="ruby-identifier">vlan_number</span>
+  }
+
+  <span class="ruby-identifier">vlan_data</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[id,vlanNumber,primaryRouter,networkSpace]&quot;</span>).<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">filter</span>).<span class="ruby-identifier">getNetworkVlans</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">vlan_data</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -384,7 +428,7 @@ bare metal and virtual servers</p>
 
           
           <div class="method-source-code" id="servers-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 136</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 163</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">servers</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">bare_metal_servers</span> <span class="ruby-operator">+</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">virtual_servers</span>
 <span class="ruby-keyword">end</span></pre>
@@ -417,9 +461,9 @@ bare metal and virtual servers</p>
 
           
           <div class="method-source-code" id="service-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 116</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 125</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">service</span>
-  <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">&quot;Account&quot;</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
+  <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Account</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -455,7 +499,7 @@ five minutes.</p>
 
           
           <div class="method-source-code" id="virtual_servers-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 104</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 88</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:virtual_servers</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">virtual_servers</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">virtual_servers</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@last_virtual_server_update</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">at</span>(<span class="ruby-value">0</span>)
@@ -485,7 +529,7 @@ five minutes.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

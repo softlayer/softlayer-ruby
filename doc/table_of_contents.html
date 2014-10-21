@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Table of Contents - softlayer_api gem 2.2.0</title>
+<title>Table of Contents - softlayer_api gem 3.0.0</title>
 
 <link href="./fonts.css" rel="stylesheet">
 <link href="./rdoc.css" rel="stylesheet">
@@ -23,7 +23,7 @@
 
 <body id="top" class="table-of-contents">
 <main role="main">
-<h1 class="class">Table of Contents - softlayer_api gem 2.2.0</h1>
+<h1 class="class">Table of Contents - softlayer_api gem 3.0.0</h1>
 
 <h2 id="pages">Pages</h2>
 <ul>
@@ -114,8 +114,8 @@
   <li class="class">
     <a href="Hash.html">Hash</a>
   </li>
-  <li class="module">
-    <a href="SoftLayer.html">SoftLayer</a>
+  <li class="class">
+    <a href="Object.html">Object</a>
   </li>
   <li class="class">
     <a href="SoftLayer/APIParameterFilter.html">SoftLayer::APIParameterFilter</a>
@@ -145,6 +145,9 @@
       <li><a href="SoftLayer/Config.html#label-Direct+parameters">Direct parameters</a>
     </ul>
   </li>
+  <li class="class">
+    <a href="SoftLayer/Datacenter.html">SoftLayer::Datacenter</a>
+  </li>
   <li class="module">
     <a href="SoftLayer/DynamicAttribute.html">SoftLayer::DynamicAttribute</a>
   </li>
@@ -155,16 +158,22 @@
     <a href="SoftLayer/DynamicAttribute/DynamicAttributeDefinition.html">SoftLayer::DynamicAttribute::DynamicAttributeDefinition</a>
   </li>
   <li class="class">
+    <a href="SoftLayer/ImageTemplate.html">SoftLayer::ImageTemplate</a>
+  </li>
+  <li class="class">
     <a href="SoftLayer/ModelBase.html">SoftLayer::ModelBase</a>
+  </li>
+  <li class="class">
+    <a href="SoftLayer/NetworkComponent.html">SoftLayer::NetworkComponent</a>
   </li>
   <li class="class">
     <a href="SoftLayer/ObjectFilter.html">SoftLayer::ObjectFilter</a>
   </li>
   <li class="class">
-    <a href="SoftLayer/ObjectFilterBlockHandler.html">SoftLayer::ObjectFilterBlockHandler</a>
+    <a href="SoftLayer/ObjectFilter/CriteriaAcceptor.html">SoftLayer::ObjectFilter::CriteriaAcceptor</a>
   </li>
-  <li class="class">
-    <a href="SoftLayer/ObjectFilterOperation.html">SoftLayer::ObjectFilterOperation</a>
+  <li class="module">
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html">SoftLayer::ObjectFilterDefinitionContext</a>
   </li>
   <li class="class">
     <a href="SoftLayer/ObjectMaskParser.html">SoftLayer::ObjectMaskParser</a>
@@ -182,6 +191,9 @@
     <a href="SoftLayer/ObjectMaskTokenizer.html">SoftLayer::ObjectMaskTokenizer</a>
   </li>
   <li class="class">
+    <a href="SoftLayer/ProductConfigurationOption.html">SoftLayer::ProductConfigurationOption</a>
+  </li>
+  <li class="class">
     <a href="SoftLayer/ProductItemCategory.html">SoftLayer::ProductItemCategory</a>
   </li>
   <li class="class">
@@ -196,14 +208,19 @@
     <a href="SoftLayer/Server.html">SoftLayer::Server</a>
   </li>
   <li class="class">
-    <a href="SoftLayer/Service.html">SoftLayer::Service</a>
-
-    <ul>
-      <li><a href="SoftLayer/Service.html#label-SoftLayer+API+Service">SoftLayer API Service</a>
-    </ul>
+    <a href="SoftLayer/ServerFirewall.html">SoftLayer::ServerFirewall</a>
+  </li>
+  <li class="class">
+    <a href="SoftLayer/ServerFirewallOrder.html">SoftLayer::ServerFirewallOrder</a>
   </li>
   <li class="class">
     <a href="SoftLayer/Ticket.html">SoftLayer::Ticket</a>
+  </li>
+  <li class="class">
+    <a href="SoftLayer/VLANFirewall.html">SoftLayer::VLANFirewall</a>
+  </li>
+  <li class="class">
+    <a href="SoftLayer/VLANFirewallOrder.html">SoftLayer::VLANFirewallOrder</a>
   </li>
   <li class="class">
     <a href="SoftLayer/VirtualServer.html">SoftLayer::VirtualServer</a>
@@ -212,13 +229,13 @@
     <a href="SoftLayer/VirtualServerOrder.html">SoftLayer::VirtualServerOrder</a>
   </li>
   <li class="class">
+    <a href="SoftLayer/VirtualServerUpgradeOrder.html">SoftLayer::VirtualServerUpgradeOrder</a>
+  </li>
+  <li class="class">
     <a href="String.html">String</a>
   </li>
   <li class="class">
     <a href="Symbol.html">Symbol</a>
-  </li>
-  <li class="module">
-    <a href="XMLRPC/Convert.html">XMLRPC::Convert</a>
   </li>
 </ul>
 
@@ -231,6 +248,11 @@
     <span class="container">SoftLayer::Account</span>
 
   <li class="method">
+    <a href="SoftLayer/ProductPackage.html#method-c-additional_products_package">::additional_products_package</a>
+    &mdash;
+    <span class="container">SoftLayer::ProductPackage</span>
+
+  <li class="method">
     <a href="SoftLayer/ProductPackage.html#method-c-bare_metal_instance_package">::bare_metal_instance_package</a>
     &mdash;
     <span class="container">SoftLayer::ProductPackage</span>
@@ -241,9 +263,9 @@
     <span class="container">SoftLayer::ProductPackage</span>
 
   <li class="method">
-    <a href="SoftLayer/ObjectFilter.html#method-c-build">::build</a>
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-begins_with">::begins_with</a>
     &mdash;
-    <span class="container">SoftLayer::ObjectFilter</span>
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
 
   <li class="method">
     <a href="SoftLayer/BareMetalServer.html#method-c-cancellation_reasons">::cancellation_reasons</a>
@@ -256,14 +278,24 @@
     <span class="container">SoftLayer::Config</span>
 
   <li class="method">
-    <a href="SoftLayer/VirtualServerOrder.html#method-c-core_options">::core_options</a>
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-contains">::contains</a>
     &mdash;
-    <span class="container">SoftLayer::VirtualServerOrder</span>
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-contains_exactly">::contains_exactly</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
 
   <li class="method">
     <a href="SoftLayer/BareMetalServerOrder.html#method-c-core_options">::core_options</a>
     &mdash;
     <span class="container">SoftLayer::BareMetalServerOrder</span>
+
+  <li class="method">
+    <a href="SoftLayer/VirtualServerOrder.html#method-c-core_options">::core_options</a>
+    &mdash;
+    <span class="container">SoftLayer::VirtualServerOrder</span>
 
   <li class="method">
     <a href="SoftLayer/VirtualServerOrder.html#method-c-create_object_options">::create_object_options</a>
@@ -281,14 +313,24 @@
     <span class="container">SoftLayer::Ticket</span>
 
   <li class="method">
-    <a href="SoftLayer/BareMetalServerOrder.html#method-c-datacenter_options">::datacenter_options</a>
+    <a href="SoftLayer/Datacenter.html#method-c-datacenter_named">::datacenter_named</a>
     &mdash;
-    <span class="container">SoftLayer::BareMetalServerOrder</span>
+    <span class="container">SoftLayer::Datacenter</span>
 
   <li class="method">
     <a href="SoftLayer/VirtualServerOrder.html#method-c-datacenter_options">::datacenter_options</a>
     &mdash;
     <span class="container">SoftLayer::VirtualServerOrder</span>
+
+  <li class="method">
+    <a href="SoftLayer/BareMetalServerOrder.html#method-c-datacenter_options">::datacenter_options</a>
+    &mdash;
+    <span class="container">SoftLayer::BareMetalServerOrder</span>
+
+  <li class="method">
+    <a href="SoftLayer/Datacenter.html#method-c-datacenters">::datacenters</a>
+    &mdash;
+    <span class="container">SoftLayer::Datacenter</span>
 
   <li class="method">
     <a href="SoftLayer/Client.html#method-c-default_client">::default_client</a>
@@ -301,9 +343,9 @@
     <span class="container">SoftLayer::Client</span>
 
   <li class="method">
-    <a href="SoftLayer/Server.html#method-c-default_object_mask">::default_object_mask</a>
+    <a href="SoftLayer/ImageTemplate.html#method-c-default_object_mask">::default_object_mask</a>
     &mdash;
-    <span class="container">SoftLayer::Server</span>
+    <span class="container">SoftLayer::ImageTemplate</span>
 
   <li class="method">
     <a href="SoftLayer/BareMetalServer.html#method-c-default_object_mask">::default_object_mask</a>
@@ -321,9 +363,19 @@
     <span class="container">SoftLayer::VirtualServer</span>
 
   <li class="method">
+    <a href="SoftLayer/Server.html#method-c-default_object_mask">::default_object_mask</a>
+    &mdash;
+    <span class="container">SoftLayer::Server</span>
+
+  <li class="method">
     <a href="SoftLayer/Ticket.html#method-c-default_object_mask">::default_object_mask</a>
     &mdash;
     <span class="container">SoftLayer::Ticket</span>
+
+  <li class="method">
+    <a href="SoftLayer/VirtualServerOrder.html#method-c-disk_options">::disk_options</a>
+    &mdash;
+    <span class="container">SoftLayer::VirtualServerOrder</span>
 
   <li class="method">
     <a href="SoftLayer/BareMetalServerOrder.html#method-c-disk_options">::disk_options</a>
@@ -331,9 +383,14 @@
     <span class="container">SoftLayer::BareMetalServerOrder</span>
 
   <li class="method">
-    <a href="SoftLayer/VirtualServerOrder.html#method-c-disk_options">::disk_options</a>
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-does_not_contain">::does_not_contain</a>
     &mdash;
-    <span class="container">SoftLayer::VirtualServerOrder</span>
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-ends_with">::ends_with</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
 
   <li class="method">
     <a href="SoftLayer/Config.html#method-c-environment_settings">::environment_settings</a>
@@ -346,24 +403,39 @@
     <span class="container">SoftLayer::ObjectMaskToken</span>
 
   <li class="method">
-    <a href="XMLRPC/Convert.html#method-c-fault">::fault</a>
-    &mdash;
-    <span class="container">XMLRPC::Convert</span>
-
-  <li class="method">
     <a href="SoftLayer/Config.html#method-c-file_settings">::file_settings</a>
     &mdash;
     <span class="container">SoftLayer::Config</span>
 
   <li class="method">
-    <a href="SoftLayer/BareMetalServer.html#method-c-find_servers">::find_servers</a>
+    <a href="SoftLayer/VLANFirewall.html#method-c-find_firewalls">::find_firewalls</a>
     &mdash;
-    <span class="container">SoftLayer::BareMetalServer</span>
+    <span class="container">SoftLayer::VLANFirewall</span>
+
+  <li class="method">
+    <a href="SoftLayer/ServerFirewall.html#method-c-find_firewalls">::find_firewalls</a>
+    &mdash;
+    <span class="container">SoftLayer::ServerFirewall</span>
+
+  <li class="method">
+    <a href="SoftLayer/ImageTemplate.html#method-c-find_private_templates">::find_private_templates</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
+
+  <li class="method">
+    <a href="SoftLayer/ImageTemplate.html#method-c-find_public_templates">::find_public_templates</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
 
   <li class="method">
     <a href="SoftLayer/VirtualServer.html#method-c-find_servers">::find_servers</a>
     &mdash;
     <span class="container">SoftLayer::VirtualServer</span>
+
+  <li class="method">
+    <a href="SoftLayer/BareMetalServer.html#method-c-find_servers">::find_servers</a>
+    &mdash;
+    <span class="container">SoftLayer::BareMetalServer</span>
 
   <li class="method">
     <a href="SoftLayer/Config.html#method-c-globals_settings">::globals_settings</a>
@@ -374,6 +446,56 @@
     <a href="SoftLayer/DynamicAttribute.html#method-c-included">::included</a>
     &mdash;
     <span class="container">SoftLayer::DynamicAttribute</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-is">::is</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-is_greater_or_equal_to">::is_greater_or_equal_to</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-is_greater_than">::is_greater_than</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-is_less_or_equal_to">::is_less_or_equal_to</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-is_less_than">::is_less_than</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-is_not">::is_not</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-is_not_null">::is_not_null</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-is_null">::is_null</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-matches_ignoring_case">::matches_ignoring_case</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-matches_query">::matches_query</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
 
   <li class="method">
     <a href="SoftLayer/VirtualServerOrder.html#method-c-max_port_speed_options">::max_port_speed_options</a>
@@ -391,9 +513,59 @@
     <span class="container">SoftLayer::VirtualServerOrder</span>
 
   <li class="method">
+    <a href="SoftLayer/ServerFirewall.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">SoftLayer::ServerFirewall</span>
+
+  <li class="method">
+    <a href="SoftLayer/DynamicAttribute/DynamicAttributeDefinition.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">SoftLayer::DynamicAttribute::DynamicAttributeDefinition</span>
+
+  <li class="method">
+    <a href="SoftLayer/Server.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">SoftLayer::Server</span>
+
+  <li class="method">
+    <a href="SoftLayer/ServerFirewallOrder.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">SoftLayer::ServerFirewallOrder</span>
+
+  <li class="method">
+    <a href="SoftLayer/Client.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">SoftLayer::Client</span>
+
+  <li class="method">
+    <a href="SoftLayer/VLANFirewallOrder.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">SoftLayer::VLANFirewallOrder</span>
+
+  <li class="method">
+    <a href="SoftLayer/BareMetalServerOrder_Package.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">SoftLayer::BareMetalServerOrder_Package</span>
+
+  <li class="method">
     <a href="SoftLayer/ProductItemCategory.html#method-c-new">::new</a>
     &mdash;
     <span class="container">SoftLayer::ProductItemCategory</span>
+
+  <li class="method">
+    <a href="SoftLayer/ProductConfigurationOption.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">SoftLayer::ProductConfigurationOption</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectMaskTokenizer.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectMaskTokenizer</span>
+
+  <li class="method">
+    <a href="SoftLayer/VirtualServerOrder.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">SoftLayer::VirtualServerOrder</span>
 
   <li class="method">
     <a href="SoftLayer/ObjectMaskToken.html#method-c-new">::new</a>
@@ -411,24 +583,9 @@
     <span class="container">SoftLayer::ObjectMaskParser</span>
 
   <li class="method">
-    <a href="SoftLayer/ModelBase.html#method-c-new">::new</a>
+    <a href="SoftLayer/ObjectFilter/CriteriaAcceptor.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">SoftLayer::ModelBase</span>
-
-  <li class="method">
-    <a href="SoftLayer/ObjectMaskTokenizer.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">SoftLayer::ObjectMaskTokenizer</span>
-
-  <li class="method">
-    <a href="SoftLayer/Client.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">SoftLayer::Client</span>
-
-  <li class="method">
-    <a href="SoftLayer/BareMetalServerOrder_Package.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">SoftLayer::BareMetalServerOrder_Package</span>
+    <span class="container">SoftLayer::ObjectFilter::CriteriaAcceptor</span>
 
   <li class="method">
     <a href="SoftLayer/ObjectFilter.html#method-c-new">::new</a>
@@ -436,34 +593,19 @@
     <span class="container">SoftLayer::ObjectFilter</span>
 
   <li class="method">
-    <a href="SoftLayer/ObjectFilterOperation.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">SoftLayer::ObjectFilterOperation</span>
-
-  <li class="method">
     <a href="SoftLayer/BareMetalServerOrder.html#method-c-new">::new</a>
     &mdash;
     <span class="container">SoftLayer::BareMetalServerOrder</span>
 
   <li class="method">
-    <a href="SoftLayer/Server.html#method-c-new">::new</a>
+    <a href="SoftLayer/VirtualServerUpgradeOrder.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">SoftLayer::Server</span>
+    <span class="container">SoftLayer::VirtualServerUpgradeOrder</span>
 
   <li class="method">
-    <a href="SoftLayer/Service.html#method-c-new">::new</a>
+    <a href="SoftLayer/ModelBase.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">SoftLayer::Service</span>
-
-  <li class="method">
-    <a href="SoftLayer/VirtualServerOrder.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">SoftLayer::VirtualServerOrder</span>
-
-  <li class="method">
-    <a href="SoftLayer/DynamicAttribute/DynamicAttributeDefinition.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">SoftLayer::DynamicAttribute::DynamicAttributeDefinition</span>
+    <span class="container">SoftLayer::ModelBase</span>
 
   <li class="method">
     <a href="SoftLayer/APIParameterFilter.html#method-c-new">::new</a>
@@ -471,19 +613,14 @@
     <span class="container">SoftLayer::APIParameterFilter</span>
 
   <li class="method">
-    <a href="SoftLayer/Ticket.html#method-c-open_tickets">::open_tickets</a>
+    <a href="SoftLayer/BareMetalServerOrder.html#method-c-os_reference_code_options">::os_reference_code_options</a>
     &mdash;
-    <span class="container">SoftLayer::Ticket</span>
+    <span class="container">SoftLayer::BareMetalServerOrder</span>
 
   <li class="method">
     <a href="SoftLayer/VirtualServerOrder.html#method-c-os_reference_code_options">::os_reference_code_options</a>
     &mdash;
     <span class="container">SoftLayer::VirtualServerOrder</span>
-
-  <li class="method">
-    <a href="SoftLayer/BareMetalServerOrder.html#method-c-os_reference_code_options">::os_reference_code_options</a>
-    &mdash;
-    <span class="container">SoftLayer::BareMetalServerOrder</span>
 
   <li class="method">
     <a href="SoftLayer/ProductPackage.html#method-c-package_with_id">::package_with_id</a>
@@ -496,9 +633,9 @@
     <span class="container">SoftLayer::ProductPackage</span>
 
   <li class="method">
-    <a href="SoftLayer/ObjectFilter.html#method-c-query_to_filter_operation">::query_to_filter_operation</a>
+    <a href="SoftLayer/ObjectFilterDefinitionContext.html#method-c-satisfies_the_raw_condition">::satisfies_the_raw_condition</a>
     &mdash;
-    <span class="container">SoftLayer::ObjectFilter</span>
+    <span class="container">SoftLayer::ObjectFilterDefinitionContext</span>
 
   <li class="method">
     <a href="SoftLayer/BareMetalServer.html#method-c-server_with_id">::server_with_id</a>
@@ -516,6 +653,16 @@
     <span class="container">SoftLayer::ModelBase</span>
 
   <li class="method">
+    <a href="SoftLayer/ImageTemplate.html#method-c-template_with_global_id">::template_with_global_id</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
+
+  <li class="method">
+    <a href="SoftLayer/ImageTemplate.html#method-c-template_with_id">::template_with_id</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
+
+  <li class="method">
     <a href="SoftLayer/Ticket.html#method-c-ticket_subjects">::ticket_subjects</a>
     &mdash;
     <span class="container">SoftLayer::Ticket</span>
@@ -531,9 +678,9 @@
     <span class="container">SoftLayer::ProductPackage</span>
 
   <li class="method">
-    <a href="SoftLayer/Client.html#method-i-5B-5D">#[]</a>
+    <a href="SoftLayer/VLANFirewall.html#method-i-VLAN_number">#VLAN_number</a>
     &mdash;
-    <span class="container">SoftLayer::Client</span>
+    <span class="container">SoftLayer::VLANFirewall</span>
 
   <li class="method">
     <a href="SoftLayer/ModelBase.html#method-i-5B-5D">#[]</a>
@@ -541,9 +688,9 @@
     <span class="container">SoftLayer::ModelBase</span>
 
   <li class="method">
-    <a href="Symbol.html#method-i-_to_sl_object_mask_property">#_to_sl_object_mask_property</a>
+    <a href="SoftLayer/Client.html#method-i-5B-5D">#[]</a>
     &mdash;
-    <span class="container">Symbol</span>
+    <span class="container">SoftLayer::Client</span>
 
   <li class="method">
     <a href="Array.html#method-i-_to_sl_object_mask_property">#_to_sl_object_mask_property</a>
@@ -551,14 +698,24 @@
     <span class="container">Array</span>
 
   <li class="method">
-    <a href="Hash.html#method-i-_to_sl_object_mask_property">#_to_sl_object_mask_property</a>
+    <a href="Symbol.html#method-i-_to_sl_object_mask_property">#_to_sl_object_mask_property</a>
     &mdash;
-    <span class="container">Hash</span>
+    <span class="container">Symbol</span>
 
   <li class="method">
     <a href="String.html#method-i-_to_sl_object_mask_property">#_to_sl_object_mask_property</a>
     &mdash;
     <span class="container">String</span>
+
+  <li class="method">
+    <a href="Hash.html#method-i-_to_sl_object_mask_property">#_to_sl_object_mask_property</a>
+    &mdash;
+    <span class="container">Hash</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilter.html#method-i-accept">#accept</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilter</span>
 
   <li class="method">
     <a href="SoftLayer/ObjectMaskProperty.html#method-i-add_child">#add_child</a>
@@ -576,7 +733,12 @@
     <span class="container">SoftLayer::Client</span>
 
   <li class="method">
-    <a href="SoftLayer/ProductPackage.html#method-i-availableLocations">#availableLocations</a>
+    <a href="SoftLayer/ImageTemplate.html#method-i-available_datacenters">#available_datacenters</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
+
+  <li class="method">
+    <a href="SoftLayer/ProductPackage.html#method-i-available_locations">#available_locations</a>
     &mdash;
     <span class="container">SoftLayer::ProductPackage</span>
 
@@ -591,19 +753,14 @@
     <span class="container">SoftLayer::Account</span>
 
   <li class="method">
-    <a href="SoftLayer/ObjectFilterBlockHandler.html#method-i-begins_with">#begins_with</a>
-    &mdash;
-    <span class="container">SoftLayer::ObjectFilterBlockHandler</span>
-
-  <li class="method">
-    <a href="SoftLayer/Service.html#method-i-call_softlayer_api_with_params">#call_softlayer_api_with_params</a>
-    &mdash;
-    <span class="container">SoftLayer::Service</span>
-
-  <li class="method">
     <a href="SoftLayer/ObjectMaskProperty.html#method-i-can_merge_with-3F">#can_merge_with?</a>
     &mdash;
     <span class="container">SoftLayer::ObjectMaskProperty</span>
+
+  <li class="method">
+    <a href="SoftLayer/ServerFirewall.html#method-i-cancel-21">#cancel!</a>
+    &mdash;
+    <span class="container">SoftLayer::ServerFirewall</span>
 
   <li class="method">
     <a href="SoftLayer/BareMetalServer.html#method-i-cancel-21">#cancel!</a>
@@ -616,9 +773,19 @@
     <span class="container">SoftLayer::VirtualServer</span>
 
   <li class="method">
+    <a href="SoftLayer/VLANFirewall.html#method-i-cancel-21">#cancel!</a>
+    &mdash;
+    <span class="container">SoftLayer::VLANFirewall</span>
+
+  <li class="method">
     <a href="SoftLayer/VirtualServer.html#method-i-capture_image">#capture_image</a>
     &mdash;
     <span class="container">SoftLayer::VirtualServer</span>
+
+  <li class="method">
+    <a href="SoftLayer/ProductPackage.html#method-i-categories">#categories</a>
+    &mdash;
+    <span class="container">SoftLayer::ProductPackage</span>
 
   <li class="method">
     <a href="SoftLayer/ProductPackage.html#method-i-category">#category</a>
@@ -631,19 +798,44 @@
     <span class="container">SoftLayer::Server</span>
 
   <li class="method">
+    <a href="SoftLayer/VLANFirewall.html#method-i-change_routing_bypass-21">#change_routing_bypass!</a>
+    &mdash;
+    <span class="container">SoftLayer::VLANFirewall</span>
+
+  <li class="method">
+    <a href="SoftLayer/ServerFirewall.html#method-i-change_rules-21">#change_rules!</a>
+    &mdash;
+    <span class="container">SoftLayer::ServerFirewall</span>
+
+  <li class="method">
+    <a href="SoftLayer/VLANFirewall.html#method-i-change_rules-21">#change_rules!</a>
+    &mdash;
+    <span class="container">SoftLayer::VLANFirewall</span>
+
+  <li class="method">
+    <a href="SoftLayer/VLANFirewall.html#method-i-change_rules_bypass-21">#change_rules_bypass!</a>
+    &mdash;
+    <span class="container">SoftLayer::VLANFirewall</span>
+
+  <li class="method">
+    <a href="SoftLayer/ServerFirewall.html#method-i-change_rules_bypass-21">#change_rules_bypass!</a>
+    &mdash;
+    <span class="container">SoftLayer::ServerFirewall</span>
+
+  <li class="method">
     <a href="SoftLayer/ProductPackage.html#method-i-configuration">#configuration</a>
     &mdash;
     <span class="container">SoftLayer::ProductPackage</span>
 
   <li class="method">
-    <a href="SoftLayer/ObjectFilterBlockHandler.html#method-i-contains">#contains</a>
+    <a href="SoftLayer/VirtualServerUpgradeOrder.html#method-i-core_options">#core_options</a>
     &mdash;
-    <span class="container">SoftLayer::ObjectFilterBlockHandler</span>
+    <span class="container">SoftLayer::VirtualServerUpgradeOrder</span>
 
   <li class="method">
-    <a href="SoftLayer/ObjectFilterBlockHandler.html#method-i-contains_exactly">#contains_exactly</a>
+    <a href="SoftLayer/ObjectFilter.html#method-i-criteria_for_key_path">#criteria_for_key_path</a>
     &mdash;
-    <span class="container">SoftLayer::ObjectFilterBlockHandler</span>
+    <span class="container">SoftLayer::ObjectFilter</span>
 
   <li class="method">
     <a href="SoftLayer/ObjectMaskTokenizer.html#method-i-current_token">#current_token</a>
@@ -656,14 +848,29 @@
     <span class="container">SoftLayer::ProductPackage</span>
 
   <li class="method">
+    <a href="SoftLayer/ImageTemplate.html#method-i-datacenters">#datacenters</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
+
+  <li class="method">
+    <a href="SoftLayer/ImageTemplate.html#method-i-datacenters-3D">#datacenters=</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
+
+  <li class="method">
     <a href="SoftLayer/ProductItemCategory.html#method-i-default_option">#default_option</a>
     &mdash;
     <span class="container">SoftLayer::ProductItemCategory</span>
 
   <li class="method">
-    <a href="SoftLayer/ObjectFilterBlockHandler.html#method-i-does_not_contain">#does_not_contain</a>
+    <a href="SoftLayer/ImageTemplate.html#method-i-delete-21">#delete!</a>
     &mdash;
-    <span class="container">SoftLayer::ObjectFilterBlockHandler</span>
+    <span class="container">SoftLayer::ImageTemplate</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilter.html#method-i-empty-3F">#empty?</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilter</span>
 
   <li class="method">
     <a href="SoftLayer/ObjectMaskToken.html#method-i-end_of_string-3F">#end_of_string?</a>
@@ -671,14 +878,49 @@
     <span class="container">SoftLayer::ObjectMaskToken</span>
 
   <li class="method">
-    <a href="SoftLayer/ObjectFilterBlockHandler.html#method-i-ends_with">#ends_with</a>
-    &mdash;
-    <span class="container">SoftLayer::ObjectFilterBlockHandler</span>
-
-  <li class="method">
     <a href="SoftLayer/ObjectMaskToken.html#method-i-eql-3F">#eql?</a>
     &mdash;
     <span class="container">SoftLayer::ObjectMaskToken</span>
+
+  <li class="method">
+    <a href="SoftLayer/Account.html#method-i-find_VLAN_with_number">#find_VLAN_with_number</a>
+    &mdash;
+    <span class="container">SoftLayer::Account</span>
+
+  <li class="method">
+    <a href="SoftLayer/ServerFirewallOrder.html#method-i-firewall_order_template">#firewall_order_template</a>
+    &mdash;
+    <span class="container">SoftLayer::ServerFirewallOrder</span>
+
+  <li class="method">
+    <a href="SoftLayer/VLANFirewallOrder.html#method-i-firewall_order_template">#firewall_order_template</a>
+    &mdash;
+    <span class="container">SoftLayer::VLANFirewallOrder</span>
+
+  <li class="method">
+    <a href="SoftLayer/BareMetalServer.html#method-i-firewall_port_speed">#firewall_port_speed</a>
+    &mdash;
+    <span class="container">SoftLayer::BareMetalServer</span>
+
+  <li class="method">
+    <a href="SoftLayer/Server.html#method-i-firewall_port_speed">#firewall_port_speed</a>
+    &mdash;
+    <span class="container">SoftLayer::Server</span>
+
+  <li class="method">
+    <a href="SoftLayer/ImageTemplate.html#method-i-flex_image-3F">#flex_image?</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
+
+  <li class="method">
+    <a href="SoftLayer/ProductConfigurationOption.html#method-i-free-3F">#free?</a>
+    &mdash;
+    <span class="container">SoftLayer::ProductConfigurationOption</span>
+
+  <li class="method">
+    <a href="SoftLayer/VLANFirewall.html#method-i-fullyQualifiedDomainName">#fullyQualifiedDomainName</a>
+    &mdash;
+    <span class="container">SoftLayer::VLANFirewall</span>
 
   <li class="method">
     <a href="SoftLayer/BareMetalServerOrder.html#method-i-hardware_instance_template">#hardware_instance_template</a>
@@ -701,6 +943,11 @@
     <span class="container">SoftLayer::Ticket</span>
 
   <li class="method">
+    <a href="SoftLayer/VLANFirewall.html#method-i-high_availability-3F">#high_availability?</a>
+    &mdash;
+    <span class="container">SoftLayer::VLANFirewall</span>
+
+  <li class="method">
     <a href="SoftLayer/ObjectMaskToken.html#method-i-inspect">#inspect</a>
     &mdash;
     <span class="container">SoftLayer::ObjectMaskToken</span>
@@ -711,37 +958,7 @@
     <span class="container">SoftLayer::ObjectMaskToken</span>
 
   <li class="method">
-    <a href="SoftLayer/ObjectFilterBlockHandler.html#method-i-is">#is</a>
-    &mdash;
-    <span class="container">SoftLayer::ObjectFilterBlockHandler</span>
-
-  <li class="method">
-    <a href="SoftLayer/ObjectFilterBlockHandler.html#method-i-is_greater_or_equal_to">#is_greater_or_equal_to</a>
-    &mdash;
-    <span class="container">SoftLayer::ObjectFilterBlockHandler</span>
-
-  <li class="method">
-    <a href="SoftLayer/ObjectFilterBlockHandler.html#method-i-is_greater_than">#is_greater_than</a>
-    &mdash;
-    <span class="container">SoftLayer::ObjectFilterBlockHandler</span>
-
-  <li class="method">
-    <a href="SoftLayer/ObjectFilterBlockHandler.html#method-i-is_less_or_equal_to">#is_less_or_equal_to</a>
-    &mdash;
-    <span class="container">SoftLayer::ObjectFilterBlockHandler</span>
-
-  <li class="method">
-    <a href="SoftLayer/ObjectFilterBlockHandler.html#method-i-is_less_than">#is_less_than</a>
-    &mdash;
-    <span class="container">SoftLayer::ObjectFilterBlockHandler</span>
-
-  <li class="method">
-    <a href="SoftLayer/ObjectFilterBlockHandler.html#method-i-is_not">#is_not</a>
-    &mdash;
-    <span class="container">SoftLayer::ObjectFilterBlockHandler</span>
-
-  <li class="method">
-    <a href="SoftLayer/ProductPackage.html#method-i-location_id_for_datacenter_name">#location_id_for_datacenter_name</a>
+    <a href="SoftLayer/ProductPackage.html#method-i-items_with_description">#items_with_description</a>
     &mdash;
     <span class="container">SoftLayer::ProductPackage</span>
 
@@ -749,6 +966,16 @@
     <a href="SoftLayer/ObjectMaskToken.html#method-i-mask_root_marker-3F">#mask_root_marker?</a>
     &mdash;
     <span class="container">SoftLayer::ObjectMaskToken</span>
+
+  <li class="method">
+    <a href="SoftLayer/VirtualServerUpgradeOrder.html#method-i-max_port_speed_options">#max_port_speed_options</a>
+    &mdash;
+    <span class="container">SoftLayer::VirtualServerUpgradeOrder</span>
+
+  <li class="method">
+    <a href="SoftLayer/VirtualServerUpgradeOrder.html#method-i-memory_options">#memory_options</a>
+    &mdash;
+    <span class="container">SoftLayer::VirtualServerUpgradeOrder</span>
 
   <li class="method">
     <a href="SoftLayer/ObjectMaskProperty.html#method-i-merge">#merge</a>
@@ -761,9 +988,9 @@
     <span class="container">SoftLayer::APIParameterFilter</span>
 
   <li class="method">
-    <a href="SoftLayer/Service.html#method-i-method_missing">#method_missing</a>
+    <a href="SoftLayer/ObjectFilter.html#method-i-modify">#modify</a>
     &mdash;
-    <span class="container">SoftLayer::Service</span>
+    <span class="container">SoftLayer::ObjectFilter</span>
 
   <li class="method">
     <a href="SoftLayer/ObjectMaskTokenizer.html#method-i-more_tokens-3F">#more_tokens?</a>
@@ -781,6 +1008,11 @@
     <span class="container">SoftLayer::ObjectMaskTokenizer</span>
 
   <li class="method">
+    <a href="SoftLayer/ImageTemplate.html#method-i-notes-3D">#notes=</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
+
+  <li class="method">
     <a href="SoftLayer/Server.html#method-i-notes-3D">#notes=</a>
     &mdash;
     <span class="container">SoftLayer::Server</span>
@@ -791,29 +1023,14 @@
     <span class="container">SoftLayer::APIParameterFilter</span>
 
   <li class="method">
-    <a href="SoftLayer/Service.html#method-i-object_filter">#object_filter</a>
-    &mdash;
-    <span class="container">SoftLayer::Service</span>
-
-  <li class="method">
     <a href="SoftLayer/APIParameterFilter.html#method-i-object_mask">#object_mask</a>
     &mdash;
     <span class="container">SoftLayer::APIParameterFilter</span>
 
   <li class="method">
-    <a href="SoftLayer/Service.html#method-i-object_mask">#object_mask</a>
-    &mdash;
-    <span class="container">SoftLayer::Service</span>
-
-  <li class="method">
     <a href="SoftLayer/APIParameterFilter.html#method-i-object_with_id">#object_with_id</a>
     &mdash;
     <span class="container">SoftLayer::APIParameterFilter</span>
-
-  <li class="method">
-    <a href="SoftLayer/Service.html#method-i-object_with_id">#object_with_id</a>
-    &mdash;
-    <span class="container">SoftLayer::Service</span>
 
   <li class="method">
     <a href="SoftLayer/ObjectMaskParser.html#method-i-parse">#parse</a>
@@ -856,9 +1073,24 @@
     <span class="container">SoftLayer::ObjectMaskParser</span>
 
   <li class="method">
-    <a href="SoftLayer/BareMetalServerOrder.html#method-i-place_order-21">#place_order!</a>
+    <a href="SoftLayer/ServerFirewallOrder.html#method-i-place_order-21">#place_order!</a>
     &mdash;
-    <span class="container">SoftLayer::BareMetalServerOrder</span>
+    <span class="container">SoftLayer::ServerFirewallOrder</span>
+
+  <li class="method">
+    <a href="SoftLayer/BareMetalServerOrder_Package.html#method-i-place_order-21">#place_order!</a>
+    &mdash;
+    <span class="container">SoftLayer::BareMetalServerOrder_Package</span>
+
+  <li class="method">
+    <a href="SoftLayer/VirtualServerUpgradeOrder.html#method-i-place_order-21">#place_order!</a>
+    &mdash;
+    <span class="container">SoftLayer::VirtualServerUpgradeOrder</span>
+
+  <li class="method">
+    <a href="SoftLayer/VLANFirewallOrder.html#method-i-place_order-21">#place_order!</a>
+    &mdash;
+    <span class="container">SoftLayer::VLANFirewallOrder</span>
 
   <li class="method">
     <a href="SoftLayer/VirtualServerOrder.html#method-i-place_order-21">#place_order!</a>
@@ -866,9 +1098,24 @@
     <span class="container">SoftLayer::VirtualServerOrder</span>
 
   <li class="method">
-    <a href="SoftLayer/BareMetalServerOrder_Package.html#method-i-place_order-21">#place_order!</a>
+    <a href="SoftLayer/BareMetalServerOrder.html#method-i-place_order-21">#place_order!</a>
     &mdash;
-    <span class="container">SoftLayer::BareMetalServerOrder_Package</span>
+    <span class="container">SoftLayer::BareMetalServerOrder</span>
+
+  <li class="method">
+    <a href="SoftLayer/VLANFirewall.html#method-i-primaryRouter">#primaryRouter</a>
+    &mdash;
+    <span class="container">SoftLayer::VLANFirewall</span>
+
+  <li class="method">
+    <a href="SoftLayer/ImageTemplate.html#method-i-public-3F">#public?</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
+
+  <li class="method">
+    <a href="SoftLayer/Server.html#method-i-reboot-21">#reboot!</a>
+    &mdash;
+    <span class="container">SoftLayer::Server</span>
 
   <li class="method">
     <a href="SoftLayer/ObjectMaskParser.html#method-i-recognize_token">#recognize_token</a>
@@ -881,14 +1128,14 @@
     <span class="container">SoftLayer::ModelBase</span>
 
   <li class="method">
-    <a href="SoftLayer/Service.html#method-i-related_service_named">#related_service_named</a>
-    &mdash;
-    <span class="container">SoftLayer::Service</span>
-
-  <li class="method">
     <a href="SoftLayer/Server.html#method-i-reload_os-21">#reload_os!</a>
     &mdash;
     <span class="container">SoftLayer::Server</span>
+
+  <li class="method">
+    <a href="SoftLayer/ImageTemplate.html#method-i-rename-21">#rename!</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
 
   <li class="method">
     <a href="SoftLayer/ProductItemCategory.html#method-i-required-3F">#required?</a>
@@ -904,11 +1151,6 @@
     <a href="SoftLayer/APIParameterFilter.html#method-i-result_limit">#result_limit</a>
     &mdash;
     <span class="container">SoftLayer::APIParameterFilter</span>
-
-  <li class="method">
-    <a href="SoftLayer/Service.html#method-i-result_limit">#result_limit</a>
-    &mdash;
-    <span class="container">SoftLayer::Service</span>
 
   <li class="method">
     <a href="SoftLayer/Ticket.html#method-i-server_admin_ticket-3F">#server_admin_ticket?</a>
@@ -946,29 +1188,14 @@
     <span class="container">SoftLayer::Account</span>
 
   <li class="method">
-    <a href="SoftLayer/VirtualServer.html#method-i-service">#service</a>
-    &mdash;
-    <span class="container">SoftLayer::VirtualServer</span>
-
-  <li class="method">
-    <a href="SoftLayer/ProductItemCategory.html#method-i-service">#service</a>
-    &mdash;
-    <span class="container">SoftLayer::ProductItemCategory</span>
-
-  <li class="method">
-    <a href="SoftLayer/Account.html#method-i-service">#service</a>
-    &mdash;
-    <span class="container">SoftLayer::Account</span>
-
-  <li class="method">
-    <a href="SoftLayer/ProductPackage.html#method-i-service">#service</a>
-    &mdash;
-    <span class="container">SoftLayer::ProductPackage</span>
-
-  <li class="method">
     <a href="SoftLayer/BareMetalServer.html#method-i-service">#service</a>
     &mdash;
     <span class="container">SoftLayer::BareMetalServer</span>
+
+  <li class="method">
+    <a href="SoftLayer/VirtualServer.html#method-i-service">#service</a>
+    &mdash;
+    <span class="container">SoftLayer::VirtualServer</span>
 
   <li class="method">
     <a href="SoftLayer/ModelBase.html#method-i-service">#service</a>
@@ -976,14 +1203,54 @@
     <span class="container">SoftLayer::ModelBase</span>
 
   <li class="method">
+    <a href="SoftLayer/ServerFirewall.html#method-i-service">#service</a>
+    &mdash;
+    <span class="container">SoftLayer::ServerFirewall</span>
+
+  <li class="method">
+    <a href="SoftLayer/Account.html#method-i-service">#service</a>
+    &mdash;
+    <span class="container">SoftLayer::Account</span>
+
+  <li class="method">
     <a href="SoftLayer/Ticket.html#method-i-service">#service</a>
     &mdash;
     <span class="container">SoftLayer::Ticket</span>
 
   <li class="method">
+    <a href="SoftLayer/ProductItemCategory.html#method-i-service">#service</a>
+    &mdash;
+    <span class="container">SoftLayer::ProductItemCategory</span>
+
+  <li class="method">
+    <a href="SoftLayer/ImageTemplate.html#method-i-service">#service</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
+
+  <li class="method">
+    <a href="SoftLayer/VLANFirewall.html#method-i-service">#service</a>
+    &mdash;
+    <span class="container">SoftLayer::VLANFirewall</span>
+
+  <li class="method">
+    <a href="SoftLayer/ProductPackage.html#method-i-service">#service</a>
+    &mdash;
+    <span class="container">SoftLayer::ProductPackage</span>
+
+  <li class="method">
+    <a href="SoftLayer/APIParameterFilter.html#method-i-service_name">#service_name</a>
+    &mdash;
+    <span class="container">SoftLayer::APIParameterFilter</span>
+
+  <li class="method">
     <a href="SoftLayer/Client.html#method-i-service_named">#service_named</a>
     &mdash;
     <span class="container">SoftLayer::Client</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilter.html#method-i-set_criteria_for_key_path">#set_criteria_for_key_path</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilter</span>
 
   <li class="method">
     <a href="SoftLayer/Server.html#method-i-set_domain-21">#set_domain!</a>
@@ -994,6 +1261,16 @@
     <a href="SoftLayer/Server.html#method-i-set_hostname-21">#set_hostname!</a>
     &mdash;
     <span class="container">SoftLayer::Server</span>
+
+  <li class="method">
+    <a href="SoftLayer/ImageTemplate.html#method-i-shared_with_accounts">#shared_with_accounts</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
+
+  <li class="method">
+    <a href="SoftLayer/ImageTemplate.html#method-i-shared_with_accounts-3D">#shared_with_accounts=</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
 
   <li class="method">
     <a href="SoftLayer/DynamicAttribute/DynamicAttributeDefinition.html#method-i-should_update-3F">#should_update?</a>
@@ -1011,9 +1288,14 @@
     <span class="container">SoftLayer::DynamicAttribute::ClassMethods</span>
 
   <li class="method">
-    <a href="SoftLayer/ModelBase.html#method-i-softlayer_properties">#softlayer_properties</a>
+    <a href="SoftLayer/VLANFirewall.html#method-i-softlayer_properties">#softlayer_properties</a>
     &mdash;
-    <span class="container">SoftLayer::ModelBase</span>
+    <span class="container">SoftLayer::VLANFirewall</span>
+
+  <li class="method">
+    <a href="SoftLayer/ServerFirewall.html#method-i-softlayer_properties">#softlayer_properties</a>
+    &mdash;
+    <span class="container">SoftLayer::ServerFirewall</span>
 
   <li class="method">
     <a href="SoftLayer/Server.html#method-i-softlayer_properties">#softlayer_properties</a>
@@ -1021,19 +1303,29 @@
     <span class="container">SoftLayer::Server</span>
 
   <li class="method">
+    <a href="SoftLayer/ModelBase.html#method-i-softlayer_properties">#softlayer_properties</a>
+    &mdash;
+    <span class="container">SoftLayer::ModelBase</span>
+
+  <li class="method">
+    <a href="SoftLayer/ImageTemplate.html#method-i-softlayer_properties">#softlayer_properties</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
+
+  <li class="method">
     <a href="SoftLayer/Ticket.html#method-i-softlayer_properties">#softlayer_properties</a>
     &mdash;
     <span class="container">SoftLayer::Ticket</span>
 
   <li class="method">
-    <a href="SoftLayer/Service.html#method-i-target">#target</a>
+    <a href="SoftLayer/ImageTemplate.html#method-i-tags">#tags</a>
     &mdash;
-    <span class="container">SoftLayer::Service</span>
+    <span class="container">SoftLayer::ImageTemplate</span>
 
   <li class="method">
-    <a href="SoftLayer/Service.html#method-i-to_ary">#to_ary</a>
+    <a href="SoftLayer/ImageTemplate.html#method-i-tags-3D">#tags=</a>
     &mdash;
-    <span class="container">SoftLayer::Service</span>
+    <span class="container">SoftLayer::ImageTemplate</span>
 
   <li class="method">
     <a href="SoftLayer/ModelBase.html#method-i-to_ary">#to_ary</a>
@@ -1041,9 +1333,9 @@
     <span class="container">SoftLayer::ModelBase</span>
 
   <li class="method">
-    <a href="SoftLayer/ObjectFilterOperation.html#method-i-to_h">#to_h</a>
+    <a href="SoftLayer/ObjectFilter.html#method-i-to_h">#to_h</a>
     &mdash;
-    <span class="container">SoftLayer::ObjectFilterOperation</span>
+    <span class="container">SoftLayer::ObjectFilter</span>
 
   <li class="method">
     <a href="SoftLayer/ObjectMaskProperty.html#method-i-to_s">#to_s</a>
@@ -1071,21 +1363,6 @@
     <span class="container">SoftLayer::Ticket</span>
 
   <li class="method">
-    <a href="SoftLayer/VirtualServer.html#method-i-upgrade_RAM-21">#upgrade_RAM!</a>
-    &mdash;
-    <span class="container">SoftLayer::VirtualServer</span>
-
-  <li class="method">
-    <a href="SoftLayer/VirtualServer.html#method-i-upgrade_cores-21">#upgrade_cores!</a>
-    &mdash;
-    <span class="container">SoftLayer::VirtualServer</span>
-
-  <li class="method">
-    <a href="SoftLayer/VirtualServer.html#method-i-upgrade_max_port_speed-21">#upgrade_max_port_speed!</a>
-    &mdash;
-    <span class="container">SoftLayer::VirtualServer</span>
-
-  <li class="method">
     <a href="SoftLayer/VirtualServer.html#method-i-upgrade_options">#upgrade_options</a>
     &mdash;
     <span class="container">SoftLayer::VirtualServer</span>
@@ -1106,9 +1383,9 @@
     <span class="container">SoftLayer::ObjectMaskToken</span>
 
   <li class="method">
-    <a href="SoftLayer/VirtualServerOrder.html#method-i-verify">#verify</a>
+    <a href="SoftLayer/BareMetalServerOrder.html#method-i-verify">#verify</a>
     &mdash;
-    <span class="container">SoftLayer::VirtualServerOrder</span>
+    <span class="container">SoftLayer::BareMetalServerOrder</span>
 
   <li class="method">
     <a href="SoftLayer/BareMetalServerOrder_Package.html#method-i-verify">#verify</a>
@@ -1116,9 +1393,24 @@
     <span class="container">SoftLayer::BareMetalServerOrder_Package</span>
 
   <li class="method">
-    <a href="SoftLayer/BareMetalServerOrder.html#method-i-verify">#verify</a>
+    <a href="SoftLayer/VLANFirewallOrder.html#method-i-verify">#verify</a>
     &mdash;
-    <span class="container">SoftLayer::BareMetalServerOrder</span>
+    <span class="container">SoftLayer::VLANFirewallOrder</span>
+
+  <li class="method">
+    <a href="SoftLayer/ServerFirewallOrder.html#method-i-verify">#verify</a>
+    &mdash;
+    <span class="container">SoftLayer::ServerFirewallOrder</span>
+
+  <li class="method">
+    <a href="SoftLayer/VirtualServerUpgradeOrder.html#method-i-verify">#verify</a>
+    &mdash;
+    <span class="container">SoftLayer::VirtualServerUpgradeOrder</span>
+
+  <li class="method">
+    <a href="SoftLayer/VirtualServerOrder.html#method-i-verify">#verify</a>
+    &mdash;
+    <span class="container">SoftLayer::VirtualServerOrder</span>
 
   <li class="method">
     <a href="SoftLayer/VirtualServerOrder.html#method-i-virtual_guest_template">#virtual_guest_template</a>
@@ -1134,13 +1426,28 @@
     <a href="SoftLayer/VirtualServer.html#method-i-wait_until_ready">#wait_until_ready</a>
     &mdash;
     <span class="container">SoftLayer::VirtualServer</span>
+
+  <li class="method">
+    <a href="SoftLayer/ImageTemplate.html#method-i-wait_until_ready">#wait_until_ready</a>
+    &mdash;
+    <span class="container">SoftLayer::ImageTemplate</span>
+
+  <li class="method">
+    <a href="SoftLayer/ObjectFilter/CriteriaAcceptor.html#method-i-when_it">#when_it</a>
+    &mdash;
+    <span class="container">SoftLayer::ObjectFilter::CriteriaAcceptor</span>
+
+  <li class="method">
+    <a href="Object.html#method-i-with_warnings">#with_warnings</a>
+    &mdash;
+    <span class="container">Object</span>
 </ul>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

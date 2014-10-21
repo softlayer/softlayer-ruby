@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::ObjectFilter - softlayer_api gem 2.2.0</title>
+<title>class SoftLayer::ObjectFilter - softlayer_api gem 3.0.0</title>
 
 <link href="../fonts.css" rel="stylesheet">
 <link href="../rdoc.css" rel="stylesheet">
@@ -61,7 +61,7 @@
   <h3>Parent</h3>
 
   
-  <p class="link"><a href="../Hash.html">Hash</a>
+  <p class="link"><a href="../Object.html">Object</a>
   
 </div>
 
@@ -73,11 +73,19 @@
 
   <ul class="link-list" role="directory">
     
-    <li ><a href="#method-c-build">::build</a>
+    <li ><a href="#method-c-new">::new</a>
     
-    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    <li ><a href="#method-i-accept">#accept</a>
     
-    <li ><a href="#method-c-query_to_filter_operation">::query_to_filter_operation</a>
+    <li ><a href="#method-i-criteria_for_key_path">#criteria_for_key_path</a>
+    
+    <li ><a href="#method-i-empty-3F">#empty?</a>
+    
+    <li ><a href="#method-i-modify">#modify</a>
+    
+    <li ><a href="#method-i-set_criteria_for_key_path">#set_criteria_for_key_path</a>
+    
+    <li ><a href="#method-i-to_h">#to_h</a>
     
   </ul>
 </div>
@@ -93,32 +101,29 @@
   <section class="description">
     
 <p>An <a href="ObjectFilter.html">ObjectFilter</a> is a tool that, when passed
-to the <a href="../SoftLayer.html">SoftLayer</a> API allows the API server
-to filter, or limit the result set for a call.</p>
+to the SoftLayer API allows the API server to filter, or limit the result
+set for a call.</p>
 
 <p>Constructing ObjectFilters is an art that is currently somewhat arcane.
 This class tries to simplify filtering for the fundamental cases, while
 still allowing for more complex ObjectFilters to be created.</p>
 
-<p>The <a href="ObjectFilter.html">ObjectFilter</a> class is implemented as a
-hash that, when asked to provide an value for an unknown key, will create a
-sub element at that key which is, itself, an object filter. This allows you
-to build up object filters by chaining [] dereference operations.</p>
+<p>To construct an object filter you begin with an instance of the class. At
+construction time, or in a “modify” call you can change the filter criteria
+using a fancy DSL syntax.</p>
 
-<p>Starting empty object filter when you ask for +<a
-href=""foo"">object_filter</a>+ either the value at that hash location will
-be returned, or a new <code>foo</code> key will be <strong>added</strong>
-to the object.  The value of that key will be an <code>ObjectFilter</code>
-and that <code>ObjectFilter</code> will be returned.</p>
+<p>For example, to filter virtual servers so that you only get ones whose
+domains end with “layer.com” you might use:</p>
 
-<p>By way of an example of chaining together +[]+ calls:</p>
-
-<pre>object_filter[&quot;foo&quot;][&quot;bar&quot;][&quot;baz&quot;] = 3</pre>
-
-<p>yields an object filter like this:</p>
-
-<pre class="ruby">{<span class="ruby-string">&quot;foo&quot;</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-string">&quot;bar&quot;</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-string">&quot;baz&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">3</span>}}}
+<pre class="ruby"><span class="ruby-identifier">object_filter</span> = <span class="ruby-constant">ObjectFilter</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-identifier">virtualGuests</span>.<span class="ruby-identifier">domain</span>).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">ends_with</span>(<span class="ruby-string">&quot;layer.com&quot;</span>)
+<span class="ruby-keyword">end</span>
 </pre>
+
+<p>The set of criteria that can be included after “when_it” are defined by
+routines in the <a
+href="ObjectFilterDefinitionContext.html">ObjectFilterDefinitionContext</a>
+module.</p>
 
   </section>
 
@@ -141,11 +146,11 @@ and that <code>ObjectFilter</code> will be returned.</p>
        </header>
 
     
-      <div id="method-c-build" class="method-detail ">
+      <div id="method-c-new" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">build</span><span
-            class="method-args">(key_path, query = nil, &block)</span>
+          <span class="method-name">new</span><span
+            class="method-args">(&construction_block)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -154,62 +159,17 @@ and that <code>ObjectFilter</code> will be returned.</p>
 
         <div class="method-description">
           
-          <p>Builds an object filter with the given key path, a dot separated list of
-property keys. The filter itself can be provided as a query string (in the
-query parameter) or by providing a block that calls routines in the <a
-href="ObjectFilterBlockHandler.html">ObjectFilterBlockHandler</a> class.</p>
+          
           
           
 
           
-          <div class="method-source-code" id="build-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 169</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">build</span>(<span class="ruby-identifier">key_path</span>, <span class="ruby-identifier">query</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The key path to build cannot be empty&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">key_path</span>
-
-  <span class="ruby-comment"># Split the keypath into its constituent parts and notify the user</span>
-  <span class="ruby-comment"># if there are no parts</span>
-  <span class="ruby-identifier">keys</span> = <span class="ruby-identifier">key_path</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;.&#39;</span>)
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The key path to build cannot be empty&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">empty?</span>
-
-  <span class="ruby-comment"># This will be the result of the build</span>
-  <span class="ruby-identifier">result</span> = <span class="ruby-constant">ObjectFilter</span>.<span class="ruby-identifier">new</span>
-
-  <span class="ruby-comment"># chase down the key path to the last-but-one key</span>
-  <span class="ruby-identifier">current_level</span> = <span class="ruby-identifier">result</span>
-  <span class="ruby-keyword">while</span> <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
-    <span class="ruby-identifier">current_level</span> = <span class="ruby-identifier">current_level</span>[<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">shift</span>]
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-comment"># if there is a block, then the query will come from</span>
-  <span class="ruby-comment"># calling the block. We warn in debug mode if you override a</span>
-  <span class="ruby-comment"># query that was passed directly with the value from a block.</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">block</span>
-    <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;The query from the block passed to ObjectFilter:build will override the query passed as a parameter&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">$DEBUG</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">query</span>
-    <span class="ruby-identifier">block_handler</span> = <span class="ruby-constant">ObjectFilterBlockHandler</span>.<span class="ruby-identifier">new</span>
-    <span class="ruby-identifier">query</span> = <span class="ruby-identifier">block_handler</span>.<span class="ruby-identifier">instance_eval</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-comment"># If we have a query, we assign its value to the last key</span>
-  <span class="ruby-comment"># otherwise, we build an emtpy filter at the bottom</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">query</span>
-    <span class="ruby-keyword">case</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-identifier">query</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Numeric</span>)
-      <span class="ruby-identifier">current_level</span>[<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">shift</span>] = { <span class="ruby-string">&#39;operation&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">query</span> }
-    <span class="ruby-keyword">when</span> <span class="ruby-identifier">query</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">ObjectFilterOperation</span>)
-      <span class="ruby-identifier">current_level</span>[<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">shift</span>] = <span class="ruby-identifier">query</span>.<span class="ruby-identifier">to_h</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-identifier">query</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">String</span>)
-      <span class="ruby-identifier">current_level</span>[<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">shift</span>] = <span class="ruby-identifier">query_to_filter_operation</span>(<span class="ruby-identifier">query</span>)
-    <span class="ruby-keyword">when</span> <span class="ruby-identifier">query</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Hash</span>)
-      <span class="ruby-identifier">current_level</span>[<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">shift</span>] = <span class="ruby-identifier">query</span>
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">current_level</span>[<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">shift</span>]
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">current_level</span>[<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">shift</span>]
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">result</span>
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 31</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">construction_block</span>)
+  <span class="ruby-ivar">@filter_hash</span> = {}
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">modify</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">construction_block</span>)
+  <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -221,10 +181,97 @@ href="ObjectFilterBlockHandler.html">ObjectFilterBlockHandler</a> class.</p>
       </div>
 
     
-      <div id="method-c-new" class="method-detail ">
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-accept" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">new</span><span
+          <span class="method-name">accept</span><span
+            class="method-args">(key_path)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="accept-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 45</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept</span>(<span class="ruby-identifier">key_path</span>)
+  <span class="ruby-constant">CriteriaAcceptor</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">key_path</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-criteria_for_key_path" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">criteria_for_key_path</span><span
+            class="method-args">(key_path)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="criteria_for_key_path-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 53</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">criteria_for_key_path</span>(<span class="ruby-identifier">key_path</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;The key path cannot be empty when searching for criteria&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">key_path</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">key_path</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-identifier">current_level</span> = <span class="ruby-ivar">@filter_hash</span>
+  <span class="ruby-identifier">keys</span> = <span class="ruby-identifier">key_path</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;.&#39;</span>)
+
+  <span class="ruby-keyword">while</span> <span class="ruby-identifier">current_level</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+    <span class="ruby-identifier">current_level</span> = <span class="ruby-identifier">current_level</span>[<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">shift</span>]
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">current_level</span>
+    <span class="ruby-identifier">current_level</span>[<span class="ruby-identifier">keys</span>[<span class="ruby-value">0</span>]]
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-empty-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">empty?</span><span
             class="method-args">()</span>
           
           <span class="method-click-advice">click to toggle source</span>
@@ -234,23 +281,15 @@ href="ObjectFilterBlockHandler.html">ObjectFilterBlockHandler</a> class.</p>
 
         <div class="method-description">
           
-          <p>The default initialize for a hash is overridden so that object filters
-create sub-filters when asked for missing keys.</p>
           
           
-            <div class="method-calls-super">
-              Calls superclass method
-              
-            </div>
           
 
           
-          <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 160</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
-  <span class="ruby-keyword">super</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">hash</span>, <span class="ruby-identifier">key</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-constant">ObjectFilter</span>.<span class="ruby-identifier">new</span>
-  <span class="ruby-keyword">end</span>
+          <div class="method-source-code" id="empty-3F-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 37</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">empty?</span>
+  <span class="ruby-ivar">@filter_hash</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -262,11 +301,11 @@ create sub-filters when asked for missing keys.</p>
       </div>
 
     
-      <div id="method-c-query_to_filter_operation" class="method-detail ">
+      <div id="method-i-modify" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">query_to_filter_operation</span><span
-            class="method-args">(query)</span>
+          <span class="method-name">modify</span><span
+            class="method-args">(&construction_block)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -275,65 +314,93 @@ create sub-filters when asked for missing keys.</p>
 
         <div class="method-description">
           
-          <p>This method simplifies creating correct object filter structures by
-defining a simple query language. It translates strings in that language
-into an Object Filter operations</p>
-
-<p>Object Filter comparisons are done using operators. Some operators make
-case sensitive comparisons and some do not. The general form of an Object
-Filter operation is an operator follwed by the value used in the
-comparison. e.g.</p>
-
-<pre>&quot;*= smaug&quot;</pre>
-
-<p>The query language also accepts some aliases using asterisks in a
-regular-expression-like way. Those aliases look like:</p>
-
-<pre>&#39;value&#39;   Exact value match (translates to &#39;_= value&#39;)
-&#39;value*&#39;  Begins with value (translates to &#39;^= value&#39;)
-&#39;*value&#39;  Ends with value (translates to &#39;$= value&#39;)
-&#39;*value*&#39; Contains value (translates to &#39;*= value&#39;)</pre>
-
-<p>This method corresponds to the <code>query_filter</code> method in the
-SoftLayer-Python API.</p>
+          
           
           
 
           
-          <div class="method-source-code" id="query_to_filter_operation-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 237</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">query_to_filter_operation</span>(<span class="ruby-identifier">query</span>)
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">query</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">String</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-identifier">query</span>.<span class="ruby-identifier">strip!</span>
+          <div class="method-source-code" id="modify-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 41</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">modify</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">construction_block</span>)
+  <span class="ruby-constant">ObjectFilterDefinitionContext</span>.<span class="ruby-identifier">module_exec</span>(<span class="ruby-keyword">self</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">construction_block</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">construction_block</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
 
-    <span class="ruby-keyword">begin</span>
-      <span class="ruby-keyword">return</span> { <span class="ruby-string">&#39;operation&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">query</span>) }
-    <span class="ruby-keyword">rescue</span>
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-set_criteria_for_key_path" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_criteria_for_key_path</span><span
+            class="method-args">(key_path, criteria)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="set_criteria_for_key_path-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 70</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_criteria_for_key_path</span>(<span class="ruby-identifier">key_path</span>, <span class="ruby-identifier">criteria</span>)
+  <span class="ruby-identifier">current_level</span> = <span class="ruby-ivar">@filter_hash</span>
+  <span class="ruby-identifier">keys</span> = <span class="ruby-identifier">key_path</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;.&#39;</span>)
+
+  <span class="ruby-identifier">current_key</span> = <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">shift</span>
+  <span class="ruby-keyword">while</span> <span class="ruby-identifier">current_level</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">keys</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">current_level</span>.<span class="ruby-identifier">has_key?</span> <span class="ruby-identifier">current_key</span>
+      <span class="ruby-identifier">current_level</span>[<span class="ruby-identifier">current_key</span>] = {}
     <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">current_level</span> = <span class="ruby-identifier">current_level</span>[<span class="ruby-identifier">current_key</span>]
+    <span class="ruby-identifier">current_key</span> = <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">shift</span>
+  <span class="ruby-keyword">end</span>
 
-    <span class="ruby-identifier">operator</span> = <span class="ruby-constant">OBJECT_FILTER_OPERATORS</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span> <span class="ruby-identifier">operator_string</span> <span class="ruby-operator">|</span>
-      <span class="ruby-identifier">query</span>[<span class="ruby-value">0</span> <span class="ruby-operator">...</span> <span class="ruby-identifier">operator_string</span>.<span class="ruby-identifier">length</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">operator_string</span>
-    <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">current_level</span>[<span class="ruby-identifier">current_key</span>] = <span class="ruby-identifier">criteria</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
 
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">operator</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">operation</span> = <span class="ruby-node">&quot;#{operator} #{query[operator.length..-1].strip}&quot;</span>
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-keyword">case</span> <span class="ruby-identifier">query</span>
-      <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\A\*(.*)\*\Z/</span>
-        <span class="ruby-identifier">operation</span> = <span class="ruby-node">&quot;*= #{$1}&quot;</span>
-      <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\A\*(.*)/</span>
-        <span class="ruby-identifier">operation</span> = <span class="ruby-node">&quot;$= #{$1}&quot;</span>
-      <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\A(.*)\*\Z/</span>
-        <span class="ruby-identifier">operation</span> = <span class="ruby-node">&quot;^= #{$1}&quot;</span>
-      <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">operation</span> = <span class="ruby-node">&quot;_= #{query}&quot;</span>
-      <span class="ruby-keyword">end</span> <span class="ruby-comment">#case</span>
-    <span class="ruby-keyword">end</span> <span class="ruby-comment">#if</span>
-  <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">operation</span> = <span class="ruby-identifier">query</span>.<span class="ruby-identifier">to_i</span>
-  <span class="ruby-keyword">end</span> <span class="ruby-comment"># query is string</span>
+        
 
-  { <span class="ruby-string">&#39;operation&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">operation</span> }
+        
+      </div>
+
+    
+      <div id="method-i-to_h" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">to_h</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="to_h-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 49</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_h</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@filter_hash</span>.<span class="ruby-identifier">dup</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -353,7 +420,7 @@ SoftLayer-Python API.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

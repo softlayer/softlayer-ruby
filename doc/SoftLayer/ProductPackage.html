@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::ProductPackage - softlayer_api gem 2.2.0</title>
+<title>class SoftLayer::ProductPackage - softlayer_api gem 3.0.0</title>
 
 <link href="../fonts.css" rel="stylesheet">
 <link href="../rdoc.css" rel="stylesheet">
@@ -93,6 +93,8 @@
 
   <ul class="link-list" role="directory">
     
+    <li ><a href="#method-c-additional_products_package">::additional_products_package</a>
+    
     <li ><a href="#method-c-bare_metal_instance_package">::bare_metal_instance_package</a>
     
     <li ><a href="#method-c-bare_metal_server_packages">::bare_metal_server_packages</a>
@@ -105,7 +107,9 @@
     
     <li ><a href="#method-c-virtual_server_package">::virtual_server_package</a>
     
-    <li ><a href="#method-i-availableLocations">#availableLocations</a>
+    <li ><a href="#method-i-available_locations">#available_locations</a>
+    
+    <li ><a href="#method-i-categories">#categories</a>
     
     <li ><a href="#method-i-category">#category</a>
     
@@ -113,7 +117,7 @@
     
     <li ><a href="#method-i-datacenter_options">#datacenter_options</a>
     
-    <li ><a href="#method-i-location_id_for_datacenter_name">#location_id_for_datacenter_name</a>
+    <li ><a href="#method-i-items_with_description">#items_with_description</a>
     
     <li ><a href="#method-i-name">#name</a>
     
@@ -134,10 +138,8 @@
 
   <section class="description">
     
-<p>Each <a href="../SoftLayer.html">SoftLayer</a> <a
-href="ProductPackage.html">ProductPackage</a> provides information about
-ordering a product or service from <a
-href="../SoftLayer.html">SoftLayer</a>.</p>
+<p>Each SoftLayer <a href="ProductPackage.html">ProductPackage</a> provides
+information about ordering a product or service from SoftLayer.</p>
 
 <h3 id="class-SoftLayer::ProductPackage-label-Product+Item+Categories">Product Item Categories<span><a href="#class-SoftLayer::ProductPackage-label-Product+Item+Categories">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 
@@ -190,6 +192,40 @@ you must supply a value even if the Category only has one choice)</p>
        </header>
 
     
+      <div id="method-c-additional_products_package" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">additional_products_package</span><span
+            class="method-args">(client = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The “Additional Products” package is a grab-bag of products and services. 
+It has a “well known” id of 0</p>
+          
+          
+
+          
+          <div class="method-source-code" id="additional_products_package-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 217</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">additional_products_package</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">package_with_id</span>(<span class="ruby-value">0</span>, <span class="ruby-identifier">client</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
       <div id="method-c-bare_metal_instance_package" class="method-detail ">
         
         <div class="method-heading">
@@ -214,7 +250,7 @@ used to order Bare Metal Servers with simplified configuration options.</p>
 
           
           <div class="method-source-code" id="bare_metal_instance_package-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 179</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 201</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">bare_metal_instance_package</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">packages_with_key_name</span>(<span class="ruby-string">&#39;BARE_METAL_CORE&#39;</span>, <span class="ruby-identifier">client</span>).<span class="ruby-identifier">first</span>
 <span class="ruby-keyword">end</span></pre>
@@ -250,7 +286,7 @@ foundation to order a bare metal server.</p>
 
           
           <div class="method-source-code" id="bare_metal_server_packages-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 188</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 210</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">bare_metal_server_packages</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">packages_with_key_name</span>(<span class="ruby-string">&#39;BARE_METAL_CPU&#39;</span>, <span class="ruby-identifier">client</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -284,12 +320,12 @@ passed in.</p>
 
           
           <div class="method-source-code" id="package_with_id-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 155</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 177</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">package_with_id</span>(<span class="ruby-identifier">package_id</span>, <span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">client</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
-  
-  <span class="ruby-identifier">package_data</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">&#39;Product_Package&#39;</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">package_id</span>).<span class="ruby-identifier">object_mask</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>(<span class="ruby-string">&#39;mask&#39;</span>)).<span class="ruby-identifier">getObject</span>
+
+  <span class="ruby-identifier">package_data</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Product_Package</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">package_id</span>).<span class="ruby-identifier">object_mask</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>(<span class="ruby-string">&#39;mask&#39;</span>)).<span class="ruby-identifier">getObject</span>
   <span class="ruby-constant">ProductPackage</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">package_data</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -322,13 +358,16 @@ passed in.</p>
 
           
           <div class="method-source-code" id="packages_with_key_name-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 141</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 160</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">packages_with_key_name</span>(<span class="ruby-identifier">key_name</span>, <span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">client</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
-  
-  <span class="ruby-identifier">filter</span> = <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">ObjectFilter</span>.<span class="ruby-identifier">build</span>(<span class="ruby-string">&#39;type.keyName&#39;</span>, <span class="ruby-identifier">key_name</span>)
-  <span class="ruby-identifier">filtered_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">&#39;Product_Package&#39;</span>].<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">filter</span>).<span class="ruby-identifier">object_mask</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>(<span class="ruby-string">&#39;mask&#39;</span>))
+
+  <span class="ruby-identifier">filter</span> = <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">ObjectFilter</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-string">&#39;type.keyName&#39;</span>).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span>(<span class="ruby-identifier">key_name</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">filtered_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Product_Package</span>].<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">filter</span>).<span class="ruby-identifier">object_mask</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>(<span class="ruby-string">&#39;mask&#39;</span>))
   <span class="ruby-identifier">packages_data</span> = <span class="ruby-identifier">filtered_service</span>.<span class="ruby-identifier">getAllObjects</span>
   <span class="ruby-identifier">packages_data</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">package_data</span><span class="ruby-operator">|</span> <span class="ruby-constant">ProductPackage</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">package_data</span>) }
 <span class="ruby-keyword">end</span></pre>
@@ -366,7 +405,7 @@ purpose</p>
 
           
           <div class="method-source-code" id="virtual_server_package-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 168</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 190</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">virtual_server_package</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">packages_with_key_name</span>(<span class="ruby-string">&#39;VIRTUAL_SERVER_INSTANCE&#39;</span>, <span class="ruby-identifier">client</span>).<span class="ruby-identifier">first</span>
 <span class="ruby-keyword">end</span></pre>
@@ -407,7 +446,7 @@ purpose</p>
 
           
           <div class="method-source-code" id="default_object_mask-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 194</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 223</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>(<span class="ruby-identifier">root</span>)
   <span class="ruby-node">&quot;#{root}[id,name,description,availableLocations.location]&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -429,10 +468,10 @@ purpose</p>
        </header>
 
     
-      <div id="method-i-availableLocations" class="method-detail ">
+      <div id="method-i-available_locations" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">availableLocations</span><span
+          <span class="method-name">available_locations</span><span
             class="method-args">()</span>
           
           <span class="method-click-advice">click to toggle source</span>
@@ -447,10 +486,55 @@ purpose</p>
           
 
           
-          <div class="method-source-code" id="availableLocations-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 62</span>
-<span class="ruby-identifier">sl_attr</span> <span class="ruby-value">:availableLocations</span>
+          <div class="method-source-code" id="available_locations-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 46</span>
+<span class="ruby-identifier">sl_attr</span> <span class="ruby-value">:available_locations</span>, <span class="ruby-string">&#39;availableLocations&#39;</span>
 </pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-categories" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">categories</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The full set of product categories contained in the package</p>
+          
+          
+
+          
+          <div class="method-source-code" id="categories-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 101</span>
+<span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:categories</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-ivar">@categories</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-comment"># This is a bit ugly, but what we do is ask for the configuration</span>
+    <span class="ruby-comment"># which updates all the categories for the package (and marks those</span>
+    <span class="ruby-comment"># that are required)</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">configuration</span>
+
+    <span class="ruby-comment"># return the value constructed by the configuraiton</span>
+    <span class="ruby-ivar">@categories</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
           </div>
           
         </div>
@@ -481,9 +565,9 @@ cannot be found)</p>
 
           
           <div class="method-source-code" id="category-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 117</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 125</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">category</span>(<span class="ruby-identifier">category_code</span>)
-  <span class="ruby-identifier">configuration</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">category</span><span class="ruby-operator">|</span> <span class="ruby-identifier">category</span>.<span class="ruby-identifier">categoryCode</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">category_code</span> }
+  <span class="ruby-identifier">categories</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">category</span><span class="ruby-operator">|</span> <span class="ruby-identifier">category</span>.<span class="ruby-identifier">categoryCode</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">category_code</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -515,7 +599,7 @@ package.</p>
 
           
           <div class="method-source-code" id="configuration-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 67</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 51</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:configuration</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment"># only retrieved once per instance</span>
@@ -533,7 +617,7 @@ package.</p>
     <span class="ruby-comment"># filtering mechanism on the server side to give us a list of the categories, groups, and prices that are valid for the current</span>
     <span class="ruby-comment"># account at the current time. We construct the ProductItemCategory objects from the results we get back.</span>
     <span class="ruby-comment">#</span>
-    <span class="ruby-identifier">configuration_data</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">&#39;Product_Package&#39;</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[isRequired,itemCategory.categoryCode]&quot;</span>).<span class="ruby-identifier">getConfiguration</span>()
+    <span class="ruby-identifier">configuration_data</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Product_Package</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[isRequired,itemCategory.categoryCode]&quot;</span>).<span class="ruby-identifier">getConfiguration</span>()
 
     <span class="ruby-comment"># We sort of invert the information and create a map from category codes to a boolean representing</span>
     <span class="ruby-comment"># whether or not they are required.</span>
@@ -543,19 +627,24 @@ package.</p>
     <span class="ruby-keyword">end</span>
 
     <span class="ruby-comment"># This call to getCategories is the one that does lots of fancy back-end filtering for us</span>
-    <span class="ruby-identifier">categories_data</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">&#39;Product_Package&#39;</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">getCategories</span>()
+    <span class="ruby-identifier">categories_data</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Product_Package</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">getCategories</span>()
 
     <span class="ruby-comment"># Run though the categories and for each one that&#39;s in our config, create a SoftLayer::ProductItemCategory object.</span>
     <span class="ruby-comment"># Conveniently the +keys+ of the required_by_category_code gives us a list of the category codes in the configuration</span>
     <span class="ruby-identifier">config_categories</span> = <span class="ruby-identifier">required_by_category_code</span>.<span class="ruby-identifier">keys</span>
-    <span class="ruby-identifier">categories_data</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">category_data</span><span class="ruby-operator">|</span>
+
+    <span class="ruby-comment"># collect all the categories into an array</span>
+    <span class="ruby-ivar">@categories</span> = <span class="ruby-identifier">categories_data</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">category_data</span><span class="ruby-operator">|</span>
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">config_categories</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">category_data</span>[<span class="ruby-string">&#39;categoryCode&#39;</span>]
         <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">ProductItemCategory</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">category_data</span>, <span class="ruby-identifier">required_by_category_code</span>[<span class="ruby-identifier">category_data</span>[<span class="ruby-string">&#39;categoryCode&#39;</span>]])
       <span class="ruby-keyword">else</span>
-        <span class="ruby-keyword">nil</span>
+        <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">ProductItemCategory</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">category_data</span>, <span class="ruby-keyword">false</span>)
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>.<span class="ruby-identifier">compact</span>
-  <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment"># The configuration consists of only those categories that are required.</span>
+    <span class="ruby-ivar">@categories</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">category</span><span class="ruby-operator">|</span> <span class="ruby-identifier">category</span>.<span class="ruby-identifier">required?</span> }
+  <span class="ruby-keyword">end</span> <span class="ruby-comment"># to_update</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -580,15 +669,15 @@ package.</p>
 
         <div class="method-description">
           
-          
+          <p>Returns a list of the datacenters that this package is available in</p>
           
           
 
           
           <div class="method-source-code" id="datacenter_options-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 121</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 131</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">datacenter_options</span>
-  <span class="ruby-identifier">availableLocations</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">location_data</span><span class="ruby-operator">|</span> <span class="ruby-identifier">location_data</span>[<span class="ruby-string">&quot;location&quot;</span>][<span class="ruby-string">&quot;name&quot;</span>] }
+  <span class="ruby-identifier">available_locations</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">location_data</span><span class="ruby-operator">|</span> <span class="ruby-constant">Datacenter</span><span class="ruby-operator">::</span><span class="ruby-identifier">datacenter_named</span>(<span class="ruby-identifier">location_data</span>[<span class="ruby-string">&#39;location&#39;</span>][<span class="ruby-string">&#39;name&#39;</span>], <span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_client</span>) }.<span class="ruby-identifier">compact</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -600,11 +689,11 @@ package.</p>
       </div>
 
     
-      <div id="method-i-location_id_for_datacenter_name" class="method-detail ">
+      <div id="method-i-items_with_description" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">location_id_for_datacenter_name</span><span
-            class="method-args">(datacenter_name)</span>
+          <span class="method-name">items_with_description</span><span
+            class="method-args">(expected_description)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -613,18 +702,22 @@ package.</p>
 
         <div class="method-description">
           
-          <p>Given a datacenter name that was returned by <a
-href="ProductPackage.html#method-i-datacenter_options">#datacenter_options</a>,
-use information in the package to retrieve a location id.</p>
+          <p>Returns the package items with the given description Currently this is
+returning the low-level hash representation directly from the Network API</p>
           
           
 
           
-          <div class="method-source-code" id="location_id_for_datacenter_name-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 128</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">location_id_for_datacenter_name</span>(<span class="ruby-identifier">datacenter_name</span>)
-  <span class="ruby-identifier">location_data</span> = <span class="ruby-identifier">availableLocations</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">location_data</span><span class="ruby-operator">|</span> <span class="ruby-identifier">location_data</span>[<span class="ruby-string">&quot;location&quot;</span>][<span class="ruby-string">&quot;name&quot;</span>]  <span class="ruby-operator">==</span> <span class="ruby-identifier">datacenter_name</span> }
-  <span class="ruby-identifier">location_data</span>[<span class="ruby-string">&quot;locationId&quot;</span>]
+          <div class="method-source-code" id="items_with_description-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 139</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">items_with_description</span>(<span class="ruby-identifier">expected_description</span>)
+  <span class="ruby-identifier">filter</span> = <span class="ruby-constant">ObjectFilter</span>.<span class="ruby-identifier">new</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span> <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-string">&quot;items.description&quot;</span>).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span>(<span class="ruby-identifier">expected_description</span>) }
+  <span class="ruby-identifier">items_data</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">filter</span>).<span class="ruby-identifier">getItems</span>()
+
+  <span class="ruby-identifier">items_data</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">item_data</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">first_price</span> = <span class="ruby-identifier">item_data</span>[<span class="ruby-string">&#39;prices&#39;</span>][<span class="ruby-value">0</span>]
+    <span class="ruby-constant">ProductConfigurationOption</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">item_data</span>, <span class="ruby-identifier">first_price</span>)
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -655,7 +748,7 @@ use information in the package to retrieve a location id.</p>
 
           
           <div class="method-source-code" id="name-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 58</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 42</span>
 <span class="ruby-identifier">sl_attr</span> <span class="ruby-value">:name</span>
 </pre>
           </div>
@@ -687,9 +780,9 @@ use information in the package to retrieve a location id.</p>
 
           
           <div class="method-source-code" id="required_categories-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 111</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 119</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">required_categories</span>
-  <span class="ruby-identifier">configuration</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">category</span><span class="ruby-operator">|</span> <span class="ruby-identifier">category</span>.<span class="ruby-identifier">required?</span> }
+  <span class="ruby-identifier">configuration</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -714,15 +807,16 @@ use information in the package to retrieve a location id.</p>
 
         <div class="method-description">
           
-          
+          <p>Returns the service for interacting with this package through the network
+API</p>
           
           
 
           
           <div class="method-source-code" id="service-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 133</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductPackage.rb, line 152</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">service</span>
-  <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">&#39;Product_Package&#39;</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
+  <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Product_Package</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -742,7 +836,7 @@ use information in the package to retrieve a location id.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

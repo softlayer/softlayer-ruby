@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::ObjectMaskParser - softlayer_api gem 2.2.0</title>
+<title>class SoftLayer::ObjectMaskParser - softlayer_api gem 3.0.0</title>
 
 <link href="../fonts.css" rel="stylesheet">
 <link href="../rdoc.css" rel="stylesheet">
@@ -61,7 +61,7 @@
   <h3>Parent</h3>
 
   
-  <p class="link">Object
+  <p class="link"><a href="../Object.html">Object</a>
   
 </div>
 
@@ -106,16 +106,18 @@
 
   <section class="description">
     
-<p>A parser that can examine and validate <a
-href="../SoftLayer.html">SoftLayer</a> Object Mask strings</p>
+<p>A parser that can examine and validate SoftLayer <a
+href="../Object.html">Object</a> Mask strings</p>
 
-<p>The Object Mask Parser parses Object Mask Strings into <a
+<p>The <a href="../Object.html">Object</a> Mask Parser parses <a
+href="../Object.html">Object</a> Mask Strings into <a
 href="ObjectMaskProperty.html">ObjectMaskProperty</a> structures.</p>
 
-<p>The Object Mask parser allows the Gem to merge Object Mask Strings to avoid
-errors from the <a href="../SoftLayer.html">SoftLayer</a> API server about
-duplicate properties being provided when the same property is provided in
-different Object Masks</p>
+<p>The <a href="../Object.html">Object</a> Mask parser allows the Gem to merge
+<a href="../Object.html">Object</a> Mask Strings to avoid errors from the
+SoftLayer API server about duplicate properties being provided when the
+same property is provided in different <a href="../Object.html">Object</a>
+Masks</p>
 
   </section>
 
@@ -178,7 +180,7 @@ different Object Masks</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 43</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 27</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>()
   <span class="ruby-ivar">@stack</span> = []
 <span class="ruby-keyword">end</span></pre>
@@ -219,7 +221,7 @@ different Object Masks</p>
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 47</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 31</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span>(<span class="ruby-identifier">mask_string</span>)
   <span class="ruby-ivar">@tokenizer</span> = <span class="ruby-constant">ObjectMaskTokenizer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">mask_string</span>)
 
@@ -273,7 +275,7 @@ different Object Masks</p>
 
           
           <div class="method-source-code" id="parse_property-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 95</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 79</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_property</span> (<span class="ruby-identifier">tokenizer</span>)
   <span class="ruby-identifier">property_name</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">property_type</span> = <span class="ruby-keyword">nil</span>
@@ -329,7 +331,7 @@ different Object Masks</p>
 
           
           <div class="method-source-code" id="parse_property_child-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 122</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 106</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_property_child</span>(<span class="ruby-identifier">tokenizer</span>)
   <span class="ruby-identifier">token</span> = <span class="ruby-identifier">recognize_token</span>(<span class="ruby-identifier">tokenizer</span>, <span class="ruby-value">:property_child_separator</span>, <span class="ruby-string">&quot;Expected a &#39;.&#39;: &quot;</span>)
   <span class="ruby-identifier">parse_property</span>(<span class="ruby-identifier">tokenizer</span>)
@@ -363,7 +365,7 @@ different Object Masks</p>
 
           
           <div class="method-source-code" id="parse_property_name-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 127</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 111</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_property_name</span>(<span class="ruby-identifier">tokenizer</span>)
   <span class="ruby-identifier">token</span> = <span class="ruby-identifier">recognize_token</span>(<span class="ruby-identifier">tokenizer</span>, <span class="ruby-value">:identifier</span>, <span class="ruby-string">&quot;Expected a valid property type: &quot;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">token</span><span class="ruby-operator">|</span> <span class="ruby-identifier">token</span>.<span class="ruby-identifier">valid_property_name?</span> }
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">token</span>.<span class="ruby-identifier">value</span>
@@ -397,7 +399,7 @@ different Object Masks</p>
 
           
           <div class="method-source-code" id="parse_property_sequence-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 79</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 63</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_property_sequence</span>(<span class="ruby-identifier">tokenizer</span>)
   <span class="ruby-identifier">first_property</span> = <span class="ruby-identifier">parse_property</span>(<span class="ruby-identifier">tokenizer</span>)
 
@@ -442,7 +444,7 @@ different Object Masks</p>
 
           
           <div class="method-source-code" id="parse_property_set-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 72</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 56</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_property_set</span>(<span class="ruby-identifier">tokenizer</span>)
   <span class="ruby-identifier">token</span> = <span class="ruby-identifier">recognize_token</span>(<span class="ruby-identifier">tokenizer</span>, <span class="ruby-value">:property_set_start</span>, <span class="ruby-string">&quot;Expected &#39;[&#39;: &quot;</span>)
   <span class="ruby-identifier">property_sequence</span> = <span class="ruby-identifier">parse_property_sequence</span>(<span class="ruby-identifier">tokenizer</span>)
@@ -478,7 +480,7 @@ different Object Masks</p>
 
           
           <div class="method-source-code" id="parse_property_type-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 132</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 116</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_property_type</span>(<span class="ruby-identifier">tokenizer</span>)
   <span class="ruby-identifier">token</span> = <span class="ruby-identifier">recognize_token</span>(<span class="ruby-identifier">tokenizer</span>, <span class="ruby-value">:property_type_start</span>, <span class="ruby-string">&quot;Expected &#39;(&#39;: &quot;</span>)
   <span class="ruby-identifier">property_type</span> = <span class="ruby-identifier">parse_property_type_name</span>(<span class="ruby-identifier">tokenizer</span>)
@@ -514,7 +516,7 @@ different Object Masks</p>
 
           
           <div class="method-source-code" id="parse_property_type_name-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 139</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 123</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_property_type_name</span>(<span class="ruby-identifier">tokenizer</span>)
   <span class="ruby-identifier">token</span> = <span class="ruby-identifier">recognize_token</span>(<span class="ruby-identifier">tokenizer</span>, <span class="ruby-value">:identifier</span>, <span class="ruby-string">&quot;Expected a valid property type: &quot;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">token</span><span class="ruby-operator">|</span> <span class="ruby-identifier">token</span>.<span class="ruby-identifier">valid_property_type?</span> }
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">token</span>.<span class="ruby-identifier">value</span>
@@ -548,7 +550,7 @@ different Object Masks</p>
 
           
           <div class="method-source-code" id="recognize_token-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 144</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskParser.rb, line 128</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">recognize_token</span>(<span class="ruby-identifier">tokenizer</span>, <span class="ruby-identifier">expected_type</span>, <span class="ruby-identifier">error_string</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">predicate</span>)
   <span class="ruby-identifier">token</span> = <span class="ruby-identifier">tokenizer</span>.<span class="ruby-identifier">current_token</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">token</span>.<span class="ruby-identifier">type</span>.<span class="ruby-identifier">equal?</span>(<span class="ruby-identifier">expected_type</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-operator">!</span><span class="ruby-identifier">predicate</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">predicate</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">token</span>))
@@ -578,7 +580,7 @@ different Object Masks</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

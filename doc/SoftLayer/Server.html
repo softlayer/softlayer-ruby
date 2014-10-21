@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::Server - softlayer_api gem 2.2.0</title>
+<title>class SoftLayer::Server - softlayer_api gem 3.0.0</title>
 
 <link href="../fonts.css" rel="stylesheet">
 <link href="../rdoc.css" rel="stylesheet">
@@ -65,7 +65,18 @@
   
 </div>
 
-    
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><a class="include" href="DynamicAttribute.html">SoftLayer::DynamicAttribute</a>
+  
+  
+  </ul>
+</div>
+
     
     <!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
@@ -79,7 +90,11 @@
     
     <li ><a href="#method-i-change_port_speed">#change_port_speed</a>
     
+    <li ><a href="#method-i-firewall_port_speed">#firewall_port_speed</a>
+    
     <li ><a href="#method-i-notes-3D">#notes=</a>
+    
+    <li ><a href="#method-i-reboot-21">#reboot!</a>
     
     <li ><a href="#method-i-reload_os-21">#reload_os!</a>
     
@@ -115,10 +130,9 @@ functionality common to both those classes.</p>
 create them directly.</p>
 
 <p>While <a href="VirtualServer.html">VirtualServer</a> and <a
-href="BareMetalServer.html">BareMetalServer</a> each have analogs in the <a
-href="../SoftLayer.html">SoftLayer</a> API, those analogs do not share a
-direct ancestry.  As a result there is no <a
-href="../SoftLayer.html">SoftLayer</a> API analog to this class.</p>
+href="BareMetalServer.html">BareMetalServer</a> each have analogs in the
+SoftLayer API, those analogs do not share a direct ancestry.  As a result
+there is no SoftLayer API analog to this class.</p>
 
   </section>
 
@@ -160,8 +174,7 @@ href="../SoftLayer.html">SoftLayer</a> API analog to this class.</p>
 
         <div class="method-description">
         
-        <p>The domain name <a href="../SoftLayer.html">SoftLayer</a> has stored for
-the server</p>
+        <p>The domain name SoftLayer has stored for the server</p>
         
         </div>
       </div>
@@ -187,8 +200,7 @@ the server</p>
 
         <div class="method-description">
         
-        <p>The host name <a href="../SoftLayer.html">SoftLayer</a> has stored for the
-server</p>
+        <p>The host name SoftLayer has stored for the server</p>
         
         </div>
       </div>
@@ -298,7 +310,7 @@ VirtualServer#find_servers</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 78</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 74</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">network_hash</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Server</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">RuntimeError</span>, <span class="ruby-string">&quot;The Server class is an abstract base class and should not be instantiated directly&quot;</span>
@@ -346,7 +358,7 @@ techniques to specialize the mask for their use.</p>
 
           
           <div class="method-source-code" id="default_object_mask-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 216</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 240</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
   { <span class="ruby-string">&quot;mask&quot;</span> =<span class="ruby-operator">&gt;</span> [
       <span class="ruby-string">&#39;id&#39;</span>,
@@ -412,13 +424,13 @@ Ports have a maximum speed that will limit the actual speed set on the
 port.</p>
 
 <p>Set <code>public</code> to <code>false</code> in order to change the speed
-of the primary private network interface.</p>
+of the private network interface.</p>
           
           
 
           
           <div class="method-source-code" id="change_port_speed-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 168</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 192</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">change_port_speed</span>(<span class="ruby-identifier">new_speed</span>, <span class="ruby-identifier">public</span> = <span class="ruby-keyword">true</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">public</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">setPublicNetworkInterfaceSpeed</span>(<span class="ruby-identifier">new_speed</span>)
@@ -428,6 +440,43 @@ of the primary private network interface.</p>
 
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">refresh_details</span>()
   <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-firewall_port_speed" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">firewall_port_speed</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the max port speed of the public network interfaces of the server
+taking into account bound interface pairs (redundant network cards).</p>
+          
+          
+
+          
+          <div class="method-source-code" id="firewall_port_speed-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 176</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">firewall_port_speed</span>
+  <span class="ruby-identifier">network_components</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[id,maxSpeed]&quot;</span>).<span class="ruby-identifier">getFrontendNetworkComponents</span>()
+  <span class="ruby-identifier">max_speeds</span> = <span class="ruby-identifier">network_components</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">component</span><span class="ruby-operator">|</span> <span class="ruby-identifier">component</span>[<span class="ruby-string">&#39;maxSpeed&#39;</span>] }
+
+  <span class="ruby-identifier">max_speeds</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">max_speeds</span>.<span class="ruby-identifier">max</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -459,9 +508,9 @@ notes</p>
 
           
           <div class="method-source-code" id="notes-3D-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 104</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 119</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">notes=</span>(<span class="ruby-identifier">new_notes</span>)
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;The new notes cannot be nil&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">new_notes</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new notes cannot be nil&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">new_notes</span>
 
   <span class="ruby-identifier">edit_template</span> = {
     <span class="ruby-string">&quot;notes&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">new_notes</span>
@@ -469,6 +518,55 @@ notes</p>
 
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">editObject</span>(<span class="ruby-identifier">edit_template</span>)
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">refresh_details</span>()
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-reboot-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">reboot!</span><span
+            class="method-args">(reboot_technique = :default_reboot)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Reboot the server.  This action is taken immediately. Servers can be
+rebooted in three different ways: :default_reboot - (Try soft, then hard)
+Attempts to reboot a server using the :os_reboot technique then, if that is
+not successful, tries the :power_cycle method :os_reboot - (aka. soft
+rebot) instructs the server&#39;s host operating system to reboot
+:power_cycle - (aka. hard reboot) The actual (for hardware) or metaphorical
+(for virtual servers) equivalent to pulling the plug on the server then
+plugging it back in.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="reboot-21-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 88</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">reboot!</span>(<span class="ruby-identifier">reboot_technique</span> = <span class="ruby-value">:default_reboot</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">reboot_technique</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-value">:default_reboot</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">rebootDefault</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-value">:os_reboot</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">rebootSoft</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-value">:power_cycle</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">rebootHard</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;Unrecognized reboot technique in SoftLayer::Server#reboot!}&quot;</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -496,12 +594,11 @@ notes</p>
           <p>Begins an OS reload on this server.</p>
 
 <p>The OS reload can wipe out the data on your server so this method uses a
-confirmation mechanism built into the underlying <a
-href="../SoftLayer.html">SoftLayer</a> API. If you call this method once
-without a token, it will not actually start the reload. Instead it will
-return a token to you. That token is good for 10 minutes. If you call this
-method again and pass that token *<strong>then</strong>* the OS reload will
-actually begin.</p>
+confirmation mechanism built into the underlying SoftLayer API. If you call
+this method once without a token, it will not actually start the reload.
+Instead it will return a token to you. That token is good for 10 minutes.
+If you call this method again and pass that token *<strong>then</strong>*
+the OS reload will actually begin.</p>
 
 <p>If you wish to force the OS Reload and bypass the token safety mechanism
 pass the token &#39;FORCE&#39; as the first parameter. If you do so the
@@ -511,7 +608,7 @@ reload will proceed immediately.</p>
 
           
           <div class="method-source-code" id="reload_os-21-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 193</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 217</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">reload_os!</span>(<span class="ruby-identifier">token</span> = <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-identifier">provisioning_script_uri</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">ssh_keys</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">configuration</span> = {}
 
@@ -552,10 +649,10 @@ validation is done on the domain name</p>
 
           
           <div class="method-source-code" id="set_domain-21-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 146</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 161</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">set_domain!</span>(<span class="ruby-identifier">new_domain</span>)
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;The new hostname cannot be nil&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">new_domain</span>
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;The new hostname cannot be empty&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">new_domain</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new hostname cannot be nil&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">new_domain</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new hostname cannot be empty&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">new_domain</span>.<span class="ruby-identifier">empty?</span>
 
   <span class="ruby-identifier">edit_template</span> = {
     <span class="ruby-string">&quot;domain&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">new_domain</span>
@@ -594,10 +691,10 @@ hostname is nil or empty</p>
 
           
           <div class="method-source-code" id="set_hostname-21-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 128</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 143</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">set_hostname!</span>(<span class="ruby-identifier">new_hostname</span>)
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;The new hostname cannot be nil&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">new_hostname</span>
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;The new hostname cannot be empty&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">new_hostname</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new hostname cannot be nil&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">new_hostname</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new hostname cannot be empty&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">new_hostname</span>.<span class="ruby-identifier">empty?</span>
 
   <span class="ruby-identifier">edit_template</span> = {
     <span class="ruby-string">&quot;hostname&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">new_hostname</span>
@@ -629,14 +726,14 @@ hostname is nil or empty</p>
 
         <div class="method-description">
           
-          <p>Make an API request to <a href="../SoftLayer.html">SoftLayer</a> and return
-the latest properties hash for this object.</p>
+          <p>Make an API request to SoftLayer and return the latest properties hash for
+this object.</p>
           
           
 
           
           <div class="method-source-code" id="softlayer_properties-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 89</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 104</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">softlayer_properties</span>(<span class="ruby-identifier">object_mask</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">my_service</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>
 
@@ -682,7 +779,7 @@ the latest properties hash for this object.</p>
 
           
           <div class="method-source-code" id="to_s-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 202</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 226</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
   <span class="ruby-identifier">result</span> = <span class="ruby-keyword">super</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:hostname</span>) <span class="ruby-keyword">then</span>
@@ -719,9 +816,9 @@ the latest properties hash for this object.</p>
 
           
           <div class="method-source-code" id="user_metadata-3D-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 118</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Server.rb, line 133</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">user_metadata=</span>(<span class="ruby-identifier">new_metadata</span>)
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;Cannot set user metadata to nil&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">new_metadata</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;Cannot set user metadata to nil&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">new_metadata</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">setUserMetadata</span>([<span class="ruby-identifier">new_metadata</span>])
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">refresh_details</span>()
 <span class="ruby-keyword">end</span></pre>
@@ -743,7 +840,7 @@ the latest properties hash for this object.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

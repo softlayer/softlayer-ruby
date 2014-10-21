@@ -112,9 +112,8 @@
   <section class="description">
     
 <p>The <a href="ServerFirewall.html">ServerFirewall</a> class represents a
-firewall in the <a href="../SoftLayer.html">SoftLayer</a> environment that
-exists in a 1 to 1 relationship with a particular server (either Bare Metal
-or Virtual).</p>
+firewall in the SoftLayer environment that exists in a 1 to 1 relationship
+with a particular server (either Bare Metal or Virtual).</p>
 
 <p>This is also called a “Shared Firewall” in some documentation.</p>
 
@@ -179,7 +178,8 @@ change the rules on the server use the asymmetric method change_rules!</p>
         
         <p>The state of the firewall, includes whether or not the rules are editable
 and whether or not the firewall rules are applied or bypassed Can at least
-be ‘allow_edit’, ‘bypass’ or ‘no_edit’. This list may not be exhaustive</p>
+be &#39;allow_edit&#39;, &#39;bypass&#39; or &#39;no_edit&#39;. This list
+may not be exhaustive</p>
         
         </div>
       </div>
@@ -242,8 +242,8 @@ account.</p>
 
   <span class="ruby-identifier">shared_vlans</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Account</span>].<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">network_vlan_mask</span>).<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">shared_vlans_filter</span>).<span class="ruby-identifier">getNetworkVlans</span>
   <span class="ruby-identifier">shared_vlans</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">vlan_data</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">bare_metal_firewalls_data</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">vlan_data</span>[<span class="ruby-string">'firewallNetworkComponents'</span>].<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">network_component</span><span class="ruby-operator">|</span> <span class="ruby-identifier">network_component</span>[<span class="ruby-string">'status'</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">'no_edit'</span>}
-    <span class="ruby-identifier">virtual_firewalls_data</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">vlan_data</span>[<span class="ruby-string">'firewallGuestNetworkComponents'</span>].<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">network_component</span><span class="ruby-operator">|</span> <span class="ruby-identifier">network_component</span>[<span class="ruby-string">'status'</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">'no_edit'</span>}
+    <span class="ruby-identifier">bare_metal_firewalls_data</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">vlan_data</span>[<span class="ruby-string">&#39;firewallNetworkComponents&#39;</span>].<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">network_component</span><span class="ruby-operator">|</span> <span class="ruby-identifier">network_component</span>[<span class="ruby-string">&#39;status&#39;</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">&#39;no_edit&#39;</span>}
+    <span class="ruby-identifier">virtual_firewalls_data</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">vlan_data</span>[<span class="ruby-string">&#39;firewallGuestNetworkComponents&#39;</span>].<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">network_component</span><span class="ruby-operator">|</span> <span class="ruby-identifier">network_component</span>[<span class="ruby-string">&#39;status&#39;</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">&#39;no_edit&#39;</span>}
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">bare_metal_firewalls</span> = <span class="ruby-identifier">bare_metal_firewalls_data</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">bare_metal_firewall_data</span><span class="ruby-operator">|</span>
@@ -345,13 +345,13 @@ or nil, a default string will be added</p>
   <span class="ruby-identifier">notes</span> = <span class="ruby-node">&quot;Cancelled by a call to #{__method__} in the softlayer_api gem&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">notes</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">notes</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;&quot;</span>
 
   <span class="ruby-identifier">cancellation_request</span> = {
-    <span class="ruby-string">'accountId'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>[<span class="ruby-string">'account'</span>][<span class="ruby-string">'id'</span>],
-    <span class="ruby-string">'userId'</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>[<span class="ruby-string">'id'</span>],
-    <span class="ruby-string">'items'</span> =<span class="ruby-operator">&gt;</span> [ {
-      <span class="ruby-string">'billingItemId'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'billingItem'</span>][<span class="ruby-string">'id'</span>],
-      <span class="ruby-string">'immediateCancellationFlag'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-string">&#39;accountId&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>[<span class="ruby-string">&#39;account&#39;</span>][<span class="ruby-string">&#39;id&#39;</span>],
+    <span class="ruby-string">&#39;userId&#39;</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>[<span class="ruby-string">&#39;id&#39;</span>],
+    <span class="ruby-string">&#39;items&#39;</span> =<span class="ruby-operator">&gt;</span> [ {
+      <span class="ruby-string">&#39;billingItemId&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;billingItem&#39;</span>][<span class="ruby-string">&#39;id&#39;</span>],
+      <span class="ruby-string">&#39;immediateCancellationFlag&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span>
       } ],
-    <span class="ruby-string">'notes'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">notes</span>
+    <span class="ruby-string">&#39;notes&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">notes</span>
   }
 
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Billing_Item_Cancellation_Request</span>].<span class="ruby-identifier">createObject</span>(<span class="ruby-identifier">cancellation_request</span>)
@@ -388,10 +388,10 @@ SoftLayer::ServerFirewall.default_rules_mask_keys</p>
 pass in a complete set of rules each time. The rules you submit will
 replace the entire ruleset on the destination firewall.</p>
 
-<p><strong>NOTE!</strong> The rules themselves have an "orderValue" property.
+<p><strong>NOTE!</strong> The rules themselves have an “orderValue” property.
 It is this property, and <strong>not</strong> the order that the rules are
 found in the rules_data array, which will determine in which order the
-firewall applies it's rules to incomming traffic.</p>
+firewall applies it&#39;s rules to incomming traffic.</p>
 
 <p><strong>NOTE!</strong> Changes to the rules are not applied immediately on
 the server side. Instead, they are enqueued by the firewall update service
@@ -465,10 +465,10 @@ provides no protection.</p>
 
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">bypass_symbol</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">:apply_firewall_rules</span>
-    <span class="ruby-identifier">change_object</span>[<span class="ruby-string">'bypassFlag'</span>] = <span class="ruby-keyword">false</span>
+    <span class="ruby-identifier">change_object</span>[<span class="ruby-string">&#39;bypassFlag&#39;</span>] = <span class="ruby-keyword">false</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Network_Firewall_Update_Request</span>].<span class="ruby-identifier">createObject</span>(<span class="ruby-identifier">change_object</span>)
   <span class="ruby-keyword">when</span> <span class="ruby-value">:bypass_firewall_rules</span>
-    <span class="ruby-identifier">change_object</span>[<span class="ruby-string">'bypassFlag'</span>] = <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">change_object</span>[<span class="ruby-string">&#39;bypassFlag&#39;</span>] = <span class="ruby-keyword">true</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Network_Firewall_Update_Request</span>].<span class="ruby-identifier">createObject</span>(<span class="ruby-identifier">change_object</span>)
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;An invalid parameter was sent to #{__method__}. It accepts :apply_firewall_rules and :bypass_firewall_rules&quot;</span>
@@ -541,7 +541,7 @@ provides no protection.</p>
   <span class="ruby-identifier">service</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>
   <span class="ruby-identifier">service</span> = <span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">object_mask</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">object_mask</span>
 
-  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">has_sl_property?</span>(<span class="ruby-string">'networkComponent'</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">has_sl_property?</span>(<span class="ruby-string">&#39;networkComponent&#39;</span>)
     <span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[id,status,billingItem.id,networkComponent.downlinkComponent.hardwareId]&quot;</span>).<span class="ruby-identifier">getObject</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[id,status,billingItem.id,guestNetworkComponent.guest.id]&quot;</span>).<span class="ruby-identifier">getObject</span>
@@ -565,7 +565,7 @@ provides no protection.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

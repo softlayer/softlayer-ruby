@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>softlayer_api gem 2.2.0</title>
+<title>softlayer_api gem 3.0.0</title>
 
 <link href="./fonts.css" rel="stylesheet">
 <link href="./rdoc.css" rel="stylesheet">
@@ -84,7 +84,7 @@
   
     <li><a href="./Hash.html">Hash</a>
   
-    <li><a href="./SoftLayer.html">SoftLayer</a>
+    <li><a href="./Object.html">Object</a>
   
     <li><a href="./SoftLayer/APIParameterFilter.html">SoftLayer::APIParameterFilter</a>
   
@@ -100,19 +100,25 @@
   
     <li><a href="./SoftLayer/Config.html">SoftLayer::Config</a>
   
+    <li><a href="./SoftLayer/Datacenter.html">SoftLayer::Datacenter</a>
+  
     <li><a href="./SoftLayer/DynamicAttribute.html">SoftLayer::DynamicAttribute</a>
   
     <li><a href="./SoftLayer/DynamicAttribute/ClassMethods.html">SoftLayer::DynamicAttribute::ClassMethods</a>
   
     <li><a href="./SoftLayer/DynamicAttribute/DynamicAttributeDefinition.html">SoftLayer::DynamicAttribute::DynamicAttributeDefinition</a>
   
+    <li><a href="./SoftLayer/ImageTemplate.html">SoftLayer::ImageTemplate</a>
+  
     <li><a href="./SoftLayer/ModelBase.html">SoftLayer::ModelBase</a>
+  
+    <li><a href="./SoftLayer/NetworkComponent.html">SoftLayer::NetworkComponent</a>
   
     <li><a href="./SoftLayer/ObjectFilter.html">SoftLayer::ObjectFilter</a>
   
-    <li><a href="./SoftLayer/ObjectFilterBlockHandler.html">SoftLayer::ObjectFilterBlockHandler</a>
+    <li><a href="./SoftLayer/ObjectFilter/CriteriaAcceptor.html">SoftLayer::ObjectFilter::CriteriaAcceptor</a>
   
-    <li><a href="./SoftLayer/ObjectFilterOperation.html">SoftLayer::ObjectFilterOperation</a>
+    <li><a href="./SoftLayer/ObjectFilterDefinitionContext.html">SoftLayer::ObjectFilterDefinitionContext</a>
   
     <li><a href="./SoftLayer/ObjectMaskParser.html">SoftLayer::ObjectMaskParser</a>
   
@@ -124,25 +130,33 @@
   
     <li><a href="./SoftLayer/ObjectMaskTokenizer.html">SoftLayer::ObjectMaskTokenizer</a>
   
+    <li><a href="./SoftLayer/ProductConfigurationOption.html">SoftLayer::ProductConfigurationOption</a>
+  
     <li><a href="./SoftLayer/ProductItemCategory.html">SoftLayer::ProductItemCategory</a>
   
     <li><a href="./SoftLayer/ProductPackage.html">SoftLayer::ProductPackage</a>
   
     <li><a href="./SoftLayer/Server.html">SoftLayer::Server</a>
   
-    <li><a href="./SoftLayer/Service.html">SoftLayer::Service</a>
+    <li><a href="./SoftLayer/ServerFirewall.html">SoftLayer::ServerFirewall</a>
+  
+    <li><a href="./SoftLayer/ServerFirewallOrder.html">SoftLayer::ServerFirewallOrder</a>
   
     <li><a href="./SoftLayer/Ticket.html">SoftLayer::Ticket</a>
+  
+    <li><a href="./SoftLayer/VLANFirewall.html">SoftLayer::VLANFirewall</a>
+  
+    <li><a href="./SoftLayer/VLANFirewallOrder.html">SoftLayer::VLANFirewallOrder</a>
   
     <li><a href="./SoftLayer/VirtualServer.html">SoftLayer::VirtualServer</a>
   
     <li><a href="./SoftLayer/VirtualServerOrder.html">SoftLayer::VirtualServerOrder</a>
   
+    <li><a href="./SoftLayer/VirtualServerUpgradeOrder.html">SoftLayer::VirtualServerUpgradeOrder</a>
+  
     <li><a href="./String.html">String</a>
   
     <li><a href="./Symbol.html">Symbol</a>
-  
-    <li><a href="./XMLRPC/Convert.html">XMLRPC::Convert</a>
   
   </ul>
 </div>
@@ -156,32 +170,29 @@
 <h1 id="label-Welcome"><a href="Welcome_md.html">Welcome</a><span><a href="#label-Welcome">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
 
 <p>The <code>softlyer_api</code> Ruby Gem provides a convenient way to call
-into the <a href="SoftLayer.html">SoftLayer</a> API from the Ruby
-programming language. This is accomplished using the XML-RPC interface
-provided by <a href="SoftLayer.html">SoftLayer</a> and the XMLRPC client
-built into the core Ruby language.</p>
+into the SoftLayer API from the Ruby programming language. This is
+accomplished using the XML-RPC interface provided by SoftLayer and the
+XMLRPC client built into the core Ruby language.</p>
 
-<p>For more information about the <a href="SoftLayer.html">SoftLayer</a> API,
-and the routines and data structures it offers should visit the <a
+<p>For more information about the SoftLayer API, and the routines and data
+structures it offers should visit the <a
 href="http://sldn.softlayer.com">SoftLayer Developer Network (SLDN)
 website</a>.</p>
 
 <p>This document is written for Ruby developers who wish to interact with
-their <a href="SoftLayer.html">SoftLayer</a> accounts through Ruby scripts.
-<a href="SoftLayer.html">SoftLayer</a> also offers a command line tool for
-performing common tasks. If prefer to use that tool, we invite you to look
-into the <a
+their SoftLayer accounts through Ruby scripts. SoftLayer also offers a
+command line tool for performing common tasks. If prefer to use that tool,
+we invite you to look into the <a
 href="https://softlayer-python.readthedocs.org/en/latest/cli.html">command
 line interface</a> that is part of the <a
 href="http://github.com/softlayer/softlayer-python">git</a> project.</p>
 
 <p>This documentation is also written for Ruby developers who wish to
 contribute to the <code>softlayer_api</code> Gem. The Gem is a work in
-progress. We welcome the support of the <a
-href="SoftLayer.html">SoftLayer</a> development community to improve the
-Gem. The project is open source and we hope that source will serve as a
-useful library, stand as sample code to assist exploration, and serve as an
-opportunity for developers to shape it for both those needs.</p>
+progress. We welcome the support of the SoftLayer development community to
+improve the Gem. The project is open source and we hope that source will
+serve as a useful library, stand as sample code to assist exploration, and
+serve as an opportunity for developers to shape it for both those needs.</p>
 
 <p>The primary repository for the Gem&#39;s source code is the <a
 href="http://github.com/softlayer/softlayer-ruby">softlayer-ruby</a> github
@@ -189,12 +200,11 @@ project.</p>
 
 <h1 id="label-Overview">Overview<span><a href="#label-Overview">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
 
-<p>These Ruby language bindings allow access to the <a
-href="SoftLayer.html">SoftLayer</a> API on two different levels. A <a
-href="Foundation_md.html">Foundation</a> layer for low-level interaction
-with the <a href="SoftLayer.html">SoftLayer</a> API, and an abstraction
-layer that simplifies and isolates scripts from some of the details found
-in the <a href="Foundation_md.html">Foundation</a>.</p>
+<p>These Ruby language bindings allow access to the SoftLayer API on two
+different levels. A <a href="Foundation_md.html">Foundation</a> layer for
+low-level interaction with the SoftLayer API, and an abstraction layer that
+simplifies and isolates scripts from some of the details found in the <a
+href="Foundation_md.html">Foundation</a>.</p>
 
 <p>The <a href="Foundation_md.html">Foundation</a> layer, makes use of the <a
 href="http://www.ruby-doc.org/stdlib-2.1.2/libdoc/xmlrpc/rdoc/XMLRPC/Client.html">XMLRPC
@@ -205,11 +215,10 @@ retrieved using fundamental Ruby types such as Hashes, Arrays, Strings, and
 Integers.</p>
 
 <p>The Model layer is built atop the foundation as object class hierarchy. The
-class hierarchy models the structures found in the <a
-href="SoftLayer.html">SoftLayer</a> environment using the object-oriented
-features of Ruby. It does this to abstract out some of the implementation
-detail that a developer would commonly have to work with to communicate
-with <a href="SoftLayer.html">SoftLayer</a> through the foundation layer.</p>
+class hierarchy models the structures found in the SoftLayer environment
+using the object-oriented features of Ruby. It does this to abstract out
+some of the implementation detail that a developer would commonly have to
+work with to communicate with SoftLayer through the foundation layer.</p>
 
 <p>The Model layer is by no means complete; quite to the contrary it is in its
 infancy and we believe that much of the development effort in the Gem will
@@ -234,7 +243,7 @@ href="ContributionGuide_md.html">Contribution Guide</a></p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

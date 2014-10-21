@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::BareMetalServerOrder_Package - softlayer_api gem 2.2.0</title>
+<title>class SoftLayer::BareMetalServerOrder_Package - softlayer_api gem 3.0.0</title>
 
 <link href="../fonts.css" rel="stylesheet">
 <link href="../rdoc.css" rel="stylesheet">
@@ -108,8 +108,8 @@ set of configuration options available for that chassis. To fully configure
 the server you must select the value for each configuration option.</p>
 
 <p>This class roughly Corresponds to the
-SoftLayer_Container_Product_Order_Hardware_Server data type in the <a
-href="../SoftLayer.html">SoftLayer</a> API</p>
+SoftLayer_Container_Product_Order_Hardware_Server data type in the
+SoftLayer API</p>
 
 <p><a
 href="http://sldn.softlayer.com/reference/datatypes/SoftLayer_Container_Product_Order_Hardware_Server">sldn.softlayer.com/reference/datatypes/SoftLayer_Container_Product_Order_Hardware_Server</a></p>
@@ -148,7 +148,9 @@ values may be Integers or Objects. The Integer values should be the
 the configuration option chosen for that category. Objects must respond to
 the <code>price_id</code> message and return an integer that is the
 <code>id</code> of a <code>SoftLayer_Product_Item_Price</code>. Instances
-of the ProductConfigurationOption class behave this way.</p>
+of the <a
+href="ProductConfigurationOption.html">ProductConfigurationOption</a> class
+behave this way.</p>
 
 <p>At a minimum, the configuation_options should include entries for each of
 the categories required by the package (i.e. those returned from <a
@@ -165,10 +167,11 @@ href="ProductPackage.html#method-i-required_categories">SoftLayer::ProductPackag
 
         <div class="method-description">
         
-        <p><a href="../String.html">String</a>, short name of the data center that
-will house the new virtual server (e.g. “dal05” or “sea01”) A list of valid
-data centers can be found in <a
-href="ProductPackage.html#method-i-datacenter_options">SoftLayer::ProductPackage#datacenter_options</a></p>
+        <p>An instance of <a href="Datacenter.html">SoftLayer::Datacenter</a>. The
+server will be provisioned in this data center. The set of datacenters
+available is determined by the package and may be obtained from the <a
+href="ProductPackage.html">SoftLayer::ProductPackage</a> object using the
+datacenter_options method.</p>
         
         </div>
       </div>
@@ -209,9 +212,10 @@ hostname of sldn.softlayer.com).</p>
 
         <div class="method-description">
         
-        <p>The product package identifying the base configuration for the server. a
-list of Bare Metal <a href="Server.html">Server</a> product packages is
-returned by <a
+        <p>The product package object (an instance of <a
+href="ProductPackage.html">SoftLayer::ProductPackage</a>) identifying the
+base configuration for the server. A list of Bare Metal <a
+href="Server.html">Server</a> product packages is returned by <a
 href="ProductPackage.html#method-c-bare_metal_server_packages">SoftLayer::ProductPackage.bare_metal_server_packages</a></p>
         
         </div>
@@ -227,7 +231,7 @@ href="ProductPackage.html#method-c-bare_metal_server_packages">SoftLayer::Produc
         
         <p>The URI of a script to execute on the server after it has been provisioned.
 This may be any object which accepts the to_s message. The resulting string
-will be passed to <a href="../SoftLayer.html">SoftLayer</a> API.</p>
+will be passed to SoftLayer API.</p>
         
         </div>
       </div>
@@ -244,7 +248,7 @@ will be passed to <a href="../SoftLayer.html">SoftLayer</a> API.</p>
 To obtain a list of existing SSH keys, call getSshKeys on the
 SoftLayer_Account service:</p>
 
-<pre>client[&#39;Account&#39;].getSshKeys()</pre>
+<pre>client[:Account].getSshKeys()</pre>
         
         </div>
       </div>
@@ -280,7 +284,7 @@ by passing in the package that you are ordering from.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder_Package.rb, line 86</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder_Package.rb, line 71</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">package</span>, <span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-ivar">@softlayer_client</span> = <span class="ruby-identifier">client</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@softlayer_client</span>
@@ -319,9 +323,9 @@ by passing in the package that you are ordering from.</p>
 
         <div class="method-description">
           
-          <p>Submit the order to be executed by the <a
-href="../SoftLayer.html">SoftLayer</a> ordering system. If successful this
-will probably result in additional billing items applied to your account!</p>
+          <p>Submit the order to be executed by the SoftLayer ordering system. If
+successful this will probably result in additional billing items applied to
+your account!</p>
 
 <p>If you add a block to the method call, it will receive the product order
 template before it is sent to the API. You may *<strong>carefully</strong>*
@@ -334,11 +338,11 @@ the order, it will proceed to Sales for authorization.</p>
 
           
           <div class="method-source-code" id="place_order-21-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder_Package.rb, line 121</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder_Package.rb, line 106</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">place_order!</span>
   <span class="ruby-identifier">product_order</span> = <span class="ruby-identifier">hardware_order</span>
   <span class="ruby-identifier">product_order</span> = <span class="ruby-keyword">yield</span> <span class="ruby-identifier">product_order</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
-  <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">&quot;Product_Order&quot;</span>].<span class="ruby-identifier">placeOrder</span>(<span class="ruby-identifier">product_order</span>)
+  <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Product_Order</span>].<span class="ruby-identifier">placeOrder</span>(<span class="ruby-identifier">product_order</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -363,10 +367,9 @@ the order, it will proceed to Sales for authorization.</p>
 
         <div class="method-description">
           
-          <p>Present the order for verification by the <a
-href="../SoftLayer.html">SoftLayer</a> ordering system. The order is
-verified, but not executed. This should not change the billing of your
-account.</p>
+          <p>Present the order for verification by the SoftLayer ordering system. The
+order is verified, but not executed. This should not change the billing of
+your account.</p>
 
 <p>If you add a block to the method call, it will receive the product order
 template before it is sent to the API. You may *<strong>carefully</strong>*
@@ -376,11 +379,11 @@ make changes to the template to provide specialized configuration.</p>
 
           
           <div class="method-source-code" id="verify-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder_Package.rb, line 103</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder_Package.rb, line 88</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">verify</span>
   <span class="ruby-identifier">product_order</span> = <span class="ruby-identifier">hardware_order</span>
   <span class="ruby-identifier">product_order</span> = <span class="ruby-keyword">yield</span> <span class="ruby-identifier">product_order</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
-  <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">&quot;Product_Order&quot;</span>].<span class="ruby-identifier">verifyOrder</span>(<span class="ruby-identifier">product_order</span>)
+  <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Product_Order</span>].<span class="ruby-identifier">verifyOrder</span>(<span class="ruby-identifier">product_order</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -421,19 +424,18 @@ configuration options given.</p>
 
           
           <div class="method-source-code" id="hardware_order-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder_Package.rb, line 132</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServerOrder_Package.rb, line 117</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">hardware_order</span>
   <span class="ruby-identifier">product_order</span> = {
     <span class="ruby-string">&#39;packageId&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@package</span>.<span class="ruby-identifier">id</span>,
     <span class="ruby-string">&#39;useHourlyPricing&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">false</span>,
-    <span class="ruby-string">&#39;hardware&#39;</span> =<span class="ruby-operator">&gt;</span> {
+    <span class="ruby-string">&#39;hardware&#39;</span> =<span class="ruby-operator">&gt;</span> [{
       <span class="ruby-string">&#39;hostname&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@hostname</span>,
       <span class="ruby-string">&#39;domain&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@domain</span>
-    }
+      }]
   }
 
-  <span class="ruby-identifier">product_order</span>[<span class="ruby-string">&#39;location&#39;</span>] = <span class="ruby-ivar">@package</span>.<span class="ruby-identifier">location_id_for_datacenter_name</span>(<span class="ruby-ivar">@datacenter</span>.<span class="ruby-identifier">downcase</span>) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@datacenter</span>
-
+  <span class="ruby-identifier">product_order</span>[<span class="ruby-string">&#39;location&#39;</span>] = <span class="ruby-ivar">@datacenter</span>.<span class="ruby-identifier">id</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@datacenter</span>
   <span class="ruby-identifier">product_order</span>[<span class="ruby-string">&#39;sshKeys&#39;</span>] = [{ <span class="ruby-string">&#39;sshKeyIds&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@ssh_key_ids</span> }] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@ssh_key_ids</span>
   <span class="ruby-identifier">product_order</span>[<span class="ruby-string">&#39;provisionScripts&#39;</span>] = [<span class="ruby-ivar">@provision_script_URI</span>.<span class="ruby-identifier">to_s</span>] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@provision_script_URI</span>
 
@@ -467,7 +469,7 @@ configuration options given.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

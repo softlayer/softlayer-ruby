@@ -268,7 +268,7 @@ immediately</p>
           <div class="method-source-code" id="core_options-source">
             <pre><span class="ruby-comment"># File lib/softlayer/VirtualServerUpgradeOrder.rb, line 79</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">core_options</span>()
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">_item_prices_in_category</span>(<span class="ruby-string">&quot;guest_core&quot;</span>).<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">item_price</span><span class="ruby-operator">|</span> <span class="ruby-identifier">item_price</span>[<span class="ruby-string">'item'</span>][<span class="ruby-string">'capacity'</span>].<span class="ruby-identifier">to_i</span>}.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">uniq</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">_item_prices_in_category</span>(<span class="ruby-string">&quot;guest_core&quot;</span>).<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">item_price</span><span class="ruby-operator">|</span> <span class="ruby-identifier">item_price</span>[<span class="ruby-string">&#39;item&#39;</span>][<span class="ruby-string">&#39;capacity&#39;</span>].<span class="ruby-identifier">to_i</span>}.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">uniq</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -302,7 +302,7 @@ href="VirtualServerUpgradeOrder.html#attribute-i-max_port_speed">#max_port_speed
           <div class="method-source-code" id="max_port_speed_options-source">
             <pre><span class="ruby-comment"># File lib/softlayer/VirtualServerUpgradeOrder.rb, line 91</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">max_port_speed_options</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">_item_prices_in_category</span>(<span class="ruby-string">&quot;port_speed&quot;</span>).<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">item_price</span><span class="ruby-operator">|</span> <span class="ruby-identifier">item_price</span>[<span class="ruby-string">'item'</span>][<span class="ruby-string">'capacity'</span>].<span class="ruby-identifier">to_i</span>}.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">uniq</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">_item_prices_in_category</span>(<span class="ruby-string">&quot;port_speed&quot;</span>).<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">item_price</span><span class="ruby-operator">|</span> <span class="ruby-identifier">item_price</span>[<span class="ruby-string">&#39;item&#39;</span>][<span class="ruby-string">&#39;capacity&#39;</span>].<span class="ruby-identifier">to_i</span>}.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">uniq</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -335,7 +335,7 @@ href="VirtualServerUpgradeOrder.html#attribute-i-max_port_speed">#max_port_speed
           <div class="method-source-code" id="memory_options-source">
             <pre><span class="ruby-comment"># File lib/softlayer/VirtualServerUpgradeOrder.rb, line 85</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">memory_options</span>()
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">_item_prices_in_category</span>(<span class="ruby-string">&quot;ram&quot;</span>).<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">item_price</span><span class="ruby-operator">|</span> <span class="ruby-identifier">item_price</span>[<span class="ruby-string">'item'</span>][<span class="ruby-string">'capacity'</span>].<span class="ruby-identifier">to_i</span>}.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">uniq</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">_item_prices_in_category</span>(<span class="ruby-string">&quot;ram&quot;</span>).<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">item_price</span><span class="ruby-operator">|</span> <span class="ruby-identifier">item_price</span>[<span class="ruby-string">&#39;item&#39;</span>][<span class="ruby-string">&#39;capacity&#39;</span>].<span class="ruby-identifier">to_i</span>}.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">uniq</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -402,8 +402,7 @@ being constructed to that block before the order is sent</p>
 
         <div class="method-description">
           
-          <p>Sends the order represented by this object to <a
-href="../SoftLayer.html">SoftLayer</a> for validation.</p>
+          <p>Sends the order represented by this object to SoftLayer for validation.</p>
 
 <p>If a block is passed to verify, the code will send the order template being
 constructed to the block before the order is actually sent for validation.</p>
@@ -439,7 +438,7 @@ constructed to the block before the order is actually sent for validation.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
