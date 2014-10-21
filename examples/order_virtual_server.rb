@@ -76,7 +76,7 @@ begin
   # SoftLayer ordering system, but a simple change from verify to place_order! would ask
   # the system to provision the server (and charge it to our account)
   begin
-    server_order.verify { |order_template| puts order_template.inspect; order_template; }
+    server_order.verify
     puts "The server order is OK"
   rescue Exception => e
     puts "The server order failed verification :-( -- #{e}"
