@@ -1,3 +1,5 @@
+$LOAD_PATH << File.join(File.dirname(__FILE__), "../lib")
+
 #
 # Copyright (c) 2014 SoftLayer Technologies, Inc. All rights reserved.
 #
@@ -74,7 +76,7 @@ begin
   # SoftLayer ordering system, but a simple change from verify to place_order! would ask
   # the system to provision the server (and charge it to our account)
   begin
-    server_order.verify
+    server_order.verify { |order_template| puts order_template.inspect; order_template; }
     puts "The server order is OK"
   rescue Exception => e
     puts "The server order failed verification :-( -- #{e}"
