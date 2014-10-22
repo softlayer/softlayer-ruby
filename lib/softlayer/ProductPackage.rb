@@ -75,7 +75,7 @@ module SoftLayer
         end
 
         # This call to getCategories is the one that does lots of fancy back-end filtering for us
-        categories_data = softlayer_client[:Product_Package].object_with_id(self.id).getCategories()
+        categories_data = softlayer_client[:Product_Package].object_with_id(self.id).object_mask(@@categories_object_mask).getCategories()
 
         # Run though the categories and for each one that's in our config, create a SoftLayer::ProductItemCategory object.
         # Conveniently the +keys+ of the required_by_category_code gives us a list of the category codes in the configuration
@@ -219,6 +219,11 @@ module SoftLayer
     end
 
     protected
+
+    @@categories_object_mask = "mask[" + [ "groups.prices.capacityRestrictionMaximum",
+                                           "groups.prices.capacityRestrictionMinimum",
+                                           "groups.prices.capacityRestrictionType",
+                                           "groups.prices.requiredCoreCount" ].join(",") + "]"
 
     def self.default_object_mask(root)
       "#{root}[id,name,description,availableLocations.location]"
