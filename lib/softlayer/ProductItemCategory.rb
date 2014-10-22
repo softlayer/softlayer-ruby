@@ -10,21 +10,26 @@ module SoftLayer
   # the product order is the price_id, the rest of the information is provided
   # to make the object friendly to humans who may be searching for the
   # meaning of a given price_id.
-  class ProductConfigurationOption < Struct.new(:price_id, :description, :capacity, :units, :setupFee, :laborFee,
-     :oneTimeFee, :recurringFee, :hourlyRecurringFee)
+  class ProductConfigurationOption < Struct.new(:capacity, :capacityRestrictionMaximum, :capacityRestrictionMinimum,
+     :capacityRestrictionType, :description, :hourlyRecurringFee, :laborFee, :oneTimeFee, :price_id, :recurringFee,
+     :requiredCoreCount, :setupFee, :units)
     # Is it evil, or just incongruous to give methods to a struct?
 
     def initialize(package_item_data, price_item_data)
+      self.capacity    = package_item_data['capacity']
       self.description = package_item_data['description']
-      self.capacity = package_item_data['capacity']
-      self.units = package_item_data['units']
+      self.units       = package_item_data['units']
 
-      self.price_id = price_item_data['id']
-      self.setupFee = price_item_data['setupFee'] ? price_item_data['setupFee'].to_f : 0.0
-      self.laborFee = price_item_data['laborFee'] ? price_item_data['laborFee'].to_f : 0.0
-      self.oneTimeFee = price_item_data['oneTimeFee'] ? price_item_data['oneTimeFee'].to_f : 0.0
-      self.recurringFee = price_item_data['recurringFee'] ? price_item_data['recurringFee'].to_f : 0.0
-      self.hourlyRecurringFee = price_item_data['hourlyRecurringFee'] ? price_item_data['hourlyRecurringFee'].to_f : 0.0
+      self.capacityRestrictionMaximum = price_item_data['capacityRestrictionMaximum'] ? price_item_data['capacityRestrictionMaximum'] : nil
+      self.capacityRestrictionMinimum = price_item_data['capacityRestrictionMinimum'] ? price_item_data['capacityRestrictionMinimum'] : nil
+      self.capacityRestrictionType    = price_item_data['capacityRestrictionType']    ? price_item_data['capacityRestrictionType']    : nil
+      self.hourlyRecurringFee         = price_item_data['hourlyRecurringFee']         ? price_item_data['hourlyRecurringFee'].to_f    : 0.0
+      self.laborFee                   = price_item_data['laborFee']                   ? price_item_data['laborFee'].to_f              : 0.0
+      self.oneTimeFee                 = price_item_data['oneTimeFee']                 ? price_item_data['oneTimeFee'].to_f            : 0.0
+      self.price_id                   = price_item_data['id']
+      self.recurringFee               = price_item_data['recurringFee']               ? price_item_data['recurringFee'].to_f          : 0.0
+      self.requiredCoreCount          = price_item_data['requiredCoreCount']          ? price_item_data['requiredCoreCount']          : nil
+      self.setupFee                   = price_item_data['setupFee']                   ? price_item_data['setupFee'].to_f              : 0.0
     end
 
     # returns true if the configurtion option has no fees associated with it.
