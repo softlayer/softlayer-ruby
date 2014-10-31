@@ -16,34 +16,6 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
-    # The manufacturer, name and version of a piece of software.
-    sl_dynamic_attr :description do |resource|
-      resource.should_update? do
-        #only retrieved once per instance
-        @description == nil
-      end
-
-      resource.to_update do
-        description = self.service.object_mask("mask[softwareDescription.longDescription]").getObject
-        description['softwareDescription']['longDescription']
-      end
-    end
-
-    ##
-    # The name of this specific piece of software. 
-    sl_dynamic_attr :name do |resource|
-      resource.should_update? do
-        #only retrieved once per instance
-        @name == nil
-      end
-
-      resource.to_update do
-        name = self.service.object_mask("mask[softwareDescription.name]").getObject
-        name['softwareDescription']['name']
-      end
-    end
-
-    ##
     # Username/Password pairs used for access to this Software Installation.
     sl_dynamic_attr :passwords do |resource|
       resource.should_update? do
@@ -52,9 +24,22 @@ module SoftLayer
       end
 
       resource.to_update do
-        passwords = self.service.object_mask("mask[passwords]").getObject['passwords']
-        passwords.collect { |password_data| SoftwarePassword.new(softlayer_client, password_data) }
+        self['passwords'].collect { |password_data| SoftwarePassword.new(softlayer_client, password_data) }
       end
+    end
+
+    ##
+    # The manufacturer, name and version of a piece of software.
+    #
+    def description
+      self['softwareDescription']['longDescription']
+    end
+
+    ##
+    # The name of this specific piece of software. 
+    #
+    def name
+      self['softwareDescription']['name']
     end
 
     ##
@@ -66,8 +51,16 @@ module SoftLayer
 
     protected
 
-    def self.default_object_mask(root)
-      "#{root}[id,hardware.id,passwords,softwareDescription[longDescription,name],virtualGuest.id]"
+    def self.default_object_mask
+      {
+        "mask(SoftLayer_Software_Component)" => [
+                                                 'id',
+                                                 'hardware.id',
+                                                 'passwords',
+                                                 'softwareDescription[longDescription,name]',
+                                                 'virtualGuest.id'
+                                                ]
+      }.to_sl_object_mask
     end
   end
 end #SoftLayer

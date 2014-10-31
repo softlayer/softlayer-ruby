@@ -52,8 +52,18 @@ module SoftLayer
 
     protected
 
-    def self.default_object_mask(root)
-      "#{root}[createDate,id,modifyDate,notes,password,port,username]"
+    def self.default_object_mask
+      {
+        "mask(SoftLayer_Software_Component_Password)" => [
+                                                          'createDate',
+                                                          'id',
+                                                          'modifyDate',
+                                                          'notes',
+                                                          'password',
+                                                          'port',
+                                                          'username'
+                                                         ]
+      }.to_sl_object_mask
     end
   end
 end #SoftLayer

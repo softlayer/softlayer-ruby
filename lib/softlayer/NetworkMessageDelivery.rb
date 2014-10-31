@@ -38,44 +38,23 @@ module SoftLayer
 
     ##
     # The message delivery type description of a network message delivery account.
-    sl_dynamic_attr :description do |resource|
-      resource.should_update? do
-        #only retrieved once per instance
-        @description == nil
-      end
-
-      resource.to_update do
-        description = self.service.object_mask("mask[type.description]").getObject['type']
-        description['description']
-      end
+    #
+    def description
+      self['type']['description']
     end
 
     ##
     # The message delivery type name of a network message delivery account.
-    sl_dynamic_attr :name do |resource|
-      resource.should_update? do
-        #only retrieved once per instance
-        @name == nil
-      end
-
-      resource.to_update do
-        name = self.service.object_mask("mask[type.name]").getObject['type']
-        name['name']
-      end
+    #
+    def name
+      self['type']['name']
     end
 
     ##
     # The vendor name for a network message delivery account.
-    sl_dynamic_attr :vendor do |resource|
-      resource.should_update? do
-        #only retrieved once per instance
-        @vendor == nil
-      end
-
-      resource.to_update do
-        vendor = self.service.object_mask("mask[vendor.name]").getObject['vendor']
-        vendor['name']
-      end
+    #
+    def vendor
+      self['vendor']['name']
     end
 
     ##
@@ -88,8 +67,18 @@ module SoftLayer
 
     protected
 
-    def self.default_object_mask(root)
-      "#{root}[createDate,id,modifyDate,password,username,type[description,name],vendor.name]"
+    def self.default_object_mask
+      {
+        "mask(SoftLayer_Network_Message_Delivery)" => [
+                                                       'createDate',
+                                                       'id',
+                                                       'modifyDate',
+                                                       'password',
+                                                       'username',
+                                                       'type[description,name]',
+                                                       'vendor.name'
+                                                      ]
+      }.to_sl_object_mask
     end
   end
 end #SoftLayer
