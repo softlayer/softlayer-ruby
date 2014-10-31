@@ -33,9 +33,45 @@ module SoftLayer
     sl_attr :password
 
     ##
-    # :attr_reader:
     # An optional note for identifying the external binding.
-    sl_attr :note
+    sl_dynamic_attr :note do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @note == nil
+      end
+
+      resource.to_update do
+        self.service.getNote
+      end
+    end
+
+    ##
+    # The user friendly name of a type of external authentication binding.
+    sl_dynamic_attr :type do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @type == nil
+      end
+
+      resource.to_update do
+        type = self.service.getType
+        type['name']
+      end
+    end
+
+    ##
+    # The user friendly name of an external binding vendor.
+    sl_dynamic_attr :vendor do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @vendor == nil
+      end
+
+      resource.to_update do
+        vendor = self.service.getVendor
+        vendor['name']
+      end
+    end
 
     ##
     # Returns the service for interacting with this user customer extnerla binding
@@ -43,20 +79,6 @@ module SoftLayer
     #
     def service
       softlayer_client[:User_Customer_External_Binding].object_with_id(self.id)
-    end
-
-    ##
-    # The user friendly name of a type of external authentication binding.
-    #
-    def type
-      self['type']['name']
-    end
-
-    ##
-    # The user friendly name of an external binding vendor.
-    #
-    def vendor
-      self['vendor']['name']
     end
 
     protected
@@ -67,10 +89,7 @@ module SoftLayer
                                                              'active',
                                                              'createDate',
                                                              'id',
-                                                             'password',
-                                                             'note',
-                                                             'type.name',
-                                                             'vendor.name'
+                                                             'password'
                                                             ]
       }.to_sl_object_mask
     end

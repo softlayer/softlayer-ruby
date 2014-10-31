@@ -16,6 +16,44 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
+    # :attr_reader:
+    # The manufacturer code that is needed to activate a license.
+    sl_attr :manufacturer_activation_code, 'manufacturerActivationCode'
+
+    ##
+    # :attr_reader:
+    # A license key for this specific installation of software, if it is needed.
+    sl_attr :manufacturer_license_key,     'manufacturerLicenseInstance'
+
+    ##
+    # The manufacturer, name and version of a piece of software.
+    sl_dynamic_attr :description do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @description == nil
+      end
+
+      resource.to_update do
+        description = self.service.getSoftwareDescription
+        description['longDescription']
+      end
+    end
+
+    ##
+    # The name of this specific piece of software. 
+    sl_dynamic_attr :name do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @name == nil
+      end
+
+      resource.to_update do
+        description = self.service.getSoftwareDescription
+        description['name']
+      end
+    end
+
+    ##
     # Username/Password pairs used for access to this Software Installation.
     sl_dynamic_attr :passwords do |resource|
       resource.should_update? do
@@ -24,22 +62,9 @@ module SoftLayer
       end
 
       resource.to_update do
-        self['passwords'].collect { |password_data| SoftwarePassword.new(softlayer_client, password_data) }
+        passwords = self.service.getPasswords
+        passwords.collect { |password_data| SoftwarePassword.new(softlayer_client, password_data) }
       end
-    end
-
-    ##
-    # The manufacturer, name and version of a piece of software.
-    #
-    def description
-      self['softwareDescription']['longDescription']
-    end
-
-    ##
-    # The name of this specific piece of software. 
-    #
-    def name
-      self['softwareDescription']['name']
     end
 
     ##
@@ -55,10 +80,8 @@ module SoftLayer
       {
         "mask(SoftLayer_Software_Component)" => [
                                                  'id',
-                                                 'hardware.id',
-                                                 'passwords',
-                                                 'softwareDescription[longDescription,name]',
-                                                 'virtualGuest.id'
+                                                 'manufacturerActivationCode',
+                                                 'manufacturerLicenseInstance'
                                                 ]
       }.to_sl_object_mask
     end

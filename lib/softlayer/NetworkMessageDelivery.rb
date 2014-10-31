@@ -38,23 +38,44 @@ module SoftLayer
 
     ##
     # The message delivery type description of a network message delivery account.
-    #
-    def description
-      self['type']['description']
+    sl_dynamic_attr :description do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @description == nil
+      end
+
+      resource.to_update do
+        type = self.service.getType
+        type['description']
+      end
     end
 
     ##
     # The message delivery type name of a network message delivery account.
-    #
-    def name
-      self['type']['name']
+    sl_dynamic_attr :name do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @name == nil
+      end
+
+      resource.to_update do
+        type = self.service.getType
+        type['name']
+      end
     end
 
     ##
     # The vendor name for a network message delivery account.
-    #
-    def vendor
-      self['vendor']['name']
+    sl_dynamic_attr :vendor do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @vendor == nil
+      end
+
+      resource.to_update do
+        vendor = self.service.getVendor
+        vendor['name']
+      end
     end
 
     ##
@@ -74,9 +95,7 @@ module SoftLayer
                                                        'id',
                                                        'modifyDate',
                                                        'password',
-                                                       'username',
-                                                       'type[description,name]',
-                                                       'vendor.name'
+                                                       'username'
                                                       ]
       }.to_sl_object_mask
     end

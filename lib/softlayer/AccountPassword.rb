@@ -32,9 +32,16 @@ module SoftLayer
 
     ##
     # A description of the use for the account username/password combination.
-    #
-    def description
-      self['type']['description']
+    sl_dynamic_attr :description do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @description == nil
+      end
+
+      resource.to_update do
+        type = self.service.getType
+        type['description']
+      end
     end
 
     ##
@@ -49,12 +56,9 @@ module SoftLayer
     def self.default_object_mask
       {
         "mask(SoftLayer_Account_Password)" => [
-                                               'accountId',
                                                'id',
                                                'notes',
                                                'password',
-                                               'type.description',
-                                               'typeId',
                                                'username'
                                               ]
       }.to_sl_object_mask
