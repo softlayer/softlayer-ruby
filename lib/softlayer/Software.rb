@@ -68,10 +68,75 @@ module SoftLayer
     end
 
     ##
+    # Adds specified username/password combination to current software instance
+    #
+    def add_user_password(username, password, options = {})
+      raise ArgumentError, "The new password cannot be nil"   unless password
+      raise ArgumentError, "The new username cannot be nil"   unless username
+      raise ArgumentError, "The new password cannot be empty" if password.empty?
+      raise ArgumentError, "The new username cannot be empty" if username.empty?
+
+      raise Exception, "Cannot add username password, a Software Password already exists for the provided username" if self.has_user_password?(username.to_s)
+
+      add_user_pw_template = {
+        'softwareId' => self['id'].to_i,
+        'password'   => password.to_s,
+        'username'   => username.to_s
+      }
+
+      add_user_pw_template['notes'] = options['notes'].to_s if options.has_key?('notes')
+      add_user_pw_template['port']  = options['port'].to_i  if options.has_key?('port')
+
+      softlayer_client[:Software_Component_Password].createObject(add_user_pw_template)
+
+      @passwords = nil
+    end
+
+    ##
+    # Deletes specified username password from current software instance
+    #
+    #
+    # This is a final action and cannot be undone.
+    # the transaction will proceed immediately.
+    #
+    # Call it with extreme care!
+    def delete_user_password!(username)
+      user_password = self.passwords.select { |sw_pw| sw_pw.username == username.to_s }
+
+      unless user_password.empty?
+        softlayer_client[:Software_Component_Password].object_with_id(user_password.first['id']).deleteObject
+        @passwords = nil
+      end
+    end
+
+    ##
+    # Returns whether or not one of the Software Passowrd instances pertains to the specified user
+    #
+    def has_user_password?(username)
+      self.passwords.map { |sw_pw| sw_pw.username }.include?(username)
+    end
+
+    ##
     # Returns the service for interacting with this software component through the network API
     #
     def service
       softlayer_client[:Software_Component].object_with_id(self.id)
+    end
+
+    ##
+    # Make an API request to SoftLayer and return the latest properties hash
+    # for this object.
+    #
+    def softlayer_properties(object_mask = nil)
+      my_service = self.service
+
+      if(object_mask)
+        my_service = my_service.object_mask(object_mask)
+      else
+        my_service = my_service.object_mask(self.class.default_object_mask)
+      end
+
+      my_service.getObject()
     end
 
     protected
