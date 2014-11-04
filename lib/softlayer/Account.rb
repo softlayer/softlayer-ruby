@@ -94,7 +94,21 @@ module SoftLayer
     end
 
     ##
-    # Retrieves an account's network message delivery acounts.
+    # Retrieve an account's image templates
+    sl_dynamic_attr :image_templates do |image_templates|
+      image_templates.should_update? do
+        @last_image_template_update ||= Time.at(0)
+        (Time.now - @last_image_template_update) > 5 * 60  # update every 5 minutes
+      end
+
+      image_templates.to_update do
+        @last_image_template_update ||= Time.now
+        ImageTemplate.find_private_templates(:client => self.softlayer_client)
+      end
+    end
+
+    ##
+    # Retrieve an account's network message delivery acounts.
     sl_dynamic_attr :network_message_delivery_accounts do |net_msg_deliv_accts|
       net_msg_deliv_accts.should_update? do
         @network_message_delivery_accounts == nil
@@ -103,6 +117,21 @@ module SoftLayer
       net_msg_deliv_accts.to_update do
         network_message_delivery_accounts = self.service.object_mask(NetworkMessageDelivery.default_object_mask).getNetworkMessageDeliveryAccounts
         network_message_delivery_accounts.collect { |net_msg_deliv_acct| NetworkMessageDelivery.new(softlayer_client, net_msg_deliv_acct) unless net_msg_deliv_acct.empty? }.compact
+      end
+    end
+
+    ##
+    # Retrieve an account's open tickets
+    sl_dynamic_attr :open_tickets do |open_tickets|
+      open_tickets.should_update? do
+        @last_open_tickets_update ||= Time.at(0)
+        (Time.now - @last_open_tickets_update) > 5 * 60  # update every 5 minutes
+      end
+
+      open_tickets.to_update do
+        @last_open_tickets_update ||= Time.now
+        open_tickets_data = self.service.object_mask(SoftLayer::Ticket.default_object_mask).getOpenTickets
+        open_tickets_data.collect { |ticket_data| SoftLayer::Ticket.new(self.softlayer_client, ticket_data) }
       end
     end
 
@@ -134,31 +163,6 @@ module SoftLayer
       virtual_servers.to_update do
         @last_virtual_server_update = Time.now
         VirtualServer.find_servers(:client => self.softlayer_client)
-      end
-    end
-
-    sl_dynamic_attr :image_templates do |image_templates|
-      image_templates.should_update? do
-        @last_image_template_update ||= Time.at(0)
-        (Time.now - @last_image_template_update) > 5 * 60  # update every 5 minutes
-      end
-
-      image_templates.to_update do
-        @last_image_template_update ||= Time.now
-        ImageTemplate.find_private_templates(:client => self.softlayer_client)
-      end
-    end
-
-    sl_dynamic_attr :open_tickets do |open_tickets|
-      open_tickets.should_update? do
-        @last_open_tickets_update ||= Time.at(0)
-        (Time.now - @last_open_tickets_update) > 5 * 60  # update every 5 minutes
-      end
-
-      open_tickets.to_update do
-        @last_open_tickets_update ||= Time.now
-        open_tickets_data = self.service.object_mask(SoftLayer::Ticket.default_object_mask).getOpenTickets
-        open_tickets_data.collect { |ticket_data| SoftLayer::Ticket.new(self.softlayer_client, ticket_data) }
       end
     end
 
