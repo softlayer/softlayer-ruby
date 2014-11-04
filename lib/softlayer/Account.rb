@@ -80,6 +80,46 @@ module SoftLayer
     end
 
     ##
+    # Retrieve an account's master EVault user. This is only used when an account
+    # has an EVault service.
+    sl_dynamic_attr :evault_master_users do |evault_users|
+      evault_users.should_update? do
+        @evault_master_users == nil
+      end
+
+      evault_users.to_update do
+        evault_user_passwords = self.service.object_mask(AccountPassword.default_object_mask).getEvaultMasterUsers
+        evault_user_passwords.collect { |evault_user_password| AccountPassword.new(softlayer_client, evault_user_password) unless evault_user_password.empty? }.compact
+      end
+    end
+
+    ##
+    # Retrieves an account's network message delivery acounts.
+    sl_dynamic_attr :network_message_delivery_accounts do |net_msg_deliv_accts|
+      net_msg_deliv_accts.should_update? do
+        @network_message_delivery_accounts == nil
+      end
+
+      net_msg_deliv_accts.to_update do
+        network_message_delivery_accounts = self.service.object_mask(NetworkMessageDelivery.default_object_mask).getNetworkMessageDeliveryAccounts
+        network_message_delivery_accounts.collect { |net_msg_deliv_acct| NetworkMessageDelivery.new(softlayer_client, net_msg_deliv_acct) unless net_msg_deliv_acct.empty? }.compact
+      end
+    end
+
+    ##
+    # Retrieve an account's portal users.
+    sl_dynamic_attr :users do |users|
+      users.should_update? do
+        @users == nil
+      end
+
+      users.to_update do
+        account_users = self.service.object_mask(UserCustomer.default_object_mask).getUsers
+        account_users.collect { |account_user| UserCustomer.new(softlayer_client, account_user) unless account_user.empty? }.compact
+      end
+    end
+
+    ##
     # The virtual servers (aka. CCIs or Virtual_Guests) associated with the
     # account. Unless you force these to update, they will be refreshed every
     # five minutes.
