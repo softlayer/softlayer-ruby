@@ -45,10 +45,45 @@ module SoftLayer
     end
 
     ##
+    # Updates the notes for the current account password.
+    #
+    def notes=(notes)
+      self.service.editObject({ "notes" => notes.to_s })
+      self.refresh_details()
+    end
+
+    ##
+    # Updates the password for the current account password.
+    #
+    def password=(password)
+      raise ArgumentError, "The new password cannot be nil"   unless password
+      raise ArgumentError, "The new password cannot be empty" if password.empty?
+
+      self.service.editObject({ "password" => password.to_s })
+      self.refresh_details()
+    end
+
+    ##
     # Returns the service for interacting with this account password through the network API
     #
     def service
       softlayer_client[:Account_Password].object_with_id(self.id)
+    end
+
+    ##
+    # Make an API request to SoftLayer and return the latest properties hash
+    # for this object.
+    #
+    def softlayer_properties(object_mask = nil)
+      my_service = self.service
+
+      if(object_mask)
+        my_service = my_service.object_mask(object_mask)
+      else
+        my_service = my_service.object_mask(self.class.default_object_mask)
+      end
+
+      my_service.getObject()
     end
 
     protected
