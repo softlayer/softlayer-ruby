@@ -149,6 +149,21 @@ module SoftLayer
     end
 
     ##
+    # Retrieve an account's virtual disk images
+    sl_dynamic_attr :virtual_disk_images do |virtual_disk_images|
+      virtual_disk_images.should_update? do
+        @last_virtual_disk_images_update ||= Time.at(0)
+        (Time.now - @last_virtual_disk_images_update) > 5 * 60  # update every 5 minutes
+      end
+
+      virtual_disk_images.to_update do
+        @last_virtual_disk_images_update ||= Time.now
+        virtual_disk_images_data = self.service.object_mask(SoftLayer::VirtualDiskImage.default_object_mask).getVirtualDiskImages
+        virtual_disk_images_data.collect { |virtual_disk_image| SoftLayer::VirtualDiskImage.new(softlayer_client, virtual_disk_image) }
+      end
+    end
+
+    ##
     # The virtual servers (aka. CCIs or Virtual_Guests) associated with the
     # account. Unless you force these to update, they will be refreshed every
     # five minutes.
