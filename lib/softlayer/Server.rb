@@ -65,6 +65,20 @@ module SoftLayer
     end
 
     ##
+    # :attr_reader:
+    # All software installed on current server
+    sl_dynamic_attr :software do |software|
+      software.should_update? do
+        @software == nil
+      end
+
+      software.to_update do
+        software_data = self.service.object_mask(Software.default_object_mask).getSoftwareComponents
+        software_data.collect { |sw| Software.new(self.softlayer_client, sw) unless sw.empty? }.compact
+      end
+    end
+
+    ##
     # Construct a server from the given client using the network data found in +network_hash+
     #
     # Most users should not have to call this method directly. Instead you should access the
