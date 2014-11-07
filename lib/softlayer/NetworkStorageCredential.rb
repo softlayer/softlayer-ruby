@@ -50,13 +50,6 @@ module SoftLayer
       self['type']['name']
     end
 
-    ##
-    # Returns the service for interacting with this network storage credential through the network API
-    #
-    def service
-      softlayer_client[:Network_Storage_Credential].object_with_id(self.id)
-    end
-
     protected
 
     def self.default_object_mask
