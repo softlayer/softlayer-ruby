@@ -55,6 +55,13 @@ module SoftLayer
     end
 
     ##
+    # Returns the username/password combinations for remote management accounts
+    #
+    def remote_management_accounts
+      self['remoteManagementAccounts']
+    end
+
+    ##
     # Returns the typical Service used to work with this Server
     # For Bare Metal Servers that is +SoftLayer_Hardware+ though in some special cases
     # you may have to use +SoftLayer_Hardware_Server+ as a type or service.  That
@@ -69,17 +76,18 @@ module SoftLayer
     def self.default_object_mask
       sub_mask = {
         "mask(SoftLayer_Hardware_Server)" => [
-          'bareMetalInstanceFlag',
-          'provisionDate',
-          'hardwareStatus',
-          'memoryCapacity',
-          'processorPhysicalCoreAmount',
-          'networkManagementIpAddress',
-          'networkComponents[id, status, speed, maxSpeed, name, ipmiMacAddress, ipmiIpAddress, macAddress, primaryIpAddress, port, primarySubnet]',
-          'activeTransaction[id, transactionStatus[friendlyName,name]]',
-          'hardwareChassis[id, name]'
-          ]
-        }
+                                              'activeTransaction[id, transactionStatus[friendlyName,name]]',
+                                              'bareMetalInstanceFlag',
+                                              'hardwareChassis[id, name]',
+                                              'hardwareStatus',
+                                              'memoryCapacity',
+                                              'networkComponents[id, maxSpeed, name, ipmiIpAddress, ipmiMacAddress, macAddress, port, primaryIpAddress, primarySubnet, speed, status]',
+                                              'networkManagementIpAddress',
+                                              'processorPhysicalCoreAmount',
+                                              'provisionDate',
+                                              'remoteManagementAccounts[password,username]'
+                                             ]
+      }
 
       super.merge(sub_mask)
     end
