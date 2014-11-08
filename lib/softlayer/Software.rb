@@ -117,6 +117,187 @@ module SoftLayer
     end
 
     ##
+    # Retrieve a list of software from hardware devices.
+    #
+    # The options parameter should contain:
+    #
+    # <b>+:client+</b> - The client used to connect to the API
+    #
+    # If no client is given, then the routine will try to use Client.default_client
+    # If no client can be found the routine will raise an error.
+    #
+    # You may filter the list returned by adding options:
+    # * <b>+:datacenter+</b>    (string) - Include software from hardware matching this datacenter
+    # * <b>+:description+</b>   (string) - Include software that matches this description
+    # * <b>+:domain+</b>        (string) - Include software from hardware matching this domain
+    # * <b>+:hardware_type+</b> (string) - Include software from hardware matching this hardware type
+    # * <b>+:hostname+</b>      (string) - Include software from hardware matching this hostname
+    # * <b>+:manufacturer+</b>  (string) - Include software that matches this manufacturer
+    # * <b>+:name+</b>          (string) - Include software that matches this name
+    #
+    # You may use the following properties to provide hardware or software object filter instances:
+    # * <b>+:hardware_object_filter+</b> (ObjectFilter) - Include software from hardware that matches the criteria of this object filter
+    # * <b>+:software_object_filter+</b> (ObjectFilter) - Include software that matches the criteria of this object filter
+    # * <b>+:software_object_mask+</b>   (string)       - Include software properties that matches the criteria of this object mask
+    #
+    def self.find_software_on_hardware(options_hash = {})
+      softlayer_client = options_hash[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
+      if(options_hash.has_key? :hardware_object_filter)
+        hardware_object_filter = options_hash[:hardware_object_filter]
+        raise "Expected an instance of SoftLayer::ObjectFilter" unless hardware_object_filter.kind_of?(SoftLayer::ObjectFilter)
+      else
+        hardware_object_filter = ObjectFilter.new()
+      end
+
+      if(options_hash.has_key? :software_object_filter)
+        software_object_filter = options_hash[:software_object_filter]
+        raise "Expected an instance of SoftLayer::ObjectFilter" unless software_object_filter.kind_of?(SoftLayer::ObjectFilter)
+      else
+        software_object_filter = ObjectFilter.new()
+      end
+
+      option_to_filter_path = {
+        :hardware => {
+          :datacenter   => "hardware.datacenter.name",
+          :domain       => "hardware.domain",
+          :hostname     => "hardware.hostname"
+        },
+        :software => {
+          :description  => "softwareComponents.softwareDescription.longDescription",
+          :manufacturer => "softwareComponents.softwareDescription.manufacturer",
+          :name         => "softwareComponents.softwareDescription.name"
+        }
+      }
+
+      option_to_filter_path[:hardware].each do |option, filter_path|
+        hardware_object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option]) } if options_hash[option]
+      end
+
+      option_to_filter_path[:software].each do |option, filter_path|
+        software_object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option]) } if options_hash[option]
+      end
+
+      account_service = softlayer_client[:Account]
+      account_service = account_service.object_filter(hardware_object_filter) unless hardware_object_filter.empty?
+      account_service = account_service.object_mask("mask[id]")
+
+      case options_hash[:hardware_type]
+      when :all, nil
+        hardware_data = [
+                         account_service.getBareMetalInstances,
+                         account_service.getHardware,
+                         account_service.getNetworkHardware,
+                         account_service.getRouters
+                        ].flatten.uniq
+      when :bare_metal_instance
+        hardware_data = account_service.getBareMetalInstances
+      when :hardware
+        hardware_data = account_service.getHardware
+      when :network_hardware
+        hardware_data = account_service.getNetworkHardware
+      when :router
+        hardware_data = account_service.getRouters
+      else
+        raise "Expected :all, :bare_metal_instance, :hardware, :network_hardware, or :router for option :hardware_type in #{__method__}"
+      end
+
+      software = hardware_data.collect do |hardware|
+        hardware_service = softlayer_client[:Hardware].object_with_id(hardware['id'])
+        hardware_service = hardware_service.object_filter(software_object_filter) unless software_object_filter.empty?
+        hardware_service = hardware_service.object_mask(Software.default_object_mask)
+        hardware_service = hardware_service.object_mask(options_hash[:software_object_mask]) if options_hash[:software_object_mask]
+
+        software_data = hardware_service.getSoftwareComponents
+        software_data.map { |software| Software.new(softlayer_client, software) unless software.empty? }.compact
+      end
+
+      software.flatten
+    end
+
+    ##
+    # Retrieve a list of software from virtual servers.
+    #
+    # The options parameter should contain:
+    #
+    # <b>+:client+</b> - The client used to connect to the API
+    #
+    # If no client is given, then the routine will try to use Client.default_client
+    # If no client can be found the routine will raise an error.
+    #
+    # You may filter the list returned by adding options:
+    # * <b>+:datacenter+</b>    (string) - Include software from virtual servers matching this datacenter
+    # * <b>+:description+</b>   (string) - Include software that matches this description
+    # * <b>+:domain+</b>        (string) - Include software from virtual servers matching this domain
+    # * <b>+:hostname+</b>      (string) - Include software from virtual servers matching this hostname
+    # * <b>+:manufacturer+</b>  (string) - Include software that matches this manufacturer
+    # * <b>+:name+</b>          (string) - Include software that matches this name
+    #
+    # You may use the following properties to provide virtual server or software object filter instances:
+    # * <b>+:virtual_server_object_filter+</b> (ObjectFilter) - Include software from virtual servers that matches the criteria of this object filter
+    # * <b>+:software_object_filter+</b>       (ObjectFilter) - Include software that matches the criteria of this object filter
+    # * <b>+:software_object_mask+</b>         (string)       - Include software properties that matches the criteria of this object mask
+    #
+    def self.find_software_on_virtual_servers(options_hash = {})
+      softlayer_client = options_hash[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
+      if(options_hash.has_key? :virtual_server_object_filter)
+        virtual_server__object_filter = options_hash[:virtual_server_object_filter]
+        raise "Expected an instance of SoftLayer::ObjectFilter" unless virtual_server_object_filter.kind_of?(SoftLayer::ObjectFilter)
+      else
+        virtual_server_object_filter = ObjectFilter.new()
+      end
+
+      if(options_hash.has_key? :software_object_filter)
+        software_object_filter = options_hash[:software_object_filter]
+        raise "Expected an instance of SoftLayer::ObjectFilter" unless software_object_filter.kind_of?(SoftLayer::ObjectFilter)
+      else
+        software_object_filter = ObjectFilter.new()
+      end
+
+      option_to_filter_path = {
+        :software       => {
+          :description  => "softwareComponents.softwareDescription.longDescription",
+          :manufacturer => "softwareComponents.softwareDescription.manufacturer",
+          :name         => "softwareComponents.softwareDescription.name"
+        },
+        :virtual_server => {
+          :datacenter   => "virtualGuests.datacenter.name",
+          :domain       => "virtualGuests.domain",
+          :hostname     => "virtualGuests.hostname"
+        }
+      }
+
+      option_to_filter_path[:virtual_server].each do |option, filter_path|
+        virtual_server_object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option]) } if options_hash[option]
+      end
+
+      option_to_filter_path[:software].each do |option, filter_path|
+        software_object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option]) } if options_hash[option]
+      end
+
+      account_service = softlayer_client[:Account]
+      account_service = account_service.object_filter(virtual_server_object_filter) unless virtual_server_object_filter.empty?
+      account_service = account_service.object_mask("mask[id]")
+
+      virtual_server_data = account_service.getVirtualGuests
+
+      software = virtual_server_data.collect do |virtual_server|
+        virtual_server_service = softlayer_client[:Virtual_Guest].object_with_id(virtual_server['id'])
+        virtual_server_service = virtual_server_service.object_filter(software_object_filter) unless software_object_filter.empty?
+        virutal_server_service = virtual_server_service.object_mask(Software.default_object_mask)
+        virutal_server_service = virtual_server_service.object_mask(options_hash[:software_object_mask]) if options_hash[:software_object_mask]
+
+        software_data = virtual_server_service.getSoftwareComponents
+        software_data.map { |software| Software.new(softlayer_client, software) unless software.empty? }.compact
+      end
+
+      software.flatten
+    end
+
+    ##
     # Returns the service for interacting with this software component through the network API
     #
     def service
