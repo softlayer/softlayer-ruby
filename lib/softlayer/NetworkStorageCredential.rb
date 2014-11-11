@@ -61,16 +61,13 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # You may filter the list returned by adding options:
-    # * <b>+:hardware+</b>      (Hash)   - Include network storage credentials from network storage matching these hardware properties
-    # * <b>+:nas_type+</b>      (string) - Include network storage credentials from devices of this storage type
-    # * <b>+:username+</b>      (string) - Include network storage credentials with this username only
-    # * <b>+:virtual_server+</b> (Hash)   - Include network storage credentials from network storage matching these virtual_server properties
-    #
-    # You may use the following properties in the above :hardware and :virtual_server filters:
-    # * <b>+:datacenter+</b>    (string) - Include network storage credentials from servers matching this datacenter
-    # * <b>+:domain+</b>        (string) - Include network storage credentials from servers matching this domain
-    # * <b>+:hostname+</b>      (string) - Include network storage credentials from servers matching this hostname
-    # * <b>+:tags+</b>          (Array)  - Include network storage credentials from servers matching these tags
+    # * <b>+:datacenter+</b>                  (string) - Include network storage account passwords from servers matching this datacenter
+    # * <b>+:domain+</b>                      (string) - Include network storage account passwords from servers matching this domain
+    # * <b>+:hostname+</b>                    (string) - Include network storage account passwords from servers matching this hostname
+    # * <b>+:network_storage_server_type+</b> (string) - Include network storage account passwords attached to this server type
+    # * <b>+:network_storage_type+</b>        (string) - Include network storage account passwords from devices of this storage type
+    # * <b>+:tags+</b>                        (Array)  - Include network storage account passwords from servers matching these tags
+    # * <b>+:username+</b>                    (string) - Include network storage account passwords with this username only
     #
     def self.find_network_storage_credentials(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
@@ -90,84 +87,83 @@ module SoftLayer
         network_storage_credential_object_filter = ObjectFilter.new()
       end
 
-      if options_hash.has_key?(:hardware) && options_hash.has_key?(:virtual_server)
-        raise "Expected only one of :hardware or :virtual_server options in #{__method__}"
+      if options_hash.has_key?(:network_storage_server_type) && ! [ :hardware, :virtual_server ].include?(options_hash[:network_storage_server_type])
+        raise "Expected one of :hardware or :virtual_server for :network_storage_server_type option in #{__method__}"
       end
 
-      if options_hash.has_key?(:hardware)
-        raise "Expected an instance of Hash for option :hardware in #{__method__}" unless options_hash[:hardware].kind_of?(Hash)
-      end
-
-      if options_hash.has_key?(:virtual_server)
-        raise "Expected an instance of Hash for option :virtual_server in #{__method__}" unless options_hash[:virtual_server].kind_of?(Hash)
-      end
+      filter_label = {
+        :evault          => "evaultNetworkStorage",
+        :hardware        => "hardware",
+        :hub             => "hubNetworkStorage",
+        :iscsi           => "iscsiNetworkStorage",
+        :lockbox         => "lockboxNetworkStorage",
+        :nas             => "nasNetworkStorage",
+        :network_storage => "networkStorage",
+        :virtual_server  => "virtualGuest"
+      }
 
       option_to_filter_path = {
-        :hardware        => {
-          :datacenter    => "networkStorage.hardware.datacenter.name",
-          :domain        => "networkStorage.hardware.domain",
-          :hostname      => "networkStorage.hardware.hostname"
-        },
-        :network_storage => {
-          :nas_type      => "nasType"
-        },
+        :datacenter                 => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.datacenter.name' ].join        },
+        :domain                     => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.domain' ].join                 },
+        :hostname                   => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.hostname' ].join               },
+        :tags                       => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.tagReferences.tag.name' ].join },
         :network_storage_credential => {
-          :username      => "credentials.username"
-        },
-        :virtual_server  => {
-          :datacenter    => "networkStorage.virtualGuest.datacenter.name",
-          :domain        => "networkStorage.virtualGuest.domain",
-          :hostname      => "networkStorage.virtualGuest.hostname"
+          :username                 => "credentials.username"
         }
       }
 
-      option_to_filter_path[:network_storage].each do |option, filter_path|
-        network_storage_object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option]) } if options_hash[option]
+      if options_hash[:network_storage_type]
+        unless filter_label.select{|label,filter| filter.end_with?("Storage")}.keys.include?(options_hash[:network_storage_type])
+          raise "Expected :evault, :hub, :iscsi, :lockbox, :nas or :network_storage for option :network_storage_type in #{__method__}"
+        end
+      end
+
+      if options_hash[:network_storage_server_type]
+        network_storage_type = options_hash[:network_storage_type] || :network_storage
+
+        [ :datacenter, :domain, :hostname ].each do |option|
+          if options_hash[option]
+            network_storage_object_filter.modify do |filter|
+              filter.accept(option_to_filter_path[option].call(network_storage_type, options_hash[:network_storage_server_type])).when_it is(options_hash[option])
+            end
+          end
+        end
+
+        if options_hash[:tags]
+          network_storage_object_filter.set_criteria_for_key_path(option_to_filter_path[:tags].call(network_storage_type, options_hash[:network_storage_server_type]),
+                                                                  {
+                                                                    'operation' => 'in',
+                                                                    'options' => [{
+                                                                                    'name' => 'data',
+                                                                                    'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
+                                                                                  }]
+                                                                  })
+        end
       end
 
       option_to_filter_path[:network_storage_credential].each do |option, filter_path|
         network_storage_credential_object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option]) } if options_hash[option]
       end
 
-      if options_hash[:hardware]
-        option_to_filter_path[:hardware].each do |option, filter_path|
-          network_storage_object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[:hardware][option]) } if options_hash[:hardware][option]
-        end
-
-        if options_hash[:hardware].has_key?(:tags)
-          network_storage_object_filter.set_criteria_for_key_path("networkStorage.hardware.tagReferences.tag.name",
-                                                                  {
-                                                                    'operation' => 'in',
-                                                                    'options' => [{
-                                                                                    'name' => 'data',
-                                                                                    'value' => options_hash[:hardware][:tags].collect{ |tag_value| tag_value.to_s }
-                                                                                  }]
-                                                                  })
-        end
-      end
-
-      if options_hash[:virtual_server]
-        option_to_filter_path[:virtual_server].each do |option, filter_path|
-          network_storage_object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[:virtual_server][option]) } if options_hash[:virtual_server][option]
-        end
-
-        if options_hash[:virtual_server].has_key?(:tags)
-          network_storage_object_filter.set_criteria_for_key_path("networkStorage.virtualGuest.tagReferences.tag.name",
-                                                                  {
-                                                                    'operation' => 'in',
-                                                                    'options' => [{
-                                                                                    'name' => 'data',
-                                                                                    'value' => options_hash[:virtual_server][:tags].collect{ |tag_value| tag_value.to_s }
-                                                                                  }]
-                                                                  })
-        end
-      end
-
       account_service = softlayer_client[:Account]
       account_service = account_service.object_filter(network_storage_object_filter) unless network_storage_object_filter.empty?
       account_service = account_service.object_mask("mask[id]")
 
-      network_storage_data        = account_service.getNetworkStorage
+      case options_hash[:network_storage_type]
+      when :evault
+        network_storage_data = account_service.getEvaultNetworkStorage
+      when :hub
+        network_storage_data = account_service.getHubNetworkStorage
+      when :iscsi
+        network_storage_data = account_service.getIscsiNetworkStorage
+      when :lockbox
+        network_storage_data = account_service.getLockboxNetworkStorage
+      when :nas
+        network_storage_data = account_service.getNasNetworkStorage
+      when :network_storage, nil
+        network_storage_data = account_service.getNetworkStorage
+      end
+
       network_storage_credentials = network_storage_data.collect do |network_storage|
         network_storage_service = softlayer_client[:Network_Storage].object_with_id(network_storage['id'])
         network_storage_service = network_storage_service.object_filter(network_storage_credential_object_filter) unless network_storage_credential_object_filter.empty?
