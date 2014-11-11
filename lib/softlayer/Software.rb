@@ -158,21 +158,46 @@ module SoftLayer
         software_object_filter = ObjectFilter.new()
       end
 
+      filter_label = {
+        :bare_metal_instance => "bareMetalInstances",
+        :hardware            => "hardware",
+        :network_hardware    => "networkHardware",
+        :router              => "routers"
+      }
+
       option_to_filter_path = {
-        :hardware => {
-          :datacenter   => "hardware.datacenter.name",
-          :domain       => "hardware.domain",
-          :hostname     => "hardware.hostname"
-        },
-        :software => {
+        :datacenter     => lambda { |hardware_type| return [ filter_label[hardware_type], '.datacenter.name' ].join        },
+        :domain         => lambda { |hardware_type| return [ filter_label[hardware_type], '.domain' ].join                 },
+        :hostname       => lambda { |hardware_type| return [ filter_label[hardware_type], '.hostname' ].join               },
+        :tags           => lambda { |hardware_type| return [ filter_label[hardware_type], '.tagReferences.tag.name' ].join },
+        :software       => {
           :description  => "softwareComponents.softwareDescription.longDescription",
           :manufacturer => "softwareComponents.softwareDescription.manufacturer",
           :name         => "softwareComponents.softwareDescription.name"
         }
       }
 
-      option_to_filter_path[:hardware].each do |option, filter_path|
-        hardware_object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option]) } if options_hash[option]
+      if options_hash[:hardware_type]
+        unless filter_label.keys.include?(options_hash[:hardware_type])
+          raise "Expected :bare_metal_instance, :hardware, :network_hardware, or :router for option :hardware_type in #{__method__}"
+        end
+      end
+
+      [ :datacenter, :domain, :hostname ].each do |option|
+        if options_hash[option]
+          hardware_object_filter.modify { |filter| filter.accept(option_to_filter_path[option].call(options_hash[:hardware_type] || :hardware)).when_it is(options_hash[option]) }
+        end
+      end
+
+      if options_hash[:tags]
+        hardware_object_filter.set_criteria_for_key_path(option_to_filter_path[:tags].call(options_hash[:hardware_type] || :hardware),
+                                                         {
+                                                           'operation' => 'in',
+                                                           'options' => [{
+                                                                           'name' => 'data',
+                                                                           'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
+                                                                         }]
+                                                         })
       end
 
       option_to_filter_path[:software].each do |option, filter_path|
@@ -184,23 +209,14 @@ module SoftLayer
       account_service = account_service.object_mask("mask[id]")
 
       case options_hash[:hardware_type]
-      when :all, nil
-        hardware_data = [
-                         account_service.getBareMetalInstances,
-                         account_service.getHardware,
-                         account_service.getNetworkHardware,
-                         account_service.getRouters
-                        ].flatten.uniq
       when :bare_metal_instance
         hardware_data = account_service.getBareMetalInstances
-      when :hardware
+      when :hardware, nil
         hardware_data = account_service.getHardware
       when :network_hardware
         hardware_data = account_service.getNetworkHardware
       when :router
         hardware_data = account_service.getRouters
-      else
-        raise "Expected :all, :bare_metal_instance, :hardware, :network_hardware, or :router for option :hardware_type in #{__method__}"
       end
 
       software = hardware_data.collect do |hardware|
