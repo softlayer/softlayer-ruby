@@ -168,7 +168,7 @@ module SoftLayer
         network_storage_service = softlayer_client[:Network_Storage].object_with_id(network_storage['id'])
         network_storage_service = network_storage_service.object_filter(network_storage_credential_object_filter) unless network_storage_credential_object_filter.empty?
         network_storage_service = network_storage_service.object_mask(NetworkStorageCredential.default_object_mask)
-        network_storage_service = network_storage_service.object_mask(network_storage_credential_object_mask) if options_hash[:network_storage_credential_object_mask]
+        network_storage_service = network_storage_service.object_mask(options_hash[:network_storage_credential_object_mask]) if options_hash[:network_storage_credential_object_mask]
 
         network_storage_credentials_data = network_storage_service.getCredentials
         network_storage_credentials_data.map { |credential| NetworkStorageCredential.new(softlayer_client, credential) unless credential.empty? }.compact
