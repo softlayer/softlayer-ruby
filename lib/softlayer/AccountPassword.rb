@@ -181,10 +181,10 @@ module SoftLayer
         network_storage_service = softlayer_client[:Network_Storage].object_with_id(network_storage['id'])
         network_storage_service = network_storage_service.object_filter(account_password_object_filter) unless account_password_object_filter.empty?
         network_storage_service = network_storage_service.object_mask(AccountPassword.default_object_mask)
-        network_storage_service = network_storage_service.object_mask(account_password_object_mask) if options_hash[:account_password_object_mask]
+        network_storage_service = network_storage_service.object_mask(options_hash[:account_password_object_mask]) if options_hash[:account_password_object_mask]
 
         account_password_data = network_storage_service.getAccountPassword
-        account_password_data = AccountPassword.new(softlayer_client, account_password_data) unless account_password_data.empty?
+        AccountPassword.new(softlayer_client, account_password_data) unless account_password_data.empty?
       end
 
       account_passwords.compact
@@ -308,10 +308,10 @@ module SoftLayer
         network_storage_service = softlayer_client[:Network_Storage].object_with_id(network_storage['id'])
         network_storage_service = network_storage_service.object_filter(webcc_password_object_filter) unless webcc_password_object_filter.empty?
         network_storage_service = network_storage_service.object_mask(AccountPassword.default_object_mask)
-        network_storage_service = network_storage_service.object_mask(webcc_password_object_mask) if options_hash[:webcc_password_object_mask]
+        network_storage_service = network_storage_service.object_mask(options_hash[:webcc_password_object_mask]) if options_hash[:webcc_password_object_mask]
 
         webcc_password_data = network_storage_service.getWebccAccount
-        webcc_password_data = AccountPassword.new(softlayer_client, webcc_password_data) unless webcc_password_data.empty?
+        AccountPassword.new(softlayer_client, webcc_password_data) unless webcc_password_data.empty?
       end
 
       webcc_passwords.compact
