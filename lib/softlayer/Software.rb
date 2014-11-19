@@ -134,6 +134,7 @@ module SoftLayer
     # * <b>+:hostname+</b>      (string) - Include software from hardware matching this hostname
     # * <b>+:manufacturer+</b>  (string) - Include software that matches this manufacturer
     # * <b>+:name+</b>          (string) - Include software that matches this name
+    # * <b>+:username+</b>      (string) - Include software that has software password matching this username
     #
     # You may use the following properties to provide hardware or software object filter instances:
     # * <b>+:hardware_object_filter+</b> (ObjectFilter) - Include software from hardware that matches the criteria of this object filter
@@ -173,7 +174,8 @@ module SoftLayer
         :software       => {
           :description  => "softwareComponents.softwareDescription.longDescription",
           :manufacturer => "softwareComponents.softwareDescription.manufacturer",
-          :name         => "softwareComponents.softwareDescription.name"
+          :name         => "softwareComponents.softwareDescription.name",
+          :username     => "softwareComponents.passwords.username"
         }
       }
 
@@ -249,6 +251,7 @@ module SoftLayer
     # * <b>+:hostname+</b>      (string) - Include software from virtual servers matching this hostname
     # * <b>+:manufacturer+</b>  (string) - Include software that matches this manufacturer
     # * <b>+:name+</b>          (string) - Include software that matches this name
+    # * <b>+:username+</b>      (string) - Include software that has software password matching this username
     #
     # You may use the following properties to provide virtual server or software object filter instances:
     # * <b>+:virtual_server_object_filter+</b> (ObjectFilter) - Include software from virtual servers that matches the criteria of this object filter
@@ -260,7 +263,7 @@ module SoftLayer
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
       if(options_hash.has_key? :virtual_server_object_filter)
-        virtual_server__object_filter = options_hash[:virtual_server_object_filter]
+        virtual_server_object_filter = options_hash[:virtual_server_object_filter]
         raise "Expected an instance of SoftLayer::ObjectFilter" unless virtual_server_object_filter.kind_of?(SoftLayer::ObjectFilter)
       else
         virtual_server_object_filter = ObjectFilter.new()
@@ -277,16 +280,30 @@ module SoftLayer
         :software       => {
           :description  => "softwareComponents.softwareDescription.longDescription",
           :manufacturer => "softwareComponents.softwareDescription.manufacturer",
-          :name         => "softwareComponents.softwareDescription.name"
+          :name         => "softwareComponents.softwareDescription.name",
+          :username     => "softwareComponents.passwords.username"
         },
         :virtual_server => {
           :datacenter   => "virtualGuests.datacenter.name",
           :domain       => "virtualGuests.domain",
-          :hostname     => "virtualGuests.hostname"
+          :hostname     => "virtualGuests.hostname",
+          :tags         => "virtualGuests.tagReferences.tag.name"
         }
       }
 
+      if options_hash[:tags]
+        virtual_server_object_filter.set_criteria_for_key_path(option_to_filter_path[:virtual_server][:tags],
+                                                               {
+                                                                 'operation' => 'in',
+                                                                 'options' => [{
+                                                                                 'name' => 'data',
+                                                                                 'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
+                                                                               }]
+                                                               })
+      end
+
       option_to_filter_path[:virtual_server].each do |option, filter_path|
+        next if option == :tags
         virtual_server_object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option]) } if options_hash[option]
       end
 
