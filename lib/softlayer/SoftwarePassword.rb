@@ -546,6 +546,31 @@ module SoftLayer
     end
 
     ##
+    # Update the passwords for a list of software passwords
+    #
+    # The options parameter should contain:
+    #
+    # <b>+:client+</b> - The client used to connect to the API
+    #
+    # If no client is given, then the routine will try to use Client.default_client
+    # If no client can be found the routine will raise an error.
+    #
+    def self.update_passwords(passwords, password, options_hash = {})
+      softlayer_client = options_hash[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
+      raise ArgumentError, "The new password cannot be nil"   unless password
+      raise ArgumentError, "The new password cannot be empty" if password.empty?
+
+      if ! passwords.kind_of?(Array) || ! passwords.select { |password| ! password.kind_of?(SoftLayer::SoftwarePassword) }.empty?
+        raise ArgumentError, "Expected an array of SoftLayer::SoftwarePassword instances"
+      end
+
+      software_password_service = softlayer_client[:Software_Component_Password]
+      software_password_service.editObjects(passwords.map { |pw| { 'id' => pw['id'], 'password' => password.to_s } })
+    end
+
+    ##
     # Returns the service for interacting with this software component password through the network API
     #
     def service
