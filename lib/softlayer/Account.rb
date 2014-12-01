@@ -121,6 +121,19 @@ module SoftLayer
     end
 
     ##
+    # Retrieve an account's network storage groups.
+    sl_dynamic_attr :network_storage_groups do |net_stor_groups|
+      net_stor_groups.should_update? do
+        @network_storage_groups == nil
+      end
+
+      net_stor_groups.to_update do
+        network_storage_groups = self.service.object_mask(NetworkStorageGroup.default_object_mask).getNetworkStorageGroups
+        network_storage_groups.collect { |net_stor_group| NetworkStorageGroup.new(softlayer_client, net_stor_group) unless net_stor_group.empty? }.compact
+      end
+    end
+
+    ##
     # Retrieve an account's open tickets
     sl_dynamic_attr :open_tickets do |open_tickets|
       open_tickets.should_update? do
