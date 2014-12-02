@@ -320,8 +320,8 @@ module SoftLayer
       software = virtual_server_data.collect do |virtual_server|
         virtual_server_service = softlayer_client[:Virtual_Guest].object_with_id(virtual_server['id'])
         virtual_server_service = virtual_server_service.object_filter(software_object_filter) unless software_object_filter.empty?
-        virutal_server_service = virtual_server_service.object_mask(Software.default_object_mask)
-        virutal_server_service = virtual_server_service.object_mask(options_hash[:software_object_mask]) if options_hash[:software_object_mask]
+        virtual_server_service = virtual_server_service.object_mask(Software.default_object_mask)
+        virtual_server_service = virtual_server_service.object_mask(options_hash[:software_object_mask]) if options_hash[:software_object_mask]
 
         software_data = virtual_server_service.getSoftwareComponents
         software_data.map { |software| Software.new(softlayer_client, software) unless software.empty? }.compact
