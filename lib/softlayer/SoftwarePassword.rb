@@ -526,7 +526,7 @@ module SoftLayer
       software_passwords = virtual_server_data.collect do |virtual_server|
         virtual_server_service = softlayer_client[:Virtual_Guest].object_with_id(virtual_server['id'])
         virtual_server_service = virtual_server_service.object_filter(software_object_filter) unless software_object_filter.empty?
-        virutal_server_service = virtual_server_service.object_mask("mask[id]")
+        virtual_server_service = virtual_server_service.object_mask("mask[id]")
 
         software_data          = virtual_server_service.getSoftwareComponents
         software_data.collect do |software| 
