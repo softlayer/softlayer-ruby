@@ -95,7 +95,12 @@ module SoftLayer
 						result[:username] = softlayer_section['username'] if softlayer_section['username']
 						result[:endpoint_url] = softlayer_section['endpoint_url'] if softlayer_section['endpoint_url']
 						result[:api_key] = softlayer_section['api_key'] if softlayer_section['api_key']
-						result[:timeout] = softlayer_section['timeout'] if softlayer_section['timeout']
+
+            begin
+						  result[:timeout] = Integer(softlayer_section['timeout']) if softlayer_section['timeout']
+            rescue => integer_parse_exception
+              $stderr.puts "Expected the value of the timeout configuration property, '#{result[:timeout]}', to be parseable as an integer"
+            end
 					end
 				end
 			end
