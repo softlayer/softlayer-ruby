@@ -1,0 +1,159 @@
+module SoftLayer
+  ##
+  # Each SoftLayer NetworkStorageGroup instance provides information about
+  # a storage product group and hosts allowed access.
+  #
+  # This class roughly corresponds to the entity SoftLayer_Network_Storage_Group
+  # in the API.
+  #
+  class NetworkStorageGroup < ModelBase
+    include ::SoftLayer::DynamicAttribute
+
+    ##
+    # :attr_reader:
+    # The friendly name of this group
+    sl_attr :alias
+
+    ##
+    # :attr_reader:
+    # The date this group was created.
+    sl_attr :created, 'createDate'
+
+    ##
+    # :attr_reader:
+    # The date this group was modified.
+    sl_attr :modified, 'modifyDate'
+
+    ##
+    # The SoftLayer_Account which owns this group.
+    sl_dynamic_attr :account do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @account == nil
+      end
+
+      resource.to_update do
+        account = self.service.getAccount
+        Account.new(softlayer_client, account) unless account.empty?
+      end
+    end
+
+    ##
+    # The allowed hosts list for this group.
+    sl_dynamic_attr :allowed_hosts do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @allowed_hosts == nil
+      end
+
+      resource.to_update do
+        allowed_hosts = self.service.object_mask(NetworkStorageAllowedHost.default_object_mask).getAllowedHosts
+        allowed_hosts.collect { |allowed_host| NetworkStorageAllowedHost.new(softlayer_client, allowed_host) unless allowed_host.empty? }.compact
+      end
+    end
+
+    ##
+    # The network storage volumes this group is attached to.
+    sl_dynamic_attr :attached_volumes do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @attached_volumes == nil
+      end
+
+      resource.to_update do
+        attached_volumes = self.service.object_mask(NetworkStorage.default_object_mask).getAttachedVolumes
+        attached_volumes.collect { |attached_volume| NetworkStorage.new(softlayer_client, attached_volume) unless attached_volume.empty? }.compact
+      end
+    end
+
+    ##
+    # The IP address for for SoftLayer_Network_Storage_Allowed_Host objects within this group.
+    sl_dynamic_attr :ip_address do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @ip_address == nil
+      end
+
+      resource.to_update do
+        network_connection_details = self.service.getNetworkConnectionDetails
+        network_connection_details["ipAddress"] unless network_connection_details.empty?
+      end
+    end
+
+    ##
+    # The description of theSoftLayer_Network_Storage_OS_Type Operating System designation that this group was created for.
+    sl_dynamic_attr :os_description do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @os_description == nil
+      end
+
+      resource.to_update do
+        os_type = self.service.getOsType
+        os_type["description"] unless os_type.empty?
+      end
+    end
+
+    ##
+    # The name of theSoftLayer_Network_Storage_OS_Type Operating System designation that this group was created for.
+    sl_dynamic_attr :os_name do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @os_name == nil
+      end
+
+      resource.to_update do
+        os_type = self.service.getOsType
+        os_type["name"] unless os_type.empty?
+      end
+    end
+
+    ##
+    # The network resource this group is created on.
+    sl_dynamic_attr :service_resource do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @service_resource == nil
+      end
+
+      resource.to_update do
+        service_resource = self.service.object_mask(NetworkService.default_object_mask).getServiceResource
+        NetworkService.new(softlayer_client, service_resource) unless service_resource.empty?
+      end
+    end
+
+    ##
+    # The name of the SoftLayer_Network_Storage_Group_Type which describes this group.
+    sl_dynamic_attr :type do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @type == nil
+      end
+
+      resource.to_update do
+        group_type = self.service.getGroupType
+        group_type["name"]
+      end
+    end
+
+    ##
+    # Returns the service for interacting with this network storage through the network API
+    #
+    def service
+      softlayer_client[:Network_Storage_Group].object_with_id(self.id)
+    end
+
+    protected
+
+    def self.default_object_mask
+      {
+        "mask(SoftLayer_Network_Storage_Group)" => [
+                                                    'alias',
+                                                    'createDate',
+                                                    'id',
+                                                    'modifyDate'
+                                                   ]
+      }.to_sl_object_mask
+    end
+  end
+end #SoftLayer

@@ -109,10 +109,104 @@ module SoftLayer
     end
 
     ##
+    # Add a username/password credential to the network storage instance
+    #
+    def add_credential(credential_type)
+      raise ArgumentError, "The new credential type cannot be nil"   unless credential_type
+      raise ArgumentError, "The new credential type cannot be empty" if credential_type.empty?
+
+      new_credential = self.service.object_mask(NetworkStorageCredential.default_object_mask).assignNewCredential(credential_type.to_s)
+      
+      @credentials = nil
+
+      NetworkStorageCredential.new(softlayer_client, new_credential) unless new_credential.empty?
+    end
+
+    ##
+    # Assign an existing network storage credential specified by the username to the network storage instance
+    #
+    def assign_credential(username)
+      raise ArgumentError, "The username cannot be nil"   unless username
+      raise ArgumentError, "The username cannot be empty" if username.empty?
+
+      self.service.assignCredential(username.to_s)
+      
+      @credentials = nil
+    end
+
+    ##
+    # Determines if one of the credentials pertains to the specified username.
+    #
+    def has_user_credential?(username)
+      self.credentials.map { |credential| credential.username }.include?(username)
+    end
+
+    ##
+    # Updates the notes for the network storage instance.
+    #
+    def notes=(notes)
+      self.service.editObject({ "notes" => notes.to_s })
+      self.refresh_details()
+    end
+
+    ##
+    # Updates the password for the network storage instance.
+    #
+    def password=(password)
+      raise ArgumentError, "The new password cannot be nil"   unless password
+      raise ArgumentError, "The new password cannot be empty" if password.empty?
+
+      self.service.editObject({ "password" => password.to_s })
+      self.refresh_details()
+    end
+
+    ##
+    # Remove an existing network storage credential specified by the username from the network storage instance
+    #
+    def remove_credential(username)
+      raise ArgumentError, "The username cannot be nil"   unless username
+      raise ArgumentError, "The username cannot be empty" if username.empty?
+
+      self.service.removeCredential(username.to_s)
+      
+      @credentials = nil
+    end
+
+    ##
     # Returns the service for interacting with this network storage through the network API
     #
     def service
       softlayer_client[:Network_Storage].object_with_id(self.id)
+    end
+
+    ##
+    # Make an API request to SoftLayer and return the latest properties hash
+    # for this object.
+    #
+    def softlayer_properties(object_mask = nil)
+      my_service = self.service
+
+      if(object_mask)
+        my_service = my_service.object_mask(object_mask)
+      else
+        my_service = my_service.object_mask(self.class.default_object_mask)
+      end
+
+      my_service.getObject()
+    end
+
+    ##
+    # Updates the password for the network storage credential of the username specified.
+    #
+    def update_credential_password(username, password)
+      raise ArgumentError, "The new password cannot be nil"   unless password
+      raise ArgumentError, "The new username cannot be nil"   unless username
+      raise ArgumentError, "The new password cannot be empty" if password.empty?
+      raise ArgumentError, "The new username cannot be empty" if username.empty?
+
+      self.service.editCredential(username.to_s, password.to_s)
+
+      @credentials = nil
     end
 
     protected

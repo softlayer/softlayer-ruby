@@ -80,6 +80,103 @@ module SoftLayer
     end
 
     ##
+    # Retrieve an account's master EVault user. This is only used when an account
+    # has an EVault service.
+    sl_dynamic_attr :evault_master_users do |evault_users|
+      evault_users.should_update? do
+        @evault_master_users == nil
+      end
+
+      evault_users.to_update do
+        evault_user_passwords = self.service.object_mask(AccountPassword.default_object_mask).getEvaultMasterUsers
+        evault_user_passwords.collect { |evault_user_password| AccountPassword.new(softlayer_client, evault_user_password) unless evault_user_password.empty? }.compact
+      end
+    end
+
+    ##
+    # Retrieve an account's image templates
+    sl_dynamic_attr :image_templates do |image_templates|
+      image_templates.should_update? do
+        @last_image_template_update ||= Time.at(0)
+        (Time.now - @last_image_template_update) > 5 * 60  # update every 5 minutes
+      end
+
+      image_templates.to_update do
+        @last_image_template_update ||= Time.now
+        ImageTemplate.find_private_templates(:client => self.softlayer_client)
+      end
+    end
+
+    ##
+    # Retrieve an account's network message delivery acounts.
+    sl_dynamic_attr :network_message_delivery_accounts do |net_msg_deliv_accts|
+      net_msg_deliv_accts.should_update? do
+        @network_message_delivery_accounts == nil
+      end
+
+      net_msg_deliv_accts.to_update do
+        network_message_delivery_accounts = self.service.object_mask(NetworkMessageDelivery.default_object_mask).getNetworkMessageDeliveryAccounts
+        network_message_delivery_accounts.collect { |net_msg_deliv_acct| NetworkMessageDelivery.new(softlayer_client, net_msg_deliv_acct) unless net_msg_deliv_acct.empty? }.compact
+      end
+    end
+
+    ##
+    # Retrieve an account's network storage groups.
+    sl_dynamic_attr :network_storage_groups do |net_stor_groups|
+      net_stor_groups.should_update? do
+        @network_storage_groups == nil
+      end
+
+      net_stor_groups.to_update do
+        network_storage_groups = self.service.object_mask(NetworkStorageGroup.default_object_mask).getNetworkStorageGroups
+        network_storage_groups.collect { |net_stor_group| NetworkStorageGroup.new(softlayer_client, net_stor_group) unless net_stor_group.empty? }.compact
+      end
+    end
+
+    ##
+    # Retrieve an account's open tickets
+    sl_dynamic_attr :open_tickets do |open_tickets|
+      open_tickets.should_update? do
+        @last_open_tickets_update ||= Time.at(0)
+        (Time.now - @last_open_tickets_update) > 5 * 60  # update every 5 minutes
+      end
+
+      open_tickets.to_update do
+        @last_open_tickets_update ||= Time.now
+        open_tickets_data = self.service.object_mask(SoftLayer::Ticket.default_object_mask).getOpenTickets
+        open_tickets_data.collect { |ticket_data| SoftLayer::Ticket.new(self.softlayer_client, ticket_data) }
+      end
+    end
+
+    ##
+    # Retrieve an account's portal users.
+    sl_dynamic_attr :users do |users|
+      users.should_update? do
+        @users == nil
+      end
+
+      users.to_update do
+        account_users = self.service.object_mask(UserCustomer.default_object_mask).getUsers
+        account_users.collect { |account_user| UserCustomer.new(softlayer_client, account_user) unless account_user.empty? }.compact
+      end
+    end
+
+    ##
+    # Retrieve an account's virtual disk images
+    sl_dynamic_attr :virtual_disk_images do |virtual_disk_images|
+      virtual_disk_images.should_update? do
+        @last_virtual_disk_images_update ||= Time.at(0)
+        (Time.now - @last_virtual_disk_images_update) > 5 * 60  # update every 5 minutes
+      end
+
+      virtual_disk_images.to_update do
+        @last_virtual_disk_images_update ||= Time.now
+        virtual_disk_images_data = self.service.object_mask(SoftLayer::VirtualDiskImage.default_object_mask).getVirtualDiskImages
+        virtual_disk_images_data.collect { |virtual_disk_image| SoftLayer::VirtualDiskImage.new(softlayer_client, virtual_disk_image) }
+      end
+    end
+
+    ##
     # The virtual servers (aka. CCIs or Virtual_Guests) associated with the
     # account. Unless you force these to update, they will be refreshed every
     # five minutes.
@@ -94,31 +191,6 @@ module SoftLayer
       virtual_servers.to_update do
         @last_virtual_server_update = Time.now
         VirtualServer.find_servers(:client => self.softlayer_client)
-      end
-    end
-
-    sl_dynamic_attr :image_templates do |image_templates|
-      image_templates.should_update? do
-        @last_image_template_update ||= Time.at(0)
-        (Time.now - @last_image_template_update) > 5 * 60  # update every 5 minutes
-      end
-
-      image_templates.to_update do
-        @last_image_template_update ||= Time.now
-        ImageTemplate.find_private_templates(:client => self.softlayer_client)
-      end
-    end
-
-    sl_dynamic_attr :open_tickets do |open_tickets|
-      open_tickets.should_update? do
-        @last_open_tickets_update ||= Time.at(0)
-        (Time.now - @last_open_tickets_update) > 5 * 60  # update every 5 minutes
-      end
-
-      open_tickets.to_update do
-        @last_open_tickets_update ||= Time.now
-        open_tickets_data = self.service.object_mask(SoftLayer::Ticket.default_object_mask).getOpenTickets
-        open_tickets_data.collect { |ticket_data| SoftLayer::Ticket.new(self.softlayer_client, ticket_data) }
       end
     end
 
