@@ -61,12 +61,13 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # You may filter the list returned by adding options:
-    # * <b>+:datacenter+</b>                  (string) - Include network storage account passwords from servers matching this datacenter
-    # * <b>+:domain+</b>                      (string) - Include network storage account passwords from servers matching this domain
-    # * <b>+:hostname+</b>                    (string) - Include network storage account passwords from servers matching this hostname
-    # * <b>+:network_storage_server_type+</b> (string) - Include network storage account passwords attached to this server type
+    # * <b>+:datacenter+</b>                  (string) - Include network storage account passwords associated with servers matching this datacenter
+    # * <b>+:domain+</b>                      (string) - Include network storage account passwords associated with servers matching this domain
+    # * <b>+:hostname+</b>                    (string) - Include network storage account passwords associated with servers matching this hostname
+    # * <b>+:network_storage_server_type+</b> (string) - Include network storage account passwords associated with services of this server type
     # * <b>+:network_storage_type+</b>        (string) - Include network storage account passwords from devices of this storage type
-    # * <b>+:tags+</b>                        (Array)  - Include network storage account passwords from servers matching these tags
+    # * <b>+:service+</b>                     (string) - Include network storage account passwords from devices with this service fqdn
+    # * <b>+:tags+</b>                        (Array)  - Include network storage account passwords associated with servers matching these tags
     # * <b>+:username+</b>                    (string) - Include network storage account passwords with this username only
     #
     def self.find_network_storage_credentials(options_hash = {})
@@ -103,10 +104,11 @@ module SoftLayer
       }
 
       option_to_filter_path = {
-        :datacenter                 => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.datacenter.name' ].join        },
-        :domain                     => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.domain' ].join                 },
-        :hostname                   => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.hostname' ].join               },
-        :tags                       => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.tagReferences.tag.name' ].join },
+        :datacenter                 => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.datacenter.name' ].join                  },
+        :domain                     => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.domain' ].join                           },
+        :hostname                   => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.hostname' ].join                         },
+        :service                    => lambda { |storage_type|              return [ filter_label[storage_type],                                 '.serviceResource.backendIpAddress' ].join },
+        :tags                       => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.tagReferences.tag.name' ].join           },
         :network_storage_credential => {
           :username                 => "credentials.username"
         }
@@ -126,6 +128,12 @@ module SoftLayer
             network_storage_object_filter.modify do |filter|
               filter.accept(option_to_filter_path[option].call(network_storage_type, options_hash[:network_storage_server_type])).when_it is(options_hash[option])
             end
+          end
+        end
+
+        if options_hash[:service]
+          network_storage_object_filter.modify do |filter|
+            filter.accept(option_to_filter_path[:service].call(network_storage_type).when_it is(options_hash[:service]))
           end
         end
 
