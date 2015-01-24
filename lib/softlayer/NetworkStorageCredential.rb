@@ -120,20 +120,20 @@ module SoftLayer
         end
       end
 
-      if options_hash[:network_storage_server_type]
-        network_storage_type = options_hash[:network_storage_type] || :network_storage
+      network_storage_type = options_hash[:network_storage_type] || :network_storage
 
+      if options_hash[:service]
+        network_storage_object_filter.modify do |filter|
+          filter.accept(option_to_filter_path[:service].call(network_storage_type)).when_it is(options_hash[:service])
+        end
+      end
+
+      if options_hash[:network_storage_server_type]
         [ :datacenter, :domain, :hostname ].each do |option|
           if options_hash[option]
             network_storage_object_filter.modify do |filter|
               filter.accept(option_to_filter_path[option].call(network_storage_type, options_hash[:network_storage_server_type])).when_it is(options_hash[option])
             end
-          end
-        end
-
-        if options_hash[:service]
-          network_storage_object_filter.modify do |filter|
-            filter.accept(option_to_filter_path[:service].call(network_storage_type).when_it is(options_hash[:service]))
           end
         end
 
