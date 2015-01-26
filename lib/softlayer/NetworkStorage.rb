@@ -190,7 +190,6 @@ module SoftLayer
     # * <b>+:network_storage_type+</b>        (string) - Include network storage from devices of this storage type
     # * <b>+:service+</b>                     (string) - Include network storage from devices with this service fqdn
     # * <b>+:tags+</b>                        (Array)  - Include network storage associated with servers matching these tags
-    # * <b>+:username+</b>                    (string) - Include network storage with this username only
     #
     def self.find_network_storage(options_hash  = {})
       softlayer_client = options_hash[:client] || Client.default_client
