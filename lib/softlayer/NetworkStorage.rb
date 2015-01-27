@@ -173,6 +173,117 @@ module SoftLayer
     end
 
     ##
+    # Retrieve a list of network storage services.
+    #
+    # The options parameter should contain:
+    #
+    # <b>+:client+</b> - The client used to connect to the API
+    #
+    # If no client is given, then the routine will try to use Client.default_client
+    # If no client can be found the routine will raise an error.
+    #
+    # You may filter the list returned by adding options:
+    # * <b>+:datacenter+</b>                  (string) - Include network storage associated with servers matching this datacenter
+    # * <b>+:domain+</b>                      (string) - Include network storage associated with servers matching this domain
+    # * <b>+:hostname+</b>                    (string) - Include network storage associated with servers matching this hostname
+    # * <b>+:network_storage_server_type+</b> (string) - Include network storage associated with this server type
+    # * <b>+:network_storage_type+</b>        (string) - Include network storage from devices of this storage type
+    # * <b>+:service+</b>                     (string) - Include network storage from devices with this service fqdn
+    # * <b>+:tags+</b>                        (Array)  - Include network storage associated with servers matching these tags
+    #
+    def self.find_network_storage(options_hash  = {})
+      softlayer_client = options_hash[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
+      if(options_hash.has_key? :network_storage_object_filter)
+        network_storage_object_filter = options_hash[:network_storage_object_filter]
+        raise "Expected an instance of SoftLayer::ObjectFilter" unless network_storage_object_filter.kind_of?(SoftLayer::ObjectFilter)
+      else
+        network_storage_object_filter = ObjectFilter.new()
+      end
+
+      if options_hash.has_key?(:network_storage_server_type) && ! [ :hardware, :virtual_server ].include?(options_hash[:network_storage_server_type])
+        raise "Expected one of :hardware or :virtual_server for :network_storage_server_type option in #{__method__}"
+      end
+
+      filter_label = {
+        :evault          => "evaultNetworkStorage",
+        :hardware        => "hardware",
+        :hub             => "hubNetworkStorage",
+        :iscsi           => "iscsiNetworkStorage",
+        :lockbox         => "lockboxNetworkStorage",
+        :nas             => "nasNetworkStorage",
+        :network_storage => "networkStorage",
+        :virtual_server  => "virtualGuest"
+      }
+
+      option_to_filter_path = {
+        :datacenter                 => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.datacenter.name' ].join                  },
+        :domain                     => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.domain' ].join                           },
+        :hostname                   => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.hostname' ].join                         },
+        :service                    => lambda { |storage_type|              return [ filter_label[storage_type],                                 '.serviceResource.backendIpAddress' ].join },
+        :tags                       => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.tagReferences.tag.name' ].join           },
+      }
+
+      if options_hash[:network_storage_type]
+        unless filter_label.select{|label,filter| filter.end_with?("Storage")}.keys.include?(options_hash[:network_storage_type])
+          raise "Expected :evault, :hub, :iscsi, :lockbox, :nas or :network_storage for option :network_storage_type in #{__method__}"
+        end
+      end
+
+      network_storage_type = options_hash[:network_storage_type] || :network_storage
+
+      if options_hash[:service]
+        network_storage_object_filter.modify do |filter|
+          filter.accept(option_to_filter_path[:service].call(network_storage_type)).when_it is(options_hash[:service])
+        end
+      end
+      
+      if options_hash[:network_storage_server_type]
+        [ :datacenter, :domain, :hostname ].each do |option|
+          if options_hash[option]
+            network_storage_object_filter.modify do |filter|
+              filter.accept(option_to_filter_path[option].call(network_storage_type, options_hash[:network_storage_server_type])).when_it is(options_hash[option])
+            end
+          end
+        end
+
+        if options_hash[:tags]
+          network_storage_object_filter.set_criteria_for_key_path(option_to_filter_path[:tags].call(network_storage_type, options_hash[:network_storage_server_type]),
+                                                                  {
+                                                                    'operation' => 'in',
+                                                                    'options' => [{
+                                                                                    'name' => 'data',
+                                                                                    'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
+                                                                                  }]
+                                                                  })
+        end
+      end
+
+      account_service = softlayer_client[:Account]
+      account_service = account_service.object_filter(network_storage_object_filter) unless network_storage_object_filter.empty?
+      account_service = account_service.object_mask(NetworkStorage.default_object_mask)
+      account_service = account_service.object_mask(options_hash[:network_storage_object_mask]) if options_hash[:network_storage_object_mask]
+
+      case options_hash[:network_storage_type]
+      when :evault
+        network_storage_data = account_service.getEvaultNetworkStorage
+      when :hub
+        network_storage_data = account_service.getHubNetworkStorage
+      when :iscsi
+        network_storage_data = account_service.getIscsiNetworkStorage
+      when :lockbox
+        network_storage_data = account_service.getLockboxNetworkStorage
+      when :nas
+        network_storage_data = account_service.getNasNetworkStorage
+      when :network_storage, nil
+        network_storage_data = account_service.getNetworkStorage
+      end
+
+      network_storage_data.collect { |network_storage| NetworkStorage.new(softlayer_client, network_storage) unless network_storage.empty? }.compact
+    end
+
+    ##
     # Returns the service for interacting with this network storage through the network API
     #
     def service

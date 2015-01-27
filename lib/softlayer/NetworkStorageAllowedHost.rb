@@ -3,7 +3,7 @@ module SoftLayer
   # Each SoftLayer NetworkStorageAllowedHost instance provides information about
   # a hosts allowed access to a storage product group.
   #
-  # This class roughly corresponds to the entity SoftLayer_Network_Storage_Group
+  # This class roughly corresponds to the entity SoftLayer_Network_Storage_Allowed_Host
   # in the API.
   #
   class NetworkStorageAllowedHost < ModelBase
@@ -60,7 +60,7 @@ module SoftLayer
     # Returns the service for interacting with this network storage through the network API
     #
     def service
-      softlayer_client[:Network_Storage].object_with_id(self.id)
+      softlayer_client[:Network_Storage_Allowed_Host].object_with_id(self.id)
     end
 
     protected
