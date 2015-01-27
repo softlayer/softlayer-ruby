@@ -289,8 +289,8 @@ module SoftLayer
       end
 
       option_to_filter_path = {
-        :name => "publicImages.name",
-        :global_id => "publicImages.globalIdentifier",
+        :name => "name",
+        :global_id => "globalIdentifier",
       }
 
       # For each of the options in the option_to_filter_path map, if the options hash includes
@@ -299,10 +299,10 @@ module SoftLayer
       option_to_filter_path.each do |option, filter_path|
         object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option])} if options_hash[option]
       end
-
+      
       # Tags get a much more complex object filter operation so we handle them separately
       if options_hash.has_key?(:tags)
-        object_filter.set_criteria_for_key_path("publicImages.tagReferences.tag.name", {
+        object_filter.set_criteria_for_key_path("tagReferences.tag.name", {
           'operation' => 'in',
           'options' => [{
             'name' => 'data',
@@ -359,7 +359,12 @@ module SoftLayer
     end
 
     ##
-    # Retrieve the image template with the given global ID
+    # Retrieve the image template with the given global ID.  The routine searches the public image template list first
+    # and the private image template list if no public image with the given id is found.  If no template is found
+    # after searching both lists, then the function returns nil.
+    #
+    # Should either search return more than one result (meaning the system found more than one template with the same
+    # global_id), then the routine will throw an exception.
     #
     # The options parameter should contain:
     #
@@ -370,8 +375,13 @@ module SoftLayer
     #
     # The options may include the following keys
     # * <b>+:object_mask+</b> (string) - A object mask of properties, in addition to the default properties, that you wish to retrieve for the template
+    #
     def self.template_with_global_id(global_id, options_hash = {})
       templates = find_public_templates(options_hash.merge(:global_id => global_id))
+      if templates.empty? then
+        templates = find_private_templates(options_hash.merge(:global_id => global_id))
+      end
+      raise "ImageTemplate::template_with_global_id returned more than one template with the same global id.  This should not happen" if templates != nil && templates.count > 1
       templates.empty? ? nil : templates[0]
     end
 
