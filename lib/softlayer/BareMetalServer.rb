@@ -50,7 +50,7 @@ module SoftLayer
         softlayer_client[:Ticket].createCancelServerTicket(self.id, cancel_reason, comment, true, 'HARDWARE')
       else
         # Note that reason and comment are ignored in this case, unfortunately
-        softlayer_client[:Billing_Item].object_with_id(self.billingItem['id'].to_i).cancelService()
+        softlayer_client[:Billing_Item].object_with_id(self.service.object_mask("mask[id]").getBillingItem['id'].to_i).cancelService()
       end
     end
 
