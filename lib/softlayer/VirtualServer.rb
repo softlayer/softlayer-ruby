@@ -131,7 +131,7 @@ module SoftLayer
         has_active_transaction = has_sl_property? :activeTransaction
 
         reloading_os = has_active_transaction && has_os_reload && (self.lastOperatingSystemReload['id'] == self.activeTransaction['id'])
-        provisioned = has_sl_property? :provisionDate
+        provisioned = has_sl_property?(:provisionDate) && ! self['provisionDate'].empty?
 
         # a server is ready when it is provisioned, not reloading the OS
         # (and if wait_for_transactions is true, when there are no active transactions).
