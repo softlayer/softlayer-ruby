@@ -139,22 +139,34 @@ The first argument to the `result_limit` helper is the index in the array of the
 
 Only one call to the `result_limit` helper should be included in any calling sequence.
 
-## Object Filters
+## {ObjectFilters}[rdoc-ref:SoftLayer::ObjectFilter]
 
-Object Filters ask the server to filter the result set using a set of criteria before returning its results. Unfortunately, at the time of this writing, constructing object filters is not a well documented process. Luckily, the `softlayer_api` Ruby Gem, offers some convenience functionality to help you create simple object filters.  If you want help crafting a particular object filter, we suggest you ask in the [SLDN Forums](https://forums.softlayer.com/forum/softlayer-developer-network) for assistance.
+\Object filters are sent along with a request to a service. The service filters
+the results before returning them over the network. The softlayer_api gem can
+create simple object filters.
 
-As an example, suppose you wished to obtain a list of all the virtual servers on an account that were in the domain kitchentools.com. To get the list of virtual servers on an account you would use the `SoftLayer_Account` service and call the `getVirtualGuests` method. The filter we wish to apply is based on the `domain` property of the virtual servers being returned. That code would look like this:
+If you want help crafting a particular object filter, we suggest you ask in the
+[SLDN Forums](https://forums.softlayer.com/forum/softlayer-developer-network)
+for assistance.
 
-    filter = SoftLayer::ObjectFilter.build("domain", "kitchentools.com")
-	softlayer_client['Account'].object_filter(filter).getVirtualGuests()
+Suppose you want to obtain a list of all the virtual servers on an account that
+are in the domain `kitchentools.com`. To get the list of virtual servers on an
+account you would use the
+{SoftLayer_Account}[http://sldn.softlayer.com/reference/services/SoftLayer_Account]
+service and call the
+{getVirtualGuests}[http://sldn.softlayer.com/reference/services/SoftLayer_Account/getVirtualGuests]
+method. The filter we wish to apply is based on the `domain` property of the
+virtual servers being returned. That code would look like this:
 
-The object filter is applied using the `object_filter` service helper. This method takes a single parameter, the object filter to apply to the network API call.
+    filter = SoftLayer::ObjectFilter.new {|f| f.accept("virtualGuests.domain").when_it is("kitchentools.com")}
+    softlayer_client['Account'].object_filter(filter).getVirtualGuests()
 
-In order to get the filter we wish to apply, this example uses the `SoftLayer::ObjectFilter#build` method. The first parameter to `build` is the property that we wish our filter based on. The second parameter is a query string, in this case the query string means "objects whose property value exactly matches 'kitchentools.com'". Other query strings possible. For example, if we wanted to select the servers whose domain names end with 'tools.com' we could use the query string '*tools.com'. For more information about query strings, please see the documentation for the `SoftLayer::ObjectFilter#query_to_filter_operation` method.
-
-The `SoftLayer::ObjectFilter#build` routine also allows a block syntax which lets you specify the filter criteria using a very simple Domain Specific Language (DSL).  Here is an example of constructing the same filter `domain` filter from the previous using the block technique:
-
-    filter = SoftLayer::ObjectFilter.build("domain") { is("kichentools.com") }
-
-This filter also asks that the domain exactly match "kitchentools.com".  Other matchers can be found in as the instance methods of the `SoftLayer::ObjectFilterBlockHandler` class.
+Note that the string to `accept` starts with the name of the service method
+being called where the `get` is dropped and first letter downcased. In this
+example `getVirtualGuests` becomes `virtualGuests`.The filter is applied using
+SoftLayer::Service#object_filter. This method requires a filter obtained from
+SoftLayer::ObjectFilter.new which takes a block that specifies filter criteria
+using a Domain Specific Language (DSL).  See
+SoftLayer::ObjectFilterDefinitionContext for other matchers to use with
+when\_it.
 
