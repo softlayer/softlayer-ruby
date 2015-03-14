@@ -120,6 +120,29 @@ module SoftLayer
     end
 
     ##
+    # Retrieve the user customer associated with the specified username
+    #
+    def self.user_customer_with_username(username, client = nil)
+      softlayer_client = client || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+      raise "#{__method__} requires a user customer username but none was given" if !username || username.empty?
+
+      user_customer_object_filter = ObjectFilter.new()
+
+      user_customer_object_filter.modify { |filter| filter.accept('users.username').when_it is(username) }
+
+      account_service = Account.account_for_client(softlayer_client).service
+      account_service = account_service.object_filter(user_customer_object_filter)
+      account_service = account_service.object_mask(UserCustomer.default_object_mask)
+
+      user_customer_data = account_service.getUsers
+
+      if user_customer_data.length == 1
+        UserCustomer.new(softlayer_client, user_customer_data.first)
+      end
+    end
+
+    ##
     # Returns the service for interacting with this user customer through the network API
     #
     def service
