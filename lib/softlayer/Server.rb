@@ -54,6 +54,29 @@ module SoftLayer
     sl_attr :notes
 
     ##
+    # :attr_reader:
+    # The list of user customers notified on monitoring failures
+    sl_dynamic_attr :notified_monitor_users do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @notified_monitor_users == nil
+      end
+
+      resource.to_update do
+        notified_monitor_users_data = self.service.object_mask("mask[userId]").getMonitoringUserNotification
+
+        notified_monitor_users = notified_monitor_users_data.collect do |notified_monitor_user|
+          user_customer_service = softlayer_client[:User_Customer].object_with_id(notified_monitor_user['userId'])
+          user_customer_data    = user_customer_service.object_mask(UserCustomer.default_object_mask).getObject
+
+          UserCustomer.new(softlayer_client, user_customer_data) unless user_customer_data.empty?
+        end
+
+        notified_monitor_users.compact
+      end
+    end
+
+    ##
     # Retrieve the primary network component
     # :call-seq:
     #   primary_network_component(force_update=false)
