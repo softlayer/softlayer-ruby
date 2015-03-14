@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class SoftLayer::NetworkService - softlayer_api gem 3.0.1</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="ModelBase.html">SoftLayer::ModelBase</a>
+  
+</div>
+
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><a class="include" href="DynamicAttribute.html">SoftLayer::DynamicAttribute</a>
+  
+  
+  </ul>
+</div>
+
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-default_object_mask">::default_object_mask</a>
+    
+    <li ><a href="#method-i-api">#api</a>
+    
+    <li ><a href="#method-i-datacenter">#datacenter</a>
+    
+    <li ><a href="#method-i-type">#type</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-SoftLayer::NetworkService">
+  <h1 id="class-SoftLayer::NetworkService" class="class">
+    class SoftLayer::NetworkService
+  </h1>
+
+  <section class="description">
+    
+<p>Each <a href="../SoftLayer.html">SoftLayer</a> <a
+href="NetworkService.html">NetworkService</a> instance provides
+connectivity information for a specific Network <a
+href="Service.html">Service</a> Resource.</p>
+
+<p>This class roughly corresponds to the entity
+SoftLayer_Network_Service_Resource in the API.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-backendIpAddress" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">backendIpAddress</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The backend IP address for this resource</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-frontendIpAddress" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">frontendIpAddress</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The frontend IP address for this resource</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-name" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">name</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The name associated with this resource</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-private_ip" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">private_ip</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The backend IP address for this resource</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-public_ip" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">public_ip</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The frontend IP address for this resource</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-sshUsername" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">sshUsername</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The ssh username of for this resource</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-ssh_username" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">ssh_username</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The ssh username of for this resource</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="protected-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Protected Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-default_object_mask" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">default_object_mask</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="default_object_mask-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkService.rb, line 74</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
+  {
+    <span class="ruby-string">&quot;mask(SoftLayer_Network_Service_Resource)&quot;</span> =<span class="ruby-operator">&gt;</span> [
+                                                   <span class="ruby-string">'apiHost'</span>,
+                                                   <span class="ruby-string">'apiPassword'</span>,
+                                                   <span class="ruby-string">'apiPath'</span>,
+                                                   <span class="ruby-string">'apiPort'</span>,
+                                                   <span class="ruby-string">'apiProtocol'</span>,
+                                                   <span class="ruby-string">'apiUsername'</span>,
+                                                   <span class="ruby-string">'backendIpAddress'</span>,
+                                                   <span class="ruby-string">'datacenter'</span>,
+                                                   <span class="ruby-string">'frontendIpAddress'</span>,
+                                                   <span class="ruby-string">'id'</span>,
+                                                   <span class="ruby-string">'name'</span>,
+                                                   <span class="ruby-string">'networkDevice.id'</span>,
+                                                   <span class="ruby-string">'sshUsername'</span>,
+                                                   <span class="ruby-string">'type.type'</span>
+                                                  ]
+  }.<span class="ruby-identifier">to_sl_object_mask</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-api" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">api</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the api properties used to connect to the network service resource</p>
+          
+          
+
+          
+          <div class="method-source-code" id="api-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkService.rb, line 54</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">api</span>
+  {
+      <span class="ruby-string">'host'</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiHost'</span>],
+      <span class="ruby-string">'password'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiPassword'</span>],
+      <span class="ruby-string">'path'</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiPath'</span>],
+      <span class="ruby-string">'port'</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiPort'</span>],
+      <span class="ruby-string">'protocol'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiProtocol'</span>],
+      <span class="ruby-string">'username'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiUsername'</span>]
+  }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-datacenter" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">datacenter</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the datacenter that this network service resource is available in</p>
+          
+          
+
+          
+          <div class="method-source-code" id="datacenter-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkService.rb, line 40</span>
+<span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:datacenter</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-comment">#only retrieved once per instance</span>
+    <span class="ruby-ivar">@datacenter</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-constant">Datacenter</span><span class="ruby-operator">::</span><span class="ruby-identifier">datacenter_named</span>(<span class="ruby-keyword">self</span>[<span class="ruby-string">'datacenter'</span>][<span class="ruby-string">'name'</span>], <span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_client</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-type" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">type</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the network service resource type name</p>
+          
+          
+
+          
+          <div class="method-source-code" id="type-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkService.rb, line 68</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">type</span>
+  <span class="ruby-keyword">self</span>[<span class="ruby-string">'type'</span>][<span class="ruby-string">'type'</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

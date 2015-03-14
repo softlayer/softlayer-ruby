@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class SoftLayer::Service - softlayer_api gem 3.0.1</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="../Object.html">Object</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-call_softlayer_api_with_params">#call_softlayer_api_with_params</a>
+    
+    <li class="calls-super" ><a href="#method-i-method_missing">#method_missing</a>
+    
+    <li ><a href="#method-i-object_filter">#object_filter</a>
+    
+    <li ><a href="#method-i-object_mask">#object_mask</a>
+    
+    <li ><a href="#method-i-object_with_id">#object_with_id</a>
+    
+    <li ><a href="#method-i-related_service_named">#related_service_named</a>
+    
+    <li ><a href="#method-i-result_limit">#result_limit</a>
+    
+    <li ><a href="#method-i-target">#target</a>
+    
+    <li ><a href="#method-i-to_ary">#to_ary</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-SoftLayer::Service">
+  <h1 id="class-SoftLayer::Service" class="class">
+    class SoftLayer::Service
+  </h1>
+
+  <section class="description">
+    
+<h1 id="class-SoftLayer::Service-label-SoftLayer+API+Service"><a href="../SoftLayer.html">SoftLayer</a> API <a href="Service.html">Service</a><span><a href="#class-SoftLayer::Service-label-SoftLayer+API+Service">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>Instances of this class are the runtime representation of services in the
+<a href="../SoftLayer.html">SoftLayer</a> API. They handle communication
+with the <a href="../SoftLayer.html">SoftLayer</a> servers.</p>
+
+<p>You typically should not need to create services directly. instead, you
+should be creating a client and then using it to obtain individual
+services. For example:</p>
+
+<pre class="ruby"><span class="ruby-identifier">client</span> = <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">Client</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">username</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;Joe&quot;</span>, :<span class="ruby-identifier">api_key=</span><span class="ruby-operator">&gt;</span><span class="ruby-string">&quot;feeddeadbeefbadfood...&quot;</span>)
+<span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">client</span>.<span class="ruby-identifier">service_named</span>(<span class="ruby-string">&quot;Account&quot;</span>) <span class="ruby-comment"># returns the SoftLayer_Account service</span>
+<span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">client</span>[:<span class="ruby-constant">Account</span>] <span class="ruby-comment"># Exactly the same as above</span>
+</pre>
+
+<p>For backward compatibility, a service can be constructed by passing client
+initialization options, however if you do so you will need to prepend the
+“SoftLayer_” on the front of the service name. For Example:</p>
+
+<pre>account_service = SoftLayer::Service(&quot;SoftLayer_Account&quot;,
+:username=&gt;&quot;&lt;your user name here&gt;&quot;
+:api_key=&gt;&quot;&lt;your api key here&gt;&quot;)</pre>
+
+<p>A service communicates with the <a href="../SoftLayer.html">SoftLayer</a>
+API through the the XML-RPC interface using Ruby’s built in classes</p>
+
+<p>Once you have a service, you can invoke methods in the service like this:</p>
+
+<pre>account_service.getOpenTickets
+=&gt; {... lots of information here representing the list of open tickets ...}</pre>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-client" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">client</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-service_name" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">service_name</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The name of the service that this object calls. Cannot be emtpy or nil.</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(service_name, options = {})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 77</span>
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> (<span class="ruby-identifier">service_name</span>, <span class="ruby-identifier">options</span> = {})
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>,<span class="ruby-string">&quot;Please provide a service name&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">service_name</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">service_name</span>.<span class="ruby-identifier">empty?</span>
+
+      <span class="ruby-comment"># remember the service name</span>
+      <span class="ruby-ivar">@service_name</span> = <span class="ruby-identifier">service_name</span>;
+
+      <span class="ruby-comment"># Collect the keys relevant to client creation and pass them on to construct</span>
+      <span class="ruby-comment"># the client if one is needed.</span>
+      <span class="ruby-identifier">client_keys</span> = [<span class="ruby-value">:username</span>, <span class="ruby-value">:api_key</span>, <span class="ruby-value">:endpoint_url</span>]
+      <span class="ruby-identifier">client_options</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">inject</span>({}) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">new_hash</span>, <span class="ruby-identifier">pair</span><span class="ruby-operator">|</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">client_keys</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">pair</span>[<span class="ruby-value">0</span>]
+          <span class="ruby-identifier">new_hash</span>[<span class="ruby-identifier">pair</span>[<span class="ruby-value">0</span>]] = <span class="ruby-identifier">pair</span>[<span class="ruby-value">1</span>]
+        <span class="ruby-keyword">end</span>
+
+        <span class="ruby-identifier">new_hash</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-comment"># if the options hash already has a client</span>
+      <span class="ruby-comment"># go ahead and use it</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span> <span class="ruby-value">:client</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">client_options</span>.<span class="ruby-identifier">empty?</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-constant">RuntimeError</span>, <span class="ruby-string">&quot;Attempting to construct a service both with a client, and with client initialization options. Only one or the other should be provided.&quot;</span>
+        <span class="ruby-keyword">end</span>
+
+        <span class="ruby-ivar">@client</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:client</span>]
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-comment"># Accepting client initialization options here</span>
+        <span class="ruby-comment"># is a backward-compatibility feature.</span>
+
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">$DEBUG</span>
+          <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">%q{
+Creating services with Client initialization options is deprecated and may be removed
+in a future release. Please change your code to create a client and obtain a service
+using either client.service_named('&lt;service_name_here&gt;') or client['&lt;service_name_here&gt;']}</span>
+        <span class="ruby-keyword">end</span>
+
+        <span class="ruby-ivar">@client</span> = <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">Client</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">client_options</span>)
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-comment"># this has proven to be very helpful during debugging. It helps prevent infinite recursion</span>
+      <span class="ruby-comment"># when you don't get a method call just right</span>
+      <span class="ruby-ivar">@method_missing_call_depth</span> = <span class="ruby-value">0</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">$DEBUG</span>
+    <span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-call_softlayer_api_with_params" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">call_softlayer_api_with_params</span><span
+            class="method-args">(method_name, parameters, args)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Issue an HTTP request to call the given method from the <a
+href="../SoftLayer.html">SoftLayer</a> API with the parameters and
+arguments given.</p>
+
+<p>Parameters are information <em>about</em> the call, the object mask or the
+particular object in the <a href="../SoftLayer.html">SoftLayer</a> API you
+are calling.</p>
+
+<p>Arguments are the arguments to the <a
+href="../SoftLayer.html">SoftLayer</a> method that you wish to invoke.</p>
+
+<p>This is intended to be used in the internal processing of <a
+href="Service.html#method-i-method_missing">#method_missing</a> and need
+not be called directly.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="call_softlayer_api_with_params-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 219</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">call_softlayer_api_with_params</span>(<span class="ruby-identifier">method_name</span>, <span class="ruby-identifier">parameters</span>, <span class="ruby-identifier">args</span>)
+  <span class="ruby-identifier">additional_headers</span> = {};
+
+  <span class="ruby-comment"># The client knows about authentication, so ask him for the auth headers</span>
+  <span class="ruby-identifier">authentication_headers</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">client</span>.<span class="ruby-identifier">authentication_headers</span>
+  <span class="ruby-identifier">additional_headers</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-identifier">authentication_headers</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">parameters</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">parameters</span>.<span class="ruby-identifier">server_object_filter</span>
+    <span class="ruby-identifier">additional_headers</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-node">&quot;#{@service_name}ObjectFilter&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">parameters</span>.<span class="ruby-identifier">server_object_filter</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Object masks go into the headers too.</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">parameters</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">parameters</span>.<span class="ruby-identifier">server_object_mask</span>
+    <span class="ruby-identifier">object_mask</span> = <span class="ruby-identifier">parameters</span>.<span class="ruby-identifier">server_object_mask</span>
+    <span class="ruby-identifier">additional_headers</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-string">&quot;SoftLayer_ObjectMask&quot;</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-string">&quot;mask&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">object_mask</span> }) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">object_mask</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Result limits go into the headers</span>
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">parameters</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">parameters</span>.<span class="ruby-identifier">server_result_limit</span>)
+    <span class="ruby-identifier">additional_headers</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-string">&quot;resultLimit&quot;</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-string">&quot;limit&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">parameters</span>.<span class="ruby-identifier">server_result_limit</span>, <span class="ruby-string">&quot;offset&quot;</span> =<span class="ruby-operator">&gt;</span> (<span class="ruby-identifier">parameters</span>.<span class="ruby-identifier">server_result_offset</span> <span class="ruby-operator">||</span> <span class="ruby-value">0</span>) })
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Add an object id to the headers.</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">parameters</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">parameters</span>.<span class="ruby-identifier">server_object_id</span>
+    <span class="ruby-identifier">additional_headers</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-node">&quot;#{@service_name}InitParameters&quot;</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-string">&quot;id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">parameters</span>.<span class="ruby-identifier">server_object_id</span> })
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># This is a workaround for a potential problem that arises from mis-using the</span>
+  <span class="ruby-comment"># API. If you call SoftLayer_Virtual_Guest and you call the getObject method</span>
+  <span class="ruby-comment"># but pass a virtual guest as a parameter, what happens is the getObject method</span>
+  <span class="ruby-comment"># is called through an HTTP POST verb and the API creates a new VirtualServer that</span>
+  <span class="ruby-comment"># is a copy of the one you passed in.</span>
+  <span class="ruby-comment">#</span>
+  <span class="ruby-comment"># The counter-intuitive creation of a new Virtual Server is unexpected and, even worse,</span>
+  <span class="ruby-comment"># is something you can be billed for. To prevent that, we ignore the request</span>
+  <span class="ruby-comment"># body on a &quot;getObject&quot; call and print out a warning.</span>
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">method_name</span> <span class="ruby-operator">==</span> <span class="ruby-value">:getObject</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-keyword">nil</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">args</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-operator">!</span><span class="ruby-identifier">args</span>.<span class="ruby-identifier">empty?</span>) <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;Warning - The getObject method takes no parameters. The parameters you have provided will be ignored.&quot;</span>
+    <span class="ruby-identifier">args</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Collect all the different header pieces into a single hash that</span>
+  <span class="ruby-comment"># will become the first argument to the call.</span>
+  <span class="ruby-identifier">call_headers</span> = {
+    <span class="ruby-string">&quot;headers&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">additional_headers</span>
+  }
+
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">call_value</span> = <span class="ruby-identifier">xmlrpc_client</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">method_name</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-identifier">call_headers</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">XMLRPC</span><span class="ruby-operator">::</span><span class="ruby-constant">FaultException</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;A XMLRPC Fault was returned #{e}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">$DEBUG</span>
+    <span class="ruby-identifier">raise</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">call_value</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-method_missing" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">method_missing</span><span
+            class="method-args">(method_name, *args, &block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>This is the primary mechanism by which requests are made. If you call the
+service with a method it doesn’t understand, it will send a call to the
+endpoint for a method of the same name.</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              
+            </div>
+          
+
+          
+          <div class="method-source-code" id="method_missing-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 178</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">method_missing</span>(<span class="ruby-identifier">method_name</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-comment"># During development, if you end up with a stray name in some</span>
+  <span class="ruby-comment"># code, you can end up in an infinite recursive loop as method_missing</span>
+  <span class="ruby-comment"># tries to resolve that name (believe me... it happens).</span>
+  <span class="ruby-comment"># This mechanism looks for what it considers to be an unreasonable call</span>
+  <span class="ruby-comment"># depth and kills the loop quickly.</span>
+  <span class="ruby-keyword">if</span>(<span class="ruby-identifier">$DEBUG</span>)
+    <span class="ruby-ivar">@method_missing_call_depth</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@method_missing_call_depth</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">3</span> <span class="ruby-comment"># 3 is somewhat arbitrary... really the call depth should only ever be 1</span>
+      <span class="ruby-ivar">@method_missing_call_depth</span> = <span class="ruby-value">0</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;stop infinite recursion #{method_name}, #{args.inspect}&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># if we're in debug mode, we put out a little helpful information</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;SoftLayer::Service#method_missing called #{method_name}, #{args.inspect}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">$DEBUG</span>
+
+  <span class="ruby-keyword">if</span>(<span class="ruby-operator">!</span><span class="ruby-identifier">block</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">method_name</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/[[:alnum:]]+/</span>))
+    <span class="ruby-identifier">result</span> = <span class="ruby-identifier">call_softlayer_api_with_params</span>(<span class="ruby-identifier">method_name</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">args</span>);
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">result</span> = <span class="ruby-keyword">super</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span>(<span class="ruby-identifier">$DEBUG</span>)
+    <span class="ruby-ivar">@method_missing_call_depth</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">result</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-object_filter" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">object_filter</span><span
+            class="method-args">(filter)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Add an object filter to the request.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="object_filter-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 170</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">filter</span>)
+  <span class="ruby-identifier">proxy</span> = <span class="ruby-constant">APIParameterFilter</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">proxy</span>.<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">filter</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-object_mask" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">object_mask</span><span
+            class="method-args">(*args)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Use this as part of a method call chain to add an object mask to the
+request. The arguments to object mask should be well formed Extended <a
+href="../Object.html">Object</a> Mask strings:</p>
+
+<pre class="ruby"><span class="ruby-identifier">ticket_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[ticket.createDate, ticket.modifyDate]&quot;</span>, <span class="ruby-string">&quot;mask(SoftLayer_Some_Type).aProperty&quot;</span>).<span class="ruby-identifier">getObject</span>
+</pre>
+
+<p>The <a href="Service.html#method-i-object_mask">#object_mask</a> becomes
+part of the request sent to the server</p>
+          
+          
+
+          
+          <div class="method-source-code" id="object_mask-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 154</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">object_mask</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-identifier">proxy</span> = <span class="ruby-constant">APIParameterFilter</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">proxy</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-object_with_id" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">object_with_id</span><span
+            class="method-args">(object_of_interest)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Use this as part of a method call chain to identify a particular object as
+the target of the request. The parameter is the <a
+href="../SoftLayer.html">SoftLayer</a> object identifier you are interested
+in. For example, this call would return the ticket whose ID is 35212</p>
+
+<pre class="ruby"><span class="ruby-identifier">ticket_service</span>.<span class="ruby-identifier">object_with_id</span>(<span class="ruby-value">35212</span>).<span class="ruby-identifier">getObject</span>
+</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="object_with_id-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 141</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">object_of_interest</span>)
+  <span class="ruby-identifier">proxy</span> = <span class="ruby-constant">APIParameterFilter</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">proxy</span>.<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">object_of_interest</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-related_service_named" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">related_service_named</span><span
+            class="method-args">(service_name)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns a related service with the given service name. The related service
+will use the same client as this service</p>
+          
+          
+
+          
+          <div class="method-source-code" id="related_service_named-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 123</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">related_service_named</span>(<span class="ruby-identifier">service_name</span>)
+  <span class="ruby-ivar">@client</span>.<span class="ruby-identifier">service_named</span>(<span class="ruby-identifier">service_name</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-result_limit" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">result_limit</span><span
+            class="method-args">(offset, limit)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Use this as part of a method call chain to reduce the number of results
+returned from the server. For example, if the server has a list of 100
+entities and you only want 5 of them, you can get the first five by using
+<a href="Service.html#method-i-result_limit">#result_limit</a>(0,5). Then
+for the next 5 you would use <a
+href="Service.html#method-i-result_limit">#result_limit</a>(5,5), then <a
+href="Service.html#method-i-result_limit">#result_limit</a>(10,5) etc.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="result_limit-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 164</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">result_limit</span>(<span class="ruby-identifier">offset</span>, <span class="ruby-identifier">limit</span>)
+  <span class="ruby-identifier">proxy</span> = <span class="ruby-constant">APIParameterFilter</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">proxy</span>.<span class="ruby-identifier">result_limit</span>(<span class="ruby-identifier">offset</span>, <span class="ruby-identifier">limit</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-target" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">target</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Added here so that the interface of this class matches that of <a
+href="APIParameterFilter.html">APIParameterFilter</a>.  In <a
+href="APIParameterFilter.html">APIParameterFilter</a> the target is a
+service.  In a service, the target is itself.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="target-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 130</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">target</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-to_ary" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">to_ary</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>If this is not defined for <a href="Service.html">Service</a>, then when
+you print a service object the code will try to convert it to an array and
+end up calling <a
+href="Service.html#method-i-method_missing">#method_missing</a></p>
+
+<p>We define this here to prevent odd calls to the <a
+href="../SoftLayer.html">SoftLayer</a> API</p>
+          
+          
+
+          
+          <div class="method-source-code" id="to_ary-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 280</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_ary</span>
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

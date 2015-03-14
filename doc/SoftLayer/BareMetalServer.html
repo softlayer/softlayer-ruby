@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class SoftLayer::BareMetalServer - softlayer_api gem 3.0.1</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Server
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-cancellation_reasons">::cancellation_reasons</a>
+    
+    <li class="calls-super" ><a href="#method-c-default_object_mask">::default_object_mask</a>
+    
+    <li ><a href="#method-c-find_servers">::find_servers</a>
+    
+    <li ><a href="#method-c-server_with_id">::server_with_id</a>
+    
+    <li ><a href="#method-i-bare_metal_instance-3F">#bare_metal_instance?</a>
+    
+    <li ><a href="#method-i-cancel-21">#cancel!</a>
+    
+    <li ><a href="#method-i-firewall_port_speed">#firewall_port_speed</a>
+    
+    <li ><a href="#method-i-remote_management_accounts">#remote_management_accounts</a>
+    
+    <li ><a href="#method-i-service">#service</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-SoftLayer::BareMetalServer">
+  <h1 id="class-SoftLayer::BareMetalServer" class="class">
+    class SoftLayer::BareMetalServer
+  </h1>
+
+  <section class="description">
+    
+<p>This class represents a Bare Metal <a href="Server.html">Server</a>, a
+hardware server in contrast to a virtual machine, in the <a
+href="../SoftLayer.html">SoftLayer</a> Environment. It corresponds rougly
+to the <code>SoftLayer_Hardware</code> and
+<code>SoftLayer_Hardware_Server</code> services in the <a
+href="../SoftLayer.html">SoftLayer</a> API</p>
+
+<p><a
+href="http://sldn.softlayer.com/reference/datatypes/SoftLayer_Hardware">sldn.softlayer.com/reference/datatypes/SoftLayer_Hardware</a></p>
+
+<p><a
+href="http://sldn.softlayer.com/reference/datatypes/SoftLayer_Hardware_Server">sldn.softlayer.com/reference/datatypes/SoftLayer_Hardware_Server</a></p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-cancellation_reasons" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">cancellation_reasons</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns a list of the cancellation reasons to use when cancelling a server.</p>
+
+<p>When cancelling a server with the cancel! method, the first parameter is
+the reason and should be one of the keys in the hash returned by this
+method.  This, in turn will be translated into a string which is, for all
+intents and purposes, a literal string constant with special meaning to the
+<a href="../SoftLayer.html">SoftLayer</a> API.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="cancellation_reasons-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 103</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">cancellation_reasons</span>
+  {
+    <span class="ruby-value">:unneeded</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'No longer needed'</span>,
+    <span class="ruby-value">:closing</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Business closing down'</span>,
+    <span class="ruby-value">:cost</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Server / Upgrade Costs'</span>,
+    <span class="ruby-value">:migrate_larger</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Migrating to larger server'</span>,
+    <span class="ruby-value">:migrate_smaller</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Migrating to smaller server'</span>,
+    <span class="ruby-value">:datacenter</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Migrating to a different SoftLayer datacenter'</span>,
+    <span class="ruby-value">:performance</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Network performance / latency'</span>,
+    <span class="ruby-value">:support</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Support response / timing'</span>,
+    <span class="ruby-value">:sales</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Sales process / upgrades'</span>,
+    <span class="ruby-value">:moving</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Moving to competitor'</span>,
+  }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-default_object_mask" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">default_object_mask</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the default object mask used when fetching servers from the API
+when an explicit object mask is not provided.</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              
+            </div>
+          
+
+          
+          <div class="method-source-code" id="default_object_mask-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 76</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
+  <span class="ruby-identifier">sub_mask</span> = {
+    <span class="ruby-string">&quot;mask(SoftLayer_Hardware_Server)&quot;</span> =<span class="ruby-operator">&gt;</span> [
+                                          <span class="ruby-string">'activeTransaction[id, transactionStatus[friendlyName,name]]'</span>,
+                                          <span class="ruby-string">'bareMetalInstanceFlag'</span>,
+                                          <span class="ruby-string">'hardwareChassis[id, name]'</span>,
+                                          <span class="ruby-string">'hardwareStatus'</span>,
+                                          <span class="ruby-string">'memoryCapacity'</span>,
+                                          <span class="ruby-string">'networkComponents[id, maxSpeed, name, ipmiIpAddress, ipmiMacAddress, macAddress, port, primaryIpAddress, primarySubnet, speed, status]'</span>,
+                                          <span class="ruby-string">'networkManagementIpAddress'</span>,
+                                          <span class="ruby-string">'processorPhysicalCoreAmount'</span>,
+                                          <span class="ruby-string">'provisionDate'</span>,
+                                          <span class="ruby-string">'remoteManagementAccounts[password,username]'</span>
+                                         ]
+  }
+
+  <span class="ruby-keyword">super</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">sub_mask</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-find_servers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">find_servers</span><span
+            class="method-args">(options_hash = {})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve a list of Bare Metal servers from the account</p>
+
+<p>The options parameter should contain:</p>
+
+<p><strong><code>:client</code></strong> - The client used to connect to the
+API</p>
+
+<p>If no client is given, then the routine will try to use <a
+href="Client.html#method-c-default_client">SoftLayer::Client.default_client</a>
+If no client can be found the routine will raise an error.</p>
+
+<p>You may filter the list returned by adding options:</p>
+<ul><li>
+<p><strong><code>:tags</code></strong> (array) - an array of strings
+representing tags to search for on the instances</p>
+</li><li>
+<p><strong><code>:cpus</code></strong> (int) - return servers with the given
+number of (virtual) CPUs</p>
+</li><li>
+<p><strong><code>:memory</code></strong> (int) - return servers with at least
+the given amount of memory (in Gigabytes)</p>
+</li><li>
+<p><strong><code>:hostname</code></strong> (string) - return servers whose
+hostnames match the query string given (see
+ObjectFilter::query_to_filter_operation)</p>
+</li><li>
+<p><strong><code>:domain</code></strong> (string) - filter servers to those
+whose domain matches the query string given (see
+ObjectFilter::query_to_filter_operation)</p>
+</li><li>
+<p><strong><code>:datacenter</code></strong> (string) - find servers whose
+data center name matches the query string given (see
+ObjectFilter::query_to_filter_operation)</p>
+</li><li>
+<p><strong><code>:nic_speed</code></strong> (int) - include servers with the
+given nic speed (in Mbps)</p>
+</li><li>
+<p><strong><code>:public_ip</code></strong> (string) - return servers whose
+public IP address matches the query string given (see
+ObjectFilter::query_to_filter_operation)</p>
+</li><li>
+<p><strong><code>:private_ip</code></strong> (string) - same as :public_ip,
+but for private IP addresses</p>
+</li></ul>
+
+<p>Additionally you may provide options related to the request itself:</p>
+<ul><li>
+<p><strong><code>:object_mask</code></strong> (string, hash, or array) - The
+object mask of properties you wish to receive for the items returned If not
+provided, the result will use the default object mask</p>
+</li><li>
+<p><strong><code>:result_limit</code></strong> (hash with :limit, and :offset
+keys) - Limit the scope of results returned.</p>
+</li></ul>
+          
+          
+
+          
+          <div class="method-source-code" id="find_servers-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 201</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find_servers</span>(<span class="ruby-identifier">options_hash</span> = {})
+  <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:client</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
+
+  <span class="ruby-keyword">if</span>(<span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">has_key?</span> <span class="ruby-value">:object_filter</span>)
+    <span class="ruby-identifier">object_filter</span> = <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:object_filter</span>]
+    <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;Expected an instance of SoftLayer::ObjectFilter&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">object_filter</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">ObjectFilter</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">object_filter</span> = <span class="ruby-constant">ObjectFilter</span>.<span class="ruby-identifier">new</span>()
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">option_to_filter_path</span> = {
+    <span class="ruby-value">:cpus</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;hardware.processorPhysicalCoreAmount&quot;</span>,
+    <span class="ruby-value">:memory</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;hardware.memoryCapacity&quot;</span>,
+    <span class="ruby-value">:hostname</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;hardware.hostname&quot;</span>,
+    <span class="ruby-value">:domain</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;hardware.domain&quot;</span>,
+    <span class="ruby-value">:datacenter</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;hardware.datacenter.name&quot;</span>,
+    <span class="ruby-value">:nic_speed</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;hardware.networkComponents.maxSpeed&quot;</span>,
+    <span class="ruby-value">:public_ip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;hardware.primaryIpAddress&quot;</span>,
+    <span class="ruby-value">:private_ip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;hardware.primaryBackendIpAddress&quot;</span>
+  }
+
+  <span class="ruby-comment"># For each of the options in the option_to_filter_path map, if the options hash includes</span>
+  <span class="ruby-comment"># that particular option, add a clause to the object filter that filters for the matching</span>
+  <span class="ruby-comment"># value</span>
+  <span class="ruby-identifier">option_to_filter_path</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">option</span>, <span class="ruby-identifier">filter_path</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">object_filter</span>.<span class="ruby-identifier">modify</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span> <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-identifier">filter_path</span>).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-identifier">option</span>])} <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-identifier">option</span>]
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Tags get a much more complex object filter operation so we handle them separately</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:tags</span>)
+    <span class="ruby-identifier">object_filter</span>.<span class="ruby-identifier">set_criteria_for_key_path</span>(<span class="ruby-string">&quot;hardware.tagReferences.tag.name&quot;</span>, {
+      <span class="ruby-string">'operation'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'in'</span>,
+      <span class="ruby-string">'options'</span> =<span class="ruby-operator">&gt;</span> [{
+        <span class="ruby-string">'name'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'data'</span>,
+        <span class="ruby-string">'value'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
+        }]
+      } );
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Account</span>]
+  <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">object_filter</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">object_filter</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">default_object_mask</span>.<span class="ruby-identifier">to_sl_object_mask</span>)
+
+  <span class="ruby-keyword">if</span>(<span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">has_key?</span> <span class="ruby-value">:object_mask</span>)
+    <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:object_mask</span>])
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:result_limit</span>)
+    <span class="ruby-identifier">offset</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:result_limit</span>][<span class="ruby-value">:offset</span>]
+    <span class="ruby-identifier">limit</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:result_limit</span>][<span class="ruby-value">:limit</span>]
+
+    <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">result_limit</span>(<span class="ruby-identifier">offset</span>, <span class="ruby-identifier">limit</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">bare_metal_data</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">getHardware</span>()
+  <span class="ruby-identifier">bare_metal_data</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">server_data</span><span class="ruby-operator">|</span> <span class="ruby-constant">BareMetalServer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">server_data</span>) }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-server_with_id" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">server_with_id</span><span
+            class="method-args">(server_id, options = {})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Retrive the bare metal server with the given server ID from the <a
+href="../SoftLayer.html">SoftLayer</a> API</p>
+
+<p>The options parameter should contain:</p>
+
+<p><strong><code>:client</code></strong> - The client used to connect to the
+API</p>
+
+<p>If no client is given, then the routine will try to use <a
+href="Client.html#method-c-default_client">SoftLayer::Client.default_client</a>
+If no client can be found the routine will raise an error.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="server_with_id-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 158</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">server_with_id</span>(<span class="ruby-identifier">server_id</span>, <span class="ruby-identifier">options</span> = {})
+  <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:client</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
+
+  <span class="ruby-identifier">hardware_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Hardware_Server</span>]
+  <span class="ruby-identifier">hardware_service</span> = <span class="ruby-identifier">hardware_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">default_object_mask</span>.<span class="ruby-identifier">to_sl_object_mask</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:object_mask</span>)
+    <span class="ruby-identifier">object_mask</span> = <span class="ruby-identifier">hardware_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:object_mask</span>])
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">server_data</span> = <span class="ruby-identifier">hardware_service</span>.<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">server_id</span>).<span class="ruby-identifier">getObject</span>()
+
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">BareMetalServer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">server_data</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-bare_metal_instance-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">bare_metal_instance?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if this <code>BareMetalServer</code> is actually a Bare Metal
+Instance a Bare Metal Instance is physical, hardware server that is is
+provisioned to match a profile with characteristics similar to a Virtual <a
+href="Server.html">Server</a></p>
+
+<p>This is an important distincition in rare cases, like cancelling the
+server.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="bare_metal_instance-3F-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 28</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">bare_metal_instance?</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">has_sl_property?</span>(<span class="ruby-value">:bareMetalInstanceFlag</span>)
+    <span class="ruby-keyword">self</span>[<span class="ruby-string">'bareMetalInstanceFlag'</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-cancel-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">cancel!</span><span
+            class="method-args">(reason = :unneeded, comment = '')</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Sends a ticket asking that a server be cancelled (i.e. shutdown and removed
+from the account).</p>
+
+<p>The <code>cancellation_reason</code> parameter should be a key from the
+hash returned by <a
+href="BareMetalServer.html#method-c-cancellation_reasons">::cancellation_reasons</a>.</p>
+
+<p>You may add your own, more specific reasons for cancelling a server in the
+<code>comments</code> parameter.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="cancel-21-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 46</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">cancel!</span>(<span class="ruby-identifier">reason</span> = <span class="ruby-value">:unneeded</span>, <span class="ruby-identifier">comment</span> = <span class="ruby-string">''</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">bare_metal_instance?</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">cancellation_reasons</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">cancellation_reasons</span>()
+    <span class="ruby-identifier">cancel_reason</span> = <span class="ruby-identifier">cancellation_reasons</span>[<span class="ruby-identifier">reason</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">cancellation_reasons</span>[<span class="ruby-value">:unneeded</span>]
+    <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Ticket</span>].<span class="ruby-identifier">createCancelServerTicket</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>, <span class="ruby-identifier">cancel_reason</span>, <span class="ruby-identifier">comment</span>, <span class="ruby-keyword">true</span>, <span class="ruby-string">'HARDWARE'</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-comment"># Note that reason and comment are ignored in this case, unfortunately</span>
+    <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Billing_Item</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[id]&quot;</span>).<span class="ruby-identifier">getBillingItem</span>[<span class="ruby-string">'id'</span>].<span class="ruby-identifier">to_i</span>).<span class="ruby-identifier">cancelService</span>()
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-firewall_port_speed" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">firewall_port_speed</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the max port speed of the public network interfaces of the server
+taking into account bound interface pairs (redundant network cards).</p>
+          
+          
+
+          
+          <div class="method-source-code" id="firewall_port_speed-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 121</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">firewall_port_speed</span>
+  <span class="ruby-identifier">network_components</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[id,maxSpeed,networkComponentGroup.networkComponents]&quot;</span>).<span class="ruby-identifier">getFrontendNetworkComponents</span>()
+
+  <span class="ruby-comment"># Split the interfaces into grouped and ungrouped interfaces. The max speed of a group will be the sum</span>
+  <span class="ruby-comment"># of the individual speeds in that group.  The max speed of ungrouped interfaces is simply the max speed</span>
+  <span class="ruby-comment"># of that interface.</span>
+  <span class="ruby-identifier">grouped_interfaces</span>, <span class="ruby-identifier">ungrouped_interfaces</span> = <span class="ruby-identifier">network_components</span>.<span class="ruby-identifier">partition</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">interface</span><span class="ruby-operator">|</span> <span class="ruby-identifier">interface</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">&quot;networkComponentGroup&quot;</span>) }
+
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">grouped_interfaces</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-identifier">group_speeds</span> = <span class="ruby-identifier">grouped_interfaces</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">interface</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">interface</span>[<span class="ruby-string">'networkComponentGroup'</span>][<span class="ruby-string">'networkComponents'</span>].<span class="ruby-identifier">inject</span>(<span class="ruby-value">0</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">total_speed</span>, <span class="ruby-identifier">component</span><span class="ruby-operator">|</span> <span class="ruby-identifier">total_speed</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">component</span>[<span class="ruby-string">'maxSpeed'</span>]}
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">max_group_speed</span> = <span class="ruby-identifier">group_speeds</span>.<span class="ruby-identifier">max</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">max_group_speed</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">ungrouped_interfaces</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-identifier">max_ungrouped_speed</span> = <span class="ruby-identifier">ungrouped_interfaces</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">interface</span><span class="ruby-operator">|</span> <span class="ruby-identifier">interface</span>[<span class="ruby-string">'maxSpeed'</span>]}.<span class="ruby-identifier">max</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">max_ungrouped_speed</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">return</span> [<span class="ruby-identifier">max_group_speed</span>, <span class="ruby-identifier">max_ungrouped_speed</span>].<span class="ruby-identifier">max</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-remote_management_accounts" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">remote_management_accounts</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the username/password combinations for remote management accounts</p>
+          
+          
+
+          
+          <div class="method-source-code" id="remote_management_accounts-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 60</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">remote_management_accounts</span>
+  <span class="ruby-keyword">self</span>[<span class="ruby-string">'remoteManagementAccounts'</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-service" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">service</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the typical <a href="Service.html">Service</a> used to work with
+this <a href="Server.html">Server</a> For Bare Metal Servers that is
+<code>SoftLayer_Hardware</code> though in some special cases you may have
+to use <code>SoftLayer_Hardware_Server</code> as a type or service.  That
+service object is available thorugh the hardware_server_service method</p>
+          
+          
+
+          
+          <div class="method-source-code" id="service-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 69</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">service</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Hardware_Server</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

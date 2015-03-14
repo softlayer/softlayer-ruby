@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class SoftLayer::ObjectMaskProperty - softlayer_api gem 3.0.1</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="../Object.html">Object</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-add_child">#add_child</a>
+    
+    <li ><a href="#method-i-add_children">#add_children</a>
+    
+    <li ><a href="#method-i-can_merge_with-3F">#can_merge_with?</a>
+    
+    <li ><a href="#method-i-merge">#merge</a>
+    
+    <li ><a href="#method-i-to_s">#to_s</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-SoftLayer::ObjectMaskProperty">
+  <h1 id="class-SoftLayer::ObjectMaskProperty" class="class">
+    class SoftLayer::ObjectMaskProperty
+  </h1>
+
+  <section class="description">
+    
+<p>A class representing a <a href="../SoftLayer.html">SoftLayer</a> Object’s
+property as represented in an <a href="../Object.html">Object</a> Mask.</p>
+
+<p>The <a href="../Object.html">Object</a> Mask Parser parses <a
+href="../Object.html">Object</a> Mask Strings into <a
+href="ObjectMaskProperty.html">ObjectMaskProperty</a> structures.</p>
+
+<p>Another useful property <a
+href="ObjectMaskProperty.html">ObjectMaskProperty</a> structures is that
+they can can merge with compatible structures to create a new structure
+which incorporates the properties of both, but in a streamlined construct</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-children" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">children</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-name" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">name</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-type" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">type</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(name, type = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskProperty.rb, line 23</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">type</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
+  <span class="ruby-ivar">@type</span> = <span class="ruby-identifier">type</span>
+  <span class="ruby-ivar">@children</span> = []
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-add_child" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_child</span><span
+            class="method-args">(new_child)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="add_child-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskProperty.rb, line 49</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_child</span>(<span class="ruby-identifier">new_child</span>)
+  <span class="ruby-identifier">mergeable_child</span> = <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">existing_child</span><span class="ruby-operator">|</span> <span class="ruby-identifier">existing_child</span>.<span class="ruby-identifier">can_merge_with?</span> <span class="ruby-identifier">new_child</span> }
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">mergeable_child</span>
+    <span class="ruby-identifier">mergeable_child</span>.<span class="ruby-identifier">merge</span> <span class="ruby-identifier">new_child</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">new_child</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-add_children" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_children</span><span
+            class="method-args">(new_children)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="add_children-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskProperty.rb, line 58</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_children</span>(<span class="ruby-identifier">new_children</span>)
+  <span class="ruby-identifier">new_children</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">new_child</span><span class="ruby-operator">|</span> <span class="ruby-identifier">add_child</span>(<span class="ruby-identifier">new_child</span>) }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-can_merge_with-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">can_merge_with?</span><span
+            class="method-args">(other_property)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="can_merge_with-3F-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskProperty.rb, line 45</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">can_merge_with?</span> (<span class="ruby-identifier">other_property</span>)
+  (<span class="ruby-keyword">self</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other_property</span>.<span class="ruby-identifier">name</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-keyword">self</span>.<span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other_property</span>.<span class="ruby-identifier">type</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-merge" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">merge</span><span
+            class="method-args">(other_property)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>DANGER: assumes you’ve already checked can_merge_with? before calling this
+routine!</p>
+          
+          
+
+          
+          <div class="method-source-code" id="merge-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskProperty.rb, line 63</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">merge</span>(<span class="ruby-identifier">other_property</span>)
+  <span class="ruby-identifier">add_children</span> <span class="ruby-identifier">other_property</span>.<span class="ruby-identifier">children</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-to_s" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">to_s</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="to_s-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskProperty.rb, line 29</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
+  <span class="ruby-identifier">full_name</span> = <span class="ruby-ivar">@name</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@type</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@type</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-identifier">full_name</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;(#{@type})&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+    <span class="ruby-identifier">full_name</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;.#{@children[0].to_s}&quot;</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+    <span class="ruby-identifier">full_name</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;[#{@children.collect { |child| child.to_s }.join(',')}]&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">full_name</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

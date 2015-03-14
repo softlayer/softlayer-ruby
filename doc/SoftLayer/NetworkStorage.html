@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class SoftLayer::NetworkStorage - softlayer_api gem 3.0.1</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="ModelBase.html">SoftLayer::ModelBase</a>
+  
+</div>
+
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><a class="include" href="DynamicAttribute.html">SoftLayer::DynamicAttribute</a>
+  
+  
+  </ul>
+</div>
+
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-default_object_mask">::default_object_mask</a>
+    
+    <li ><a href="#method-c-find_network_storage">::find_network_storage</a>
+    
+    <li ><a href="#method-i-account_password">#account_password</a>
+    
+    <li ><a href="#method-i-add_credential">#add_credential</a>
+    
+    <li ><a href="#method-i-assign_credential">#assign_credential</a>
+    
+    <li ><a href="#method-i-credentials">#credentials</a>
+    
+    <li ><a href="#method-i-has_user_credential-3F">#has_user_credential?</a>
+    
+    <li ><a href="#method-i-notes-3D">#notes=</a>
+    
+    <li ><a href="#method-i-password-3D">#password=</a>
+    
+    <li ><a href="#method-i-remove_credential">#remove_credential</a>
+    
+    <li ><a href="#method-i-service">#service</a>
+    
+    <li ><a href="#method-i-service_resource">#service_resource</a>
+    
+    <li ><a href="#method-i-softlayer_properties">#softlayer_properties</a>
+    
+    <li ><a href="#method-i-update_credential_password">#update_credential_password</a>
+    
+    <li ><a href="#method-i-webcc_account">#webcc_account</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-SoftLayer::NetworkStorage">
+  <h1 id="class-SoftLayer::NetworkStorage" class="class">
+    class SoftLayer::NetworkStorage
+  </h1>
+
+  <section class="description">
+    
+<p>Each <a href="../SoftLayer.html">SoftLayer</a> <a
+href="NetworkStorage.html">NetworkStorage</a> instance provides information
+about a storage product and access credentials.</p>
+
+<p>This class roughly corresponds to the entity SoftLayer_Network_Storage in
+the API.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-capacity" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">capacity</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>A Storage account’s capacity, measured in gigabytes.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-capacityGb" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">capacityGb</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>A Storage account’s capacity, measured in gigabytes.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-createDate" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">createDate</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The date a network storage volume was created.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-created" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">created</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The date a network storage volume was created.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-nasType" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">nasType</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>A Storage account’s type.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-notes" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">notes</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Public notes related to a Storage volume.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-password" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">password</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The password used to access a non-EVault Storage volume. This password is
+used to register the EVault server agent with the vault backup system.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-type" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">type</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>A Storage account’s type.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-upgradable" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">upgradable</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>This flag indicates whether this storage type is upgradable or not.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-upgradableFlag" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">upgradableFlag</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>This flag indicates whether this storage type is upgradable or not.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-username" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">username</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The username used to access a non-EVault Storage volume. This username is
+used to register the EVault server agent with the vault backup system.</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-find_network_storage" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">find_network_storage</span><span
+            class="method-args">(options_hash = {})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve a list of network storage services.</p>
+
+<p>The options parameter should contain:</p>
+
+<p><strong><code>:client</code></strong> - The client used to connect to the
+API</p>
+
+<p>If no client is given, then the routine will try to use <a
+href="Client.html#method-c-default_client">SoftLayer::Client.default_client</a>
+If no client can be found the routine will raise an error.</p>
+
+<p>You may filter the list returned by adding options:</p>
+<ul><li>
+<p><strong><code>:datacenter</code></strong>                  (string) -
+Include network storage associated with servers matching this datacenter</p>
+</li><li>
+<p><strong><code>:domain</code></strong>                      (string) -
+Include network storage associated with servers matching this domain</p>
+</li><li>
+<p><strong><code>:hostname</code></strong>                    (string) -
+Include network storage associated with servers matching this hostname</p>
+</li><li>
+<p><strong><code>:network_storage_server_type</code></strong> (string) -
+Include network storage associated with this server type</p>
+</li><li>
+<p><strong><code>:network_storage_type</code></strong>        (string) -
+Include network storage from devices of this storage type</p>
+</li><li>
+<p><strong><code>:service</code></strong>                     (string) -
+Include network storage from devices with this service fqdn</p>
+</li><li>
+<p><strong><code>:tags</code></strong>                        (Array)  -
+Include network storage associated with servers matching these tags</p>
+</li></ul>
+          
+          
+
+          
+          <div class="method-source-code" id="find_network_storage-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 194</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find_network_storage</span>(<span class="ruby-identifier">options_hash</span>  = {})
+  <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:client</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
+
+  <span class="ruby-keyword">if</span>(<span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">has_key?</span> <span class="ruby-value">:network_storage_object_filter</span>)
+    <span class="ruby-identifier">network_storage_object_filter</span> = <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_object_filter</span>]
+    <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;Expected an instance of SoftLayer::ObjectFilter&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">network_storage_object_filter</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">ObjectFilter</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">network_storage_object_filter</span> = <span class="ruby-constant">ObjectFilter</span>.<span class="ruby-identifier">new</span>()
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:network_storage_server_type</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span> [ <span class="ruby-value">:hardware</span>, <span class="ruby-value">:virtual_server</span> ].<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_server_type</span>])
+    <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Expected one of :hardware or :virtual_server for :network_storage_server_type option in #{__method__}&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">filter_label</span> = {
+    <span class="ruby-value">:evault</span>          =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;evaultNetworkStorage&quot;</span>,
+    <span class="ruby-value">:hardware</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;hardware&quot;</span>,
+    <span class="ruby-value">:hub</span>             =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;hubNetworkStorage&quot;</span>,
+    <span class="ruby-value">:iscsi</span>           =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;iscsiNetworkStorage&quot;</span>,
+    <span class="ruby-value">:lockbox</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;lockboxNetworkStorage&quot;</span>,
+    <span class="ruby-value">:nas</span>             =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;nasNetworkStorage&quot;</span>,
+    <span class="ruby-value">:network_storage</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;networkStorage&quot;</span>,
+    <span class="ruby-value">:virtual_server</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;virtualGuest&quot;</span>
+  }
+
+  <span class="ruby-identifier">option_to_filter_path</span> = {
+    <span class="ruby-value">:datacenter</span>                 =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">storage_type</span>, <span class="ruby-identifier">server_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">storage_type</span>], <span class="ruby-string">'.'</span>, <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">server_type</span>], <span class="ruby-string">'.datacenter.name'</span> ].<span class="ruby-identifier">join</span>                  },
+    <span class="ruby-value">:domain</span>                     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">storage_type</span>, <span class="ruby-identifier">server_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">storage_type</span>], <span class="ruby-string">'.'</span>, <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">server_type</span>], <span class="ruby-string">'.domain'</span> ].<span class="ruby-identifier">join</span>                           },
+    <span class="ruby-value">:hostname</span>                   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">storage_type</span>, <span class="ruby-identifier">server_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">storage_type</span>], <span class="ruby-string">'.'</span>, <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">server_type</span>], <span class="ruby-string">'.hostname'</span> ].<span class="ruby-identifier">join</span>                         },
+    <span class="ruby-value">:service</span>                    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">storage_type</span><span class="ruby-operator">|</span>              <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">storage_type</span>],                                 <span class="ruby-string">'.serviceResource.backendIpAddress'</span> ].<span class="ruby-identifier">join</span> },
+    <span class="ruby-value">:tags</span>                       =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">storage_type</span>, <span class="ruby-identifier">server_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">storage_type</span>], <span class="ruby-string">'.'</span>, <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">server_type</span>], <span class="ruby-string">'.tagReferences.tag.name'</span> ].<span class="ruby-identifier">join</span>           },
+  }
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_type</span>]
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">filter_label</span>.<span class="ruby-identifier">select</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">label</span>,<span class="ruby-identifier">filter</span><span class="ruby-operator">|</span> <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">end_with?</span>(<span class="ruby-string">&quot;Storage&quot;</span>)}.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_type</span>])
+      <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Expected :evault, :hub, :iscsi, :lockbox, :nas or :network_storage for option :network_storage_type in #{__method__}&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">network_storage_type</span> = <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_type</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:network_storage</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:service</span>]
+    <span class="ruby-identifier">network_storage_object_filter</span>.<span class="ruby-identifier">modify</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-identifier">option_to_filter_path</span>[<span class="ruby-value">:service</span>].<span class="ruby-identifier">call</span>(<span class="ruby-identifier">network_storage_type</span>)).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:service</span>])
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_server_type</span>]
+    [ <span class="ruby-value">:datacenter</span>, <span class="ruby-value">:domain</span>, <span class="ruby-value">:hostname</span> ].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">option</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-identifier">option</span>]
+        <span class="ruby-identifier">network_storage_object_filter</span>.<span class="ruby-identifier">modify</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-identifier">option_to_filter_path</span>[<span class="ruby-identifier">option</span>].<span class="ruby-identifier">call</span>(<span class="ruby-identifier">network_storage_type</span>, <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_server_type</span>])).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-identifier">option</span>])
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>]
+      <span class="ruby-identifier">network_storage_object_filter</span>.<span class="ruby-identifier">set_criteria_for_key_path</span>(<span class="ruby-identifier">option_to_filter_path</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">call</span>(<span class="ruby-identifier">network_storage_type</span>, <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_server_type</span>]),
+                                                              {
+                                                                <span class="ruby-string">'operation'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'in'</span>,
+                                                                <span class="ruby-string">'options'</span> =<span class="ruby-operator">&gt;</span> [{
+                                                                                <span class="ruby-string">'name'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'data'</span>,
+                                                                                <span class="ruby-string">'value'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
+                                                                              }]
+                                                              })
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Account</span>]
+  <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">network_storage_object_filter</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">network_storage_object_filter</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-constant">NetworkStorage</span>.<span class="ruby-identifier">default_object_mask</span>)
+  <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_object_mask</span>]) <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_object_mask</span>]
+
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_type</span>]
+  <span class="ruby-keyword">when</span> <span class="ruby-value">:evault</span>
+    <span class="ruby-identifier">network_storage_data</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">getEvaultNetworkStorage</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-value">:hub</span>
+    <span class="ruby-identifier">network_storage_data</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">getHubNetworkStorage</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-value">:iscsi</span>
+    <span class="ruby-identifier">network_storage_data</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">getIscsiNetworkStorage</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-value">:lockbox</span>
+    <span class="ruby-identifier">network_storage_data</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">getLockboxNetworkStorage</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-value">:nas</span>
+    <span class="ruby-identifier">network_storage_data</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">getNasNetworkStorage</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-value">:network_storage</span>, <span class="ruby-keyword">nil</span>
+    <span class="ruby-identifier">network_storage_data</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">getNetworkStorage</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">network_storage_data</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">network_storage</span><span class="ruby-operator">|</span> <span class="ruby-constant">NetworkStorage</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">network_storage</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">network_storage</span>.<span class="ruby-identifier">empty?</span> }.<span class="ruby-identifier">compact</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="protected-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Protected Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-default_object_mask" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">default_object_mask</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="default_object_mask-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 325</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
+  {
+    <span class="ruby-string">&quot;mask(SoftLayer_Network_Storage)&quot;</span> =<span class="ruby-operator">&gt;</span> [
+                                          <span class="ruby-string">'capacityGb'</span>,
+                                          <span class="ruby-string">'createDate'</span>,
+                                          <span class="ruby-string">'id'</span>,
+                                          <span class="ruby-string">'nasType'</span>,
+                                          <span class="ruby-string">'notes'</span>,
+                                          <span class="ruby-string">'password'</span>,
+                                          <span class="ruby-string">'upgradableFlag'</span>,
+                                          <span class="ruby-string">'username'</span>
+                                         ]
+  }.<span class="ruby-identifier">to_sl_object_mask</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-account_password" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">account_password</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Other usernames and passwords associated with a Storage volume.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="account_password-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 59</span>
+<span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:account_password</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-comment">#only retrieved once per instance</span>
+    <span class="ruby-ivar">@account_password</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">account_password</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-constant">AccountPassword</span>.<span class="ruby-identifier">default_object_mask</span>).<span class="ruby-identifier">getAccountPassword</span>
+    <span class="ruby-constant">AccountPassword</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">account_password</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">account_password</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-add_credential" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_credential</span><span
+            class="method-args">(credential_type)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Add a username/password credential to the network storage instance</p>
+          
+          
+
+          
+          <div class="method-source-code" id="add_credential-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 114</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_credential</span>(<span class="ruby-identifier">credential_type</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new credential type cannot be nil&quot;</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">credential_type</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new credential type cannot be empty&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">credential_type</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-identifier">new_credential</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-constant">NetworkStorageCredential</span>.<span class="ruby-identifier">default_object_mask</span>).<span class="ruby-identifier">assignNewCredential</span>(<span class="ruby-identifier">credential_type</span>.<span class="ruby-identifier">to_s</span>)
+  
+  <span class="ruby-ivar">@credentials</span> = <span class="ruby-keyword">nil</span>
+
+  <span class="ruby-constant">NetworkStorageCredential</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">new_credential</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">new_credential</span>.<span class="ruby-identifier">empty?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-assign_credential" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">assign_credential</span><span
+            class="method-args">(username)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Assign an existing network storage credential specified by the username to
+the network storage instance</p>
+          
+          
+
+          
+          <div class="method-source-code" id="assign_credential-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 128</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">assign_credential</span>(<span class="ruby-identifier">username</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The username cannot be nil&quot;</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">username</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The username cannot be empty&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">username</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">assignCredential</span>(<span class="ruby-identifier">username</span>.<span class="ruby-identifier">to_s</span>)
+  
+  <span class="ruby-ivar">@credentials</span> = <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-credentials" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">credentials</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>A Storage volume’s access credentials.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="credentials-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 73</span>
+<span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:credentials</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-comment">#only retrieved once per instance</span>
+    <span class="ruby-ivar">@credentials</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-constant">NetworkStorageCredential</span>.<span class="ruby-identifier">default_object_mask</span>).<span class="ruby-identifier">getCredentials</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">cred</span><span class="ruby-operator">|</span> <span class="ruby-constant">NetworkStorageCredential</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">cred</span>) }
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-has_user_credential-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">has_user_credential?</span><span
+            class="method-args">(username)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Determines if one of the credentials pertains to the specified username.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="has_user_credential-3F-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 140</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">has_user_credential?</span>(<span class="ruby-identifier">username</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">credentials</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">credential</span><span class="ruby-operator">|</span> <span class="ruby-identifier">credential</span>.<span class="ruby-identifier">username</span> }.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">username</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-notes-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">notes=</span><span
+            class="method-args">(notes)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Updates the notes for the network storage instance.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="notes-3D-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 147</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">notes=</span>(<span class="ruby-identifier">notes</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">editObject</span>({ <span class="ruby-string">&quot;notes&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">notes</span>.<span class="ruby-identifier">to_s</span> })
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">refresh_details</span>()
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-password-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">password=</span><span
+            class="method-args">(password)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Updates the password for the network storage instance.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="password-3D-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 155</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">password=</span>(<span class="ruby-identifier">password</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new password cannot be nil&quot;</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">password</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new password cannot be empty&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">password</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">editObject</span>({ <span class="ruby-string">&quot;password&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">password</span>.<span class="ruby-identifier">to_s</span> })
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">refresh_details</span>()
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-remove_credential" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">remove_credential</span><span
+            class="method-args">(username)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Remove an existing network storage credential specified by the username
+from the network storage instance</p>
+          
+          
+
+          
+          <div class="method-source-code" id="remove_credential-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 166</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_credential</span>(<span class="ruby-identifier">username</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The username cannot be nil&quot;</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">username</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The username cannot be empty&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">username</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">removeCredential</span>(<span class="ruby-identifier">username</span>.<span class="ruby-identifier">to_s</span>)
+  
+  <span class="ruby-ivar">@credentials</span> = <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-service" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">service</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the service for interacting with this network storage through the
+network API</p>
+          
+          
+
+          
+          <div class="method-source-code" id="service-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 289</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">service</span>
+  <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Network_Storage</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-service_resource" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">service_resource</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The network resource a Storage service is connected to.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="service_resource-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 86</span>
+<span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:service_resource</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-comment">#only retrieved once per instance</span>
+    <span class="ruby-ivar">@service_resource</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-constant">NetworkService</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-constant">NetworkService</span>.<span class="ruby-identifier">default_object_mask</span>).<span class="ruby-identifier">getServiceResource</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-softlayer_properties" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">softlayer_properties</span><span
+            class="method-args">(object_mask = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Make an API request to <a href="../SoftLayer.html">SoftLayer</a> and return
+the latest properties hash for this object.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="softlayer_properties-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 297</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">softlayer_properties</span>(<span class="ruby-identifier">object_mask</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">my_service</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>
+
+  <span class="ruby-keyword">if</span>(<span class="ruby-identifier">object_mask</span>)
+    <span class="ruby-identifier">my_service</span> = <span class="ruby-identifier">my_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">object_mask</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">my_service</span> = <span class="ruby-identifier">my_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">default_object_mask</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">my_service</span>.<span class="ruby-identifier">getObject</span>()
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-update_credential_password" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_credential_password</span><span
+            class="method-args">(username, password)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Updates the password for the network storage credential of the username
+specified.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="update_credential_password-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 312</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_credential_password</span>(<span class="ruby-identifier">username</span>, <span class="ruby-identifier">password</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new password cannot be nil&quot;</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">password</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new username cannot be nil&quot;</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">username</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new password cannot be empty&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">password</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new username cannot be empty&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">username</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">editCredential</span>(<span class="ruby-identifier">username</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-identifier">password</span>.<span class="ruby-identifier">to_s</span>)
+
+  <span class="ruby-ivar">@credentials</span> = <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-webcc_account" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">webcc_account</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The account username and password for the EVault webCC interface.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="webcc_account-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 99</span>
+<span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:webcc_account</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-comment">#only retrieved once per instance</span>
+    <span class="ruby-ivar">@webcc_account</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">webcc_account</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-constant">AccountPassword</span>.<span class="ruby-identifier">default_object_mask</span>).<span class="ruby-identifier">getWebccAccount</span>
+    <span class="ruby-constant">AccountPassword</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">webcc_account</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">webcc_account</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class SoftLayer::ObjectMaskTokenizer - softlayer_api gem 3.0.1</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="../Object.html">Object</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-current_token">#current_token</a>
+    
+    <li ><a href="#method-i-more_tokens-3F">#more_tokens?</a>
+    
+    <li ><a href="#method-i-next_token">#next_token</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-SoftLayer::ObjectMaskTokenizer">
+  <h1 id="class-SoftLayer::ObjectMaskTokenizer" class="class">
+    class SoftLayer::ObjectMaskTokenizer
+  </h1>
+
+  <section class="description">
+    
+<p>This class is an implementation detail of the <a
+href="ObjectMaskParser.html">ObjectMaskParser</a></p>
+
+<p>It takes an <a href="../Object.html">Object</a> Mask <a
+href="../String.html">String</a> and breaks it down into <a
+href="ObjectMaskToken.html">ObjectMaskToken</a> instances.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="ObjectMask_Token_Specs">ObjectMask_Token_Specs
+        
+        <dd>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(mask_string)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskTokenizer.rb, line 28</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">mask_string</span>)
+  <span class="ruby-ivar">@mask_string</span> = <span class="ruby-identifier">mask_string</span>.<span class="ruby-identifier">clone</span>
+  <span class="ruby-ivar">@scanner</span> = <span class="ruby-constant">StringScanner</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@mask_string</span>)
+  <span class="ruby-ivar">@current_token</span> = <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-current_token" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">current_token</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="current_token-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskTokenizer.rb, line 38</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">current_token</span>
+  <span class="ruby-ivar">@current_token</span> = <span class="ruby-identifier">next_token</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@current_token</span>
+  <span class="ruby-ivar">@current_token</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-more_tokens-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">more_tokens?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="more_tokens-3F-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskTokenizer.rb, line 34</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">more_tokens?</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@current_token</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">||</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@current_token</span>.<span class="ruby-identifier">end_of_string?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-next_token" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">next_token</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="next_token-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectMaskTokenizer.rb, line 43</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">next_token</span>
+  <span class="ruby-comment"># if we're at the end of the string, we keep returning the</span>
+  <span class="ruby-comment"># EOS token</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">more_tokens?</span> <span class="ruby-keyword">then</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@scanner</span>.<span class="ruby-identifier">eos?</span>
+      <span class="ruby-comment"># skip whitespace</span>
+      <span class="ruby-ivar">@scanner</span>.<span class="ruby-identifier">skip</span>(<span class="ruby-regexp">/\s+/</span>)
+
+      <span class="ruby-comment"># search through the token specs to find which (if any) matches</span>
+      <span class="ruby-identifier">token_spec</span> = <span class="ruby-constant">ObjectMask_Token_Specs</span>.<span class="ruby-identifier">find</span>() <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">token_spec</span><span class="ruby-operator">|</span>
+        <span class="ruby-ivar">@scanner</span>.<span class="ruby-identifier">check</span>(<span class="ruby-identifier">token_spec</span>[<span class="ruby-value">0</span>])
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-comment"># if a good token spec was found, set the current token to the one found</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">token_spec</span>
+        <span class="ruby-ivar">@current_token</span> = <span class="ruby-constant">ObjectMaskToken</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">token_spec</span>.<span class="ruby-identifier">last</span>, <span class="ruby-ivar">@scanner</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-identifier">token_spec</span>[<span class="ruby-value">0</span>]))
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-ivar">@current_token</span> = <span class="ruby-constant">ObjectMaskToken</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:invalid_token</span>, <span class="ruby-ivar">@scanner</span>.<span class="ruby-identifier">rest</span>)
+        <span class="ruby-ivar">@scanner</span>.<span class="ruby-identifier">terminate</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-ivar">@current_token</span> = <span class="ruby-constant">ObjectMaskToken</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:eos</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@current_token</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

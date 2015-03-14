@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module SoftLayer::DynamicAttribute - softlayer_api gem 3.0.1</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    
+    <div id="extends-section" class="nav-section">
+  <h3>Extended With Modules</h3>
+
+  <ul class="link-list">
+    
+  
+    <li><a class="extend" href="DynamicAttribute/ClassMethods.html">SoftLayer::DynamicAttribute::ClassMethods</a>
+  
+  
+  </ul>
+</div>
+
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-included">::included</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-SoftLayer::DynamicAttribute">
+  <h1 id="module-SoftLayer::DynamicAttribute" class="module">
+    module SoftLayer::DynamicAttribute
+  </h1>
+
+  <section class="description">
+    
+<p>This module is inteneded to be used by classes in the <a
+href="../SoftLayer.html">SoftLayer</a> object model. It creates a small DSL
+for creating attributes that update themselves dynamically (usually by
+making requests to the <a href="../SoftLayer.html">SoftLayer</a> API)</p>
+
+<p><code>sl_dynamic_attr</code> is an implementation of a memoization scheme
+The module creates a getter which is implemented in terms of a predicate
+(identifying whether or not the attribute needs to be updated) and an
+update routine</p>
+
+<p>When the getter is called, it checks the predicate routine to see if the
+attribute needs to be updated. If it doesn’t, then the getter simply
+returns the cached value for the attribute. If the attribute does need to
+be updated, the getter calls the update routine to get a new value and
+caches that value off before returning it to the caller.</p>
+
+<p>Declaring a attribute adds three methods to a class and a corresponding
+instance variable in instances of the class All three are based on the name
+of the attribute:</p>
+<ul><li>
+<p>The getter simply has the same name as the attribute</p>
+</li><li>
+<p>The predicate routine is called +should_update_&lt;attribute name&gt;?+</p>
+</li><li>
+<p>The updating routine is called +update_&lt;attribute name&gt;!+</p>
+</li></ul>
+
+<p>The getter can also be called with a boolean argument. If that argument is
+true, the getter will force the attribute to be updated without consulting
+the <code>should_update?</code> predicate</p>
+
+<p>When a attribute is defined, the definition takes a block. Inside the block
+there is a small DSL that allows you to set the behavior of the
+<code>should_update?</code> predicate and the <code>update_!</code>
+routine.</p>
+
+<p>A attribute definition might look something like this:</p>
+
+<pre class="ruby"><span class="ruby-identifier">sl_dynamic_attr</span> :<span class="ruby-identifier">lollipop</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">lollipop</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">lollipop</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">lollipop_supply_is_low?</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">lollipop</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">candy_store</span>.<span class="ruby-identifier">buy_lollipops</span>(<span class="ruby-identifier">bakers_dozen</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-included" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">included</span><span
+            class="method-args">(included_in)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="included-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/DynamicAttribute.rb, line 150</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">included</span>(<span class="ruby-identifier">included_in</span>)
+  <span class="ruby-identifier">included_in</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">ClassMethods</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
