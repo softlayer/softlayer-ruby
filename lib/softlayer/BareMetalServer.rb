@@ -19,6 +19,27 @@ module SoftLayer
   class BareMetalServer < Server
 
     ##
+    # Add user customer to the list of users notified on monitor failure. Accepts a UserCustomer
+    # instance or a user customer username.
+    #
+    def add_monitor_notification_user(user_customer)
+      raise "#{__method__} requires a user customer but none was given" if !user_customer || (!user_customer.class.method_defined?(:username) && user_customer.empty?)
+
+      user_customer_data = user_customer.class.method_defined?(:username) ? user_customer : UserCustomer.user_customer_with_username(user_customer, softlayer_client)
+
+      raise "#{__method__} user customer with username #{user_customer.inspect} not found" unless user_customer_data
+
+      if self.notified_monitor_users.select { |notified_monitor_user| notified_monitor_user['id'] == user_customer_data['id'] }.empty?
+        softlayer_client[:User_Customer_Notification_Hardware].createObject({
+                                                                              'hardwareId' => self.id,
+                                                                              'userId'     => user_customer_data['id']
+                                                                            })
+
+        @notified_monitor_users = nil
+      end
+    end
+
+    ##
     # Returns true if this +BareMetalServer+ is actually a Bare Metal Instance
     # a Bare Metal Instance is physical, hardware server that is is provisioned to
     # match a profile with characteristics similar to a Virtual Server
@@ -59,6 +80,30 @@ module SoftLayer
     #
     def remote_management_accounts
       self['remoteManagementAccounts']
+    end
+
+    ##
+    # Rmove user customer from the list of users notified on monitor failure. Accepts a UserCustomer
+    # instance or a user customer username.
+    #
+    def remove_monitor_notification_user(user_customer)
+      raise "#{__method__} requires a user customer but none was given" if !user_customer || (!user_customer.class.method_defined?(:username) && user_customer.empty?)
+
+      user_customer_data = user_customer.class.method_defined?(:username) ? user_customer : UserCustomer.user_customer_with_username(user_customer, softlayer_client)
+
+      raise "#{__method__} user customer with username #{user_customer.inspect} not found" unless user_customer_data
+
+      monitor_user_notification_object_filter = ObjectFilter.new()
+
+      monitor_user_notification_object_filter.modify { |filter| filter.accept('monitoringUserNotification.userId').when_it is(user_customer_data['id']) }
+
+      monitor_user_notification_data = self.service.object_filter(monitor_user_notification_object_filter).object_mask("mask[id]").getMonitoringUserNotification
+
+      unless monitor_user_notification_data.empty?
+        softlayer_client[:User_Customer_Notification_Hardware].deleteObjects(monitor_user_notification_data)
+
+        @notified_monitor_users = nil
+      end
     end
 
     ##
