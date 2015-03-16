@@ -88,7 +88,7 @@ module SoftLayer
     # Add user customers to the list of users notified on monitor failure. Accepts a list of  UserCustomer
     # instances or user customer usernames.
     #
-    def add_monitor_notification_users(user_customers)
+    def add_network_monitor_notification_users(user_customers)
       raise "#{__method__} requires a list user customers but none was given" if !user_customers || user_customers.empty?
 
       user_customers_data = user_customers.map do |user_customer|
@@ -155,7 +155,7 @@ module SoftLayer
     # Rmove user customers from the list of users notified on monitor failure. Accepts a list of UserCustomer
     # instances or user customer usernames.
     #
-    def remove_monitor_notification_users(user_customers)
+    def remove_network_monitor_notification_users(user_customers)
       raise "#{__method__} requires a list user customers but none was given" if !user_customers || user_customers.empty?
 
       user_customers_data = user_customers.map do |user_customer|
