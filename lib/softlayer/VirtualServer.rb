@@ -66,21 +66,30 @@ module SoftLayer
     end
 
     ##
-    # Add user customer to the list of users notified on monitor failure. Accepts a UserCustomer
-    # instance or a user customer username.
+    # Add user customers to the list of users notified on monitor failure. Accepts a list of  UserCustomer
+    # instances or user customer usernames.
     #
-    def add_monitor_notification_user(user_customer)
-      raise "#{__method__} requires a user customer but none was given" if !user_customer || (!user_customer.class.method_defined?(:username) && user_customer.empty?)
+    def add_monitor_notification_users(user_customers)
+      raise "#{__method__} requires a list user customers but none was given" if !user_customers || user_customers.empty?
 
-      user_customer_data = user_customer.class.method_defined?(:username) ? user_customer : UserCustomer.user_customer_with_username(user_customer, softlayer_client)
+      user_customers_data = user_customers.map do |user_customer|
+        raise "#{__method__} requires a user customer but none was given" if !user_customer || (!user_customer.class.method_defined?(:username) && user_customer.empty?)
 
-      raise "#{__method__} user customer with username #{user_customer.inspect} not found" unless user_customer_data
+        user_customer_data = user_customer.class.method_defined?(:username) ? user_customer : UserCustomer.user_customer_with_username(user_customer, softlayer_client)
 
-      if self.notified_monitor_users.select { |notified_monitor_user| notified_monitor_user['id'] == user_customer_data['id'] }.empty?
-        softlayer_client[:User_Customer_Notification_Virtual_Guest].createObject({
-                                                                                   'guestId' => self.id,
-                                                                                   'userId'  => user_customer_data['id']
-                                                                                 })
+        raise "#{__method__} user customer with username #{user_customer.inspect} not found" unless user_customer_data
+
+        user_customer_data
+      end
+
+      current_user_customers = self.notified_monitor_users.map { |notified_monitor_user| notified_monitor_user['id'] }
+
+      user_customers_data.delete_if { |user_customer| current_user_customers.include?(user_customer['id']) }
+
+      unless user_customers_data.empty?
+        user_customer_notifications = user_customers_data.map { |user_customer| { 'guestId' => self.id, 'userId' => user_customer['id'] } }
+
+        softlayer_client[:User_Customer_Notification_Virtual_Guest].createObjects(user_customer_notifications)
 
         @notified_monitor_users = nil
       end
@@ -124,19 +133,34 @@ module SoftLayer
     end
 
     ##
-    # Rmove user customer from the list of users notified on monitor failure. Accepts a UserCustomer
-    # instance or a user customer username.
+    # Rmove user customers from the list of users notified on monitor failure. Accepts a list of UserCustomer
+    # instances or user customer usernames.
     #
-    def remove_monitor_notification_user(user_customer)
-      raise "#{__method__} requires a user customer but none was given" if !user_customer || (!user_customer.class.method_defined?(:username) && user_customer.empty?)
+    def remove_monitor_notification_users(user_customers)
+      raise "#{__method__} requires a list user customers but none was given" if !user_customers || user_customers.empty?
 
-      user_customer_data = user_customer.class.method_defined?(:username) ? user_customer : UserCustomer.user_customer_with_username(user_customer, softlayer_client)
+      user_customers_data = user_customers.map do |user_customer|
+        raise "#{__method__} requires a user customer but none was given" if !user_customer || (!user_customer.class.method_defined?(:username) && user_customer.empty?)
 
-      raise "#{__method__} user customer with username #{user_customer.inspect} not found" unless user_customer_data
+        user_customer_data = user_customer.class.method_defined?(:username) ? user_customer : UserCustomer.user_customer_with_username(user_customer, softlayer_client)
+
+        raise "#{__method__} user customer with username #{user_customer.inspect} not found" unless user_customer_data
+
+        user_customer_data
+      end
+
+      current_user_customers = user_customers_data.map { |user_customer| user_customer['id'] }
 
       monitor_user_notification_object_filter = ObjectFilter.new()
 
-      monitor_user_notification_object_filter.modify { |filter| filter.accept('monitoringUserNotification.userId').when_it is(user_customer_data['id']) }
+      monitor_user_notification_object_filter.set_criteria_for_key_path('monitoringUserNotification.userId',
+                                                                        {
+                                                                          'operation' => 'in',
+                                                                          'options' => [{
+                                                                                          'name' => 'data',
+                                                                                          'value' => current_user_customers.map{ |uid| uid.to_s }
+                                                                                        }]
+                                                                        })
 
       monitor_user_notification_data = self.service.object_filter(monitor_user_notification_object_filter).object_mask("mask[id]").getMonitoringUserNotification
 
