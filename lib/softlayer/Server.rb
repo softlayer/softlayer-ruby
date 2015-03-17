@@ -54,6 +54,25 @@ module SoftLayer
     sl_attr :notes
 
     ##
+    # A lsst of configured network monitors.
+    #
+    sl_dynamic_attr :network_monitors do |resource|
+      resource.should_update? do
+        @network_monitors == nil
+      end
+
+      resource.to_update do
+        network_monitors_data = self.service.object_mask(NetworkMonitor.default_object_mask).getNetworkMonitors
+
+        network_monitors_data.map! do |network_monitor|
+          NetworkMonitor.new(softlayer_client, network_monitor) unless network_monitor.empty?
+        end
+
+        network_monitors_data.compact
+      end
+    end
+
+    ##
     # :attr_reader:
     # The list of user customers notified on monitoring failures
     sl_dynamic_attr :notified_network_monitor_users do |resource|
