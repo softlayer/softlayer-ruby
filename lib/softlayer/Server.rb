@@ -54,6 +54,19 @@ module SoftLayer
     sl_attr :notes
 
     ##
+    # The maximum network monitor query/response levels currently supported by the server
+    #
+    sl_dynamic_attr :network_monitor_levels do |resource|
+      resource.should_update? do
+        @network_monitor_levels == nil
+      end
+
+      resource.to_update do
+        self.service.getAvailableMonitoring
+      end
+    end
+
+    ##
     # A lsst of configured network monitors.
     #
     sl_dynamic_attr :network_monitors do |resource|
