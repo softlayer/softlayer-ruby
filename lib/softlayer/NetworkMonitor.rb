@@ -15,7 +15,9 @@ module SoftLayer
   class NetworkMonitor < ModelBase
     include ::SoftLayer::DynamicAttribute
 
-    @@query_result_descriptions = {
+    @@available_query_types      = nil
+    @@available_response_actions = nil
+    @@query_result_descriptions  = {
       0 => "Down/Critical: Server is down and/or has passed the critical response threshold (extremely long ping response, abnormal behavior, etc.).",
       1 => "Warning - Server may be recovering from a previous down state, or may have taken too long to respond.",
       2 => "Up",
@@ -83,6 +85,104 @@ module SoftLayer
       resource.to_update do
         self.service.getResponseAction
       end
+    end
+
+    ##
+    # Add a network monitor for a host ping or port check to a server.
+    #
+    def self.add_network_monitor(server, ip_address, query_type, response_action, wait_cycles = 0, argument_value = nil, options = {})
+      softlayer_client = options[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+      raise "#{__method__} requires a server to monitor but none was given" if !server || !server.kind_of?(Server)
+      raise "#{__method__} requires an IP address to monitor but none was given" if !ip_address || ip_address.empty?
+      raise "#{__method__} requires a query type for the monitor but none was given" if !query_type || (query_type.kind_of?(Hash) && !query_type.include?('id'))
+      raise "#{__method__} requires a response action for the monitor but none was given" if !response_action || (response_action.kind_of?(Hash) && !response_action.include?('id'))
+
+      query_type_id      = query_type.kind_of?(Hash) ? query_type['id'] : query_type
+      response_action_id = response_action.kind_of?(Hash) ? response_action['id'] : response_action
+
+      if available_query_types(:client => softlayer_client, :query_level => server.network_monitor_levels['monitorLevel']).select{ |query_type| query_type['id'] == query_type_id }.empty?
+        raise "#{__method__} requested monitor query level is not supported for this server"
+      end
+
+      if available_response_actions(:client => softlayer_client, :response_level => server.network_monitor_levels['responseLevel']).select{ |response| response['id'] == response_action_id }.empty?
+        raise "#{__method__} requested monitor response level is not supported for this server"
+      end
+
+      network_monitor_object_filter = ObjectFilter.new()
+      server_id_label               = server.kind_of?(VirtualServer) ? 'guestId' : 'hardwareId'
+
+      network_monitor_object_filter.modify { |filter| filter.accept('networkMonitors.arg1Value').when_it          is(argument_value.to_s) }
+      network_monitor_object_filter.modify { |filter| filter.accept('networkMonitors.' + server_id_label).when_it is(server.id)           }
+      network_monitor_object_filter.modify { |filter| filter.accept('networkMonitors.ipAddress').when_it          is(ip_address.to_s)     }
+      network_monitor_object_filter.modify { |filter| filter.accept('networkMonitors.queryTypeId').when_it        is(query_type_id)       }
+      network_monitor_object_filter.modify { |filter| filter.accept('networkMonitors.responseActionId').when_it   is(response_action_id)  }
+      network_monitor_object_filter.modify { |filter| filter.accept('networkMonitors.waitCycles').when_it         is(wait_cycles)         }
+
+      if server.service.object_filter(network_monitor_object_filter).getNetworkMonitors.empty?
+        network_monitor = softlayer_client[:Network_Monitor_Version1_Query_Host].createObject({
+                                                                                                'arg1Value'        => argument_value.to_s,
+                                                                                                server_id_label    => server.id,
+                                                                                                'ipAddress'        => ip_address.to_s,
+                                                                                                'queryTypeId'      => query_type_id,
+                                                                                                'responseActionId' => response_action_id,
+                                                                                                'waitCycles'       => wait_cycles
+                                                                                              })
+
+        NetworkMonitor.new(softlayer_client, network_monitor)
+      end
+    end
+
+    ##
+    # Return the list of available query types (optionally limited to a max query level)
+    #
+    def self.available_query_types(options = {})
+      softlayer_client = options[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
+      unless @@available_query_types
+        @@available_query_types = softlayer_client[:Network_Monitor_Version1_Query_Host_Stratum].getAllQueryTypes
+      end
+
+      if options[:query_level]
+        @@available_query_types.select { |query_type| query_type['monitorLevel'].to_i <= options[:query_level].to_i }
+      else
+        @@available_query_types
+      end
+    end
+
+    ##
+    # Return the list of available response actions (optionally limited to a max response level)
+    #
+    def self.available_response_actions(options = {})
+      softlayer_client = options[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
+      unless @@available_response_actions
+        @@available_response_actions = softlayer_client[:Network_Monitor_Version1_Query_Host_Stratum].getAllResponseTypes
+      end
+
+      if options[:response_level]
+        @@available_response_actions.select { |response_action| response_action['level'].to_i <= options[:response_level].to_i }
+      else
+        @@available_response_actions
+      end
+    end
+
+    ##
+    # Removes the list of network monitors from their associated servers
+    #
+    def self.remove_network_monitors(network_monitors, options = {})
+      softlayer_client = options[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
+      network_monitors_data = network_monitors.map do |network_monitor|
+        raise "#{__method__} requires a network monitor instance or id but non provided" if !network_monitor || !(network_monitor.kind_of?(Hash) && network_monitor['id'])
+
+        network_monitor.kind_of?(Hash) ? { 'id' => network_monitor['id'] } : { 'id' => network_monitor }
+      end
+
+      softlayer_client[:Network_Monitor_Version1_Query_Host].deleteObjects(network_monitors_data)
     end
 
     ##
