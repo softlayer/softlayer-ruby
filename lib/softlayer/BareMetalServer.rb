@@ -19,36 +19,6 @@ module SoftLayer
   class BareMetalServer < Server
 
     ##
-    # Add user customers to the list of users notified on monitor failure. Accepts a list of  UserCustomer
-    # instances or user customer usernames.
-    #
-    def add_network_monitor_notification_users(user_customers)
-      raise "#{__method__} requires a list user customers but none was given" if !user_customers || user_customers.empty?
-
-      user_customers_data = user_customers.map do |user_customer|
-        raise "#{__method__} requires a user customer but none was given" if !user_customer || (!user_customer.class.method_defined?(:username) && user_customer.empty?)
-
-        user_customer_data = user_customer.class.method_defined?(:username) ? user_customer : UserCustomer.user_customer_with_username(user_customer, softlayer_client)
-
-        raise "#{__method__} user customer with username #{user_customer.inspect} not found" unless user_customer_data
-
-        user_customer_data
-      end
-
-      current_user_customers = self.notified_monitor_users.map { |notified_monitor_user| notified_monitor_user['id'] }
-
-      user_customers_data.delete_if { |user_customer| current_user_customers.include?(user_customer['id']) }
-
-      unless user_customers_data.empty?
-        user_customer_notifications = user_customers_data.map { |user_customer| { 'hardwareId' => self.id, 'userId' => user_customer['id'] } }
-
-        softlayer_client[:User_Customer_Notification_Hardware].createObjects(user_customer_notifications)
-
-        @notified_monitor_users = nil
-      end
-    end
-
-    ##
     # Returns true if this +BareMetalServer+ is actually a Bare Metal Instance
     # a Bare Metal Instance is physical, hardware server that is is provisioned to
     # match a profile with characteristics similar to a Virtual Server
@@ -89,45 +59,6 @@ module SoftLayer
     #
     def remote_management_accounts
       self['remoteManagementAccounts']
-    end
-
-    ##
-    # Rmove user customers from the list of users notified on monitor failure. Accepts a list of UserCustomer
-    # instances or user customer usernames.
-    #
-    def remove_network_monitor_notification_users(user_customers)
-      raise "#{__method__} requires a list user customers but none was given" if !user_customers || user_customers.empty?
-
-      user_customers_data = user_customers.map do |user_customer|
-        raise "#{__method__} requires a user customer but none was given" if !user_customer || (!user_customer.class.method_defined?(:username) && user_customer.empty?)
-
-        user_customer_data = user_customer.class.method_defined?(:username) ? user_customer : UserCustomer.user_customer_with_username(user_customer, softlayer_client)
-
-        raise "#{__method__} user customer with username #{user_customer.inspect} not found" unless user_customer_data
-
-        user_customer_data
-      end
-
-      current_user_customers = user_customers_data.map { |user_customer| user_customer['id'] }
-
-      monitor_user_notification_object_filter = ObjectFilter.new()
-
-      monitor_user_notification_object_filter.set_criteria_for_key_path('monitoringUserNotification.userId',
-                                                                        {
-                                                                          'operation' => 'in',
-                                                                          'options' => [{
-                                                                                          'name' => 'data',
-                                                                                          'value' => current_user_customers.map{ |uid| uid.to_s }
-                                                                                        }]
-                                                                        })
-
-      monitor_user_notification_data = self.service.object_filter(monitor_user_notification_object_filter).object_mask("mask[id]").getMonitoringUserNotification
-
-      unless monitor_user_notification_data.empty?
-        softlayer_client[:User_Customer_Notification_Hardware].deleteObjects(monitor_user_notification_data)
-
-        @notified_monitor_users = nil
-      end
     end
 
     ##

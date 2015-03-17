@@ -134,6 +134,40 @@ module SoftLayer
     end
 
     ##
+    # Add user customers to the list of users notified on monitor failure for the specified server. Accepts a list of  UserCustomer
+    # instances or user customer usernames.
+    #
+    def self.add_network_monitor_notification_users(server, user_customers, options = {})
+      softlayer_client = options[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+      raise "#{__method__} requires a server to monitor but none was given" if !server || !server.kind_of?(Server)
+      raise "#{__method__} requires a list user customers but none was given" if !user_customers || user_customers.empty?
+
+      user_customers_data = user_customers.map do |user_customer|
+        raise "#{__method__} requires a user customer but none was given" if !user_customer || (!user_customer.class.method_defined?(:username) && user_customer.empty?)
+
+        user_customer_data = user_customer.class.method_defined?(:username) ? user_customer : UserCustomer.user_customer_with_username(user_customer, softlayer_client)
+
+        raise "#{__method__} user customer with username #{user_customer.inspect} not found" unless user_customer_data
+
+        user_customer_data
+      end
+
+      current_user_customers = server.notified_network_monitor_users.map { |notified_network_monitor_user| notified_network_monitor_user['id'] }
+
+      user_customers_data.delete_if { |user_customer| current_user_customers.include?(user_customer['id']) }
+
+      unless user_customers_data.empty?
+        notification_monitor_user_service = server.kind_of?(VirtualServer) ? :User_Customer_Notification_Virtual_Guest : :User_Customer_Notification_Hardware
+        server_id_label                   = server.kind_of?(VirtualServer) ? 'guestId' : 'hardwareId'
+
+        user_customer_notifications = user_customers_data.map { |user_customer| { server_id_label => server.id, 'userId' => user_customer['id'] } }
+
+        softlayer_client[notification_monitor_user_service].createObjects(user_customer_notifications)
+      end
+    end
+
+    ##
     # Return the list of available query types (optionally limited to a max query level)
     #
     def self.available_query_types(options = {})
@@ -166,6 +200,48 @@ module SoftLayer
         @@available_response_actions.select { |response_action| response_action['level'].to_i <= options[:response_level].to_i }
       else
         @@available_response_actions
+      end
+    end
+
+    ##
+    # Rmove user customers from the list of users notified on monitor failure for the specified server. Accepts a list of UserCustomer
+    # instances or user customer usernames.
+    #
+    def self.remove_network_monitor_notification_users(server, user_customers, options = {})
+      softlayer_client = options[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+      raise "#{__method__} requires a server to monitor but none was given" if !server || !server.kind_of?(Server)
+      raise "#{__method__} requires a list user customers but none was given" if !user_customers || user_customers.empty?
+
+      user_customers_data = user_customers.map do |user_customer|
+        raise "#{__method__} requires a user customer but none was given" if !user_customer || (!user_customer.kind_of?(UserCustomer) && user_customer.empty?)
+
+        user_customer_data = user_customer.kind_of?(UserCustomer) ? user_customer : UserCustomer.user_customer_with_username(user_customer, softlayer_client)
+
+        raise "#{__method__} user customer with username #{user_customer.inspect} not found" unless user_customer_data
+
+        user_customer_data
+      end
+
+      current_user_customers = user_customers_data.map { |user_customer| user_customer['id'] }
+
+      monitor_user_notification_object_filter = ObjectFilter.new()
+
+      monitor_user_notification_object_filter.set_criteria_for_key_path('monitoringUserNotification.userId',
+                                                                        {
+                                                                          'operation' => 'in',
+                                                                          'options' => [{
+                                                                                          'name' => 'data',
+                                                                                          'value' => current_user_customers.map{ |uid| uid.to_s }
+                                                                                        }]
+                                                                        })
+
+      monitor_user_notification_data = server.service.object_filter(monitor_user_notification_object_filter).object_mask("mask[id]").getMonitoringUserNotification
+
+      unless monitor_user_notification_data.empty?
+        notification_monitor_user_service = server.kind_of?(VirtualServer) ? :User_Customer_Notification_Virtual_Guest : :User_Customer_Notification_Hardware
+
+        softlayer_client[notification_monitor_user_service].deleteObjects(monitor_user_notification_data)
       end
     end
 
