@@ -246,16 +246,16 @@ module SoftLayer
     end
 
     ##
-    # Removes the list of network monitors from their associated servers
+    # Removes the list of network monitors from their associated servers. Accpets a list of NetworkMonitor instances or id's.
     #
     def self.remove_network_monitors(network_monitors, options = {})
       softlayer_client = options[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
       network_monitors_data = network_monitors.map do |network_monitor|
-        raise "#{__method__} requires a network monitor instance or id but non provided" if !network_monitor || !(network_monitor.kind_of?(Hash) && network_monitor['id'])
+        raise "#{__method__} requires a network monitor instance or id but non provided" if !network_monitor || (!network_monitor.kind_of?(NetworkMonitor) && network_monitor.empty?)
 
-        network_monitor.kind_of?(Hash) ? { 'id' => network_monitor['id'] } : { 'id' => network_monitor }
+        network_monitor.kind_of?(NetworkMonitor) ? { 'id' => network_monitor['id'] } : { 'id' => network_monitor }
       end
 
       softlayer_client[:Network_Monitor_Version1_Query_Host].deleteObjects(network_monitors_data)
