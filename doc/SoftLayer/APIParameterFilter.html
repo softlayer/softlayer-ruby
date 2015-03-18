@@ -4,21 +4,18 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::APIParameterFilter - softlayer_api gem 3.0.0</title>
-
-<link href="../fonts.css" rel="stylesheet">
-<link href="../rdoc.css" rel="stylesheet">
+<title>class SoftLayer::APIParameterFilter - softlayer_api gem 3.0.1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
-<script src="../js/navigation.js"></script>
-<script src="../js/search_index.js"></script>
-<script src="../js/search.js"></script>
-<script src="../js/searcher.js"></script>
 <script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
 
 
 <body id="top" role="document" class="class">
@@ -114,20 +111,22 @@
 understands how to accept the other API parameter filters and carry their
 values to <a
 href="APIParameterFilter.html#method-i-method_missing">#method_missing</a>
-in Service. Instances of this class are created internally by the Service
-in its handling of a method call and you should not have to create
-instances of this class directly.</p>
+in <a href="Service.html">Service</a>. Instances of this class are created
+internally by the <a href="Service.html">Service</a> in its handling of a
+method call and you should not have to create instances of this class
+directly.</p>
 
 <p>Instead, to use an API filter, you add a filter method to the call chain
-when you call a method through a Service</p>
+when you call a method through a <a href="Service.html">Service</a></p>
 
-<p>For example, given a Service instance called <code>account_service</code>
-you could take advantage of the API filter that identifies a particular
-object known to that service using the <a
+<p>For example, given a <a href="Service.html">Service</a> instance called
+<code>account_service</code> you could take advantage of the API filter
+that identifies a particular object known to that service using the <a
 href="APIParameterFilter.html#method-i-object_with_id">#object_with_id</a>
 method :</p>
 
-<pre>account_service.object_with_id(91234).getSomeAttribute</pre>
+<pre class="ruby"><span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">object_with_id</span>(<span class="ruby-value">91234</span>).<span class="ruby-identifier">getSomeAttribute</span>
+</pre>
 
 <p>The invocation of <a
 href="APIParameterFilter.html#method-i-object_with_id">#object_with_id</a>
@@ -181,7 +180,7 @@ is forwarding a message.</p>
 unknown method call, <a
 href="APIParameterFilter.html#method-i-method_missing">#method_missing</a>
 will forward the call on to the target. This is supposed to be an instance
-of the SoftLayer::Service class.</p>
+of the <a href="Service.html">SoftLayer::Service</a> class.</p>
         
         </div>
       </div>
@@ -253,7 +252,8 @@ of the SoftLayer::Service class.</p>
           
           <p>This allows the filters to be used at the end of a long chain of calls that
 ends at a service.  It forwards the message and the parameters to the
-target of this method (presumably a Service instance)</p>
+target of this method (presumably a <a href="Service.html">Service</a>
+instance)</p>
           
           
             <div class="method-calls-super">
@@ -342,9 +342,10 @@ server.</p>
 request. The arguments to object mask should be well formed Extended <a
 href="../Object.html">Object</a> Mask strings:</p>
 
-<pre>ticket_service.object_mask(
-  &quot;mask[createDate, modifyDate]&quot;,
-  &quot;mask(SoftLayer_Some_Type).aProperty&quot;).getObject</pre>
+<pre class="ruby"><span class="ruby-identifier">ticket_service</span>.<span class="ruby-identifier">object_mask</span>(
+  <span class="ruby-string">&quot;mask[createDate, modifyDate]&quot;</span>,
+  <span class="ruby-string">&quot;mask(SoftLayer_Some_Type).aProperty&quot;</span>).<span class="ruby-identifier">getObject</span>
+</pre>
 
 <p>The <a href="APIParameterFilter.html#method-i-object_mask">#object_mask</a>
 becomes part of the request sent to the server The object mask strings are
@@ -396,7 +397,8 @@ strings immediately before the mask is used in a call</p>
 particular ID. For example, if you want to get the ticket with an ID of
 12345 from the ticket service you might use</p>
 
-<pre>ticket_service.object_with_id(12345).getObject</pre>
+<pre class="ruby"><span class="ruby-identifier">ticket_service</span>.<span class="ruby-identifier">object_with_id</span>(<span class="ruby-value">12345</span>).<span class="ruby-identifier">getObject</span>
+</pre>
           
           
 
@@ -439,7 +441,8 @@ limit describes how many items you wish the call to return.</p>
 <p>For example, if you wanted to get five open tickets from the account
 starting with the tenth item in the open tickets list you might call</p>
 
-<pre>account_service.result_limit(10, 5).getOpenTickets</pre>
+<pre class="ruby"><span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">result_limit</span>(<span class="ruby-value">10</span>, <span class="ruby-value">5</span>).<span class="ruby-identifier">getOpenTickets</span>
+</pre>
           
           
 
@@ -577,7 +580,7 @@ parameter set.</p>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">reduced_masks</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
       <span class="ruby-identifier">reduced_masks</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_s</span>
     <span class="ruby-keyword">else</span>
-      <span class="ruby-node">&quot;[#{reduced_masks.collect{|mask| mask.to_s}.join(&#39;,&#39;)}]&quot;</span>
+      <span class="ruby-node">&quot;[#{reduced_masks.collect{|mask| mask.to_s}.join(',')}]&quot;</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-keyword">nil</span>
@@ -703,7 +706,7 @@ service is defined by their target</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
-  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

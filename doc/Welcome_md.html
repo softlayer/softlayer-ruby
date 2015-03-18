@@ -4,21 +4,18 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Welcome - softlayer_api gem 3.0.0</title>
-
-<link href="./fonts.css" rel="stylesheet">
-<link href="./rdoc.css" rel="stylesheet">
+<title>Welcome - softlayer_api gem 3.0.1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
 </script>
 
 <script src="./js/jquery.js"></script>
-<script src="./js/navigation.js"></script>
-<script src="./js/search_index.js"></script>
-<script src="./js/search.js"></script>
-<script src="./js/searcher.js"></script>
 <script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
 
 
 <body id="top" role="document" class="file">
@@ -90,44 +87,48 @@
 
 <main role="main" aria-label="Page Welcome.md">
 
-<h1 id="label-Welcome"><a href="Welcome_md.html">Welcome</a><span><a href="#label-Welcome">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="label-Welcome"><a href="Welcome_md.html">Welcome</a><span><a href="#label-Welcome">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>The <code>softlyer_api</code> Ruby Gem provides a convenient way to call
-into the SoftLayer API from the Ruby programming language. This is
-accomplished using the XML-RPC interface provided by SoftLayer and the
-XMLRPC client built into the core Ruby language.</p>
+into the <a href="SoftLayer.html">SoftLayer</a> API from the Ruby
+programming language. This is accomplished using the XML-RPC interface
+provided by <a href="SoftLayer.html">SoftLayer</a> and the <a
+href="XMLRPC.html">XMLRPC</a> client built into the core Ruby language.</p>
 
-<p>For more information about the SoftLayer API, and the routines and data
-structures it offers should visit the <a
+<p>For more information about the <a href="SoftLayer.html">SoftLayer</a> API,
+and the routines and data structures it offers should visit the <a
 href="http://sldn.softlayer.com">SoftLayer Developer Network (SLDN)
 website</a>.</p>
 
 <p>This document is written for Ruby developers who wish to interact with
-their SoftLayer accounts through Ruby scripts. SoftLayer also offers a
-command line tool for performing common tasks. If prefer to use that tool,
-we invite you to look into the <a
+their <a href="SoftLayer.html">SoftLayer</a> accounts through Ruby scripts.
+<a href="SoftLayer.html">SoftLayer</a> also offers a command line tool for
+performing common tasks. If prefer to use that tool, we invite you to look
+into the <a
 href="https://softlayer-python.readthedocs.org/en/latest/cli.html">command
 line interface</a> that is part of the <a
 href="http://github.com/softlayer/softlayer-python">git</a> project.</p>
 
 <p>This documentation is also written for Ruby developers who wish to
 contribute to the <code>softlayer_api</code> Gem. The Gem is a work in
-progress. We welcome the support of the SoftLayer development community to
-improve the Gem. The project is open source and we hope that source will
-serve as a useful library, stand as sample code to assist exploration, and
-serve as an opportunity for developers to shape it for both those needs.</p>
+progress. We welcome the support of the <a
+href="SoftLayer.html">SoftLayer</a> development community to improve the
+Gem. The project is open source and we hope that source will serve as a
+useful library, stand as sample code to assist exploration, and serve as an
+opportunity for developers to shape it for both those needs.</p>
 
-<p>The primary repository for the Gem&#39;s source code is the <a
+<p>The primary repository for the Gem’s source code is the <a
 href="http://github.com/softlayer/softlayer-ruby">softlayer-ruby</a> github
 project.</p>
 
-<h1 id="label-Overview">Overview<span><a href="#label-Overview">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="label-Overview">Overview<span><a href="#label-Overview">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>These Ruby language bindings allow access to the SoftLayer API on two
-different levels. A <a href="Foundation_md.html">Foundation</a> layer for
-low-level interaction with the SoftLayer API, and an abstraction layer that
-simplifies and isolates scripts from some of the details found in the <a
-href="Foundation_md.html">Foundation</a>.</p>
+<p>These Ruby language bindings allow access to the <a
+href="SoftLayer.html">SoftLayer</a> API on two different levels. A <a
+href="Foundation_md.html">Foundation</a> layer for low-level interaction
+with the <a href="SoftLayer.html">SoftLayer</a> API, and an abstraction
+layer that simplifies and isolates scripts from some of the details found
+in the <a href="Foundation_md.html">Foundation</a>.</p>
 
 <p>The <a href="Foundation_md.html">Foundation</a> layer, makes use of the <a
 href="http://www.ruby-doc.org/stdlib-2.1.2/libdoc/xmlrpc/rdoc/XMLRPC/Client.html">XMLRPC
@@ -138,10 +139,11 @@ retrieved using fundamental Ruby types such as Hashes, Arrays, Strings, and
 Integers.</p>
 
 <p>The Model layer is built atop the foundation as object class hierarchy. The
-class hierarchy models the structures found in the SoftLayer environment
-using the object-oriented features of Ruby. It does this to abstract out
-some of the implementation detail that a developer would commonly have to
-work with to communicate with SoftLayer through the foundation layer.</p>
+class hierarchy models the structures found in the <a
+href="SoftLayer.html">SoftLayer</a> environment using the object-oriented
+features of Ruby. It does this to abstract out some of the implementation
+detail that a developer would commonly have to work with to communicate
+with <a href="SoftLayer.html">SoftLayer</a> through the foundation layer.</p>
 
 <p>The Model layer is by no means complete; quite to the contrary it is in its
 infancy and we believe that much of the development effort in the Gem will
@@ -166,7 +168,7 @@ href="ContributionGuide_md.html">Contribution Guide</a></p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
-  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

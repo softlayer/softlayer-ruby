@@ -4,21 +4,18 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::Config - softlayer_api gem 3.0.0</title>
-
-<link href="../fonts.css" rel="stylesheet">
-<link href="../rdoc.css" rel="stylesheet">
+<title>class SoftLayer::Config - softlayer_api gem 3.0.1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
-<script src="../js/navigation.js"></script>
-<script src="../js/search_index.js"></script>
-<script src="../js/search.js"></script>
-<script src="../js/searcher.js"></script>
 <script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
 
 
 <body id="top" role="document" class="class">
@@ -105,12 +102,13 @@
 
   <section class="description">
     
-<p>The SoftLayer <a href="Config.html">Config</a> class is responsible for
-providing the key information the library needs to communicate with the
-network SoftLayer API. Those three crucial pieces of information are the
-Username, the API Key, and the endpoint_url. This information is collected
-in a hash with the keys `:username`, `:api_key`, and `:endpoint_url`
-repsectively.</p>
+<p>The <a href="../SoftLayer.html">SoftLayer</a> <a
+href="Config.html">Config</a> class is responsible for providing the key
+information the library needs to communicate with the network <a
+href="../SoftLayer.html">SoftLayer</a> API. Those three crucial pieces of
+information are the Username, the API Key, and the endpoint_url. This
+information is collected in a hash with the keys `:username`, `:api_key`,
+and `:endpoint_url` repsectively.</p>
 
 <p>The routine used to retrieve this information from a <a
 href="Config.html">Config</a> object is <a
@@ -135,26 +133,28 @@ username is also set in the global variables, the <a
 href="Config.html">Config</a> class allows the global variable to override
 the name from the config file.</p>
 
-<h1 id="class-SoftLayer::Config-label-Config+File"><a href="Config.html">Config</a> File<span><a href="#class-SoftLayer::Config-label-Config+File">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="class-SoftLayer::Config-label-Config+File"><a href="Config.html">Config</a> File<span><a href="#class-SoftLayer::Config-label-Config+File">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The library will search for the SoftLayer config file at the file locations
-listed in the `SoftLayer::Config::FILE_LOCATIONS` array. The config file
-follows the format recognized by Python&#39;s ConfigParser class (and
-consequently is compatible with the) SoftLayer-Python language bindings). 
-A simple config file looks something like this:</p>
+<p>The library will search for the <a href="../SoftLayer.html">SoftLayer</a>
+config file at the file locations listed in the
+`SoftLayer::Config::FILE_LOCATIONS` array. The config file follows the
+format recognized by Python’s ConfigParser class (and consequently is
+compatible with the) SoftLayer-Python language bindings).  A simple config
+file looks something like this:</p>
 
-<pre>[softlayer]
-username = joeusername
-api_key = DEADBEEFBADF00D
-timeout = 60</pre>
+<pre class="ruby">[<span class="ruby-identifier">softlayer</span>]
+<span class="ruby-identifier">username</span> = <span class="ruby-identifier">joeusername</span>
+<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">DEADBEEFBADF00D</span>
+<span class="ruby-identifier">timeout</span> = <span class="ruby-value">60</span>
+</pre>
 
-<h1 id="class-SoftLayer::Config-label-Environment+Variables">Environment Variables<span><a href="#class-SoftLayer::Config-label-Environment+Variables">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="class-SoftLayer::Config-label-Environment+Variables">Environment Variables<span><a href="#class-SoftLayer::Config-label-Environment+Variables">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>The config class will search the environment variables SL_USERNAME and
 SL_API_KEY for the username and API key respectively. The endpoint_url may
 not be set thorugh environment variables.</p>
 
-<h1 id="class-SoftLayer::Config-label-Global+Variables">Global Variables<span><a href="#class-SoftLayer::Config-label-Global+Variables">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="class-SoftLayer::Config-label-Global+Variables">Global Variables<span><a href="#class-SoftLayer::Config-label-Global+Variables">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>The names of the global variables that can be used to provide
 authentication key are:</p>
@@ -166,7 +166,7 @@ authentication key are:</p>
 <p>+$SL_API_BASE_URL+</p>
 </li></ul>
 
-<h1 id="class-SoftLayer::Config-label-Direct+parameters">Direct parameters<span><a href="#class-SoftLayer::Config-label-Direct+parameters">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="class-SoftLayer::Config-label-Direct+parameters">Direct parameters<span><a href="#class-SoftLayer::Config-label-Direct+parameters">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>Finally, the <a
 href="Config.html#method-c-client_settings">::client_settings</a> routine
@@ -228,7 +228,7 @@ techniques above.</p>
 
           
           <div class="method-source-code" id="client_settings-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Config.rb, line 106</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Config.rb, line 111</span>
           <span class="ruby-keyword">def</span> <span class="ruby-constant">Config</span>.<span class="ruby-identifier">client_settings</span>(<span class="ruby-identifier">provided_settings</span> = {})
 <span class="ruby-identifier">settings</span> = { <span class="ruby-value">:endpoint_url</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">API_PUBLIC_ENDPOINT</span> }
                   <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">merge!</span> <span class="ruby-identifier">file_settings</span>
@@ -270,8 +270,8 @@ techniques above.</p>
             <pre><span class="ruby-comment"># File lib/softlayer/Config.rb, line 73</span>
 <span class="ruby-keyword">def</span> <span class="ruby-constant">Config</span>.<span class="ruby-identifier">environment_settings</span>
         <span class="ruby-identifier">result</span> = {}
-        <span class="ruby-identifier">result</span>[<span class="ruby-value">:username</span>] =  <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_USERNAME&#39;</span>] <span class="ruby-keyword">if</span> <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_USERNAME&#39;</span>]
-        <span class="ruby-identifier">result</span>[<span class="ruby-value">:api_key</span>] = <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_KEY&#39;</span>] <span class="ruby-keyword">if</span> <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_KEY&#39;</span>]
+        <span class="ruby-identifier">result</span>[<span class="ruby-value">:username</span>] =  <span class="ruby-constant">ENV</span>[<span class="ruby-string">'SL_USERNAME'</span>] <span class="ruby-keyword">if</span> <span class="ruby-constant">ENV</span>[<span class="ruby-string">'SL_USERNAME'</span>]
+        <span class="ruby-identifier">result</span>[<span class="ruby-value">:api_key</span>] = <span class="ruby-constant">ENV</span>[<span class="ruby-string">'SL_API_KEY'</span>] <span class="ruby-keyword">if</span> <span class="ruby-constant">ENV</span>[<span class="ruby-string">'SL_API_KEY'</span>]
         <span class="ruby-identifier">result</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -304,29 +304,34 @@ techniques above.</p>
           
           <div class="method-source-code" id="file_settings-source">
             <pre><span class="ruby-comment"># File lib/softlayer/Config.rb, line 82</span>
-<span class="ruby-keyword">def</span> <span class="ruby-constant">Config</span>.<span class="ruby-identifier">file_settings</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">additional_files</span>)
-        <span class="ruby-identifier">result</span> = {}
+    <span class="ruby-keyword">def</span> <span class="ruby-constant">Config</span>.<span class="ruby-identifier">file_settings</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">additional_files</span>)
+            <span class="ruby-identifier">result</span> = {}
 
-        <span class="ruby-identifier">search_path</span> = <span class="ruby-constant">FILE_LOCATIONS</span>
-        <span class="ruby-identifier">search_path</span> = <span class="ruby-identifier">search_path</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">additional_files</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">additional_files</span>
-        <span class="ruby-identifier">search_path</span> = <span class="ruby-identifier">search_path</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">file_path</span><span class="ruby-operator">|</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">file_path</span>) }
+            <span class="ruby-identifier">search_path</span> = <span class="ruby-constant">FILE_LOCATIONS</span>
+            <span class="ruby-identifier">search_path</span> = <span class="ruby-identifier">search_path</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">additional_files</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">additional_files</span>
+            <span class="ruby-identifier">search_path</span> = <span class="ruby-identifier">search_path</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">file_path</span><span class="ruby-operator">|</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">file_path</span>) }
 
-        <span class="ruby-identifier">search_path</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file_path</span><span class="ruby-operator">|</span>
-                <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span> <span class="ruby-identifier">file_path</span>
-                        <span class="ruby-identifier">config</span> = <span class="ruby-constant">ConfigParser</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">file_path</span>
-                        <span class="ruby-identifier">softlayer_section</span> = <span class="ruby-identifier">config</span>[<span class="ruby-string">&#39;softlayer&#39;</span>]
+            <span class="ruby-identifier">search_path</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file_path</span><span class="ruby-operator">|</span>
+                    <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span> <span class="ruby-identifier">file_path</span>
+                            <span class="ruby-identifier">config</span> = <span class="ruby-constant">ConfigParser</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">file_path</span>
+                            <span class="ruby-identifier">softlayer_section</span> = <span class="ruby-identifier">config</span>[<span class="ruby-string">'softlayer'</span>]
 
-                        <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>
-                                <span class="ruby-identifier">result</span>[<span class="ruby-value">:username</span>] = <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;username&#39;</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;username&#39;</span>]
-                                <span class="ruby-identifier">result</span>[<span class="ruby-value">:endpoint_url</span>] = <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;endpoint_url&#39;</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;endpoint_url&#39;</span>]
-                                <span class="ruby-identifier">result</span>[<span class="ruby-value">:api_key</span>] = <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;api_key&#39;</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;api_key&#39;</span>]
-                                <span class="ruby-identifier">result</span>[<span class="ruby-value">:timeout</span>] = <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;timeout&#39;</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;timeout&#39;</span>]
-                        <span class="ruby-keyword">end</span>
-                <span class="ruby-keyword">end</span>
-        <span class="ruby-keyword">end</span>
+                            <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>
+                                    <span class="ruby-identifier">result</span>[<span class="ruby-value">:username</span>] = <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'username'</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'username'</span>]
+                                    <span class="ruby-identifier">result</span>[<span class="ruby-value">:endpoint_url</span>] = <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'endpoint_url'</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'endpoint_url'</span>]
+                                    <span class="ruby-identifier">result</span>[<span class="ruby-value">:api_key</span>] = <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'api_key'</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'api_key'</span>]
 
-        <span class="ruby-identifier">result</span>
-<span class="ruby-keyword">end</span></pre>
+<span class="ruby-keyword">begin</span>
+                                      <span class="ruby-identifier">result</span>[<span class="ruby-value">:timeout</span>] = <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'timeout'</span>]) <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'timeout'</span>]
+<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">integer_parse_exception</span>
+  <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Expected the value of the timeout configuration property, '#{result[:timeout]}', to be parseable as an integer&quot;</span>
+<span class="ruby-keyword">end</span>
+                            <span class="ruby-keyword">end</span>
+                    <span class="ruby-keyword">end</span>
+            <span class="ruby-keyword">end</span>
+
+            <span class="ruby-identifier">result</span>
+    <span class="ruby-keyword">end</span></pre>
           </div>
           
         </div>
@@ -382,7 +387,7 @@ techniques above.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
-  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

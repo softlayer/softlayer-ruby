@@ -253,20 +253,20 @@ SoftLayer_Network_Service_Resource in the API.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
   {
     <span class="ruby-string">&quot;mask(SoftLayer_Network_Service_Resource)&quot;</span> =<span class="ruby-operator">&gt;</span> [
-                                                   <span class="ruby-string">&#39;apiHost&#39;</span>,
-                                                   <span class="ruby-string">&#39;apiPassword&#39;</span>,
-                                                   <span class="ruby-string">&#39;apiPath&#39;</span>,
-                                                   <span class="ruby-string">&#39;apiPort&#39;</span>,
-                                                   <span class="ruby-string">&#39;apiProtocol&#39;</span>,
-                                                   <span class="ruby-string">&#39;apiUsername&#39;</span>,
-                                                   <span class="ruby-string">&#39;backendIpAddress&#39;</span>,
-                                                   <span class="ruby-string">&#39;datacenter&#39;</span>,
-                                                   <span class="ruby-string">&#39;frontendIpAddress&#39;</span>,
-                                                   <span class="ruby-string">&#39;id&#39;</span>,
-                                                   <span class="ruby-string">&#39;name&#39;</span>,
-                                                   <span class="ruby-string">&#39;networkDevice.id&#39;</span>,
-                                                   <span class="ruby-string">&#39;sshUsername&#39;</span>,
-                                                   <span class="ruby-string">&#39;type.type&#39;</span>
+                                                   <span class="ruby-string">'apiHost'</span>,
+                                                   <span class="ruby-string">'apiPassword'</span>,
+                                                   <span class="ruby-string">'apiPath'</span>,
+                                                   <span class="ruby-string">'apiPort'</span>,
+                                                   <span class="ruby-string">'apiProtocol'</span>,
+                                                   <span class="ruby-string">'apiUsername'</span>,
+                                                   <span class="ruby-string">'backendIpAddress'</span>,
+                                                   <span class="ruby-string">'datacenter'</span>,
+                                                   <span class="ruby-string">'frontendIpAddress'</span>,
+                                                   <span class="ruby-string">'id'</span>,
+                                                   <span class="ruby-string">'name'</span>,
+                                                   <span class="ruby-string">'networkDevice.id'</span>,
+                                                   <span class="ruby-string">'sshUsername'</span>,
+                                                   <span class="ruby-string">'type.type'</span>
                                                   ]
   }.<span class="ruby-identifier">to_sl_object_mask</span>
 <span class="ruby-keyword">end</span></pre>
@@ -310,12 +310,12 @@ SoftLayer_Network_Service_Resource in the API.</p>
             <pre><span class="ruby-comment"># File lib/softlayer/NetworkService.rb, line 54</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">api</span>
   {
-      <span class="ruby-string">&#39;host&#39;</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;apiHost&#39;</span>],
-      <span class="ruby-string">&#39;password&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;apiPassword&#39;</span>],
-      <span class="ruby-string">&#39;path&#39;</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;apiPath&#39;</span>],
-      <span class="ruby-string">&#39;port&#39;</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;apiPort&#39;</span>],
-      <span class="ruby-string">&#39;protocol&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;apiProtocol&#39;</span>],
-      <span class="ruby-string">&#39;username&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;apiUsername&#39;</span>]
+      <span class="ruby-string">'host'</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiHost'</span>],
+      <span class="ruby-string">'password'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiPassword'</span>],
+      <span class="ruby-string">'path'</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiPath'</span>],
+      <span class="ruby-string">'port'</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiPort'</span>],
+      <span class="ruby-string">'protocol'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiProtocol'</span>],
+      <span class="ruby-string">'username'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiUsername'</span>]
   }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -355,7 +355,7 @@ SoftLayer_Network_Service_Resource in the API.</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-constant">Datacenter</span><span class="ruby-operator">::</span><span class="ruby-identifier">datacenter_named</span>(<span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;datacenter&#39;</span>][<span class="ruby-string">&#39;name&#39;</span>], <span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_client</span>)
+    <span class="ruby-constant">Datacenter</span><span class="ruby-operator">::</span><span class="ruby-identifier">datacenter_named</span>(<span class="ruby-keyword">self</span>[<span class="ruby-string">'datacenter'</span>][<span class="ruby-string">'name'</span>], <span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_client</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -389,7 +389,7 @@ SoftLayer_Network_Service_Resource in the API.</p>
           <div class="method-source-code" id="type-source">
             <pre><span class="ruby-comment"># File lib/softlayer/NetworkService.rb, line 68</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">type</span>
-  <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;type&#39;</span>][<span class="ruby-string">&#39;type&#39;</span>]
+  <span class="ruby-keyword">self</span>[<span class="ruby-string">'type'</span>][<span class="ruby-string">'type'</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
           

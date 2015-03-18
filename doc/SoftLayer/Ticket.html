@@ -4,21 +4,18 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::Ticket - softlayer_api gem 3.0.0</title>
-
-<link href="../fonts.css" rel="stylesheet">
-<link href="../rdoc.css" rel="stylesheet">
+<title>class SoftLayer::Ticket - softlayer_api gem 3.0.1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
-<script src="../js/navigation.js"></script>
-<script src="../js/search_index.js"></script>
-<script src="../js/search.js"></script>
-<script src="../js/searcher.js"></script>
 <script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
 
 
 <body id="top" role="document" class="class">
@@ -186,8 +183,8 @@ used to ensure tickets make it to the right folks quickly</p>
 
         <div class="method-description">
           
-          <p>Create and submit a new support <a href="Ticket.html">Ticket</a> to
-SoftLayer.</p>
+          <p>Create and submit a new support <a href="Ticket.html">Ticket</a> to <a
+href="../SoftLayer.html">SoftLayer</a>.</p>
 
 <p>The options parameter should contain:</p>
 
@@ -229,14 +226,14 @@ whom the ticket should be assigned</p>
 
   <span class="ruby-keyword">if</span>(<span class="ruby-keyword">nil</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">assigned_user_id</span>)
     <span class="ruby-identifier">current_user</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Account</span>].<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;id&quot;</span>).<span class="ruby-identifier">getCurrentUser</span>()
-    <span class="ruby-identifier">assigned_user_id</span> = <span class="ruby-identifier">current_user</span>[<span class="ruby-string">&#39;id&#39;</span>]
+    <span class="ruby-identifier">assigned_user_id</span> = <span class="ruby-identifier">current_user</span>[<span class="ruby-string">'id'</span>]
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">new_ticket</span> = {
-    <span class="ruby-string">&#39;subjectId&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">subject_id</span>,
-    <span class="ruby-string">&#39;contents&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">body</span>,
-    <span class="ruby-string">&#39;assignedUserId&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">assigned_user_id</span>,
-    <span class="ruby-string">&#39;title&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">title</span>
+    <span class="ruby-string">'subjectId'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">subject_id</span>,
+    <span class="ruby-string">'contents'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">body</span>,
+    <span class="ruby-string">'assignedUserId'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">assigned_user_id</span>,
+    <span class="ruby-string">'title'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">title</span>
   }
 
   <span class="ruby-identifier">ticket_data</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Ticket</span>].<span class="ruby-identifier">createStandardTicket</span>(<span class="ruby-identifier">new_ticket</span>, <span class="ruby-identifier">body</span>)
@@ -266,7 +263,8 @@ whom the ticket should be assigned</p>
         <div class="method-description">
           
           <p>Returns the default object mask,as a hash, that is used when retrieving
-ticket information from the SoftLayer server.</p>
+ticket information from the <a href="../SoftLayer.html">SoftLayer</a>
+server.</p>
           
           
 
@@ -276,18 +274,18 @@ ticket information from the SoftLayer server.</p>
           <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
 {
   <span class="ruby-string">&quot;mask&quot;</span> =<span class="ruby-operator">&gt;</span> [
-    <span class="ruby-string">&#39;id&#39;</span>,                                                 <span class="ruby-comment"># This is an internal ticket ID, not the one usually seen in the portal</span>
-    <span class="ruby-string">&#39;serviceProvider&#39;</span>,
-    <span class="ruby-string">&#39;serviceProviderResourceId&#39;</span>,  <span class="ruby-comment"># This is the ticket ID usually seen in the portal</span>
-    <span class="ruby-string">&#39;title&#39;</span>,
-    <span class="ruby-string">&#39;subject&#39;</span>,
-    {<span class="ruby-string">&#39;assignedUser&#39;</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">&#39;username&#39;</span>, <span class="ruby-string">&#39;firstName&#39;</span>, <span class="ruby-string">&#39;lastName&#39;</span>] },
-    <span class="ruby-string">&#39;status.id&#39;</span>,
-    <span class="ruby-string">&#39;createDate&#39;</span>,
-    <span class="ruby-string">&#39;lastEditDate&#39;</span>,
-    <span class="ruby-string">&#39;newUpdatesFlag&#39;</span>,             <span class="ruby-comment"># This comes in from the server as a Boolean value</span>
-    <span class="ruby-string">&#39;awaitingUserResponseFlag&#39;</span>,   <span class="ruby-comment"># This comes in from the server as a Boolean value</span>
-    <span class="ruby-string">&#39;serverAdministrationFlag&#39;</span>,   <span class="ruby-comment"># This comes in from the server as an integer :-(</span>
+    <span class="ruby-string">'id'</span>,                                                 <span class="ruby-comment"># This is an internal ticket ID, not the one usually seen in the portal</span>
+    <span class="ruby-string">'serviceProvider'</span>,
+    <span class="ruby-string">'serviceProviderResourceId'</span>,  <span class="ruby-comment"># This is the ticket ID usually seen in the portal</span>
+    <span class="ruby-string">'title'</span>,
+    <span class="ruby-string">'subject'</span>,
+    {<span class="ruby-string">'assignedUser'</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">'username'</span>, <span class="ruby-string">'firstName'</span>, <span class="ruby-string">'lastName'</span>] },
+    <span class="ruby-string">'status.id'</span>,
+    <span class="ruby-string">'createDate'</span>,
+    <span class="ruby-string">'lastEditDate'</span>,
+    <span class="ruby-string">'newUpdatesFlag'</span>,             <span class="ruby-comment"># This comes in from the server as a Boolean value</span>
+    <span class="ruby-string">'awaitingUserResponseFlag'</span>,   <span class="ruby-comment"># This comes in from the server as a Boolean value</span>
+    <span class="ruby-string">'serverAdministrationFlag'</span>,   <span class="ruby-comment"># This comes in from the server as an integer :-(</span>
   ]
 }.<span class="ruby-identifier">to_sl_object_mask</span>
           <span class="ruby-keyword">end</span></pre>
@@ -314,7 +312,8 @@ ticket information from the SoftLayer server.</p>
 
         <div class="method-description">
           
-          <p>Queries the SoftLayer API to retrieve a list of the valid ticket subjects.</p>
+          <p>Queries the <a href="../SoftLayer.html">SoftLayer</a> API to retrieve a
+list of the valid ticket subjects.</p>
           
           
 
@@ -427,7 +426,7 @@ is also nil the routine will raise an error.</p>
           <div class="method-source-code" id="has_updates-3F-source">
             <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 27</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">has_updates?</span>
-  <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;newUpdatesFlag&#39;</span>]
+  <span class="ruby-keyword">self</span>[<span class="ruby-string">'newUpdatesFlag'</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -461,7 +460,7 @@ is also nil the routine will raise an error.</p>
             <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 33</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">server_admin_ticket?</span>
   <span class="ruby-comment"># note that serverAdministrationFlag comes from the server as an Integer (0, or 1)</span>
-  <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;serverAdministrationFlag&#39;</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+  <span class="ruby-keyword">self</span>[<span class="ruby-string">'serverAdministrationFlag'</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -590,7 +589,7 @@ server.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
-  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

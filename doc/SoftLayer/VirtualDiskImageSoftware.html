@@ -104,7 +104,7 @@
     
 <p>Each <a href="../SoftLayer.html">SoftLayer</a> <a
 href="VirtualDiskImageSoftware.html">VirtualDiskImageSoftware</a> is a
-record that connects  a computing instance&#39;s virtual disk images with
+record that connects  a computing instance’s virtual disk images with
 software records.</p>
 
 <p>This class roughly corresponds to the entity
@@ -154,9 +154,9 @@ SoftLayer_Virtual_Disk_Image_Software in the API.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
   {
     <span class="ruby-string">&quot;mask(SoftLayer_Virtual_Disk_Image_Software)&quot;</span> =<span class="ruby-operator">&gt;</span> [
-                                                      <span class="ruby-string">&#39;id&#39;</span>,
-                                                      <span class="ruby-string">&#39;passwords[password,username]&#39;</span>,
-                                                      <span class="ruby-string">&#39;softwareDescription[longDescription,name]&#39;</span>
+                                                      <span class="ruby-string">'id'</span>,
+                                                      <span class="ruby-string">'passwords[password,username]'</span>,
+                                                      <span class="ruby-string">'softwareDescription[longDescription,name]'</span>
                                                      ]
   }.<span class="ruby-identifier">to_sl_object_mask</span>
 <span class="ruby-keyword">end</span></pre>
@@ -199,7 +199,7 @@ SoftLayer_Virtual_Disk_Image_Software in the API.</p>
           <div class="method-source-code" id="description-source">
             <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImageSoftware.rb, line 21</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">description</span>
-  <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;softwareDescription&#39;</span>][<span class="ruby-string">&#39;longDescription&#39;</span>]
+  <span class="ruby-keyword">self</span>[<span class="ruby-string">'softwareDescription'</span>][<span class="ruby-string">'longDescription'</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -232,7 +232,7 @@ SoftLayer_Virtual_Disk_Image_Software in the API.</p>
           <div class="method-source-code" id="name-source">
             <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImageSoftware.rb, line 28</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">name</span>
-  <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;softwareDescription&#39;</span>][<span class="ruby-string">&#39;name&#39;</span>]
+  <span class="ruby-keyword">self</span>[<span class="ruby-string">'softwareDescription'</span>][<span class="ruby-string">'name'</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -265,7 +265,7 @@ SoftLayer_Virtual_Disk_Image_Software in the API.</p>
           <div class="method-source-code" id="passwords-source">
             <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImageSoftware.rb, line 35</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">passwords</span>
-  <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;passwords&#39;</span>]
+  <span class="ruby-keyword">self</span>[<span class="ruby-string">'passwords'</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
           

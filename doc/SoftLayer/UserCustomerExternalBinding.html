@@ -106,7 +106,7 @@
     
 <p>Each <a href="../SoftLayer.html">SoftLayer</a> <a
 href="UserCustomerExternalBinding.html">UserCustomerExternalBinding</a>
-instance provides information for a single user customer&#39;s external
+instance provides information for a single user customer’s external
 binding.</p>
 
 <p>This class roughly corresponds to the entity
@@ -218,10 +218,10 @@ authentication source.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
   {
     <span class="ruby-string">&quot;mask(SoftLayer_User_Customer_External_Binding)&quot;</span> =<span class="ruby-operator">&gt;</span> [
-                                                         <span class="ruby-string">&#39;active&#39;</span>,
-                                                         <span class="ruby-string">&#39;createDate&#39;</span>,
-                                                         <span class="ruby-string">&#39;id&#39;</span>,
-                                                         <span class="ruby-string">&#39;password&#39;</span>
+                                                         <span class="ruby-string">'active'</span>,
+                                                         <span class="ruby-string">'createDate'</span>,
+                                                         <span class="ruby-string">'id'</span>,
+                                                         <span class="ruby-string">'password'</span>
                                                         ]
   }.<span class="ruby-identifier">to_sl_object_mask</span>
 <span class="ruby-keyword">end</span></pre>
@@ -345,7 +345,7 @@ binding through the network API</p>
 
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">type</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">getType</span>
-    <span class="ruby-identifier">type</span>[<span class="ruby-string">&#39;name&#39;</span>]
+    <span class="ruby-identifier">type</span>[<span class="ruby-string">'name'</span>]
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -386,7 +386,7 @@ binding through the network API</p>
 
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">vendor</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">getVendor</span>
-    <span class="ruby-identifier">vendor</span>[<span class="ruby-string">&#39;name&#39;</span>]
+    <span class="ruby-identifier">vendor</span>[<span class="ruby-string">'name'</span>]
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>

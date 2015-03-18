@@ -4,21 +4,18 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::VirtualServerOrder - softlayer_api gem 3.0.0</title>
-
-<link href="../fonts.css" rel="stylesheet">
-<link href="../rdoc.css" rel="stylesheet">
+<title>class SoftLayer::VirtualServerOrder - softlayer_api gem 3.0.1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
-<script src="../js/navigation.js"></script>
-<script src="../js/search_index.js"></script>
-<script src="../js/search.js"></script>
-<script src="../js/searcher.js"></script>
 <script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
 
 
 <body id="top" role="document" class="class">
@@ -116,7 +113,7 @@ href="http://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest/creat
 
 <p><code>createObject</code> allows you to order a virtual server by providing
 a simple set of attributes and allows you to avoid much of the complexity
-of the SoftLayer ordering system (see <a
+of the <a href="../SoftLayer.html">SoftLayer</a> ordering system (see <a
 href="ProductPackage.html">ProductPackage</a>)</p>
 
   </section>
@@ -192,7 +189,7 @@ documentation</p>
 
         <div class="method-description">
         
-        <p><a href="../Array.html">Array</a> of Integer, Sizes (in gigabytes… so use
+        <p><a href="../Array.html">Array</a> of Integer, Sizes (in gigabytes... so use
 25 to get a 25GB disk) of disks to attach to this server This roughly
 Corresponds to <code>blockDevices</code> field in the
 <code>createObject</code> documentation. This attribute only allows you to
@@ -374,7 +371,7 @@ to run on this server once it is created</p>
         <div class="method-description">
         
         <p><a href="../Array.html">Array</a> of Strings, SSH keys to add to the root
-user&#39;s account. Corresponds to <code>sshKeys</code> in the
+user's account. Corresponds to <code>sshKeys</code> in the
 <code>createObject</code> documentation</p>
         
         </div>
@@ -484,7 +481,7 @@ instance Corresponds to
           <div class="method-source-code" id="core_options-source">
             <pre><span class="ruby-comment"># File lib/softlayer/VirtualServerOrder.rb, line 218</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">core_options</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&#39;processors&#39;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">processor_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">processor_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;startCpus&#39;</span>] }.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort!</span>
+  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">'processors'</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">processor_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">processor_spec</span>[<span class="ruby-string">'template'</span>][<span class="ruby-string">'startCpus'</span>] }.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort!</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -560,7 +557,7 @@ href="http://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest/getCr
           <div class="method-source-code" id="datacenter_options-source">
             <pre><span class="ruby-comment"># File lib/softlayer/VirtualServerOrder.rb, line 212</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">datacenter_options</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&#39;datacenters&#39;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">datacenter_spec</span><span class="ruby-operator">|</span> <span class="ruby-constant">Datacenter</span>.<span class="ruby-identifier">datacenter_named</span>(<span class="ruby-identifier">datacenter_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;datacenter&#39;</span>][<span class="ruby-string">&#39;name&#39;</span>], <span class="ruby-identifier">client</span>) }.<span class="ruby-identifier">uniq</span>
+  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">'datacenters'</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">datacenter_spec</span><span class="ruby-operator">|</span> <span class="ruby-constant">Datacenter</span>.<span class="ruby-identifier">datacenter_named</span>(<span class="ruby-identifier">datacenter_spec</span>[<span class="ruby-string">'template'</span>][<span class="ruby-string">'datacenter'</span>][<span class="ruby-string">'name'</span>], <span class="ruby-identifier">client</span>) }.<span class="ruby-identifier">uniq</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -593,7 +590,7 @@ href="http://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest/getCr
           <div class="method-source-code" id="disk_options-source">
             <pre><span class="ruby-comment"># File lib/softlayer/VirtualServerOrder.rb, line 230</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">disk_options</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&#39;blockDevices&#39;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">block_device_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">block_device_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;blockDevices&#39;</span>][<span class="ruby-value">0</span>][<span class="ruby-string">&#39;diskImage&#39;</span>][<span class="ruby-string">&#39;capacity&#39;</span>]}.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort!</span>
+  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">'blockDevices'</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">block_device_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">block_device_spec</span>[<span class="ruby-string">'template'</span>][<span class="ruby-string">'blockDevices'</span>][<span class="ruby-value">0</span>][<span class="ruby-string">'diskImage'</span>][<span class="ruby-string">'capacity'</span>]}.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort!</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -626,7 +623,7 @@ href="http://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest/getCr
           <div class="method-source-code" id="max_port_speed_options-source">
             <pre><span class="ruby-comment"># File lib/softlayer/VirtualServerOrder.rb, line 242</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">max_port_speed_options</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&#39;networkComponents&#39;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">component_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">component_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;networkComponents&#39;</span>][<span class="ruby-value">0</span>][<span class="ruby-string">&#39;maxSpeed&#39;</span>] }
+  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">'networkComponents'</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">component_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">component_spec</span>[<span class="ruby-string">'template'</span>][<span class="ruby-string">'networkComponents'</span>][<span class="ruby-value">0</span>][<span class="ruby-string">'maxSpeed'</span>] }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -659,7 +656,7 @@ href="http://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest/getCr
           <div class="method-source-code" id="memory_options-source">
             <pre><span class="ruby-comment"># File lib/softlayer/VirtualServerOrder.rb, line 224</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">memory_options</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&#39;memory&#39;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">memory_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">memory_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;maxMemory&#39;</span>].<span class="ruby-identifier">to_i</span> <span class="ruby-operator">/</span> <span class="ruby-value">1024</span>}.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort!</span>
+  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">'memory'</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">memory_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">memory_spec</span>[<span class="ruby-string">'template'</span>][<span class="ruby-string">'maxMemory'</span>].<span class="ruby-identifier">to_i</span> <span class="ruby-operator">/</span> <span class="ruby-value">1024</span>}.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort!</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -692,7 +689,7 @@ href="http://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest/getCr
           <div class="method-source-code" id="os_reference_code_options-source">
             <pre><span class="ruby-comment"># File lib/softlayer/VirtualServerOrder.rb, line 236</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">os_reference_code_options</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">&#39;operatingSystems&#39;</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">os_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">os_spec</span>[<span class="ruby-string">&#39;template&#39;</span>][<span class="ruby-string">&#39;operatingSystemReferenceCode&#39;</span>] }.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort!</span>
+  <span class="ruby-identifier">create_object_options</span>(<span class="ruby-identifier">client</span>)[<span class="ruby-string">'operatingSystems'</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">os_spec</span><span class="ruby-operator">|</span> <span class="ruby-identifier">os_spec</span>[<span class="ruby-string">'template'</span>][<span class="ruby-string">'operatingSystemReferenceCode'</span>] }.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort!</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -725,9 +722,10 @@ href="http://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest/getCr
 
         <div class="method-description">
           
-          <p>Calls the SoftLayer API to place an order for a new virtual server based on
-the template in this order. If this succeeds then you will be billed for
-the new Virtual <a href="Server.html">Server</a>.</p>
+          <p>Calls the <a href="../SoftLayer.html">SoftLayer</a> API to place an order
+for a new virtual server based on the template in this order. If this
+succeeds then you will be billed for the new Virtual <a
+href="Server.html">Server</a>.</p>
 
 <p>If you provide a block, it will receive the order template as a parameter
 and should return an order template, *<strong>carefully</strong>* modified,
@@ -743,7 +741,7 @@ that will be sent to create the server</p>
   <span class="ruby-identifier">order_template</span> = <span class="ruby-keyword">yield</span> <span class="ruby-identifier">order_template</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
 
   <span class="ruby-identifier">virtual_server_hash</span> = <span class="ruby-ivar">@softlayer_client</span>[<span class="ruby-value">:Virtual_Guest</span>].<span class="ruby-identifier">createObject</span>(<span class="ruby-identifier">order_template</span>)
-  <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">VirtualServer</span>.<span class="ruby-identifier">server_with_id</span>(<span class="ruby-identifier">virtual_server_hash</span>[<span class="ruby-string">&#39;id&#39;</span>], <span class="ruby-value">:client</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@softlayer_client</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">virtual_server_hash</span>
+  <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">VirtualServer</span>.<span class="ruby-identifier">server_with_id</span>(<span class="ruby-identifier">virtual_server_hash</span>[<span class="ruby-string">'id'</span>], <span class="ruby-value">:client</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@softlayer_client</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">virtual_server_hash</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -768,9 +766,9 @@ that will be sent to create the server</p>
 
         <div class="method-description">
           
-          <p>Calls the SoftLayer API to verify that the template provided by this order
-is valid This routine will return the order template generated by the API
-or will throw an exception</p>
+          <p>Calls the <a href="../SoftLayer.html">SoftLayer</a> API to verify that the
+template provided by this order is valid This routine will return the order
+template generated by the API or will throw an exception</p>
 
 <p>This routine will not actually create a Virtual <a
 href="Server.html">Server</a> and will not affect billing.</p>
@@ -820,8 +818,9 @@ and it should return the order template you wish to forward to the server.</p>
 
         <div class="method-description">
           
-          <p>Returns a hash of the creation options formatted to be sent to the
-SoftLayer API for either verification or completion</p>
+          <p>Returns a hash of the creation options formatted to be sent to the <a
+href="../SoftLayer.html">SoftLayer</a> API for either verification or
+completion</p>
           
           
 
@@ -841,32 +840,32 @@ SoftLayer API for either verification or completion</p>
     <span class="ruby-string">&quot;hourlyBillingFlag&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-ivar">@hourly</span>
   }
 
-  <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;dedicatedAccountHostOnlyFlag&#39;</span>] = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@dedicated_host_only</span>
-  <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;privateNetworkOnlyFlag&#39;</span>] = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@private_network_only</span>
+  <span class="ruby-identifier">template</span>[<span class="ruby-string">'dedicatedAccountHostOnlyFlag'</span>] = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@dedicated_host_only</span>
+  <span class="ruby-identifier">template</span>[<span class="ruby-string">'privateNetworkOnlyFlag'</span>] = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@private_network_only</span>
 
-  <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;datacenter&#39;</span>] = {<span class="ruby-string">&quot;name&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@datacenter</span>.<span class="ruby-identifier">name</span>} <span class="ruby-keyword">if</span> <span class="ruby-ivar">@datacenter</span>
-  <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;userData&#39;</span>] = [{<span class="ruby-string">&#39;value&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@user_metadata</span>}] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user_metadata</span>
-  <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;networkComponents&#39;</span>] = [{<span class="ruby-string">&#39;maxSpeed&#39;</span>=<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@max_port_speed</span>}] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@max_port_speed</span>
-  <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;postInstallScriptUri&#39;</span>] = <span class="ruby-ivar">@provision_script_URI</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@provision_script_URI</span>
-  <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;sshKeys&#39;</span>] = <span class="ruby-ivar">@ssh_key_ids</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">ssh_key_id</span><span class="ruby-operator">|</span> {<span class="ruby-string">&#39;id&#39;</span>=<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ssh_key_id</span>.<span class="ruby-identifier">to_i</span> } } <span class="ruby-keyword">if</span> <span class="ruby-ivar">@ssh_key_ids</span>
-  <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;primaryNetworkComponent&#39;</span>] = { <span class="ruby-string">&quot;networkVlan&quot;</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-string">&quot;id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@public_vlan_id</span>.<span class="ruby-identifier">to_i</span> } } <span class="ruby-keyword">if</span> <span class="ruby-ivar">@public_vlan_id</span>
-  <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;primaryBackendNetworkComponent&#39;</span>] = { <span class="ruby-string">&quot;networkVlan&quot;</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-string">&quot;id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@private_vlan_id</span>.<span class="ruby-identifier">to_i</span> } } <span class="ruby-keyword">if</span> <span class="ruby-ivar">@private_vlan_id</span>
+  <span class="ruby-identifier">template</span>[<span class="ruby-string">'datacenter'</span>] = {<span class="ruby-string">&quot;name&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@datacenter</span>.<span class="ruby-identifier">name</span>} <span class="ruby-keyword">if</span> <span class="ruby-ivar">@datacenter</span>
+  <span class="ruby-identifier">template</span>[<span class="ruby-string">'userData'</span>] = [{<span class="ruby-string">'value'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@user_metadata</span>}] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user_metadata</span>
+  <span class="ruby-identifier">template</span>[<span class="ruby-string">'networkComponents'</span>] = [{<span class="ruby-string">'maxSpeed'</span>=<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@max_port_speed</span>}] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@max_port_speed</span>
+  <span class="ruby-identifier">template</span>[<span class="ruby-string">'postInstallScriptUri'</span>] = <span class="ruby-ivar">@provision_script_URI</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@provision_script_URI</span>
+  <span class="ruby-identifier">template</span>[<span class="ruby-string">'sshKeys'</span>] = <span class="ruby-ivar">@ssh_key_ids</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">ssh_key_id</span><span class="ruby-operator">|</span> {<span class="ruby-string">'id'</span>=<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ssh_key_id</span>.<span class="ruby-identifier">to_i</span> } } <span class="ruby-keyword">if</span> <span class="ruby-ivar">@ssh_key_ids</span>
+  <span class="ruby-identifier">template</span>[<span class="ruby-string">'primaryNetworkComponent'</span>] = { <span class="ruby-string">&quot;networkVlan&quot;</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-string">&quot;id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@public_vlan_id</span>.<span class="ruby-identifier">to_i</span> } } <span class="ruby-keyword">if</span> <span class="ruby-ivar">@public_vlan_id</span>
+  <span class="ruby-identifier">template</span>[<span class="ruby-string">'primaryBackendNetworkComponent'</span>] = { <span class="ruby-string">&quot;networkVlan&quot;</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-string">&quot;id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@private_vlan_id</span>.<span class="ruby-identifier">to_i</span> } } <span class="ruby-keyword">if</span> <span class="ruby-ivar">@private_vlan_id</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@image_template</span>
-      <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;blockDeviceTemplateGroup&#39;</span>] = {<span class="ruby-string">&quot;globalIdentifier&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@image_template</span>.<span class="ruby-identifier">global_id</span>}
+      <span class="ruby-identifier">template</span>[<span class="ruby-string">'blockDeviceTemplateGroup'</span>] = {<span class="ruby-string">&quot;globalIdentifier&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@image_template</span>.<span class="ruby-identifier">global_id</span>}
   <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@os_reference_code</span>
-      <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;operatingSystemReferenceCode&#39;</span>] = <span class="ruby-ivar">@os_reference_code</span>
+      <span class="ruby-identifier">template</span>[<span class="ruby-string">'operatingSystemReferenceCode'</span>] = <span class="ruby-ivar">@os_reference_code</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@disks</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@disks</span>.<span class="ruby-identifier">empty?</span>
-    <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;blockDevices&#39;</span>] = []
+    <span class="ruby-identifier">template</span>[<span class="ruby-string">'blockDevices'</span>] = []
 
     <span class="ruby-comment"># According to the documentation for +createObject+,</span>
     <span class="ruby-comment"># device number 1 is reserved for the SWAP disk of the computing instance.</span>
     <span class="ruby-comment"># So we assign device 0 and then assign the rest starting at index 2.</span>
     <span class="ruby-ivar">@disks</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">disk</span>, <span class="ruby-identifier">index</span><span class="ruby-operator">|</span>
       <span class="ruby-identifier">device_id</span> = (<span class="ruby-identifier">index</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">1</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">index</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">index</span>
-      <span class="ruby-identifier">template</span>[<span class="ruby-string">&#39;blockDevices&#39;</span>].<span class="ruby-identifier">push</span>({<span class="ruby-string">&quot;device&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{device_id}&quot;</span>, <span class="ruby-string">&quot;diskImage&quot;</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-string">&quot;capacity&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">disk</span>}})
+      <span class="ruby-identifier">template</span>[<span class="ruby-string">'blockDevices'</span>].<span class="ruby-identifier">push</span>({<span class="ruby-string">&quot;device&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{device_id}&quot;</span>, <span class="ruby-string">&quot;diskImage&quot;</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-string">&quot;capacity&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">disk</span>}})
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
@@ -890,7 +889,7 @@ SoftLayer API for either verification or completion</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
-  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

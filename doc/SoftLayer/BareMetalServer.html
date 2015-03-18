@@ -4,21 +4,18 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::BareMetalServer - softlayer_api gem 3.0.0</title>
-
-<link href="../fonts.css" rel="stylesheet">
-<link href="../rdoc.css" rel="stylesheet">
+<title>class SoftLayer::BareMetalServer - softlayer_api gem 3.0.1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
-<script src="../js/navigation.js"></script>
-<script src="../js/search_index.js"></script>
-<script src="../js/search.js"></script>
-<script src="../js/searcher.js"></script>
 <script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
 
 
 <body id="top" role="document" class="class">
@@ -87,6 +84,8 @@
     
     <li ><a href="#method-i-firewall_port_speed">#firewall_port_speed</a>
     
+    <li ><a href="#method-i-remote_management_accounts">#remote_management_accounts</a>
+    
     <li ><a href="#method-i-service">#service</a>
     
   </ul>
@@ -103,9 +102,11 @@
   <section class="description">
     
 <p>This class represents a Bare Metal <a href="Server.html">Server</a>, a
-hardware server in contrast to a virtual machine, in the SoftLayer
-Environment. It corresponds rougly to the <code>SoftLayer_Hardware</code>
-and <code>SoftLayer_Hardware_Server</code> services in the SoftLayer API</p>
+hardware server in contrast to a virtual machine, in the <a
+href="../SoftLayer.html">SoftLayer</a> Environment. It corresponds rougly
+to the <code>SoftLayer_Hardware</code> and
+<code>SoftLayer_Hardware_Server</code> services in the <a
+href="../SoftLayer.html">SoftLayer</a> API</p>
 
 <p><a
 href="http://sldn.softlayer.com/reference/datatypes/SoftLayer_Hardware">sldn.softlayer.com/reference/datatypes/SoftLayer_Hardware</a></p>
@@ -153,25 +154,25 @@ href="http://sldn.softlayer.com/reference/datatypes/SoftLayer_Hardware_Server">s
 the reason and should be one of the keys in the hash returned by this
 method.  This, in turn will be translated into a string which is, for all
 intents and purposes, a literal string constant with special meaning to the
-SoftLayer API.</p>
+<a href="../SoftLayer.html">SoftLayer</a> API.</p>
           
           
 
           
           <div class="method-source-code" id="cancellation_reasons-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 95</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 103</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">cancellation_reasons</span>
   {
-    <span class="ruby-value">:unneeded</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;No longer needed&#39;</span>,
-    <span class="ruby-value">:closing</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;Business closing down&#39;</span>,
-    <span class="ruby-value">:cost</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;Server / Upgrade Costs&#39;</span>,
-    <span class="ruby-value">:migrate_larger</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;Migrating to larger server&#39;</span>,
-    <span class="ruby-value">:migrate_smaller</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;Migrating to smaller server&#39;</span>,
-    <span class="ruby-value">:datacenter</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;Migrating to a different SoftLayer datacenter&#39;</span>,
-    <span class="ruby-value">:performance</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;Network performance / latency&#39;</span>,
-    <span class="ruby-value">:support</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;Support response / timing&#39;</span>,
-    <span class="ruby-value">:sales</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;Sales process / upgrades&#39;</span>,
-    <span class="ruby-value">:moving</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;Moving to competitor&#39;</span>,
+    <span class="ruby-value">:unneeded</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'No longer needed'</span>,
+    <span class="ruby-value">:closing</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Business closing down'</span>,
+    <span class="ruby-value">:cost</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Server / Upgrade Costs'</span>,
+    <span class="ruby-value">:migrate_larger</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Migrating to larger server'</span>,
+    <span class="ruby-value">:migrate_smaller</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Migrating to smaller server'</span>,
+    <span class="ruby-value">:datacenter</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Migrating to a different SoftLayer datacenter'</span>,
+    <span class="ruby-value">:performance</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Network performance / latency'</span>,
+    <span class="ruby-value">:support</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Support response / timing'</span>,
+    <span class="ruby-value">:sales</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Sales process / upgrades'</span>,
+    <span class="ruby-value">:moving</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Moving to competitor'</span>,
   }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -209,21 +210,22 @@ when an explicit object mask is not provided.</p>
 
           
           <div class="method-source-code" id="default_object_mask-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 69</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 76</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
   <span class="ruby-identifier">sub_mask</span> = {
     <span class="ruby-string">&quot;mask(SoftLayer_Hardware_Server)&quot;</span> =<span class="ruby-operator">&gt;</span> [
-      <span class="ruby-string">&#39;bareMetalInstanceFlag&#39;</span>,
-      <span class="ruby-string">&#39;provisionDate&#39;</span>,
-      <span class="ruby-string">&#39;hardwareStatus&#39;</span>,
-      <span class="ruby-string">&#39;memoryCapacity&#39;</span>,
-      <span class="ruby-string">&#39;processorPhysicalCoreAmount&#39;</span>,
-      <span class="ruby-string">&#39;networkManagementIpAddress&#39;</span>,
-      <span class="ruby-string">&#39;networkComponents[id, status, speed, maxSpeed, name, ipmiMacAddress, ipmiIpAddress, macAddress, primaryIpAddress, port, primarySubnet]&#39;</span>,
-      <span class="ruby-string">&#39;activeTransaction[id, transactionStatus[friendlyName,name]]&#39;</span>,
-      <span class="ruby-string">&#39;hardwareChassis[id, name]&#39;</span>
-      ]
-    }
+                                          <span class="ruby-string">'activeTransaction[id, transactionStatus[friendlyName,name]]'</span>,
+                                          <span class="ruby-string">'bareMetalInstanceFlag'</span>,
+                                          <span class="ruby-string">'hardwareChassis[id, name]'</span>,
+                                          <span class="ruby-string">'hardwareStatus'</span>,
+                                          <span class="ruby-string">'memoryCapacity'</span>,
+                                          <span class="ruby-string">'networkComponents[id, maxSpeed, name, ipmiIpAddress, ipmiMacAddress, macAddress, port, primaryIpAddress, primarySubnet, speed, status]'</span>,
+                                          <span class="ruby-string">'networkManagementIpAddress'</span>,
+                                          <span class="ruby-string">'processorPhysicalCoreAmount'</span>,
+                                          <span class="ruby-string">'provisionDate'</span>,
+                                          <span class="ruby-string">'remoteManagementAccounts[password,username]'</span>
+                                         ]
+  }
 
   <span class="ruby-keyword">super</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">sub_mask</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -309,7 +311,7 @@ keys) - Limit the scope of results returned.</p>
 
           
           <div class="method-source-code" id="find_servers-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 193</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 201</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find_servers</span>(<span class="ruby-identifier">options_hash</span> = {})
   <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:client</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
@@ -342,10 +344,10 @@ keys) - Limit the scope of results returned.</p>
   <span class="ruby-comment"># Tags get a much more complex object filter operation so we handle them separately</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:tags</span>)
     <span class="ruby-identifier">object_filter</span>.<span class="ruby-identifier">set_criteria_for_key_path</span>(<span class="ruby-string">&quot;hardware.tagReferences.tag.name&quot;</span>, {
-      <span class="ruby-string">&#39;operation&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;in&#39;</span>,
-      <span class="ruby-string">&#39;options&#39;</span> =<span class="ruby-operator">&gt;</span> [{
-        <span class="ruby-string">&#39;name&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;data&#39;</span>,
-        <span class="ruby-string">&#39;value&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
+      <span class="ruby-string">'operation'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'in'</span>,
+      <span class="ruby-string">'options'</span> =<span class="ruby-operator">&gt;</span> [{
+        <span class="ruby-string">'name'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'data'</span>,
+        <span class="ruby-string">'value'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
         }]
       } );
   <span class="ruby-keyword">end</span>
@@ -391,8 +393,8 @@ keys) - Limit the scope of results returned.</p>
 
         <div class="method-description">
           
-          <p>Retrive the bare metal server with the given server ID from the SoftLayer
-API</p>
+          <p>Retrive the bare metal server with the given server ID from the <a
+href="../SoftLayer.html">SoftLayer</a> API</p>
 
 <p>The options parameter should contain:</p>
 
@@ -407,7 +409,7 @@ If no client can be found the routine will raise an error.</p>
 
           
           <div class="method-source-code" id="server_with_id-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 150</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 158</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">server_with_id</span>(<span class="ruby-identifier">server_id</span>, <span class="ruby-identifier">options</span> = {})
   <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:client</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
@@ -469,7 +471,7 @@ server.</p>
             <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 28</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">bare_metal_instance?</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">has_sl_property?</span>(<span class="ruby-value">:bareMetalInstanceFlag</span>)
-    <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;bareMetalInstanceFlag&#39;</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+    <span class="ruby-keyword">self</span>[<span class="ruby-string">'bareMetalInstanceFlag'</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-keyword">false</span>
   <span class="ruby-keyword">end</span>
@@ -512,14 +514,14 @@ href="BareMetalServer.html#method-c-cancellation_reasons">::cancellation_reasons
           
           <div class="method-source-code" id="cancel-21-source">
             <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 46</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">cancel!</span>(<span class="ruby-identifier">reason</span> = <span class="ruby-value">:unneeded</span>, <span class="ruby-identifier">comment</span> = <span class="ruby-string">&#39;&#39;</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">cancel!</span>(<span class="ruby-identifier">reason</span> = <span class="ruby-value">:unneeded</span>, <span class="ruby-identifier">comment</span> = <span class="ruby-string">''</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">bare_metal_instance?</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">cancellation_reasons</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">cancellation_reasons</span>()
     <span class="ruby-identifier">cancel_reason</span> = <span class="ruby-identifier">cancellation_reasons</span>[<span class="ruby-identifier">reason</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">cancellation_reasons</span>[<span class="ruby-value">:unneeded</span>]
-    <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Ticket</span>].<span class="ruby-identifier">createCancelServerTicket</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>, <span class="ruby-identifier">cancel_reason</span>, <span class="ruby-identifier">comment</span>, <span class="ruby-keyword">true</span>, <span class="ruby-string">&#39;HARDWARE&#39;</span>)
+    <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Ticket</span>].<span class="ruby-identifier">createCancelServerTicket</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>, <span class="ruby-identifier">cancel_reason</span>, <span class="ruby-identifier">comment</span>, <span class="ruby-keyword">true</span>, <span class="ruby-string">'HARDWARE'</span>)
   <span class="ruby-keyword">else</span>
     <span class="ruby-comment"># Note that reason and comment are ignored in this case, unfortunately</span>
-    <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Billing_Item</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">billingItem</span>[<span class="ruby-string">&#39;id&#39;</span>].<span class="ruby-identifier">to_i</span>).<span class="ruby-identifier">cancelService</span>()
+    <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Billing_Item</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[id]&quot;</span>).<span class="ruby-identifier">getBillingItem</span>[<span class="ruby-string">'id'</span>].<span class="ruby-identifier">to_i</span>).<span class="ruby-identifier">cancelService</span>()
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -552,7 +554,7 @@ taking into account bound interface pairs (redundant network cards).</p>
 
           
           <div class="method-source-code" id="firewall_port_speed-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 113</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 121</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">firewall_port_speed</span>
   <span class="ruby-identifier">network_components</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[id,maxSpeed,networkComponentGroup.networkComponents]&quot;</span>).<span class="ruby-identifier">getFrontendNetworkComponents</span>()
 
@@ -563,7 +565,7 @@ taking into account bound interface pairs (redundant network cards).</p>
 
   <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">grouped_interfaces</span>.<span class="ruby-identifier">empty?</span>
     <span class="ruby-identifier">group_speeds</span> = <span class="ruby-identifier">grouped_interfaces</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">interface</span><span class="ruby-operator">|</span>
-      <span class="ruby-identifier">interface</span>[<span class="ruby-string">&#39;networkComponentGroup&#39;</span>][<span class="ruby-string">&#39;networkComponents&#39;</span>].<span class="ruby-identifier">inject</span>(<span class="ruby-value">0</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">total_speed</span>, <span class="ruby-identifier">component</span><span class="ruby-operator">|</span> <span class="ruby-identifier">total_speed</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">component</span>[<span class="ruby-string">&#39;maxSpeed&#39;</span>]}
+      <span class="ruby-identifier">interface</span>[<span class="ruby-string">'networkComponentGroup'</span>][<span class="ruby-string">'networkComponents'</span>].<span class="ruby-identifier">inject</span>(<span class="ruby-value">0</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">total_speed</span>, <span class="ruby-identifier">component</span><span class="ruby-operator">|</span> <span class="ruby-identifier">total_speed</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">component</span>[<span class="ruby-string">'maxSpeed'</span>]}
     <span class="ruby-keyword">end</span>
 
     <span class="ruby-identifier">max_group_speed</span> = <span class="ruby-identifier">group_speeds</span>.<span class="ruby-identifier">max</span>
@@ -572,12 +574,45 @@ taking into account bound interface pairs (redundant network cards).</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">ungrouped_interfaces</span>.<span class="ruby-identifier">empty?</span>
-    <span class="ruby-identifier">max_ungrouped_speed</span> = <span class="ruby-identifier">ungrouped_interfaces</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">interface</span><span class="ruby-operator">|</span> <span class="ruby-identifier">interface</span>[<span class="ruby-string">&#39;maxSpeed&#39;</span>]}.<span class="ruby-identifier">max</span>
+    <span class="ruby-identifier">max_ungrouped_speed</span> = <span class="ruby-identifier">ungrouped_interfaces</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">interface</span><span class="ruby-operator">|</span> <span class="ruby-identifier">interface</span>[<span class="ruby-string">'maxSpeed'</span>]}.<span class="ruby-identifier">max</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">max_ungrouped_speed</span> = <span class="ruby-value">0</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">return</span> [<span class="ruby-identifier">max_group_speed</span>, <span class="ruby-identifier">max_ungrouped_speed</span>].<span class="ruby-identifier">max</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-remote_management_accounts" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">remote_management_accounts</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the username/password combinations for remote management accounts</p>
+          
+          
+
+          
+          <div class="method-source-code" id="remote_management_accounts-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 60</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">remote_management_accounts</span>
+  <span class="ruby-keyword">self</span>[<span class="ruby-string">'remoteManagementAccounts'</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -602,8 +637,8 @@ taking into account bound interface pairs (redundant network cards).</p>
 
         <div class="method-description">
           
-          <p>Returns the typical Service used to work with this <a
-href="Server.html">Server</a> For Bare Metal Servers that is
+          <p>Returns the typical <a href="Service.html">Service</a> used to work with
+this <a href="Server.html">Server</a> For Bare Metal Servers that is
 <code>SoftLayer_Hardware</code> though in some special cases you may have
 to use <code>SoftLayer_Hardware_Server</code> as a type or service.  That
 service object is available thorugh the hardware_server_service method</p>
@@ -612,7 +647,7 @@ service object is available thorugh the hardware_server_service method</p>
 
           
           <div class="method-source-code" id="service-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 62</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/BareMetalServer.rb, line 69</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">service</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Hardware_Server</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -634,7 +669,7 @@ service object is available thorugh the hardware_server_service method</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
-  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

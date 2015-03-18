@@ -300,10 +300,10 @@ Include software properties that matches the criteria of this object mask</p>
   }
 
   <span class="ruby-identifier">option_to_filter_path</span> = {
-    <span class="ruby-value">:datacenter</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">&#39;.datacenter.name&#39;</span> ].<span class="ruby-identifier">join</span>        },
-    <span class="ruby-value">:domain</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">&#39;.domain&#39;</span> ].<span class="ruby-identifier">join</span>                 },
-    <span class="ruby-value">:hostname</span>       =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">&#39;.hostname&#39;</span> ].<span class="ruby-identifier">join</span>               },
-    <span class="ruby-value">:tags</span>           =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">&#39;.tagReferences.tag.name&#39;</span> ].<span class="ruby-identifier">join</span> },
+    <span class="ruby-value">:datacenter</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">'.datacenter.name'</span> ].<span class="ruby-identifier">join</span>        },
+    <span class="ruby-value">:domain</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">'.domain'</span> ].<span class="ruby-identifier">join</span>                 },
+    <span class="ruby-value">:hostname</span>       =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">'.hostname'</span> ].<span class="ruby-identifier">join</span>               },
+    <span class="ruby-value">:tags</span>           =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">'.tagReferences.tag.name'</span> ].<span class="ruby-identifier">join</span> },
     <span class="ruby-value">:software</span>       =<span class="ruby-operator">&gt;</span> {
       <span class="ruby-value">:description</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;softwareComponents.softwareDescription.longDescription&quot;</span>,
       <span class="ruby-value">:manufacturer</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;softwareComponents.softwareDescription.manufacturer&quot;</span>,
@@ -327,10 +327,10 @@ Include software properties that matches the criteria of this object mask</p>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>]
     <span class="ruby-identifier">hardware_object_filter</span>.<span class="ruby-identifier">set_criteria_for_key_path</span>(<span class="ruby-identifier">option_to_filter_path</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">call</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:hardware_type</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:hardware</span>),
                                                      {
-                                                       <span class="ruby-string">&#39;operation&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;in&#39;</span>,
-                                                       <span class="ruby-string">&#39;options&#39;</span> =<span class="ruby-operator">&gt;</span> [{
-                                                                       <span class="ruby-string">&#39;name&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;data&#39;</span>,
-                                                                       <span class="ruby-string">&#39;value&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
+                                                       <span class="ruby-string">'operation'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'in'</span>,
+                                                       <span class="ruby-string">'options'</span> =<span class="ruby-operator">&gt;</span> [{
+                                                                       <span class="ruby-string">'name'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'data'</span>,
+                                                                       <span class="ruby-string">'value'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
                                                                      }]
                                                      })
   <span class="ruby-keyword">end</span>
@@ -355,7 +355,7 @@ Include software properties that matches the criteria of this object mask</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">software</span> = <span class="ruby-identifier">hardware_data</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">hardware</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">hardware_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Hardware</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">hardware</span>[<span class="ruby-string">&#39;id&#39;</span>])
+    <span class="ruby-identifier">hardware_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Hardware</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">hardware</span>[<span class="ruby-string">'id'</span>])
     <span class="ruby-identifier">hardware_service</span> = <span class="ruby-identifier">hardware_service</span>.<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">software_object_filter</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">software_object_filter</span>.<span class="ruby-identifier">empty?</span>
     <span class="ruby-identifier">hardware_service</span> = <span class="ruby-identifier">hardware_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-constant">Software</span>.<span class="ruby-identifier">default_object_mask</span>)
     <span class="ruby-identifier">hardware_service</span> = <span class="ruby-identifier">hardware_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:software_object_mask</span>]) <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:software_object_mask</span>]
@@ -479,10 +479,10 @@ object filter</p>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>]
     <span class="ruby-identifier">virtual_server_object_filter</span>.<span class="ruby-identifier">set_criteria_for_key_path</span>(<span class="ruby-identifier">option_to_filter_path</span>[<span class="ruby-value">:virtual_server</span>][<span class="ruby-value">:tags</span>],
                                                            {
-                                                             <span class="ruby-string">&#39;operation&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;in&#39;</span>,
-                                                             <span class="ruby-string">&#39;options&#39;</span> =<span class="ruby-operator">&gt;</span> [{
-                                                                             <span class="ruby-string">&#39;name&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;data&#39;</span>,
-                                                                             <span class="ruby-string">&#39;value&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
+                                                             <span class="ruby-string">'operation'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'in'</span>,
+                                                             <span class="ruby-string">'options'</span> =<span class="ruby-operator">&gt;</span> [{
+                                                                             <span class="ruby-string">'name'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'data'</span>,
+                                                                             <span class="ruby-string">'value'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
                                                                            }]
                                                            })
   <span class="ruby-keyword">end</span>
@@ -503,7 +503,7 @@ object filter</p>
   <span class="ruby-identifier">virtual_server_data</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">getVirtualGuests</span>
 
   <span class="ruby-identifier">software</span> = <span class="ruby-identifier">virtual_server_data</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">virtual_server</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">virtual_server_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Virtual_Guest</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">virtual_server</span>[<span class="ruby-string">&#39;id&#39;</span>])
+    <span class="ruby-identifier">virtual_server_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Virtual_Guest</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">virtual_server</span>[<span class="ruby-string">'id'</span>])
     <span class="ruby-identifier">virtual_server_service</span> = <span class="ruby-identifier">virtual_server_service</span>.<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">software_object_filter</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">software_object_filter</span>.<span class="ruby-identifier">empty?</span>
     <span class="ruby-identifier">virtual_server_service</span> = <span class="ruby-identifier">virtual_server_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-constant">Software</span>.<span class="ruby-identifier">default_object_mask</span>)
     <span class="ruby-identifier">virtual_server_service</span> = <span class="ruby-identifier">virtual_server_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:software_object_mask</span>]) <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:software_object_mask</span>]
@@ -555,9 +555,9 @@ object filter</p>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
   {
     <span class="ruby-string">&quot;mask(SoftLayer_Software_Component)&quot;</span> =<span class="ruby-operator">&gt;</span> [
-                                             <span class="ruby-string">&#39;id&#39;</span>,
-                                             <span class="ruby-string">&#39;manufacturerActivationCode&#39;</span>,
-                                             <span class="ruby-string">&#39;manufacturerLicenseInstance&#39;</span>
+                                             <span class="ruby-string">'id'</span>,
+                                             <span class="ruby-string">'manufacturerActivationCode'</span>,
+                                             <span class="ruby-string">'manufacturerLicenseInstance'</span>
                                             ]
   }.<span class="ruby-identifier">to_sl_object_mask</span>
 <span class="ruby-keyword">end</span></pre>
@@ -608,13 +608,13 @@ object filter</p>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">Exception</span>, <span class="ruby-string">&quot;Cannot add username password, a Software Password already exists for the provided username&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">has_user_password?</span>(<span class="ruby-identifier">username</span>.<span class="ruby-identifier">to_s</span>)
 
   <span class="ruby-identifier">add_user_pw_template</span> = {
-    <span class="ruby-string">&#39;softwareId&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;id&#39;</span>].<span class="ruby-identifier">to_i</span>,
-    <span class="ruby-string">&#39;password&#39;</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">password</span>.<span class="ruby-identifier">to_s</span>,
-    <span class="ruby-string">&#39;username&#39;</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">username</span>.<span class="ruby-identifier">to_s</span>
+    <span class="ruby-string">'softwareId'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'id'</span>].<span class="ruby-identifier">to_i</span>,
+    <span class="ruby-string">'password'</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">password</span>.<span class="ruby-identifier">to_s</span>,
+    <span class="ruby-string">'username'</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">username</span>.<span class="ruby-identifier">to_s</span>
   }
 
-  <span class="ruby-identifier">add_user_pw_template</span>[<span class="ruby-string">&#39;notes&#39;</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-string">&#39;notes&#39;</span>].<span class="ruby-identifier">to_s</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">&#39;notes&#39;</span>)
-  <span class="ruby-identifier">add_user_pw_template</span>[<span class="ruby-string">&#39;port&#39;</span>]  = <span class="ruby-identifier">options</span>[<span class="ruby-string">&#39;port&#39;</span>].<span class="ruby-identifier">to_i</span>  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">&#39;port&#39;</span>)
+  <span class="ruby-identifier">add_user_pw_template</span>[<span class="ruby-string">'notes'</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-string">'notes'</span>].<span class="ruby-identifier">to_s</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'notes'</span>)
+  <span class="ruby-identifier">add_user_pw_template</span>[<span class="ruby-string">'port'</span>]  = <span class="ruby-identifier">options</span>[<span class="ruby-string">'port'</span>].<span class="ruby-identifier">to_i</span>  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'port'</span>)
 
   <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Software_Component_Password</span>].<span class="ruby-identifier">createObject</span>(<span class="ruby-identifier">add_user_pw_template</span>)
 
@@ -659,7 +659,7 @@ immediately.</p>
   <span class="ruby-identifier">user_password</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">passwords</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">sw_pw</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sw_pw</span>.<span class="ruby-identifier">username</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">username</span>.<span class="ruby-identifier">to_s</span> }
 
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">user_password</span>.<span class="ruby-identifier">empty?</span>
-    <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Software_Component_Password</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">user_password</span>.<span class="ruby-identifier">first</span>[<span class="ruby-string">&#39;id&#39;</span>]).<span class="ruby-identifier">deleteObject</span>
+    <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Software_Component_Password</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">user_password</span>.<span class="ruby-identifier">first</span>[<span class="ruby-string">'id'</span>]).<span class="ruby-identifier">deleteObject</span>
     <span class="ruby-ivar">@passwords</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
@@ -701,7 +701,7 @@ immediately.</p>
 
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">description</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">getSoftwareDescription</span>
-    <span class="ruby-identifier">description</span>[<span class="ruby-string">&#39;longDescription&#39;</span>]
+    <span class="ruby-identifier">description</span>[<span class="ruby-string">'longDescription'</span>]
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -776,7 +776,7 @@ Passowrd instances pertains to the specified user</p>
 
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">description</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">getSoftwareDescription</span>
-    <span class="ruby-identifier">description</span>[<span class="ruby-string">&#39;name&#39;</span>]
+    <span class="ruby-identifier">description</span>[<span class="ruby-string">'name'</span>]
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>

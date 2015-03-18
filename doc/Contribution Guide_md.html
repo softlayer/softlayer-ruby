@@ -4,21 +4,18 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Contribution Guide - softlayer_api gem 3.0.0</title>
-
-<link href="./fonts.css" rel="stylesheet">
-<link href="./rdoc.css" rel="stylesheet">
+<title>Contribution Guide - softlayer_api gem 3.0.1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
 </script>
 
 <script src="./js/jquery.js"></script>
-<script src="./js/navigation.js"></script>
-<script src="./js/search_index.js"></script>
-<script src="./js/search.js"></script>
-<script src="./js/searcher.js"></script>
 <script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
 
 
 <body id="top" role="document" class="file">
@@ -100,7 +97,7 @@
 
 <main role="main" aria-label="Page Contribution Guide.md">
 
-<h1 id="label-Contribution+Guide">Contribution Guide<span><a href="#label-Contribution+Guide">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="label-Contribution+Guide">Contribution Guide<span><a href="#label-Contribution+Guide">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>The <code>softlayer_api</code> Ruby Gem is an open source project and the
 developers who use it have an opportunity to tailor its direction. Here are
@@ -112,7 +109,7 @@ the documentation; or, since the documentation itself is part of the open
 source project, please feel free to submit changes to this guide which
 might leave some footprints those who follow along behind you.</p>
 
-<h1 id="label-Contributer+License+Agreement">Contributer License Agreement<span><a href="#label-Contributer+License+Agreement">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="label-Contributer+License+Agreement">Contributer License Agreement<span><a href="#label-Contributer+License+Agreement">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>Contributions to the softlayer-ruby project require the submission of a
 contributer license agreement. Individual contributers should review and
@@ -120,13 +117,13 @@ complete the <a href="./cla-individual.md">CLA</a>. Contributions made of
 behalf of a company/employer will necessitate the completion of the <a
 href="./cla-corporate.md">CCLA</a>.</p>
 
-<h1 id="label-Requesting+Changes">Requesting Changes<span><a href="#label-Requesting+Changes">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="label-Requesting+Changes">Requesting Changes<span><a href="#label-Requesting+Changes">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>Any requests for enhancements, new features, or bug reports should be
 entered into the softlayer-ruby GitHub repository as “<a
 href="https://github.com/softlayer/softlayer-ruby/issues?state=open">issues</a>”.</p>
 
-<h1 id="label-Development+Environment">Development Environment<span><a href="#label-Development+Environment">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="label-Development+Environment">Development Environment<span><a href="#label-Development+Environment">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>As a Ruby project, your first step will be to install the <a
 href="https://www.ruby-lang.org/en/">Ruby Programming Language</a>. Many
@@ -174,7 +171,7 @@ href="http://bundler.io">Bundler</a></p>
 href="https://travis-ci.org">Travis CI</a> continuous integration platform
 runs the unit tests as a means of smoke testing submitted code.</p>
 
-<h1 id="label-Setting+up">Setting up<span><a href="#label-Setting+up">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="label-Setting+up">Setting up<span><a href="#label-Setting+up">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>To set up a development environment you should have Ruby installed and
 select an editor. Fork the <a
@@ -204,7 +201,7 @@ looks something like:</p>
 
 <p>(The actual number of examples run will probably vary)</p>
 
-<h1 id="label-Building+the+Gem">Building the Gem<span><a href="#label-Building+the+Gem">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="label-Building+the+Gem">Building the Gem<span><a href="#label-Building+the+Gem">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>To build the gem, you ask rake to do the heavy lifting:</p>
 
@@ -219,10 +216,10 @@ the form <code>softlayer_api-&lt;version&gt;.gem.</code> where
 
 <pre>$ bundle gem install pkg/softlayer_api-&lt;version&gt;.gem</pre>
 
-<p>(don&#39;t forget to substitute the version you are installing where the
+<p>(don’t forget to substitute the version you are installing where the
 <code>&lt;version&gt;</code> tag appears in the command line above)</p>
 
-<h1 id="label-Running+the+Tests">Running the Tests<span><a href="#label-Running+the+Tests">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="label-Running+the+Tests">Running the Tests<span><a href="#label-Running+the+Tests">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>The unit tests in the Gem are written using <a
 href="http://rspec.info">RSpec</a>. They are also integrated into the
@@ -237,7 +234,7 @@ $ rake</pre>
 <p>Coverage of the unit tests is not 100%, but we heartily recommend that you
 add unit tests for any new code you add to the gem.</p>
 
-<h1 id="label-Building+documentation">Building documentation<span><a href="#label-Building+documentation">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="label-Building+documentation">Building documentation<span><a href="#label-Building+documentation">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>To build documentation for the gem, use the <code>rdoc</code> or
 <code>rerdoc</code> actions with the <code>rake</code> command:</p>
@@ -253,19 +250,20 @@ Supplementary documentation is found in the doc_src folder and is primarily
 written in <a
 href="http://daringfireball.net/projects/markdown/syntax">markdown</a>.</p>
 
-<h1 id="label-Directory+Structure">Directory Structure<span><a href="#label-Directory+Structure">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="label-Directory+Structure">Directory Structure<span><a href="#label-Directory+Structure">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>The basic directory structure for the source tree is as follows</p>
 
-<pre>doc           # Built by RDoc when documentation is generated
-    doc_src           # Static pages (in markdown format) that are included with the documentation.  You&#39;re reading one now.
-    examples      # Sample scripts offering examples of using the softlayer_api gem
-    lib           # Container for the source code of the gem
-      softlayer   # Folder containing most of the gem&#39;s actual source code
-    log                       # RVM will create a log folder when running commands across multiple ruby versions.
-    pkg                       # Created when the gem is built, contains built versions of the gem
-    spec              # Source directory for the RSpec testing specifications
-      fixtures    # Files used by the unit tests to mock responses from the SoftLayer network API</pre>
+<pre class="ruby"><span class="ruby-identifier">doc</span>           <span class="ruby-comment"># Built by RDoc when documentation is generated</span>
+    <span class="ruby-identifier">doc_src</span>           <span class="ruby-comment"># Static pages (in markdown format) that are included with the documentation.  You're reading one now.</span>
+    <span class="ruby-identifier">examples</span>      <span class="ruby-comment"># Sample scripts offering examples of using the softlayer_api gem</span>
+    <span class="ruby-identifier">lib</span>           <span class="ruby-comment"># Container for the source code of the gem</span>
+      <span class="ruby-identifier">softlayer</span>   <span class="ruby-comment"># Folder containing most of the gem's actual source code</span>
+    <span class="ruby-identifier">log</span>                       <span class="ruby-comment"># RVM will create a log folder when running commands across multiple ruby versions.</span>
+    <span class="ruby-identifier">pkg</span>                       <span class="ruby-comment"># Created when the gem is built, contains built versions of the gem</span>
+    <span class="ruby-identifier">spec</span>              <span class="ruby-comment"># Source directory for the RSpec testing specifications</span>
+      <span class="ruby-identifier">fixtures</span>    <span class="ruby-comment"># Files used by the unit tests to mock responses from the SoftLayer network API</span>
+</pre>
 
 <p>Most of the source files that implement the gem are found in
 <code>lib/softlayer</code>. If you wish to add new functionality, or edit
@@ -277,7 +275,7 @@ generally follow the naming convention of &lt;Class&gt;_spec.rb</p>
 convention of having a single source file per class, and the file is named
 after the class it contains.</p>
 
-<h1 id="label-Style">Style<span><a href="#label-Style">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="label-Style">Style<span><a href="#label-Style">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>Questions of coding style are the source of massive levels of angst and
 unrest in development communities. We ask contributors to be tolerant in
@@ -302,29 +300,30 @@ prefer them as stand-alone commits with appropriate commenting.</p>
 
 <p>We strongly recommend that the naming guidelines in the style guide be
 followed. Ruby language variables and methods should be named using
-<code>snake_case</code>. This is particularly valuable since the SoftLayer
-network API uses <code>camelCase</code> as its naming convention and having
-the two styles helps to indicate which environment a method name or
-identifier comes from.</p>
+<code>snake_case</code>. This is particularly valuable since the <a
+href="SoftLayer.html">SoftLayer</a> network API uses <code>camelCase</code>
+as its naming convention and having the two styles helps to indicate which
+environment a method name or identifier comes from.</p>
 
 <p>The Gem uses an exclamation mark (!) to mark methods that have strong
-consequences to the SoftLayer Environment. This includes methods that
-delete, destroy, or otherwise permanently modify an entity in the
-environment, or requests that might cause additional charges to be applied
-to a customer account. For example, the method for permanently canceling a
-server is <code>cancel!</code> and the method for placing an order (and
-incurring additional charges to the account) is <code>place_order!</code>.</p>
+consequences to the <a href="SoftLayer.html">SoftLayer</a> Environment.
+This includes methods that delete, destroy, or otherwise permanently modify
+an entity in the environment, or requests that might cause additional
+charges to be applied to a customer account. For example, the method for
+permanently canceling a server is <code>cancel!</code> and the method for
+placing an order (and incurring additional charges to the account) is
+<code>place_order!</code>.</p>
 
-<h1 id="label-Model+Layer+Changes">Model Layer Changes<span><a href="#label-Model+Layer+Changes">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="label-Model+Layer+Changes">Model Layer Changes<span><a href="#label-Model+Layer+Changes">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>The Model Layer of the <code>softlayer_api</code> gem is intended to allow
-scripts to access information easily and make common modifications to a
-SoftLayer environment with straightforward code. As such, it is important
-that the model itself be sound. For contributors who wish to add new models
-to this layer, we recommend that you present your design in an issue on
-GitHub and solicit the constructive advice of the community on your model.
-In particular we recommend the following for consideration on good model
-design:</p>
+scripts to access information easily and make common modifications to a <a
+href="SoftLayer.html">SoftLayer</a> environment with straightforward code.
+As such, it is important that the model itself be sound. For contributors
+who wish to add new models to this layer, we recommend that you present
+your design in an issue on GitHub and solicit the constructive advice of
+the community on your model. In particular we recommend the following for
+consideration on good model design:</p>
 <ul><li>
 <p><a
 href="http://en.m.wikipedia.org/wiki/SOLID_(object-oriented_design)">SOLID
@@ -341,20 +340,21 @@ and subjectivity as other programming topics.</p>
 documentation in this set as subclasses of ModelBase are expected to
 conform to particular protocols.</p>
 
-<h1 id="label-Submitting+Changes">Submitting Changes<span><a href="#label-Submitting+Changes">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<h1 id="label-Submitting+Changes">Submitting Changes<span><a href="#label-Submitting+Changes">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>Contributions are made to the <code>softlayer_api</code> Gem by submitting
 a pull-request on GitHub. The community will review pull requests and offer
 constructive advice on improvements. The determination on whether a
 pull-request will be accepted into the gem is made at the sole discretion
-of SoftLayer with the wise counsel of the community.</p>
+of <a href="SoftLayer.html">SoftLayer</a> with the wise counsel of the
+community.</p>
 </main>
 
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
-  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

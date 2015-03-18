@@ -138,11 +138,11 @@ href="http://sldn.softlayer.com/reference/datatypes/SoftLayer_Container_Product_
         <div class="method-description">
         
         <p>The value of this property should be a hash. The keys of the hash are
-ProdcutItemCategory codes (like &#39;os&#39; and &#39;ram&#39;) while the
-values may be Integers or Objects. The Integer values should be the
-<code>id</code> of a <code>SoftLayer_Product_Item_Price</code> representing
-the configuration option chosen for that category. Objects must respond to
-the <code>price_id</code> message and return an integer that is the
+ProdcutItemCategory codes (like ‘os’ and ‘ram’) while the values may be
+Integers or Objects. The Integer values should be the <code>id</code> of a
+<code>SoftLayer_Product_Item_Price</code> representing the configuration
+option chosen for that category. Objects must respond to the
+<code>price_id</code> message and return an integer that is the
 <code>id</code> of a <code>SoftLayer_Product_Item_Price</code>. Instances
 of the <a
 href="ProductConfigurationOption.html">ProductConfigurationOption</a> class
@@ -180,8 +180,8 @@ datacenter_options method.</p>
 
         <div class="method-description">
         
-        <p>The domain of the server being created (i.e. &#39;softlayer.com&#39; is the
-domain of sldn.softlayer.com)</p>
+        <p>The domain of the server being created (i.e. ‘softlayer.com’ is the domain
+of sldn.softlayer.com)</p>
         
         </div>
       </div>
@@ -194,8 +194,8 @@ domain of sldn.softlayer.com)</p>
 
         <div class="method-description">
         
-        <p>The hostname of the server being created (i.e. &#39;sldn&#39; is the
-hostname of sldn.softlayer.com).</p>
+        <p>The hostname of the server being created (i.e. ‘sldn’ is the hostname of
+sldn.softlayer.com).</p>
         
         </div>
       </div>
@@ -470,30 +470,30 @@ configuration options given.</p>
             <pre><span class="ruby-comment"># File lib/softlayer/VirtualServerOrder_Package.rb, line 130</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">virtual_server_order</span>
   <span class="ruby-identifier">product_order</span> = {
-    <span class="ruby-string">&#39;packageId&#39;</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@package</span>.<span class="ruby-identifier">id</span>,
-    <span class="ruby-string">&#39;useHourlyPricing&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-ivar">@hourly</span>,
-    <span class="ruby-string">&#39;virtualGuests&#39;</span>    =<span class="ruby-operator">&gt;</span> [{
-                             <span class="ruby-string">&#39;domain&#39;</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@domain</span>,
-                             <span class="ruby-string">&#39;hostname&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@hostname</span>
+    <span class="ruby-string">'packageId'</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@package</span>.<span class="ruby-identifier">id</span>,
+    <span class="ruby-string">'useHourlyPricing'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-ivar">@hourly</span>,
+    <span class="ruby-string">'virtualGuests'</span>    =<span class="ruby-operator">&gt;</span> [{
+                             <span class="ruby-string">'domain'</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@domain</span>,
+                             <span class="ruby-string">'hostname'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@hostname</span>
                            }]
   }
 
   <span class="ruby-comment">#Note that the use of image_template and SoftLayer::ProductPackage os/guest_diskX configuration category</span>
   <span class="ruby-comment">#item prices is mutually exclusive.</span>
-  <span class="ruby-identifier">product_order</span>[<span class="ruby-string">&#39;imageTemplateGlobalIdentifier&#39;</span>] = <span class="ruby-ivar">@image_template</span>.<span class="ruby-identifier">global_id</span>         <span class="ruby-keyword">if</span> <span class="ruby-ivar">@image_template</span>
-  <span class="ruby-identifier">product_order</span>[<span class="ruby-string">&#39;location&#39;</span>]                      = <span class="ruby-ivar">@datacenter</span>.<span class="ruby-identifier">id</span>                    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@datacenter</span>
-  <span class="ruby-identifier">product_order</span>[<span class="ruby-string">&#39;provisionScripts&#39;</span>]              = [<span class="ruby-ivar">@provision_script_URI</span>.<span class="ruby-identifier">to_s</span>]      <span class="ruby-keyword">if</span> <span class="ruby-ivar">@provision_script_URI</span>
-  <span class="ruby-identifier">product_order</span>[<span class="ruby-string">&#39;sshKeys&#39;</span>]                       = [{ <span class="ruby-string">&#39;sshKeyIds&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@ssh_key_ids</span> }] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@ssh_key_ids</span>
-  <span class="ruby-identifier">product_order</span>[<span class="ruby-string">&#39;virtualGuests&#39;</span>][<span class="ruby-value">0</span>][<span class="ruby-string">&#39;userData&#39;</span>]  = <span class="ruby-ivar">@user_metadata</span>                    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user_metadata</span>
+  <span class="ruby-identifier">product_order</span>[<span class="ruby-string">'imageTemplateGlobalIdentifier'</span>] = <span class="ruby-ivar">@image_template</span>.<span class="ruby-identifier">global_id</span>         <span class="ruby-keyword">if</span> <span class="ruby-ivar">@image_template</span>
+  <span class="ruby-identifier">product_order</span>[<span class="ruby-string">'location'</span>]                      = <span class="ruby-ivar">@datacenter</span>.<span class="ruby-identifier">id</span>                    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@datacenter</span>
+  <span class="ruby-identifier">product_order</span>[<span class="ruby-string">'provisionScripts'</span>]              = [<span class="ruby-ivar">@provision_script_URI</span>.<span class="ruby-identifier">to_s</span>]      <span class="ruby-keyword">if</span> <span class="ruby-ivar">@provision_script_URI</span>
+  <span class="ruby-identifier">product_order</span>[<span class="ruby-string">'sshKeys'</span>]                       = [{ <span class="ruby-string">'sshKeyIds'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@ssh_key_ids</span> }] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@ssh_key_ids</span>
+  <span class="ruby-identifier">product_order</span>[<span class="ruby-string">'virtualGuests'</span>][<span class="ruby-value">0</span>][<span class="ruby-string">'userData'</span>]  = <span class="ruby-ivar">@user_metadata</span>                    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user_metadata</span>
 
-  <span class="ruby-identifier">product_order</span>[<span class="ruby-string">&#39;prices&#39;</span>] = <span class="ruby-ivar">@configuration_options</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">product_order</span>[<span class="ruby-string">'prices'</span>] = <span class="ruby-ivar">@configuration_options</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:price_id</span>)
       <span class="ruby-identifier">price_id</span> = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">price_id</span>
     <span class="ruby-keyword">else</span>
       <span class="ruby-identifier">price_id</span> = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_i</span>
     <span class="ruby-keyword">end</span>
 
-    { <span class="ruby-string">&#39;id&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">price_id</span> }
+    { <span class="ruby-string">'id'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">price_id</span> }
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">product_order</span>

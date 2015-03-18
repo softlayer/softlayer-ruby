@@ -4,21 +4,18 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::ImageTemplate - softlayer_api gem 3.0.0</title>
-
-<link href="../fonts.css" rel="stylesheet">
-<link href="../rdoc.css" rel="stylesheet">
+<title>class SoftLayer::ImageTemplate - softlayer_api gem 3.0.1</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
-<script src="../js/navigation.js"></script>
-<script src="../js/search_index.js"></script>
-<script src="../js/search.js"></script>
-<script src="../js/searcher.js"></script>
 <script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
 
 
 <body id="top" role="document" class="class">
@@ -187,7 +184,7 @@ href="http://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest_Block
 
         <div class="method-description">
         
-        <p>The &#39;friendly name&#39; given to the template when it was created</p>
+        <p>The ‘friendly name’ given to the template when it was created</p>
         
         </div>
       </div>
@@ -292,10 +289,10 @@ the given global identfier</p>
   <span class="ruby-comment"># Tags get a much more complex object filter operation so we handle them separately</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:tags</span>)
     <span class="ruby-identifier">object_filter</span>.<span class="ruby-identifier">set_criteria_for_key_path</span>(<span class="ruby-string">&quot;privateBlockDeviceTemplateGroups.tagReferences.tag.name&quot;</span>, {
-      <span class="ruby-string">&#39;operation&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;in&#39;</span>,
-      <span class="ruby-string">&#39;options&#39;</span> =<span class="ruby-operator">&gt;</span> [{
-        <span class="ruby-string">&#39;name&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;data&#39;</span>,
-        <span class="ruby-string">&#39;value&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
+      <span class="ruby-string">'operation'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'in'</span>,
+      <span class="ruby-string">'options'</span> =<span class="ruby-operator">&gt;</span> [{
+        <span class="ruby-string">'name'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'data'</span>,
+        <span class="ruby-string">'value'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
         }]
       } );
   <span class="ruby-keyword">end</span>
@@ -378,8 +375,8 @@ the given global identfier</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">option_to_filter_path</span> = {
-    <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;publicImages.name&quot;</span>,
-    <span class="ruby-value">:global_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;publicImages.globalIdentifier&quot;</span>,
+    <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;name&quot;</span>,
+    <span class="ruby-value">:global_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;globalIdentifier&quot;</span>,
   }
 
   <span class="ruby-comment"># For each of the options in the option_to_filter_path map, if the options hash includes</span>
@@ -388,14 +385,14 @@ the given global identfier</p>
   <span class="ruby-identifier">option_to_filter_path</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">option</span>, <span class="ruby-identifier">filter_path</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">object_filter</span>.<span class="ruby-identifier">modify</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span> <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-identifier">filter_path</span>).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-identifier">option</span>])} <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-identifier">option</span>]
   <span class="ruby-keyword">end</span>
-
+  
   <span class="ruby-comment"># Tags get a much more complex object filter operation so we handle them separately</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:tags</span>)
-    <span class="ruby-identifier">object_filter</span>.<span class="ruby-identifier">set_criteria_for_key_path</span>(<span class="ruby-string">&quot;publicImages.tagReferences.tag.name&quot;</span>, {
-      <span class="ruby-string">&#39;operation&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;in&#39;</span>,
-      <span class="ruby-string">&#39;options&#39;</span> =<span class="ruby-operator">&gt;</span> [{
-        <span class="ruby-string">&#39;name&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;data&#39;</span>,
-        <span class="ruby-string">&#39;value&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
+    <span class="ruby-identifier">object_filter</span>.<span class="ruby-identifier">set_criteria_for_key_path</span>(<span class="ruby-string">&quot;tagReferences.tag.name&quot;</span>, {
+      <span class="ruby-string">'operation'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'in'</span>,
+      <span class="ruby-string">'options'</span> =<span class="ruby-operator">&gt;</span> [{
+        <span class="ruby-string">'name'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'data'</span>,
+        <span class="ruby-string">'value'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
         }]
       } );
   <span class="ruby-keyword">end</span>
@@ -441,7 +438,15 @@ the given global identfier</p>
 
         <div class="method-description">
           
-          <p>Retrieve the image template with the given global ID</p>
+          <p>Retrieve the image template with the given global ID.  The routine searches
+the public image template list first and the private image template list if
+no public image with the given id is found.  If no template is found after
+searching both lists, then the function returns nil.</p>
+
+<p>Should either search return more than one result (meaning the system found
+more than one template with the same <a
+href="ImageTemplate.html#attribute-i-global_id">#global_id</a>), then the
+routine will throw an exception.</p>
 
 <p>The options parameter should contain:</p>
 
@@ -463,9 +468,13 @@ retrieve for the template</p>
 
           
           <div class="method-source-code" id="template_with_global_id-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ImageTemplate.rb, line 373</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ImageTemplate.rb, line 379</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">template_with_global_id</span>(<span class="ruby-identifier">global_id</span>, <span class="ruby-identifier">options_hash</span> = {})
   <span class="ruby-identifier">templates</span> = <span class="ruby-identifier">find_public_templates</span>(<span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-value">:global_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">global_id</span>))
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">templates</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">templates</span> = <span class="ruby-identifier">find_private_templates</span>(<span class="ruby-identifier">options_hash</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-value">:global_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">global_id</span>))
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;ImageTemplate::template_with_global_id returned more than one template with the same global id.  This should not happen&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">templates</span> <span class="ruby-operator">!=</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">templates</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
   <span class="ruby-identifier">templates</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">templates</span>[<span class="ruby-value">0</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -566,7 +575,7 @@ retrieve for the template</p>
 
           
           <div class="method-source-code" id="default_object_mask-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ImageTemplate.rb, line 380</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ImageTemplate.rb, line 390</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
   <span class="ruby-keyword">return</span> <span class="ruby-string">&quot;mask[id,accountId,name,note,globalIdentifier,datacenters,blockDevices,tagReferences,publicFlag,flexImageFlag,transactionId,children.transactionId]&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -612,7 +621,7 @@ list you will send to the datacenters= setter.</p>
             <pre><span class="ruby-comment"># File lib/softlayer/ImageTemplate.rb, line 108</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">available_datacenters</span>
   <span class="ruby-identifier">datacenters_data</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">getStorageLocations</span>()
-  <span class="ruby-identifier">datacenters_data</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">datacenter_data</span><span class="ruby-operator">|</span> <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">Datacenter</span>.<span class="ruby-identifier">datacenter_named</span>(<span class="ruby-identifier">datacenter_data</span>[<span class="ruby-string">&#39;name&#39;</span>]) }
+  <span class="ruby-identifier">datacenters_data</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">datacenter_data</span><span class="ruby-operator">|</span> <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">Datacenter</span>.<span class="ruby-identifier">datacenter_named</span>(<span class="ruby-identifier">datacenter_data</span>[<span class="ruby-string">'name'</span>]) }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -646,7 +655,7 @@ available.</p>
           <div class="method-source-code" id="datacenters-source">
             <pre><span class="ruby-comment"># File lib/softlayer/ImageTemplate.rb, line 80</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">datacenters</span>
-  <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;datacenters&#39;</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">datacenter_data</span><span class="ruby-operator">|</span> <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">Datacenter</span>.<span class="ruby-identifier">datacenter_named</span>(<span class="ruby-identifier">datacenter_data</span>[<span class="ruby-string">&#39;name&#39;</span>])}
+  <span class="ruby-keyword">self</span>[<span class="ruby-string">'datacenters'</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">datacenter_data</span><span class="ruby-operator">|</span> <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">Datacenter</span>.<span class="ruby-identifier">datacenter_named</span>(<span class="ruby-identifier">datacenter_data</span>[<span class="ruby-string">'name'</span>])}
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -767,7 +776,7 @@ property comes back as a boolean</p>
           <div class="method-source-code" id="flex_image-3F-source">
             <pre><span class="ruby-comment"># File lib/softlayer/ImageTemplate.rb, line 50</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">flex_image?</span>
-  <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;flexImageFlag&#39;</span>]
+  <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-keyword">self</span>[<span class="ruby-string">'flexImageFlag'</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -802,7 +811,7 @@ property comes back as a boolean</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">notes=</span>(<span class="ruby-identifier">new_notes</span>)
   <span class="ruby-comment"># it is not a typo that this sets the &quot;note&quot; property.  The</span>
   <span class="ruby-comment"># property in the network api is &quot;note&quot;, the model exposes it as</span>
-  <span class="ruby-comment"># &#39;notes&#39; for self-consistency</span>
+  <span class="ruby-comment"># 'notes' for self-consistency</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">editObject</span>({ <span class="ruby-string">&quot;note&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">new_notes</span>.<span class="ruby-identifier">to_s</span>})
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -837,7 +846,7 @@ property comes back as an integer (0 or 1)</p>
           <div class="method-source-code" id="public-3F-source">
             <pre><span class="ruby-comment"># File lib/softlayer/ImageTemplate.rb, line 43</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">public?</span>
-  <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;publicFlag&#39;</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+  <span class="ruby-keyword">self</span>[<span class="ruby-string">'publicFlag'</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -938,7 +947,7 @@ image is shared with</p>
             <pre><span class="ruby-comment"># File lib/softlayer/ImageTemplate.rb, line 117</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">shared_with_accounts</span>
   <span class="ruby-identifier">accounts_data</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">getAccountReferences</span>
-  <span class="ruby-identifier">accounts_data</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">account_data</span><span class="ruby-operator">|</span> <span class="ruby-identifier">account_data</span>[<span class="ruby-string">&#39;accountId&#39;</span>] }
+  <span class="ruby-identifier">accounts_data</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">account_data</span><span class="ruby-operator">|</span> <span class="ruby-identifier">account_data</span>[<span class="ruby-string">'accountId'</span>] }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -964,7 +973,7 @@ image is shared with</p>
         <div class="method-description">
           
           <p>Change the set of accounts that this image is shared with. The parameter is
-an array of account ID&#39;s.</p>
+an array of account ID’s.</p>
 
 <p>Note that this routine will “unshare” with any accounts not included in the
 list passed in so the list should be comprehensive</p>
@@ -985,7 +994,7 @@ list passed in so the list should be comprehensive</p>
   <span class="ruby-comment"># but no way to delete those resources. For that reason this model</span>
   <span class="ruby-comment"># always includes the account ID that owns the image in the list of</span>
   <span class="ruby-comment"># accounts the image will be shared with.</span>
-  <span class="ruby-identifier">my_account_id</span> = <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;accountId&#39;</span>]
+  <span class="ruby-identifier">my_account_id</span> = <span class="ruby-keyword">self</span>[<span class="ruby-string">'accountId'</span>]
   <span class="ruby-identifier">accounts_to_add</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">my_account_id</span>) <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">already_sharing_with</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">my_account_id</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">accounts_to_add</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">my_account_id</span>)
 
   <span class="ruby-identifier">accounts_to_remove</span> = <span class="ruby-identifier">already_sharing_with</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">account_id</span><span class="ruby-operator">|</span> (<span class="ruby-identifier">account_id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">my_account_id</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">account_id_list</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">account_id</span>) }
@@ -1057,7 +1066,7 @@ list passed in so the list should be comprehensive</p>
           <div class="method-source-code" id="tags-source">
             <pre><span class="ruby-comment"># File lib/softlayer/ImageTemplate.rb, line 65</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">tags</span>
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;tagReferences&#39;</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_reference</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_reference</span>[<span class="ruby-string">&#39;tag&#39;</span>][<span class="ruby-string">&#39;name&#39;</span>] }
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'tagReferences'</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_reference</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_reference</span>[<span class="ruby-string">'tag'</span>][<span class="ruby-string">'name'</span>] }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -1093,7 +1102,7 @@ tags must be comprehensive.</p>
             <pre><span class="ruby-comment"># File lib/softlayer/ImageTemplate.rb, line 73</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">tags=</span>(<span class="ruby-identifier">tags_array</span>)
   <span class="ruby-identifier">as_strings</span> = <span class="ruby-identifier">tags_array</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">tag</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag</span>.<span class="ruby-identifier">to_s</span> }
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">setTags</span>(<span class="ruby-identifier">as_strings</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39;,&#39;</span>))
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">setTags</span>(<span class="ruby-identifier">as_strings</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">','</span>))
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -1121,12 +1130,12 @@ tags must be comprehensive.</p>
           <p>Repeatedly poll the netwokr API until transactions related to this image
 template are finished</p>
 
-<p>A template is not &#39;ready&#39; until all the transactions on the
-template itself, and all its children are complete.</p>
+<p>A template is not ‘ready’ until all the transactions on the template
+itself, and all its children are complete.</p>
 
 <p>At each trial, the routine will yield to a block if one is given The block
 is passed one parameter, a boolean flag indicating whether or not the image
-template is &#39;ready&#39;.</p>
+template is ‘ready’.</p>
           
           
 
@@ -1140,7 +1149,7 @@ template is &#39;ready&#39;.</p>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">refresh_details</span>()
 
     <span class="ruby-identifier">parent_ready</span> = <span class="ruby-operator">!</span>(<span class="ruby-identifier">has_sl_property?</span> <span class="ruby-value">:transactionId</span>) <span class="ruby-operator">||</span> (<span class="ruby-keyword">self</span>[<span class="ruby-value">:transactionId</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;&quot;</span>)
-    <span class="ruby-identifier">children_ready</span> = (<span class="ruby-keyword">nil</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;children&#39;</span>].<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">child</span><span class="ruby-operator">|</span> <span class="ruby-identifier">child</span>[<span class="ruby-string">&#39;transactionId&#39;</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;&quot;</span> })
+    <span class="ruby-identifier">children_ready</span> = (<span class="ruby-keyword">nil</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'children'</span>].<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">child</span><span class="ruby-operator">|</span> <span class="ruby-identifier">child</span>[<span class="ruby-string">'transactionId'</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;&quot;</span> })
 
     <span class="ruby-identifier">ready</span> = <span class="ruby-identifier">parent_ready</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">children_ready</span>
     <span class="ruby-keyword">yield</span> <span class="ruby-identifier">ready</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
@@ -1169,7 +1178,7 @@ template is &#39;ready&#39;.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
-  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
