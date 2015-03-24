@@ -51,9 +51,9 @@ module SoftLayer
     #
     def verify()
       if has_order_items?
-        order_obj = order_object
-        order_obj = yield order_object if block_given?
-        @virtual_server.softlayer_client[:Product_Order].verifyOrder(order_obj)
+        order_template = order_object
+        order_template = yield order_object if block_given?
+        @virtual_server.softlayer_client[:Product_Order].verifyOrder(order_template)
       end
     end
 
@@ -66,10 +66,10 @@ module SoftLayer
     #
     def place_order!()
       if has_order_items?
-        order_obj = order_object
-        order_obj = yield order_object if block_given?
+        order_template = order_object
+        order_template = yield order_object if block_given?
 
-        @virtual_server.softlayer_client[:Product_Order].placeOrder(order_object)
+        @virtual_server.softlayer_client[:Product_Order].placeOrder(order_template)
       end
     end
 
