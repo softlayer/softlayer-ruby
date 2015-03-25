@@ -51,10 +51,9 @@ module SoftLayer
     #
     def verify()
       if has_order_items?
-        order_object = self.order_object
-        order_object = yield order_object if block_given?
-
-        @virtual_server.softlayer_client[:Product_Order].verifyOrder(order_object)
+        order_template = order_object
+        order_template = yield order_object if block_given?
+        @virtual_server.softlayer_client[:Product_Order].verifyOrder(order_template)
       end
     end
 
@@ -67,10 +66,10 @@ module SoftLayer
     #
     def place_order!()
       if has_order_items?
-        order_object = self.order_object
-        order_object = yield order_object if block_given?
+        order_template = order_object
+        order_template = yield order_object if block_given?
 
-        @virtual_server.softlayer_client[:Product_Order].placeOrder(order_object)
+        @virtual_server.softlayer_client[:Product_Order].placeOrder(order_template)
       end
     end
 
@@ -113,7 +112,7 @@ module SoftLayer
     # and whose capacity matches the value given. Returns the item_price or nil
     #
     def _item_price_with_capacity(which_category, capacity)
-      self._item_prices_in_category(which_category).find { |item_price| item_price['item']['capacity'].to_i == capacity}
+      _item_prices_in_category(which_category).find { |item_price| item_price['item']['capacity'].to_i == capacity}
     end
 
     ##
