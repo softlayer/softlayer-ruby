@@ -127,14 +127,14 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # You may filter the list returned by adding options:
-    # * <b>+:datacenter+</b>    (string) - Include software from hardware matching this datacenter
-    # * <b>+:description+</b>   (string) - Include software that matches this description
-    # * <b>+:domain+</b>        (string) - Include software from hardware matching this domain
-    # * <b>+:hardware_type+</b> (string) - Include software from hardware matching this hardware type
-    # * <b>+:hostname+</b>      (string) - Include software from hardware matching this hostname
-    # * <b>+:manufacturer+</b>  (string) - Include software that matches this manufacturer
-    # * <b>+:name+</b>          (string) - Include software that matches this name
-    # * <b>+:username+</b>      (string) - Include software that has software password matching this username
+    # * <b>+:datacenter+</b>    (string/array) - Include software from hardware matching this datacenter
+    # * <b>+:description+</b>   (string/array) - Include software that matches this description
+    # * <b>+:domain+</b>        (string/array) - Include software from hardware matching this domain
+    # * <b>+:hardware_type+</b> (symbol)       - Include software from hardware matching this hardware type
+    # * <b>+:hostname+</b>      (string/array) - Include software from hardware matching this hostname
+    # * <b>+:manufacturer+</b>  (string/array) - Include software that matches this manufacturer
+    # * <b>+:name+</b>          (string/array) - Include software that matches this name
+    # * <b>+:username+</b>      (string/array) - Include software that has software password matching this username
     #
     # You may use the following properties to provide hardware or software object filter instances:
     # * <b>+:hardware_object_filter+</b> (ObjectFilter) - Include software from hardware that matches the criteria of this object filter
@@ -167,10 +167,12 @@ module SoftLayer
       }
 
       option_to_filter_path = {
-        :datacenter     => lambda { |hardware_type| return [ filter_label[hardware_type], '.datacenter.name' ].join        },
-        :domain         => lambda { |hardware_type| return [ filter_label[hardware_type], '.domain' ].join                 },
-        :hostname       => lambda { |hardware_type| return [ filter_label[hardware_type], '.hostname' ].join               },
-        :tags           => lambda { |hardware_type| return [ filter_label[hardware_type], '.tagReferences.tag.name' ].join },
+        :hardware       => {
+          :datacenter     => lambda { |hardware_type| return [ filter_label[hardware_type], '.datacenter.name' ].join        },
+          :domain         => lambda { |hardware_type| return [ filter_label[hardware_type], '.domain' ].join                 },
+          :hostname       => lambda { |hardware_type| return [ filter_label[hardware_type], '.hostname' ].join               },
+          :tags           => lambda { |hardware_type| return [ filter_label[hardware_type], '.tagReferences.tag.name' ].join }
+        },
         :software       => {
           :description  => "softwareComponents.softwareDescription.longDescription",
           :manufacturer => "softwareComponents.softwareDescription.manufacturer",
@@ -185,21 +187,10 @@ module SoftLayer
         end
       end
 
-      [ :datacenter, :domain, :hostname ].each do |option|
+      option_to_filter_path[:hardware].keys.each do |option|
         if options_hash[option]
-          hardware_object_filter.modify { |filter| filter.accept(option_to_filter_path[option].call(options_hash[:hardware_type] || :hardware)).when_it is(options_hash[option]) }
+          hardware_object_filter.modify { |filter| filter.accept(option_to_filter_path[:hardware][option].call(options_hash[:hardware_type] || :hardware)).when_it is(options_hash[option]) }
         end
-      end
-
-      if options_hash[:tags]
-        hardware_object_filter.set_criteria_for_key_path(option_to_filter_path[:tags].call(options_hash[:hardware_type] || :hardware),
-                                                         {
-                                                           'operation' => 'in',
-                                                           'options' => [{
-                                                                           'name' => 'data',
-                                                                           'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
-                                                                         }]
-                                                         })
       end
 
       option_to_filter_path[:software].each do |option, filter_path|
@@ -245,13 +236,13 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # You may filter the list returned by adding options:
-    # * <b>+:datacenter+</b>    (string) - Include software from virtual servers matching this datacenter
-    # * <b>+:description+</b>   (string) - Include software that matches this description
-    # * <b>+:domain+</b>        (string) - Include software from virtual servers matching this domain
-    # * <b>+:hostname+</b>      (string) - Include software from virtual servers matching this hostname
-    # * <b>+:manufacturer+</b>  (string) - Include software that matches this manufacturer
-    # * <b>+:name+</b>          (string) - Include software that matches this name
-    # * <b>+:username+</b>      (string) - Include software that has software password matching this username
+    # * <b>+:datacenter+</b>    (string/array) - Include software from virtual servers matching this datacenter
+    # * <b>+:description+</b>   (string/array) - Include software that matches this description
+    # * <b>+:domain+</b>        (string/array) - Include software from virtual servers matching this domain
+    # * <b>+:hostname+</b>      (string/array) - Include software from virtual servers matching this hostname
+    # * <b>+:manufacturer+</b>  (string/array) - Include software that matches this manufacturer
+    # * <b>+:name+</b>          (string/array) - Include software that matches this name
+    # * <b>+:username+</b>      (string/array) - Include software that has software password matching this username
     #
     # You may use the following properties to provide virtual server or software object filter instances:
     # * <b>+:virtual_server_object_filter+</b> (ObjectFilter) - Include software from virtual servers that matches the criteria of this object filter
@@ -291,19 +282,7 @@ module SoftLayer
         }
       }
 
-      if options_hash[:tags]
-        virtual_server_object_filter.set_criteria_for_key_path(option_to_filter_path[:virtual_server][:tags],
-                                                               {
-                                                                 'operation' => 'in',
-                                                                 'options' => [{
-                                                                                 'name' => 'data',
-                                                                                 'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
-                                                                               }]
-                                                               })
-      end
-
       option_to_filter_path[:virtual_server].each do |option, filter_path|
-        next if option == :tags
         virtual_server_object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option]) } if options_hash[option]
       end
 
