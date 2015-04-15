@@ -17,7 +17,7 @@ module SoftLayer
   # As a result, instances of this class correspond to certain instances
   # in the SoftLayer_Network_Vlan service.
   #
-	class VLANFirewall < SoftLayer::ModelBase
+  class VLANFirewall < SoftLayer::ModelBase
     include ::SoftLayer::DynamicAttribute
 
     ##
@@ -218,7 +218,6 @@ module SoftLayer
       vlan_firewalls = softlayer_client[:Account].object_mask(vlan_firewall_mask).object_filter(vlan_firewall_filter).getNetworkVlans
       vlan_firewalls.collect { |firewall_data| SoftLayer::VLANFirewall.new(softlayer_client, firewall_data)}
     end
-
 
     #--
     # Methods for the SoftLayer model
