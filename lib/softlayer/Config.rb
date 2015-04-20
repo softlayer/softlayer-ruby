@@ -156,13 +156,13 @@ module SoftLayer
       result[:user_agent]   = $SL_API_USER_AGENT || "softlayer-ruby #{VERSION}"
       result[:username]     = $SL_API_USERNAME if $SL_API_USERNAME
 
-      if $SL_API_BASE_URL && ENDPOINT_URL_ALIAS.include?($SL_API_BASE_URL)
-        result[:endpoint_url] = ($SL_API_BASE_URL == "API_PUBLIC_ENDPOINT" ? API_PUBLIC_ENDPOINT : API_PRIVATE_ENDPOINT)
-      elsif $SL_API_ENDPOINT_URL && ENDPOINT_URL_ALIAS.include?($SL_API_ENDPOINT_URL)
+      if $SL_API_ENDPOINT_URL && ENDPOINT_URL_ALIAS.include?($SL_API_ENDPOINT_URL)
         result[:endpoint_url] = ($SL_API_ENDPOINT_URL == "API_PUBLIC_ENDPOINT" ? API_PUBLIC_ENDPOINT : API_PRIVATE_ENDPOINT)
+      elsif $SL_API_BASE_URL && ENDPOINT_URL_ALIAS.include?($SL_API_BASE_URL)
+        result[:endpoint_url] = ($SL_API_BASE_URL == "API_PUBLIC_ENDPOINT" ? API_PUBLIC_ENDPOINT : API_PRIVATE_ENDPOINT)
       elsif ($SL_API_BASE_URL     && ! ENDPOINT_URL_ALIAS.include?($SL_API_BASE_URL)) ||
             ($SL_API_ENDPOINT_URL && ! ENDPOINT_URL_ALIAS.include?($SL_API_ENDPOINT_URL))
-        result[:endpoint_url] = softlayer_section['base_url'] || softlayer_section['endpoint_url']
+        result[:endpoint_url] = $SL_API_ENDPOINT_URL || $SL_API_BASE_URL
       end
 
       begin
