@@ -36,9 +36,11 @@ module SoftLayer
   # SoftLayer-Python language bindings).  A simple config file looks something like this:
   #
   #      [softlayer]
-  #      username = joeusername
   #      api_key = DEADBEEFBADF00D
+  #      endpoint_url = 'API_PUBLIC_ENDPOINT'
   #      timeout = 60
+  #      user_agent = "softlayer-ruby x.x.x"
+  #      username = joeusername
   #
   # = Environment Variables
   #
@@ -52,7 +54,16 @@ module SoftLayer
   #
   # - +$SL_API_USERNAME+
   # - +$SL_API_KEY+
-  # - +$SL_API_BASE_URL+
+  # - +$SL_API_BASE_URL+ (or alias +$SL_API_ENDPOINT_URL+)
+  #
+  # = XML RPC Variables
+  #
+  # The config allows for two variables that are passed on to the underlying XML RPC agent
+  # for interacting with the SoftLayer API (as with other settings these can be loaded from
+  # config file, environment variables, globals or provided values):
+  #
+  # - +SL_API_TIMEOUT+
+  # - +SL_API_USER_AGENT+
   #
   # = Direct parameters
   #
@@ -60,62 +71,107 @@ module SoftLayer
   # of the key information is provided in that hash, that information will override
   # any discovered through the techniques above.
   #
+  class Config
+    ENDPOINT_URL_ALIAS = [ 'API_PRIVATE_ENDPOINT', 'API_PUBLIC_ENDPOINT' ]
+    FILE_LOCATIONS     = [ '/etc/softlayer.conf', '~/.softlayer', './.softlayer' ]
 
-	class Config
-		def Config.globals_settings
-			result = {}
-			result[:username] =  $SL_API_USERNAME if $SL_API_USERNAME
-			result[:api_key] = $SL_API_KEY if $SL_API_KEY
-			result[:endpoint_url] = $SL_API_BASE_URL || API_PUBLIC_ENDPOINT
-			result
-		end
+    def Config.client_settings(provided_settings = {})
+      settings = { :endpoint_url => API_PUBLIC_ENDPOINT }
 
-		def Config.environment_settings
-			result = {}
-			result[:username] =  ENV['SL_USERNAME'] if ENV['SL_USERNAME']
-			result[:api_key] = ENV['SL_API_KEY'] if ENV['SL_API_KEY']
-			result
-		end
+      settings.merge! file_settings
+      settings.merge! environment_settings
+      settings.merge! globals_settings
+      settings.merge! provided_settings
 
-		FILE_LOCATIONS = ['/etc/softlayer.conf', '~/.softlayer', './.softlayer']
+      settings
+    end
 
-		def Config.file_settings(*additional_files)
-			result = {}
+    def Config.environment_settings
+      result = {}
 
-			search_path = FILE_LOCATIONS
-			search_path = search_path + additional_files if additional_files
-			search_path = search_path.map { |file_path| File.expand_path(file_path) }
+      result[:api_key]      = ENV['SL_API_KEY'] if ENV['SL_API_KEY']
+      result[:user_agent]   = ENV['SL_API_USER_AGENT'] || "softlayer-ruby #{VERSION}"
+      result[:username]     = ENV['SL_USERNAME'] if ENV['SL_USERNAME']
 
-			search_path.each do |file_path|
-				if File.readable? file_path
-					config = ConfigParser.new file_path
-					softlayer_section = config['softlayer']
+      if ENV['SL_API_BASE_URL'] && ENDPOINT_URL_ALIAS.include?(ENV['SL_API_BASE_URL'])
+        result[:endpoint_url] = (ENV["SL_API_BASE_URL"] == "API_PUBLIC_ENDPOINT" ? API_PUBLIC_ENDPOINT : API_PRIVATE_ENDPOINT)
+      elsif ENV['SL_API_ENDPOINT_URL'] && ENDPOINT_URL_ALIAS.include?(ENV['SL_API_ENDPOINT_URL'])
+        result[:endpoint_url] = (ENV["SL_API_ENDPOINT_URL"] == "API_PUBLIC_ENDPOINT" ? API_PUBLIC_ENDPOINT : API_PRIVATE_ENDPOINT)
+      elsif (ENV['SL_API_BASE_URL']     && ! ENDPOINT_URL_ALIAS.include?(ENV['SL_API_BASE_URL'])) ||
+            (ENV['SL_API_ENDPOINT_URL'] && ! ENDPOINT_URL_ALIAS.include?(ENV['SL_API_ENDPOINT_URL']))
+        result[:endpoint_url] = ENV['SL_API_BASE_URL'] || ENV['SL_API_ENDPOINT_URL']
+      end
 
-					if softlayer_section
-						result[:username] = softlayer_section['username'] if softlayer_section['username']
-						result[:endpoint_url] = softlayer_section['endpoint_url'] if softlayer_section['endpoint_url']
-						result[:api_key] = softlayer_section['api_key'] if softlayer_section['api_key']
+      begin
+        result[:timeout] = Integer(ENV['SL_API_TIMEOUT']) if ENV['SL_API_TIMEOUT']
+      rescue => integer_parse_exception
+        raise "Expected the value of the timeout configuration property, '#{ENV['SL_API_TIMEOUT']}', to be parseable as an integer"
+      end
+
+      result
+    end
+
+    def Config.file_settings(*additional_files)
+      result = {}
+
+      search_path = FILE_LOCATIONS
+      search_path = search_path + additional_files if additional_files
+      search_path = search_path.map { |file_path| File.expand_path(file_path) }
+
+      search_path.each do |file_path|
+        if File.readable? file_path
+          config            = ConfigParser.new file_path
+          softlayer_section = config['softlayer']
+
+          if softlayer_section
+            result[:api_key]      = softlayer_section['api_key'] if softlayer_section['api_key']
+            result[:user_agent]   = softlayer_section['user_agent'] || "softlayer-ruby #{VERSION}"
+            result[:username]     = softlayer_section['username'] if softlayer_section['username']
+
+            if softlayer_section['base_url'] && ENDPOINT_URL_ALIAS.include?(softlayer_section['base_url'])
+              result[:endpoint_url] = (softlayer_section['base_url'] == "API_PUBLIC_ENDPOINT" ? API_PUBLIC_ENDPOINT : API_PRIVATE_ENDPOINT)
+            elsif softlayer_section['endpoint_url'] && ENDPOINT_URL_ALIAS.include?(softlayer_section['endpoint_url'])
+              result[:endpoint_url] = (softlayer_section['endpoint_url'] == "API_PUBLIC_ENDPOINT" ? API_PUBLIC_ENDPOINT : API_PRIVATE_ENDPOINT)
+            elsif (softlayer_section['base_url']     && ! ENDPOINT_URL_ALIAS.include?(softlayer_section['base_url'])) ||
+                  (softlayer_section['endpoint_url'] && ! ENDPOINT_URL_ALIAS.include?(softlayer_section['endpoint_url']))
+              result[:endpoint_url] = softlayer_section['base_url'] || softlayer_section['endpoint_url']
+            end
 
             begin
-						  result[:timeout] = Integer(softlayer_section['timeout']) if softlayer_section['timeout']
+              result[:timeout] = Integer(softlayer_section['timeout']) if softlayer_section['timeout']
             rescue => integer_parse_exception
-              $stderr.puts "Expected the value of the timeout configuration property, '#{result[:timeout]}', to be parseable as an integer"
+              raise "Expected the value of the timeout configuration property, '#{softlayer_section['timeout']}', to be parseable as an integer"
             end
-					end
-				end
-			end
+          end
+        end
+      end
 
-			result
-		end
+      result
+    end
 
-		def Config.client_settings(provided_settings = {})
-      settings = { :endpoint_url => API_PUBLIC_ENDPOINT }
-			settings.merge! file_settings
-			settings.merge! environment_settings
-			settings.merge! globals_settings
-			settings.merge! provided_settings
+    def Config.globals_settings
+      result = {}
 
-			settings
-		end
-	end
+      result[:api_key]      = $SL_API_KEY if $SL_API_KEY
+      result[:user_agent]   = $SL_API_USER_AGENT || "softlayer-ruby #{VERSION}"
+      result[:username]     = $SL_API_USERNAME if $SL_API_USERNAME
+
+      if $SL_API_BASE_URL && ENDPOINT_URL_ALIAS.include?($SL_API_BASE_URL)
+        result[:endpoint_url] = ($SL_API_BASE_URL == "API_PUBLIC_ENDPOINT" ? API_PUBLIC_ENDPOINT : API_PRIVATE_ENDPOINT)
+      elsif $SL_API_ENDPOINT_URL && ENDPOINT_URL_ALIAS.include?($SL_API_ENDPOINT_URL)
+        result[:endpoint_url] = ($SL_API_ENDPOINT_URL == "API_PUBLIC_ENDPOINT" ? API_PUBLIC_ENDPOINT : API_PRIVATE_ENDPOINT)
+      elsif ($SL_API_BASE_URL     && ! ENDPOINT_URL_ALIAS.include?($SL_API_BASE_URL)) ||
+            ($SL_API_ENDPOINT_URL && ! ENDPOINT_URL_ALIAS.include?($SL_API_ENDPOINT_URL))
+        result[:endpoint_url] = softlayer_section['base_url'] || softlayer_section['endpoint_url']
+      end
+
+      begin
+        result[:timeout] = Integer($SL_API_TIMEOUT) if $SL_API_TIMEOUT
+      rescue => integer_parse_exception
+        raise "Expected the value of the timeout configuration property, '#{$SL_API_TIMEOUT}', to be parseable as an integer"
+      end
+
+      result
+    end
+  end
 end
