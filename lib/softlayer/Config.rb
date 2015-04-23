@@ -90,7 +90,7 @@ module SoftLayer
       result = {}
 
       result[:api_key]      = ENV['SL_API_KEY'] if ENV['SL_API_KEY']
-      result[:user_agent]   = ENV['SL_API_USER_AGENT'] || "softlayer-ruby #{VERSION}"
+      result[:user_agent]   = ENV['SL_API_USER_AGENT'] || "softlayer_api gem/#{SoftLayer::VERSION} (Ruby #{RUBY_PLATFORM}/#{RUBY_VERSION})"
       result[:username]     = ENV['SL_USERNAME'] if ENV['SL_USERNAME']
 
       if ENV['SL_API_BASE_URL'] && ENDPOINT_URL_ALIAS.include?(ENV['SL_API_BASE_URL'])
@@ -125,7 +125,7 @@ module SoftLayer
 
           if softlayer_section
             result[:api_key]      = softlayer_section['api_key'] if softlayer_section['api_key']
-            result[:user_agent]   = softlayer_section['user_agent'] || "softlayer-ruby #{VERSION}"
+            result[:user_agent]   = softlayer_section['user_agent'] || "softlayer_api gem/#{SoftLayer::VERSION} (Ruby #{RUBY_PLATFORM}/#{RUBY_VERSION})"
             result[:username]     = softlayer_section['username'] if softlayer_section['username']
 
             if softlayer_section['base_url'] && ENDPOINT_URL_ALIAS.include?(softlayer_section['base_url'])
@@ -153,7 +153,7 @@ module SoftLayer
       result = {}
 
       result[:api_key]      = $SL_API_KEY if $SL_API_KEY
-      result[:user_agent]   = $SL_API_USER_AGENT || "softlayer-ruby #{VERSION}"
+      result[:user_agent]   = $SL_API_USER_AGENT || "softlayer_api gem/#{SoftLayer::VERSION} (Ruby #{RUBY_PLATFORM}/#{RUBY_VERSION})"
       result[:username]     = $SL_API_USERNAME if $SL_API_USERNAME
 
       if $SL_API_ENDPOINT_URL && ENDPOINT_URL_ALIAS.include?($SL_API_ENDPOINT_URL)
