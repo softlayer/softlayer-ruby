@@ -5,7 +5,7 @@
 #++
 
 module SoftLayer
-	class NetworkComponent < SoftLayer::ModelBase
+  class NetworkComponent < SoftLayer::ModelBase
     sl_attr :name
     sl_attr :port
     sl_attr :speed

@@ -5,7 +5,7 @@
 #++
 
 module SoftLayer
-	class Ticket < SoftLayer::ModelBase
+  class Ticket < SoftLayer::ModelBase
 
     ##
     # :attr_reader:
@@ -35,12 +35,12 @@ module SoftLayer
       self['serverAdministrationFlag'] != 0
     end
 
-		##
-		# Add an update to this ticket.
-		#
-		def update(body = nil)
-			self.service.edit(self.softlayer_hash, body)
-		end
+    ##
+    # Add an update to this ticket.
+    #
+    def update(body = nil)
+      self.service.edit(self.softlayer_hash, body)
+    end
 
     ##
     # Override of service from ModelBase. Returns the SoftLayer_Ticket service
@@ -52,7 +52,7 @@ module SoftLayer
     ##
     # Override from model base. Requests new details about the ticket
     # from the server.
-		def softlayer_properties(object_mask = nil)
+    def softlayer_properties(object_mask = nil)
       my_service = self.service
 
       if(object_mask)
@@ -62,12 +62,12 @@ module SoftLayer
       end
 
       my_service.getObject()
-		end
+    end
 
     ##
     # Returns the default object mask,as a hash, that is used when
     # retrieving ticket information from the SoftLayer server.
-		def self.default_object_mask
+    def self.default_object_mask
       {
         "mask" => [
           'id',							# This is an internal ticket ID, not the one usually seen in the portal
@@ -84,23 +84,23 @@ module SoftLayer
           'serverAdministrationFlag',   # This comes in from the server as an integer :-(
         ]
       }.to_sl_object_mask
-		end
+    end
 
     ##
     # Queries the SoftLayer API to retrieve a list of the valid
     # ticket subjects.
-		def self.ticket_subjects(client = nil)
-			@ticket_subjects ||= nil
+    def self.ticket_subjects(client = nil)
+      @ticket_subjects ||= nil
 
-			if !@ticket_subjects
+      if !@ticket_subjects
         softlayer_client = client || Client.default_client
         raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-				@ticket_subjects = softlayer_client[:Ticket_Subject].getAllObjects();
-			end
+        @ticket_subjects = softlayer_client[:Ticket_Subject].getAllObjects();
+      end
 
-			@ticket_subjects
-		end
+      @ticket_subjects
+    end
 
     ##
     # Find the ticket with the given ID and return it
@@ -112,7 +112,7 @@ module SoftLayer
     # If a client is not provided then the routine will search Client::default_client
     # If Client::default_client is also nil the routine will raise an error.
     #
-		def self.ticket_with_id(ticket_id, options = {})
+    def self.ticket_with_id(ticket_id, options = {})
       softlayer_client = options[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
@@ -167,5 +167,5 @@ module SoftLayer
       ticket_data = softlayer_client[:Ticket].createStandardTicket(new_ticket, body)
       return new(softlayer_client, ticket_data)
     end
-	end
+  end
 end

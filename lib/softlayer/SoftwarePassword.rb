@@ -65,10 +65,10 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # You may filter the list returned by adding options:
-    # * <b>+:datacenter+</b>    (string) - Include software passwords from application delivery controllers matching this datacenter
-    # * <b>+:name+</b>          (string) - Include software passwords from application delivery controllers that matches this name
-    # * <b>+:tags+</b>          (Array)  - Include software passwords from application delivery controllers that matches these tags
-    # * <b>+:username+</b>      (string) - Include software passwords that match this username
+    # * <b>+:datacenter+</b>    (string/array) - Include software passwords from application delivery controllers matching this datacenter
+    # * <b>+:name+</b>          (string/array) - Include software passwords from application delivery controllers that matches this name
+    # * <b>+:tags+</b>          (string/array  - Include software passwords from application delivery controllers that matches these tags
+    # * <b>+:username+</b>      (string/array) - Include software passwords that match this username
     #
     def self.find_passwords_for_application_delivery_controllers(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
@@ -89,32 +89,25 @@ module SoftLayer
       end
 
       option_to_filter_path = {
-        :advanced_mode     => "applicationDeliveryControllers.advancedModeFlag",
-        :datacenter        => "applicationDeliveryControllers.datacenter.name",
-        :name              => "applicationDeliveryControllers.name",
-        :tags              => "applicationDeliveryControllers.tagReferences.tag.name",
-        :software_password => {
+        :app_deliv_controller => {
+          :advanced_mode     => "applicationDeliveryControllers.advancedModeFlag",
+          :datacenter        => "applicationDeliveryControllers.datacenter.name",
+          :name              => "applicationDeliveryControllers.name",
+          :tags              => "applicationDeliveryControllers.tagReferences.tag.name"
+        },
+        :software_password    => {
           :username        => "password.username"
         }
       }
 
-      application_delivery_controller_object_filter.modify { |filter| filter.accept(option_to_filter_path[:advanced_mode]).when_it is(true) }
+      application_delivery_controller_object_filter.modify { |filter| filter.accept(option_to_filter_path[:app_deliv_controller][:advanced_mode]).when_it is(true) }
 
-      [ :datacenter, :name ].each do |option|
+      option_to_filter_path[:app_deliv_controller].each do |option, filter_path|
+        next if option == :advanced_mode
+
         if options_hash[option]
-          application_delivery_controller_object_filter.modify { |filter| filter.accept(option_to_filter_path[option]).when_it is(options_hash[option]) }
+          application_delivery_controller_object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option]) }
         end
-      end
-
-      if options_hash[:tags]
-        application_delivery_controller_object_filter.set_criteria_for_key_path(option_to_filter_path[:tags],
-                                                                                {
-                                                                                  'operation' => 'in',
-                                                                                  'options' => [{
-                                                                                                  'name' => 'data',
-                                                                                                  'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
-                                                                                                }]
-                                                                                })
       end
 
       option_to_filter_path[:software_password].each do |option, filter_path|
@@ -150,15 +143,15 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # You may filter the list returned by adding options:
-    # * <b>+:datacenter+</b>    (string) - Include software passwords from vlan firewalls matching this datacenter
-    # * <b>+:vlan_name+</b>     (Array)  - Include software passwords from vlans that matches these names
-    # * <b>+:vlan_numbers+</b>  (Array)  - Include software passwords from vlans that matches these numbers
-    # * <b>+:vlan_space+</b>    (symbol) - Include software passwords from vlans that match this space
-    # * <b>+:vlan_tags+</b>     (Array)  - Include software passwords from vlans that matches these tags
-    # * <b>+:vlan_fw_fqdn+</b>  (string) - Include software passwords from vlan firewalls that match this fqdn
-    # * <b>+:vlan_fw_tags+</b>  (Array)  - Include software passwords from vlan firewalls that matches these tags
-    # * <b>+:vlan_fw_type+</b>  (string) - Include software passwords from vlan firewalls that match this type
-    # * <b>+:username+</b>      (string) - Include software passwords that match this username
+    # * <b>+:datacenter+</b>    (string/array) - Include software passwords from vlan firewalls matching this datacenter
+    # * <b>+:vlan_names+</b>    (string/array) - Include software passwords from vlans that matches these names
+    # * <b>+:vlan_numbers+</b>  (string/array) - Include software passwords from vlans that matches these numbers
+    # * <b>+:vlan_space+</b>    (symbol)       - Include software passwords from vlans that match this space
+    # * <b>+:vlan_tags+</b>     (string/array) - Include software passwords from vlans that matches these tags
+    # * <b>+:vlan_fw_fqdn+</b>  (string/array) - Include software passwords from vlan firewalls that match this fqdn
+    # * <b>+:vlan_fw_tags+</b>  (string/array) - Include software passwords from vlan firewalls that matches these tags
+    # * <b>+:vlan_fw_type+</b>  (string/array) - Include software passwords from vlan firewalls that match this type
+    # * <b>+:username+</b>      (string/array) - Include software passwords that match this username
     #
     def self.find_passwords_for_vlan_firewalls(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
@@ -195,16 +188,18 @@ module SoftLayer
         :software_password => {
           :username        => "managementCredentials.username"
           },
-        :vlan_dedicated_fw => lambda { |vlan_space| return [ filter_label[vlan_space], '.', 'dedicatedFirewallFlag' ].join  },
-        :vlan_names        => lambda { |vlan_space| return [ filter_label[vlan_space], '.', 'name' ].join                   },
-        :vlan_numbers      => lambda { |vlan_space| return [ filter_label[vlan_space], '.', 'vlanNumber' ].join             },
-        :vlan_tags         => lambda { |vlan_space| return [ filter_label[vlan_space], '.', 'tagReferences.tag.name' ].join },
+        :vlan              => {
+          :vlan_dedicated_fw => lambda { |vlan_space| return [ filter_label[vlan_space], '.', 'dedicatedFirewallFlag' ].join  },
+          :vlan_names        => lambda { |vlan_space| return [ filter_label[vlan_space], '.', 'name' ].join                   },
+          :vlan_numbers      => lambda { |vlan_space| return [ filter_label[vlan_space], '.', 'vlanNumber' ].join             },
+          :vlan_tags         => lambda { |vlan_space| return [ filter_label[vlan_space], '.', 'tagReferences.tag.name' ].join }
+        },
         :vlan_firewall     => {
           :vlan_fw_datacenter => "networkVlanFirewall.datacenter.name",
           :vlan_fw_fqdn       => "networkVlanFirewall.fullyQualifiedDomainName",
+          :vlan_fw_tags       => "networkVlanFirewall.tagReferences.tag.name",
           :vlan_fw_type       => "networkVlanFirewall.firewallType"
-        },
-        :vlan_fw_tags      => "networkVlanFirewall.tagReferences.tag.name"
+        }
       }
 
       if options_hash[:vlan_space] && ! filter_label.keys.include?(options_hash[:vlan_space])
@@ -217,35 +212,16 @@ module SoftLayer
 
       vlan_space = options_hash[:vlan_space] || :all
 
-      vlan_object_filter.modify { |filter| filter.accept(option_to_filter_path[:vlan_dedicated_fw].call(vlan_space)).when_it is(1) }
-      vlan_object_filter.modify { |filter| filter.accept(option_to_filter_path[:vlan_name].call(vlan_space)).when_it is(options_hash[:vlan_name]) } if options_hash[:vlan_name]
+      option_to_filter_path[:vlan].keys.each do |option|
+        vlan_object_filter.modify { |filter| filter.accept(option_to_filter_path[:vlan][option].call(vlan_space)).when_it is(1) } if option == :vlan_dedicated_fw
 
-      [ :vlan_names, :vlan_numbers, :vlan_tags ].each do |option|
-        if options_hash[option]
-          vlan_object_filter.set_criteria_for_key_path(option_to_filter_path[option].call(vlan_space),
-                                                       {
-                                                         'operation' => 'in',
-                                                         'options' => [{
-                                                                         'name' => 'data',
-                                                                         'value' => options_hash[option].collect{ |tag_value| tag_value.to_s }
-                                                                       }]
-                                                     })
+        if options_hash[option] && option != :vlan_dedicated_fw
+          vlan_object_filter.modify { |filter| filter.accept(option_to_filter_path[:vlan][option].call(vlan_space)).when_it is(options_hash[option]) }
         end
       end
 
       option_to_filter_path[:vlan_firewall].each do |option, filter_path|
         vlan_firewall_object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option]) } if options_hash[option]
-      end
-
-      if options_hash[:vlan_fw_tags]
-        vlan_firewall_object_filter.set_criteria_for_key_path(option_to_filter_path[:vlan_fw_tags],
-                                                              {
-                                                                'operation' => 'in',
-                                                                'options' => [{
-                                                                                'name' => 'data',
-                                                                                'value' => options_hash[:vlan_fw_tags].collect{ |tag_value| tag_value.to_s }
-                                                                              }]
-                                                              })
       end
 
       account_service = softlayer_client[:Account]
@@ -293,14 +269,14 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # You may filter the list returned by adding options:
-    # * <b>+:datacenter+</b>    (string) - Include software passwords from software on hardware matching this datacenter
-    # * <b>+:description+</b>   (string) - Include software passwords from software that matches this description
-    # * <b>+:domain+</b>        (string) - Include software passwords from software on hardware matching this domain
-    # * <b>+:hardware_type+</b> (string) - Include software passwords from software on hardware matching this hardware type
-    # * <b>+:hostname+</b>      (string) - Include software passwords from software on hardware matching this hostname
-    # * <b>+:manufacturer+</b>  (string) - Include software passwords from software that matches this manufacturer
-    # * <b>+:name+</b>          (string) - Include software passwords from software that matches this name
-    # * <b>+:username+</b>      (string) - Include software passwords for username matching this username
+    # * <b>+:datacenter+</b>    (string/array) - Include software passwords from software on hardware matching this datacenter
+    # * <b>+:description+</b>   (string/array) - Include software passwords from software that matches this description
+    # * <b>+:domain+</b>        (string/array) - Include software passwords from software on hardware matching this domain
+    # * <b>+:hardware_type+</b> (symbol)       - Include software passwords from software on hardware matching this hardware type
+    # * <b>+:hostname+</b>      (string/array) - Include software passwords from software on hardware matching this hostname
+    # * <b>+:manufacturer+</b>  (string/array) - Include software passwords from software that matches this manufacturer
+    # * <b>+:name+</b>          (string/array) - Include software passwords from software that matches this name
+    # * <b>+:username+</b>      (string/array) - Include software passwords for username matching this username
     #
     # You may use the following properties to provide hardware or software object filter instances:
     # * <b>+:hardware_object_filter+</b>          (ObjectFilter) - Include software passwords from software on hardware that matches the criteria of this object filter
@@ -341,10 +317,12 @@ module SoftLayer
       }
 
       option_to_filter_path = {
-        :datacenter        => lambda { |hardware_type| return [ filter_label[hardware_type], '.datacenter.name' ].join        },
-        :domain            => lambda { |hardware_type| return [ filter_label[hardware_type], '.domain' ].join                 },
-        :hostname          => lambda { |hardware_type| return [ filter_label[hardware_type], '.hostname' ].join               },
-        :tags              => lambda { |hardware_type| return [ filter_label[hardware_type], '.tagReferences.tag.name' ].join },
+        :hardware          => {
+          :datacenter        => lambda { |hardware_type| return [ filter_label[hardware_type], '.datacenter.name' ].join        },
+          :domain            => lambda { |hardware_type| return [ filter_label[hardware_type], '.domain' ].join                 },
+          :hostname          => lambda { |hardware_type| return [ filter_label[hardware_type], '.hostname' ].join               },
+          :tags              => lambda { |hardware_type| return [ filter_label[hardware_type], '.tagReferences.tag.name' ].join }
+        },
         :software          => {
           :description     => "softwareComponents.softwareDescription.longDescription",
           :manufacturer    => "softwareComponents.softwareDescription.manufacturer",
@@ -362,21 +340,10 @@ module SoftLayer
         end
       end
 
-      [ :datacenter, :domain, :hostname ].each do |option|
+      option_to_filter_path[:hardware].keys.each do |option|
         if options_hash[option]
-          hardware_object_filter.modify { |filter| filter.accept(option_to_filter_path[option].call(options_hash[:hardware_type] || :hardware)).when_it is(options_hash[option]) }
+          hardware_object_filter.modify { |filter| filter.accept(option_to_filter_path[:hardware][option].call(options_hash[:hardware_type] || :hardware)).when_it is(options_hash[option]) }
         end
-      end
-
-      if options_hash[:tags]
-        hardware_object_filter.set_criteria_for_key_path(option_to_filter_path[:tags].call(options_hash[:hardware_type] || :hardware),
-                                                         {
-                                                           'operation' => 'in',
-                                                           'options' => [{
-                                                                           'name' => 'data',
-                                                                           'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
-                                                                         }]
-                                                         })
       end
 
       option_to_filter_path[:software].each do |option, filter_path|
@@ -436,13 +403,13 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # You may filter the list returned by adding options:
-    # * <b>+:datacenter+</b>    (string) - Include software passwords from software on virtual servers matching this datacenter
-    # * <b>+:description+</b>   (string) - Include software passwords from software that matches this description
-    # * <b>+:domain+</b>        (string) - Include software passwords from software on virtual servers matching this domain
-    # * <b>+:hostname+</b>      (string) - Include software passwords from software on virtual servers matching this hostname
-    # * <b>+:manufacturer+</b>  (string) - Include software passwords from software that matches this manufacturer
-    # * <b>+:name+</b>          (string) - Include software passwords from software that matches this name
-    # * <b>+:username+</b>      (string) - Include software passwords for username matching this username
+    # * <b>+:datacenter+</b>    (string/array) - Include software passwords from software on virtual servers matching this datacenter
+    # * <b>+:description+</b>   (string/array) - Include software passwords from software that matches this description
+    # * <b>+:domain+</b>        (string/array) - Include software passwords from software on virtual servers matching this domain
+    # * <b>+:hostname+</b>      (string/array) - Include software passwords from software on virtual servers matching this hostname
+    # * <b>+:manufacturer+</b>  (string/array) - Include software passwords from software that matches this manufacturer
+    # * <b>+:name+</b>          (string/array) - Include software passwords from software that matches this name
+    # * <b>+:username+</b>      (string/array) - Include software passwords for username matching this username
     #
     # You may use the following properties to provide virtual server or software object filter instances:
     # * <b>+:virtual_server_object_filter+</b>    (ObjectFilter) - Include software passwords from software on virtual servers that matches the criteria of this object filter
@@ -493,19 +460,7 @@ module SoftLayer
         }
       }
 
-      if options_hash[:tags]
-        virtual_server_object_filter.set_criteria_for_key_path(option_to_filter_path[:virtual_server][:tags],
-                                                                {
-                                                                  'operation' => 'in',
-                                                                  'options' => [{
-                                                                                  'name' => 'data',
-                                                                                  'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
-                                                                                }]
-                                                                })
-      end
-
       option_to_filter_path[:virtual_server].each do |option, filter_path|
-        next if option == :tags
         virtual_server_object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option]) } if options_hash[option]
       end
 

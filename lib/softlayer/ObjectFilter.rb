@@ -125,14 +125,16 @@ module SoftLayer
   module ObjectFilterDefinitionContext
     # Matches when the value in the field is exactly equal to the
     # given value. This is a case-sensitive match
+    # If value is Enumerable, it is equivalent to calling is_contained_by
     def self.is(value)
-      { 'operation' => value }
+      value.kind_of?(Enumerable) ? is_contained_by(value) : { 'operation' => value }
     end
 
     # Matches is the value in the field does not exactly equal
     # the value passed in.
+    # If value is Enumerable, it is equivalent to calling is_not_contained_by
     def self.is_not(value)
-      filter_criteria('!=', value)
+      value.kind_of?(Enumerable) ? is_not_contained_by(value) : filter_criteria('!=', value)
     end
 
     # Matches when the value is found within the field
@@ -156,6 +158,54 @@ module SoftLayer
     # Maches the given value in a case-insensitive way
     def self.matches_ignoring_case(value)
       filter_criteria('_=', value)
+    end
+
+    # Matches when the key path value is a date between the start and end dates provided
+    # Dates should be strings in '%m/%d/%Y %T' format or Date/DateTime instances
+    def self.is_between_dates(start_date, end_date)
+      {
+        'operation' => 'betweenDate',
+        'options'   => [
+                        {
+                          'name'  => 'startDate',
+                          'value' => [ start_date.kind_of?(Date) ? start_date.strftime('%m/%d/%Y %T') : DateTime.strptime(start_date.to_s, '%m/%d/%Y %T').strftime('%m/%d/%Y %T') ]
+                        },
+                        {
+                          'name'  => 'endDate',
+                          'value' => [ end_date.kind_of?(Date) ? end_date.strftime('%m/%d/%Y %T') : DateTime.strptime(end_date.to_s, '%m/%d/%Y %T').strftime('%m/%d/%Y %T') ]
+                        }
+                       ]
+      }
+    end
+
+    # Matches when key path value is equal to one of the given values in the Enumarable
+    def self.is_contained_by(value)
+      raise "Expected an Enumerable value with a list of acceptable values that can be converted to strings" unless value.kind_of?(Enumerable)
+
+      {
+        'operation' => 'in',
+        'options'   => [
+                        {
+                          'name'  => 'data',
+                          'value' => value.collect { |enum_val| enum_val.to_s }
+                        }
+                       ]
+      }
+    end
+
+    # Matches when key path value is not equal to one of the given values in the Enumarable
+    def self.is_not_contained_by(value)
+      raise "Expected an Enumerable value with a list of acceptable values that can be converted to strings" unless value.kind_of?(Enumerable)
+
+      {
+        'operation' => 'not in',
+        'options'   => [
+                        {
+                          'name'  => 'data',
+                          'value' => value.collect { |enum_val| enum_val.to_s }
+                        }
+                       ]
+      }
     end
 
     # Matches when the value in the field is greater than the given value
