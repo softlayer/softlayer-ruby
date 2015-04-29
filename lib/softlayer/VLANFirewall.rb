@@ -120,7 +120,7 @@ module SoftLayer
     # *NOTE!* The rules themselves have an "orderValue" property.
     # It is this property, and *not* the order that the rules are
     # found in the rules_data array, which will determine in which
-    # order the firewall applies its rules to incomming traffic.
+    # order the firewall applies its rules to incoming traffic.
     #
     # *NOTE!* Changes to the rules are not applied immediately
     # on the server side. Instead, they are enqueued by the
