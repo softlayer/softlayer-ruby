@@ -23,12 +23,12 @@ module SoftLayer
     sl_attr :name
 
     ##
-    # :attr_reader:
+    # :attr_reader: notes
     # The notes, if any, that are attached to the template. Can be nil.
     sl_attr :notes, "note"
 
     ##
-    # :attr_reader:
+    # :attr_reader: global_id
     # The universally unique identifier (if any) for the template. Can be nil.
     sl_attr :global_id, 'globalIdentifier'
 

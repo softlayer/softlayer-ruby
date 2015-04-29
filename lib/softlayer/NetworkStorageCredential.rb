@@ -17,12 +17,12 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
-    # :attr_reader:
+    # :attr_reader: created
     # This is the data that the record was created in the table.
     sl_attr :created,  'createDate'
 
     ##
-    # :attr_reader:
+    # :attr_reader: modified
     # This is the date that the record was last updated in the table.
     sl_attr :modified, 'modifyDate'
 

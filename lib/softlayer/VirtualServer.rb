@@ -16,7 +16,7 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
-    # :attr_reader:
+    # :attr_reader: cores
     # A count of the nubmer of virtual processing cores allocated
     # to the server.
     sl_attr :cores, 'maxCpu'

@@ -16,12 +16,12 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
-    # :attr_reader:
+    # :attr_reader: capacity
     # A Storage account's capacity, measured in gigabytes.
     sl_attr :capacity,   'capacityGb'
 
     ##
-    # :attr_reader:
+    # :attr_reader: created
     # The date a network storage volume was created.
     sl_attr :created,    'createDate'
 
@@ -38,12 +38,12 @@ module SoftLayer
     sl_attr :password
 
     ##
-    # :attr_reader:
+    # :attr_reader: type
     # A Storage account's type.
     sl_attr :type,       'nasType'
 
     ##
-    # :attr_reader:
+    # :attr_reader: upgradable
     # This flag indicates whether this storage type is upgradable or not.
     sl_attr :upgradable, 'upgradableFlag'
 

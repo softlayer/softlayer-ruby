@@ -15,12 +15,12 @@ module SoftLayer
     sl_attr :alias
 
     ##
-    # :attr_reader:
+    # :attr_reader: created
     # The date this group was created.
     sl_attr :created, 'createDate'
 
     ##
-    # :attr_reader:
+    # :attr_reader: modified
     # The date this group was modified.
     sl_attr :modified, 'modifyDate'
 

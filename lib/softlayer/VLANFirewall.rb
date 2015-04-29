@@ -21,7 +21,7 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
-    #:attr_reader:
+    # :attr_reader: VLAN_number
     #
     # The number of the VLAN protected by this firewall.
     #

@@ -22,7 +22,7 @@ module SoftLayer
     sl_attr :active
 
     ##
-    # :attr_reader:
+    # :attr_reader: created
     # The date that the external authentication binding was created.
     sl_attr :created, 'createDate'
 

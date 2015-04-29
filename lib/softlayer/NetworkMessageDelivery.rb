@@ -17,12 +17,12 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
-    # :attr_reader:
+    # :attr_reader: created
     # The date this username/password pair was created.
     sl_attr :created,  'createDate'
 
     ##
-    # :attr_reader:
+    # :attr_reader: modified
     # The date of the last modification to this username/password pair.
     sl_attr :modified, 'modifyDate'
 

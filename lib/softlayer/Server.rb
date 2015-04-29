@@ -39,12 +39,12 @@ module SoftLayer
     sl_attr :datacenter
 
     ##
-    # :attr_reader:
+    # :attr_reader: primary_public_ip
     # The IP address of the primary public interface for the server
     sl_attr :primary_public_ip, "primaryIpAddress"
 
     ##
-    # :attr_reader:
+    # :attr_reader: primary_private_ip
     # The IP address of the primary private interface for the server
     sl_attr :primary_private_ip, "primaryBackendIpAddress"
 

@@ -16,12 +16,12 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
-    # :attr_reader:
+    # :attr_reader: manufacturer_activation_code
     # The manufacturer code that is needed to activate a license.
     sl_attr :manufacturer_activation_code, 'manufacturerActivationCode'
 
     ##
-    # :attr_reader:
+    # :attr_reader: manufacturer_license_key
     # A license key for this specific installation of software, if it is needed.
     sl_attr :manufacturer_license_key,     'manufacturerLicenseInstance'
 

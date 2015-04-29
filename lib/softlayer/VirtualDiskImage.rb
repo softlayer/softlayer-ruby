@@ -26,7 +26,7 @@ module SoftLayer
     sl_attr :checksum
 
     ##
-    # :attr_reader:
+    # :attr_reader: created
     # The date a disk image was created.
     sl_attr :created,    'createDate'
 
@@ -36,7 +36,7 @@ module SoftLayer
     sl_attr :description
 
     ##
-    # :attr_reader:
+    # :attr_reader: modified
     # The date a disk image was last modified.
     sl_attr :modified,   'modifyDate'
 
