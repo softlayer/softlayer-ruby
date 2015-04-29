@@ -9,7 +9,7 @@ module SoftLayer
   ##
   # A Virtual Server Image Template.
   #
-  # This class rougly corresponds to the unwieldily named
+  # This class roughly corresponds to the unwieldy named
   # +SoftLayer_Virtual_Guest_Block_Device_Template_Group+
   # service:
   #
@@ -23,12 +23,12 @@ module SoftLayer
     sl_attr :name
 
     ##
-    # :attr_reader:
+    # :attr_reader: notes
     # The notes, if any, that are attached to the template. Can be nil.
     sl_attr :notes, "note"
 
     ##
-    # :attr_reader:
+    # :attr_reader: global_id
     # The universally unique identifier (if any) for the template. Can be nil.
     sl_attr :global_id, 'globalIdentifier'
 
@@ -91,7 +91,7 @@ module SoftLayer
     # appear in this array! The list given must be comprehensive.
     #
     # The available_datacenters call returns a list of the values that are valid
-    # whithin this array.
+    # within this array.
     def datacenters=(datacenters_array)
       datacenter_data = datacenters_array.collect do |datacenter|
         { "id" => datacenter.id }
@@ -160,7 +160,7 @@ module SoftLayer
     end
 
     ##
-    # Repeatedly poll the netwokr API until transactions related to this image
+    # Repeatedly poll the network API until transactions related to this image
     # template are finished
     #
     # A template is not 'ready' until all the transactions on the template
@@ -313,7 +313,7 @@ module SoftLayer
     end
 
     ##
-    # Retrive the Image Template with the given ID
+    # Retrieve the Image Template with the given ID
     # (Note! This is the service ID, not the globalIdentifier!)
     #
     # The options parameter should contain:
