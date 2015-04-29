@@ -9,7 +9,7 @@ module SoftLayer
   ##
   # A Virtual Server Image Template.
   #
-  # This class roughly corresponds to the unwieldy named
+  # This class rougly corresponds to the unwieldily named
   # +SoftLayer_Virtual_Guest_Block_Device_Template_Group+
   # service:
   #
@@ -23,12 +23,12 @@ module SoftLayer
     sl_attr :name
 
     ##
-    # :attr_reader: notes
+    # :attr_reader:
     # The notes, if any, that are attached to the template. Can be nil.
     sl_attr :notes, "note"
 
     ##
-    # :attr_reader: global_id
+    # :attr_reader:
     # The universally unique identifier (if any) for the template. Can be nil.
     sl_attr :global_id, 'globalIdentifier'
 
@@ -91,7 +91,7 @@ module SoftLayer
     # appear in this array! The list given must be comprehensive.
     #
     # The available_datacenters call returns a list of the values that are valid
-    # within this array.
+    # whithin this array.
     def datacenters=(datacenters_array)
       datacenter_data = datacenters_array.collect do |datacenter|
         { "id" => datacenter.id }
@@ -160,7 +160,7 @@ module SoftLayer
     end
 
     ##
-    # Repeatedly poll the network API until transactions related to this image
+    # Repeatedly poll the netwokr API until transactions related to this image
     # template are finished
     #
     # A template is not 'ready' until all the transactions on the template
@@ -209,8 +209,9 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # Additional options that may be provided:
-    # * <b>+:name+</b> (string) - Return templates with the given name
-    # * <b>+:global_id+</b> (string) - Return templates with the given global identifier
+    # * <b>+:name+</b>      (string/array) - Return templates with the given name
+    # * <b>+:global_id+</b> (string/array) - Return templates with the given global identfier
+    # * <b>+:tags+</b>      (string/array) - Return templates with the tags
     def self.find_private_templates(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
@@ -223,8 +224,9 @@ module SoftLayer
       end
 
       option_to_filter_path = {
-        :name => "privateBlockDeviceTemplateGroups.name",
+        :name      => "privateBlockDeviceTemplateGroups.name",
         :global_id => "privateBlockDeviceTemplateGroups.globalIdentifier",
+        :tags      => "privateBlockDeviceTemplateGroups.tagReferences.tag.name"
       }
 
       # For each of the options in the option_to_filter_path map, if the options hash includes
@@ -232,17 +234,6 @@ module SoftLayer
       # value
       option_to_filter_path.each do |option, filter_path|
         object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option])} if options_hash[option]
-      end
-
-      # Tags get a much more complex object filter operation so we handle them separately
-      if options_hash.has_key?(:tags)
-        object_filter.set_criteria_for_key_path("privateBlockDeviceTemplateGroups.tagReferences.tag.name", {
-          'operation' => 'in',
-          'options' => [{
-            'name' => 'data',
-            'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
-            }]
-          } );
       end
 
       account_service = softlayer_client[:Account]
@@ -275,8 +266,9 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # Additional options that may be provided:
-    # * <b>+:name+</b> (string) - Return templates with the given name
-    # * <b>+:global_id+</b> (string) - Return templates with the given global identifier
+    # * <b>+:name+</b>      (string/array) - Return templates with the given name
+    # * <b>+:global_id+</b> (string/array) - Return templates with the given global identfier
+    # * <b>+:tags+</b>      (string/array) - Return templates with the tags
     def self.find_public_templates(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
@@ -289,8 +281,9 @@ module SoftLayer
       end
 
       option_to_filter_path = {
-        :name => "name",
+        :name      => "name",
         :global_id => "globalIdentifier",
+        :tags      => "tagReferences.tag.name"
       }
 
       # For each of the options in the option_to_filter_path map, if the options hash includes
@@ -298,17 +291,6 @@ module SoftLayer
       # value
       option_to_filter_path.each do |option, filter_path|
         object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option])} if options_hash[option]
-      end
-      
-      # Tags get a much more complex object filter operation so we handle them separately
-      if options_hash.has_key?(:tags)
-        object_filter.set_criteria_for_key_path("tagReferences.tag.name", {
-          'operation' => 'in',
-          'options' => [{
-            'name' => 'data',
-            'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
-            }]
-          } );
       end
 
       template_service = softlayer_client[:Virtual_Guest_Block_Device_Template_Group]
@@ -331,7 +313,7 @@ module SoftLayer
     end
 
     ##
-    # Retrieve the Image Template with the given ID
+    # Retrive the Image Template with the given ID
     # (Note! This is the service ID, not the globalIdentifier!)
     #
     # The options parameter should contain:

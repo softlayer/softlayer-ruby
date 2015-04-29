@@ -183,15 +183,15 @@ module SoftLayer
     #
     # You may filter the list returned by adding options:
     #
-    # * <b>+:tags+</b> (array) - an array of strings representing tags to search for on the instances
-    # * <b>+:cpus+</b> (int) - return servers with the given number of (virtual) CPUs
-    # * <b>+:memory+</b> (int) - return servers with at least the given amount of memory (in Gigabytes)
-    # * <b>+:hostname+</b> (string) - return servers whose hostnames match the query string given (see ObjectFilter::query_to_filter_operation)
-    # * <b>+:domain+</b> (string) - filter servers to those whose domain matches the query string given (see ObjectFilter::query_to_filter_operation)
-    # * <b>+:datacenter+</b> (string) - find servers whose data center name matches the query string given (see ObjectFilter::query_to_filter_operation)
-    # * <b>+:nic_speed+</b> (int) - include servers with the given nic speed (in Mbps)
-    # * <b>+:public_ip+</b> (string) - return servers whose public IP address matches the query string given (see ObjectFilter::query_to_filter_operation)
-    # * <b>+:private_ip+</b> (string) - same as :public_ip, but for private IP addresses
+    # * <b>+:tags+</b>       (string/array) - an array of strings representing tags to search for on the instances
+    # * <b>+:cpus+</b>       (int/array)    - return servers with the given number of (virtual) CPUs
+    # * <b>+:memory+</b>     (int/array)    - return servers with at least the given amount of memory (in Gigabytes)
+    # * <b>+:hostname+</b>   (string/array) - return servers whose hostnames match the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:domain+</b>     (string/array) - filter servers to those whose domain matches the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:datacenter+</b> (string/array) - find servers whose data center name matches the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:nic_speed+</b>  (int/array)    - include servers with the given nic speed (in Mbps)
+    # * <b>+:public_ip+</b>  (string/array) - return servers whose public IP address matches the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:private_ip+</b> (string/array) - same as :public_ip, but for private IP addresses
     #
     # Additionally you may provide options related to the request itself:
     #
@@ -210,14 +210,15 @@ module SoftLayer
       end
 
       option_to_filter_path = {
-        :cpus => "hardware.processorPhysicalCoreAmount",
-        :memory => "hardware.memoryCapacity",
-        :hostname => "hardware.hostname",
-        :domain => "hardware.domain",
+        :cpus       => "hardware.processorPhysicalCoreAmount",
+        :memory     => "hardware.memoryCapacity",
+        :hostname   => "hardware.hostname",
+        :domain     => "hardware.domain",
         :datacenter => "hardware.datacenter.name",
-        :nic_speed => "hardware.networkComponents.maxSpeed",
-        :public_ip => "hardware.primaryIpAddress",
-        :private_ip => "hardware.primaryBackendIpAddress"
+        :nic_speed  => "hardware.networkComponents.maxSpeed",
+        :public_ip  => "hardware.primaryIpAddress",
+        :private_ip => "hardware.primaryBackendIpAddress",
+        :tags       => "hardware.tagReferences.tag.name"
       }
 
       # For each of the options in the option_to_filter_path map, if the options hash includes
@@ -225,17 +226,6 @@ module SoftLayer
       # value
       option_to_filter_path.each do |option, filter_path|
         object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option])} if options_hash[option]
-      end
-
-      # Tags get a much more complex object filter operation so we handle them separately
-      if options_hash.has_key?(:tags)
-        object_filter.set_criteria_for_key_path("hardware.tagReferences.tag.name", {
-          'operation' => 'in',
-          'options' => [{
-            'name' => 'data',
-            'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
-            }]
-          } );
       end
 
       account_service = softlayer_client[:Account]

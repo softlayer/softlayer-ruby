@@ -187,18 +187,18 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # You may filter the list returned by adding options:
-    # * <b>+:hourly+</b> (boolean) - Include servers billed hourly in the list
-    # * <b>+:monthly+</b> (boolean) - Include servers billed monthly in the list
-    # * <b>+:tags+</b> (array) - an array of strings representing tags to search for on the instances
-    # * <b>+:cpus+</b> (int) - return virtual servers with the given number of (virtual) CPUs
-    # * <b>+:memory+</b> (int) - return servers with at least the given amount of memory (in MB. e.g. 4096 = 4GB)
-    # * <b>+:hostname+</b> (string) - return servers whose hostnames match the query string given (see ObjectFilter::query_to_filter_operation)
-    # * <b>+:domain+</b> (string) - filter servers to those whose domain matches the query string given (see ObjectFilter::query_to_filter_operation)
-    # * <b>+:local_disk+</b> (boolean) - include servers that do, or do not, have local disk storage
-    # * <b>+:datacenter+</b> (string) - find servers whose short data center name (e.g. dal05, sjc01) matches the query string given (see ObjectFilter::query_to_filter_operation)
-    # * <b>+:nic_speed+</b> (int) - include servers with the given nic speed (in Mbps, usually 10, 100, or 1000)
-    # * <b>+:public_ip+</b> (string) - return servers whose public IP address matches the query string given (see ObjectFilter::query_to_filter_operation)
-    # * <b>+:private_ip+</b> (string) - same as :public_ip, but for private IP addresses
+    # * <b>+:hourly+</b>     (boolean)      - Include servers billed hourly in the list
+    # * <b>+:monthly+</b>    (boolean)      - Include servers billed monthly in the list
+    # * <b>+:tags+</b>       (string/array) - an array of strings representing tags to search for on the instances
+    # * <b>+:cpus+</b>       (int/array)    - return virtual servers with the given number of (virtual) CPUs
+    # * <b>+:memory+</b>     (int/array)    - return servers with at least the given amount of memory (in MB. e.g. 4096 = 4GB)
+    # * <b>+:hostname+</b>   (string/array) - return servers whose hostnames match the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:domain+</b>     (string/array) - filter servers to those whose domain matches the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:local_disk+</b> (boolean)      - include servers that do, or do not, have local disk storage
+    # * <b>+:datacenter+</b> (string/array) - find servers whose short data center name (e.g. dal05, sjc01) matches the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:nic_speed+</b>  (int/array)    - include servers with the given nic speed (in Mbps, usually 10, 100, or 1000)
+    # * <b>+:public_ip+</b>  (string/array) - return servers whose public IP address matches the query string given (see ObjectFilter::query_to_filter_operation)
+    # * <b>+:private_ip+</b> (string/array) - same as :public_ip, but for private IP addresses
     #
     # Additionally you may provide options related to the request itself:
     # * <b>+:object_mask+</b> (string) - A object mask of properties, in addition to the default properties, that you wish to retrieve for the servers
@@ -216,15 +216,16 @@ module SoftLayer
       end
 
       option_to_filter_path = {
-        :cores => "virtualGuests.maxCpu",
-        :memory => "virtualGuests.maxMemory",
-        :hostname => "virtualGuests.hostname",
-        :domain => "virtualGuests.domain",
+        :cores      => "virtualGuests.maxCpu",
+        :memory     => "virtualGuests.maxMemory",
+        :hostname   => "virtualGuests.hostname",
+        :domain     => "virtualGuests.domain",
         :local_disk => "virtualGuests.localDiskFlag",
         :datacenter => "virtualGuests.datacenter.name",
-        :nic_speed => "virtualGuests.networkComponents.maxSpeed",
-        :public_ip => "virtualGuests.primaryIpAddress",
-        :private_ip => "virtualGuests.primaryBackendIpAddress"
+        :nic_speed  => "virtualGuests.networkComponents.maxSpeed",
+        :public_ip  => "virtualGuests.primaryIpAddress",
+        :private_ip => "virtualGuests.primaryBackendIpAddress",
+        :tags       => "virtualGuests.tagReferences.tag.name"
       }
 
       if options_hash.has_key?(:local_disk) then
@@ -236,17 +237,6 @@ module SoftLayer
       # value
       option_to_filter_path.each do |option, filter_path|
         object_filter.modify { |filter| filter.accept(filter_path).when_it is(options_hash[option])} if options_hash[option]
-      end
-
-      # Tags get a much more complex object filter operation so we handle them separately
-      if options_hash.has_key?(:tags)
-        object_filter.set_criteria_for_key_path("virtualGuests.tagReferences.tag.name", {
-          'operation' => 'in',
-          'options' => [{
-            'name' => 'data',
-            'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
-            }]
-          } );
       end
 
       required_properties_mask = 'mask.id'

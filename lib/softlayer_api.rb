@@ -5,6 +5,7 @@
 #++
 
 # requirements from the core libraries
+require 'date'
 require 'time'
 
 # Requirements for the Foundation Layer

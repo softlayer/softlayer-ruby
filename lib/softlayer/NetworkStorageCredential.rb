@@ -61,14 +61,14 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # You may filter the list returned by adding options:
-    # * <b>+:datacenter+</b>                  (string) - Include network storage account passwords associated with servers matching this datacenter
-    # * <b>+:domain+</b>                      (string) - Include network storage account passwords associated with servers matching this domain
-    # * <b>+:hostname+</b>                    (string) - Include network storage account passwords associated with servers matching this hostname
-    # * <b>+:network_storage_server_type+</b> (string) - Include network storage account passwords associated with services of this server type
-    # * <b>+:network_storage_type+</b>        (string) - Include network storage account passwords from devices of this storage type
-    # * <b>+:service+</b>                     (string) - Include network storage account passwords from devices with this service fqdn
-    # * <b>+:tags+</b>                        (Array)  - Include network storage account passwords associated with servers matching these tags
-    # * <b>+:username+</b>                    (string) - Include network storage account passwords with this username only
+    # * <b>+:datacenter+</b>                  (string/array) - Include network storage account passwords associated with servers matching this datacenter
+    # * <b>+:domain+</b>                      (string/array) - Include network storage account passwords associated with servers matching this domain
+    # * <b>+:hostname+</b>                    (string/array) - Include network storage account passwords associated with servers matching this hostname
+    # * <b>+:network_storage_server_type+</b> (string)       - Include network storage account passwords associated with services of this server type
+    # * <b>+:network_storage_type+</b>        (string)       - Include network storage account passwords from devices of this storage type
+    # * <b>+:service+</b>                     (string/array) - Include network storage account passwords from devices with this service fqdn
+    # * <b>+:tags+</b>                        (string/array) - Include network storage account passwords associated with servers matching these tags
+    # * <b>+:username+</b>                    (string/array) - Include network storage account passwords with this username only
     #
     def self.find_network_storage_credentials(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
@@ -104,11 +104,13 @@ module SoftLayer
       }
 
       option_to_filter_path = {
-        :datacenter                 => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.datacenter.name' ].join                  },
-        :domain                     => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.domain' ].join                           },
-        :hostname                   => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.hostname' ].join                         },
-        :service                    => lambda { |storage_type|              return [ filter_label[storage_type],                                 '.serviceResource.backendIpAddress' ].join },
-        :tags                       => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.tagReferences.tag.name' ].join           },
+        :network_storage            => {
+          :datacenter => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.datacenter.name' ].join                  },
+          :domain     => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.domain' ].join                           },
+          :hostname   => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.hostname' ].join                         },
+          :service    => lambda { |storage_type|              return [ filter_label[storage_type],                                 '.serviceResource.backendIpAddress' ].join },
+          :tags       => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.tagReferences.tag.name' ].join           }
+        },
         :network_storage_credential => {
           :username                 => "credentials.username"
         }
@@ -124,28 +126,19 @@ module SoftLayer
 
       if options_hash[:service]
         network_storage_object_filter.modify do |filter|
-          filter.accept(option_to_filter_path[:service].call(network_storage_type)).when_it is(options_hash[:service])
+          filter.accept(option_to_filter_path[:network_storage][:service].call(network_storage_type)).when_it is(options_hash[:service])
         end
       end
 
       if options_hash[:network_storage_server_type]
-        [ :datacenter, :domain, :hostname ].each do |option|
+        option_to_filter_path[:network_storage].keys.each do |option|
+          next if option == :service
+
           if options_hash[option]
             network_storage_object_filter.modify do |filter|
-              filter.accept(option_to_filter_path[option].call(network_storage_type, options_hash[:network_storage_server_type])).when_it is(options_hash[option])
+              filter.accept(option_to_filter_path[:network_storage][option].call(network_storage_type, options_hash[:network_storage_server_type])).when_it is(options_hash[option])
             end
           end
-        end
-
-        if options_hash[:tags]
-          network_storage_object_filter.set_criteria_for_key_path(option_to_filter_path[:tags].call(network_storage_type, options_hash[:network_storage_server_type]),
-                                                                  {
-                                                                    'operation' => 'in',
-                                                                    'options' => [{
-                                                                                    'name' => 'data',
-                                                                                    'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
-                                                                                  }]
-                                                                  })
         end
       end
 

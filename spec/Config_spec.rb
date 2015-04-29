@@ -16,8 +16,9 @@ describe SoftLayer::Config do
 	it "retrieves config information from environment variables" do
 		ENV.store("SL_USERNAME", "PoohBear")
 		ENV.store("SL_API_KEY", "DEADBEEFBADF00D")
+                ENV.store("SL_API_USER_AGENT", "de trackerz")
 
-		expect(SoftLayer::Config.environment_settings).to eq({ :username => "PoohBear", :api_key => "DEADBEEFBADF00D" })
+		expect(SoftLayer::Config.environment_settings).to eq({ :user_agent => "de trackerz", :username => "PoohBear", :api_key => "DEADBEEFBADF00D" })
 	end
 
 it "retrieves the properties from a custom file" do

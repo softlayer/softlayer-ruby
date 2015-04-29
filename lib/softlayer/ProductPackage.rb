@@ -157,7 +157,7 @@ module SoftLayer
 
     ##
     # Requests a list (array) of ProductPackages whose key names match the
-    # one passed in.
+    # one passed in. key_name may be a string or array.
     #
     def self.packages_with_key_name(key_name, client = nil)
       softlayer_client = client || Client.default_client

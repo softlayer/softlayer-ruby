@@ -65,6 +65,14 @@ module SoftLayer
     # be installed on the server.
     attr_accessor :image_template
 
+    # Integer, The id of the public VLAN this server should join
+    # Corresponds to +primaryNetworkComponent.networkVlan.id+ in the +createObject+ documentation
+    attr_accessor :public_vlan_id
+
+    # Integer, The id of the private VLAN this server should join
+    # Corresponds to +primaryBackendNetworkComponent.networkVlan.id+ in the +createObject+ documentation
+    attr_accessor :private_vlan_id
+
     # The URI of a script to execute on the server after it has been provisioned. This may be
     # any object which accepts the to_s message. The resulting string will be passed to SoftLayer API.
     attr_accessor :provision_script_URI
@@ -139,11 +147,13 @@ module SoftLayer
 
       #Note that the use of image_template and SoftLayer::ProductPackage os/guest_diskX configuration category
       #item prices is mutually exclusive.
-      product_order['imageTemplateGlobalIdentifier'] = @image_template.global_id         if @image_template
-      product_order['location']                      = @datacenter.id                    if @datacenter
-      product_order['provisionScripts']              = [@provision_script_URI.to_s]      if @provision_script_URI
-      product_order['sshKeys']                       = [{ 'sshKeyIds' => @ssh_key_ids }] if @ssh_key_ids
-      product_order['virtualGuests'][0]['userData']  = @user_metadata                    if @user_metadata
+      product_order['imageTemplateGlobalIdentifier']  = @image_template.global_id         if @image_template
+      product_order['location']                       = @datacenter.id                    if @datacenter
+      product_order['provisionScripts']               = [@provision_script_URI.to_s]      if @provision_script_URI
+      product_order['sshKeys']                        = [{ 'sshKeyIds' => @ssh_key_ids }] if @ssh_key_ids
+      product_order['virtualGuests'][0]['userData']   = @user_metadata                    if @user_metadata
+      product_order['primaryNetworkComponent']        = { "networkVlan" => { "id" => @public_vlan_id.to_i } } if @public_vlan_id
+      product_order['primaryBackendNetworkComponent'] = { "networkVlan" => {"id" => @private_vlan_id.to_i } } if @private_vlan_id
 
       product_order['prices'] = @configuration_options.collect do |key, value|
         if value.respond_to?(:price_id)
