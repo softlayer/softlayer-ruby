@@ -17,7 +17,15 @@ module SoftLayer
   # represent.
 
   class Datacenter < SoftLayer::ModelBase
+
+    ##
+    # :attr_reader:
+    # A short location description
     sl_attr :name
+
+    ##
+    # :attr_reader: long_name
+    # A longer location description
     sl_attr :long_name, "longName"
 
     ##
