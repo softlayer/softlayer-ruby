@@ -81,7 +81,7 @@ module SoftLayer
     end
 
     ##
-    # The description of theSoftLayer_Network_Storage_OS_Type Operating System designation that this group was created for.
+    # The description of the SoftLayer_Network_Storage_OS_Type Operating System designation that this group was created for.
     sl_dynamic_attr :os_description do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -95,7 +95,7 @@ module SoftLayer
     end
 
     ##
-    # The name of theSoftLayer_Network_Storage_OS_Type Operating System designation that this group was created for.
+    # The name of the SoftLayer_Network_Storage_OS_Type Operating System designation that this group was created for.
     sl_dynamic_attr :os_name do |resource|
       resource.should_update? do
         #only retrieved once per instance

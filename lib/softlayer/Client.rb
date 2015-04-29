@@ -6,7 +6,7 @@
 
 module SoftLayer
   # A client is responsible for storing authentication information for API calls and
-  # it serves as a centeral repository for the Service instances that call into the
+  # it serves as a central repository for the Service instances that call into the
   # network API.
   #
   # When you create a client, you pass in hash arguments specifying how the client
@@ -21,16 +21,16 @@ module SoftLayer
   # class to provide the missing information.  Please see that class for details.
   #
   class Client
-    # A username passed as authentication for each request. Cannot be emtpy or nil.
+    # A username passed as authentication for each request. Cannot be empty or nil.
     attr_reader :username
 
-    # An API key passed as part of the authentication of each request. Cannot be emtpy or nil.
+    # An API key passed as part of the authentication of each request. Cannot be empty or nil.
     attr_reader :api_key
 
-    # The base URL for requests that are passed to the server. Cannot be emtpy or nil.
+    # The base URL for requests that are passed to the server. Cannot be empty or nil.
     attr_reader :endpoint_url
 
-    # A string passsed as the value for the User-Agent header when requests are sent to SoftLayer API.
+    # A string passed as the value for the User-Agent header when requests are sent to SoftLayer API.
     attr_accessor :user_agent
 
     # An integer value (in seconds). The number of seconds to wait for HTTP requests to the network API
@@ -63,7 +63,7 @@ module SoftLayer
     # Clients are built with a number of settings:
     # * <b>+:username+</b> - The username of the account you wish to access through the API
     # * <b>+:api_key+</b> - The API key used to authenticate the user with the API
-    # * <b>+:enpoint_url+</b> - The API endpoint the client should connect to.  This defaults to API_PUBLIC_ENDPOINT
+    # * <b>+:endpoint_url+</b> - The API endpoint the client should connect to.  This defaults to API_PUBLIC_ENDPOINT
     # * <b>+:user_agent+</b> - A string that is passed along as the user agent when the client sends requests to the server
     # * <b>+:timeout+</b> - An integer number of seconds to wait until network requests time out.  Corresponds to the network_timeout property of the client
     #
@@ -92,7 +92,7 @@ module SoftLayer
 
       raise "A SoftLayer Client requires a username" if !@username || @username.empty?
       raise "A SoftLayer Client requires an api_key" if !@api_key || @api_key.empty?
-      raise "A SoftLayer Clietn requires an enpoint URL" if !@endpoint_url || @endpoint_url.empty?
+      raise "A SoftLayer Client requires an endpoint URL" if !@endpoint_url || @endpoint_url.empty?
     end
 
     # return a hash of the authentication headers for the client

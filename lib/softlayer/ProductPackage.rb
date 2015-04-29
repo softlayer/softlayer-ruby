@@ -111,7 +111,7 @@ module SoftLayer
         # that are required)
         self.configuration
 
-        # return the value constructed by the configuraiton
+        # return the value constructed by the configuration
         @categories
       end
     end

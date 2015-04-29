@@ -17,7 +17,7 @@ module SoftLayer
 
     ##
     # :attr_reader: cores
-    # A count of the nubmer of virtual processing cores allocated
+    # A count of the number of virtual processing cores allocated
     # to the server.
     sl_attr :cores, 'maxCpu'
 
@@ -148,7 +148,7 @@ module SoftLayer
     end
 
     ##
-    # Retrive the virtual server with the given server ID from the API
+    # Retrieve the virtual server with the given server ID from the API
     #
     # The options parameter should contain:
     #

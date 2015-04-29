@@ -74,7 +74,7 @@ module SoftLayer
     end
 
     ##
-    # Returns the service for interacting with this user customer extnerla binding
+    # Returns the service for interacting with this user customer external binding
     # through the network API
     #
     def service

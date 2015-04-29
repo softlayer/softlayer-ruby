@@ -108,7 +108,7 @@ module SoftLayer
     end
 
     ##
-    # Searches through the upgrade items pricess known to this server for the one that is in a particular category
+    # Searches through the upgrade items prices known to this server for the one that is in a particular category
     # and whose capacity matches the value given. Returns the item_price or nil
     #
     def _item_price_with_capacity(which_category, capacity)

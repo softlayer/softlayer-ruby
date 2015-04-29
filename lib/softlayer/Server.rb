@@ -97,7 +97,7 @@ module SoftLayer
     # Reboot the server.  This action is taken immediately.
     # Servers can be rebooted in three different ways:
     # :default_reboot - (Try soft, then hard) Attempts to reboot a server using the :os_reboot technique then, if that is not successful, tries the :power_cycle method
-    # :os_reboot - (aka. soft rebot) instructs the server's host operating system to reboot
+    # :os_reboot - (aka. soft reboot) instructs the server's host operating system to reboot
     # :power_cycle - (aka. hard reboot) The actual (for hardware) or metaphorical (for virtual servers) equivalent to pulling the plug on the server then plugging it back in.
     def reboot!(reboot_technique = :default_reboot)
       case reboot_technique

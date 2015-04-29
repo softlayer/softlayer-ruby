@@ -110,7 +110,7 @@ module SoftLayer
     end
 
     ##
-    # Returns whether or not one of the Software Passowrd instances pertains to the specified user
+    # Returns whether or not one of the Software Password instances pertains to the specified user
     #
     def has_user_password?(username)
       self.passwords.map { |sw_pw| sw_pw.username }.include?(username)

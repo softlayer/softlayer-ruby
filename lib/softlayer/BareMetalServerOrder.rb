@@ -93,7 +93,7 @@ module SoftLayer
     attr_accessor :max_port_speed
 
     ##
-    # Create a new order that works thorugh the given client connection
+    # Create a new order that works through the given client connection
     def initialize (client = nil)
       @softlayer_client = client || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !@softlayer_client
@@ -195,7 +195,7 @@ module SoftLayer
     end
 
     ##
-    # Returns a list of the valid :os_refrence_codes
+    # Returns a list of the valid :os_reference_codes
     def self.os_reference_code_options(client = nil)
       create_object_options(client)['operatingSystems'].collect { |os_spec| os_spec['template']['operatingSystemReferenceCode'] }.uniq.sort!
     end

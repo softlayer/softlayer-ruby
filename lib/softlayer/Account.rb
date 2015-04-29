@@ -58,7 +58,7 @@ module SoftLayer
 
     ##
     # :attr_reader:
-    # The office phone nubmer listed for the primary contact
+    # The office phone number listed for the primary contact
     sl_attr :officePhone
 
     ##
@@ -108,7 +108,7 @@ module SoftLayer
     end
 
     ##
-    # Retrieve an account's network message delivery acounts.
+    # Retrieve an account's network message delivery accounts.
     sl_dynamic_attr :network_message_delivery_accounts do |net_msg_deliv_accts|
       net_msg_deliv_accts.should_update? do
         @network_message_delivery_accounts == nil

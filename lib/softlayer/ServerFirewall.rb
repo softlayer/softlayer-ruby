@@ -12,7 +12,7 @@ module SoftLayer
   #
   # This is also called a "Shared Firewall" in some documentation.
   #
-  # Instances of this class rougly correspond to instances of the
+  # Instances of this class roughly correspond to instances of the
   # SoftLayer_Network_Component_Firewall service entity.
   #
 	class ServerFirewall < SoftLayer::ModelBase

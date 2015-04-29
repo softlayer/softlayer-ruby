@@ -210,7 +210,7 @@ module SoftLayer
       softlayer_client = client || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      # only VLAN firewallas have a networkVlanFirewall component
+      # only VLAN firewalls have a networkVlanFirewall component
       vlan_firewall_filter = SoftLayer::ObjectFilter.new() { |filter|
         filter.accept("networkVlans.networkVlanFirewall").when_it is_not_null
       }

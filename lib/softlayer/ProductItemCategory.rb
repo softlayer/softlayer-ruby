@@ -32,7 +32,7 @@ module SoftLayer
       self.setupFee                   = price_item_data['setupFee']                   ? price_item_data['setupFee'].to_f              : 0.0
     end
 
-    # returns true if the configurtion option has no fees associated with it.
+    # returns true if the configuration option has no fees associated with it.
     def free?
       self.setupFee == 0 && self.laborFee == 0 && self.oneTimeFee == 0 && self.recurringFee == 0 && self.hourlyRecurringFee == 0
     end
@@ -46,7 +46,7 @@ module SoftLayer
   # of a ProductPackage object. There should not be a need to create instances
   # of this class directly.
   #
-  # This class rougly represents entities in the +SoftLayer_Product_Item_Category+
+  # This class roughly represents entities in the +SoftLayer_Product_Item_Category+
   # service.
   class ProductItemCategory < ModelBase
     include ::SoftLayer::DynamicAttribute

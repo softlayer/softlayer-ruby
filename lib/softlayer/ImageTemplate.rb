@@ -9,7 +9,7 @@ module SoftLayer
   ##
   # A Virtual Server Image Template.
   #
-  # This class rougly corresponds to the unwieldily named
+  # This class roughly corresponds to the unwieldy named
   # +SoftLayer_Virtual_Guest_Block_Device_Template_Group+
   # service:
   #
@@ -91,7 +91,7 @@ module SoftLayer
     # appear in this array! The list given must be comprehensive.
     #
     # The available_datacenters call returns a list of the values that are valid
-    # whithin this array.
+    # within this array.
     def datacenters=(datacenters_array)
       datacenter_data = datacenters_array.collect do |datacenter|
         { "id" => datacenter.id }
@@ -160,7 +160,7 @@ module SoftLayer
     end
 
     ##
-    # Repeatedly poll the netwokr API until transactions related to this image
+    # Repeatedly poll the network API until transactions related to this image
     # template are finished
     #
     # A template is not 'ready' until all the transactions on the template
@@ -210,7 +210,7 @@ module SoftLayer
     #
     # Additional options that may be provided:
     # * <b>+:name+</b> (string) - Return templates with the given name
-    # * <b>+:global_id+</b> (string) - Return templates with the given global identfier
+    # * <b>+:global_id+</b> (string) - Return templates with the given global identifier
     def self.find_private_templates(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
@@ -276,7 +276,7 @@ module SoftLayer
     #
     # Additional options that may be provided:
     # * <b>+:name+</b> (string) - Return templates with the given name
-    # * <b>+:global_id+</b> (string) - Return templates with the given global identfier
+    # * <b>+:global_id+</b> (string) - Return templates with the given global identifier
     def self.find_public_templates(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
@@ -331,7 +331,7 @@ module SoftLayer
     end
 
     ##
-    # Retrive the Image Template with the given ID
+    # Retrieve the Image Template with the given ID
     # (Note! This is the service ID, not the globalIdentifier!)
     #
     # The options parameter should contain:
