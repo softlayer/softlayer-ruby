@@ -210,7 +210,7 @@ module SoftLayer
     #
     # Additional options that may be provided:
     # * <b>+:name+</b>      (string/array) - Return templates with the given name
-    # * <b>+:global_id+</b> (string/array) - Return templates with the given global identfier
+    # * <b>+:global_id+</b> (string/array) - Return templates with the given global identifier
     # * <b>+:tags+</b>      (string/array) - Return templates with the tags
     def self.find_private_templates(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
@@ -267,7 +267,7 @@ module SoftLayer
     #
     # Additional options that may be provided:
     # * <b>+:name+</b>      (string/array) - Return templates with the given name
-    # * <b>+:global_id+</b> (string/array) - Return templates with the given global identfier
+    # * <b>+:global_id+</b> (string/array) - Return templates with the given global identifier
     # * <b>+:tags+</b>      (string/array) - Return templates with the tags
     def self.find_public_templates(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
