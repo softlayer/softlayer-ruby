@@ -25,7 +25,9 @@ module SoftLayer
     sl_attr :modified, 'modifyDate'
 
     ##
-    # The SoftLayer_Account which owns this group.
+    # Retrieve the SoftLayer_Account which owns this group.
+    # :call-seq:
+    #   account(force_update=false)
     sl_dynamic_attr :account do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -39,7 +41,9 @@ module SoftLayer
     end
 
     ##
-    # The allowed hosts list for this group.
+    # Retrieve the allowed hosts list for this group.
+    # :call-seq:
+    #   allowed_hosts(force_update=false)
     sl_dynamic_attr :allowed_hosts do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -53,7 +57,9 @@ module SoftLayer
     end
 
     ##
-    # The network storage volumes this group is attached to.
+    # Retrieve the network storage volumes this group is attached to.
+    # :call-seq:
+    #   attached_volumes(force_update=false)
     sl_dynamic_attr :attached_volumes do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -67,7 +73,9 @@ module SoftLayer
     end
 
     ##
-    # The IP address for for SoftLayer_Network_Storage_Allowed_Host objects within this group.
+    # Retrieve the IP address for for SoftLayer_Network_Storage_Allowed_Host objects within this group.
+    # :call-seq:
+    #   ip_address(force_update=false)
     sl_dynamic_attr :ip_address do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -81,7 +89,10 @@ module SoftLayer
     end
 
     ##
-    # The description of the SoftLayer_Network_Storage_OS_Type Operating System designation that this group was created for.
+    # Retrieve the description of the SoftLayer_Network_Storage_OS_Type 
+    # Operating System designation that this group was created for.
+    # :call-seq:
+    #   os_description(force_update=false)
     sl_dynamic_attr :os_description do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -95,7 +106,10 @@ module SoftLayer
     end
 
     ##
-    # The name of the SoftLayer_Network_Storage_OS_Type Operating System designation that this group was created for.
+    # Retrieve the name of the SoftLayer_Network_Storage_OS_Type 
+    # Operating System designation that this group was created for.
+    # :call-seq:
+    #   os_name(force_update=false)
     sl_dynamic_attr :os_name do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -109,7 +123,9 @@ module SoftLayer
     end
 
     ##
-    # The network resource this group is created on.
+    # Retrieve the network resource this group is created on.
+    # :call-seq:
+    #   service_resource(force_update=false)
     sl_dynamic_attr :service_resource do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -123,7 +139,9 @@ module SoftLayer
     end
 
     ##
-    # The name of the SoftLayer_Network_Storage_Group_Type which describes this group.
+    # Retrieve the name of the SoftLayer_Network_Storage_Group_Type which describes this group.
+    # :call-seq:
+    #   type(force_update=false)
     sl_dynamic_attr :type do |resource|
       resource.should_update? do
         #only retrieved once per instance

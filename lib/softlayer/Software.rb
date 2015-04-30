@@ -26,7 +26,9 @@ module SoftLayer
     sl_attr :manufacturer_license_key,     'manufacturerLicenseInstance'
 
     ##
-    # The manufacturer, name and version of a piece of software.
+    # Retrieve the manufacturer, name and version of a piece of software.
+    # :call-seq:
+    #   description(force_update=false)
     sl_dynamic_attr :description do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -40,7 +42,9 @@ module SoftLayer
     end
 
     ##
-    # The name of this specific piece of software. 
+    # Retrieve the name of this specific piece of software. 
+    # :call-seq:
+    #   name(force_update=false)
     sl_dynamic_attr :name do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -54,7 +58,9 @@ module SoftLayer
     end
 
     ##
-    # Username/Password pairs used for access to this Software Installation.
+    # Retrieve the Username/Password pairs used for access to this Software Installation.
+    # :call-seq:
+    #   passwords(force_update=false)
     sl_dynamic_attr :passwords do |resource|
       resource.should_update? do
         #only retrieved once per instance

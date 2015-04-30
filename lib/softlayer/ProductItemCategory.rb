@@ -62,6 +62,10 @@ module SoftLayer
     # The name of a category is a friendly, readable string
     sl_attr :name
 
+    ##
+    # Retrieve the product item configuration information
+    # :call-seq:
+    #   configuration_options(force_update=false)
     sl_dynamic_attr :configuration_options do |config_opts|
       config_opts.should_update? do
         # only retrieved once per instance

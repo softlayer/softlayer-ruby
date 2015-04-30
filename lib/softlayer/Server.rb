@@ -53,6 +53,10 @@ module SoftLayer
     # Notes about these server (for use by the customer)
     sl_attr :notes
 
+    ##
+    # Retrieve the primary network component
+    # :call-seq:
+    #   primary_network_component(force_update=false)
     sl_dynamic_attr :primary_network_component do |primary_component|
       primary_component.should_update? do
         return @primary_network_component == nil
@@ -65,8 +69,9 @@ module SoftLayer
     end
 
     ##
-    # :attr_reader:
-    # All software installed on current server
+    # Retrieve all software installed on current server
+    # :call-seq:
+    #   software(force_update=false)
     sl_dynamic_attr :software do |software|
       software.should_update? do
         @software == nil

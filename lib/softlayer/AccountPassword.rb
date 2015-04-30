@@ -32,6 +32,8 @@ module SoftLayer
 
     ##
     # A description of the use for the account username/password combination.
+    # :call-seq:
+    #   description(force_update=false)
     sl_dynamic_attr :description do |resource|
       resource.should_update? do
         #only retrieved once per instance

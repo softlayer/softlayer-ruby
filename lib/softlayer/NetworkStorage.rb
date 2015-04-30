@@ -55,7 +55,9 @@ module SoftLayer
     sl_attr :username
 
     ##
-    # Other usernames and passwords associated with a Storage volume.
+    # Retrieve other usernames and passwords associated with a Storage volume.
+    # :call-seq:
+    #   account_password(force_update=false)
     sl_dynamic_attr :account_password do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -70,6 +72,8 @@ module SoftLayer
 
     ##
     # A Storage volume's access credentials.
+    # :call-seq:
+    #   credentials(force_update=false)
     sl_dynamic_attr :credentials do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -83,6 +87,8 @@ module SoftLayer
 
     ##
     # The network resource a Storage service is connected to.
+    # :call-seq:
+    #   service_resource(force_update=false)
     sl_dynamic_attr :service_resource do |resource|
       resource.should_update? do
         #only retrieved once per instance

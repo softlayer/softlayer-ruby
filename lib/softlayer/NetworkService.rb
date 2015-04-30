@@ -36,7 +36,9 @@ module SoftLayer
     sl_attr :ssh_username, 'sshUsername'
 
     ##
-    # Returns the datacenter that this network service resource is available in
+    # Retrieve the datacenter that this network service resource is available in
+    # :call-seq:
+    #   datacenter(force_update=false)
     sl_dynamic_attr :datacenter do |resource|
       resource.should_update? do
         #only retrieved once per instance

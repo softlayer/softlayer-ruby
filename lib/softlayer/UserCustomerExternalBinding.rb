@@ -33,7 +33,9 @@ module SoftLayer
     sl_attr :password
 
     ##
-    # An optional note for identifying the external binding.
+    # Retrieve an optional note for identifying the external binding.
+    # :call-seq:
+    #   note(force_update=false)
     sl_dynamic_attr :note do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -46,7 +48,9 @@ module SoftLayer
     end
 
     ##
-    # The user friendly name of a type of external authentication binding.
+    # Retrieve the user friendly name of a type of external authentication binding.
+    # :call-seq:
+    #   type(force_update=false)
     sl_dynamic_attr :type do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -60,7 +64,9 @@ module SoftLayer
     end
 
     ##
-    # The user friendly name of an external binding vendor.
+    # Retrieve the user friendly name of an external binding vendor.
+    # :call-seq:
+    #   vendor(force_update=false)
     sl_dynamic_attr :vendor do |resource|
       resource.should_update? do
         #only retrieved once per instance

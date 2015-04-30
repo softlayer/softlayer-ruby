@@ -52,9 +52,9 @@ module SoftLayer
     sl_attr :lastOperatingSystemReload
 
     ##
-    # A virtual server can find out about items that are
-    # available for upgrades.
-    #
+    # Retrieve information about items that are available for upgrades.
+    # :call-seq:
+    #   upgrade_options(force_update=false)
     sl_dynamic_attr :upgrade_options do |resource|
       resource.should_update? do
         @upgrade_options == nil

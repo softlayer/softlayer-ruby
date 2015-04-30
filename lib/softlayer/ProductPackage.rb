@@ -48,8 +48,9 @@ module SoftLayer
     sl_attr :available_locations, 'availableLocations'
 
     ##
-    # The set of product categories needed to make an order for this product package.
-    #
+    # Retrieve the set of product categories needed to make an order for this product package.
+    # :call-seq:
+    #   configuration(force_update=false)
     sl_dynamic_attr :configuration do |resource|
       resource.should_update? do
         # only retrieved once per instance
@@ -98,8 +99,9 @@ module SoftLayer
     end # configuration
 
     ##
-    # The full set of product categories contained in the package
-    #
+    # Retrieve the full set of product categories contained in the package
+    # :call-seq:
+    #   categories(force_update=false)
     sl_dynamic_attr :categories do |resource|
       resource.should_update? do
         @categories == nil

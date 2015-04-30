@@ -37,7 +37,9 @@ module SoftLayer
     sl_attr :username
 
     ##
-    # The message delivery type description of a network message delivery account.
+    # Retrieve the message delivery type description of a network message delivery account.
+    # :call-seq:
+    #   description(force_update=false)
     sl_dynamic_attr :description do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -51,7 +53,9 @@ module SoftLayer
     end
 
     ##
-    # The message delivery type name of a network message delivery account.
+    # Retrieve the message delivery type name of a network message delivery account.
+    # :call-seq:
+    #   name(force_update=false)
     sl_dynamic_attr :name do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -65,7 +69,9 @@ module SoftLayer
     end
 
     ##
-    # The vendor name for a network message delivery account.
+    # Retrieve the vendor name for a network message delivery account.
+    # :call-seq:
+    #   vendor(force_update=false)
     sl_dynamic_attr :vendor do |resource|
       resource.should_update? do
         #only retrieved once per instance

@@ -71,8 +71,10 @@ module SoftLayer
     sl_attr :username
 
     ##
-    # A portal user's additional email addresses.
+    # Retrieve a portal user's additional email addresses.
     # These email addresses are contacted when updates are made to support tickets.
+    # :call-seq:
+    #   additional_emails(force_update=false)
     sl_dynamic_attr :additional_emails do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -86,8 +88,10 @@ module SoftLayer
     end
 
     ##
-    # A portal user's API Authentication keys.
+    # Retrieve a portal user's API Authentication keys.
     # There is a max limit of two API keys per user.
+    # :call-seq:
+    #   api_authentication_keys(force_update=false)
     sl_dynamic_attr :api_authentication_keys do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -100,7 +104,9 @@ module SoftLayer
     end
     
     ##
-    # The external authentication bindings that link an external identifier to a SoftLayer user.
+    # Retrieve the external authentication bindings that link an external identifier to a SoftLayer user.
+    # :call-seq:
+    #   external_bindings(force_update=false)
     sl_dynamic_attr :external_bindings do |resource|
       resource.should_update? do
         #only retrieved once per instance

@@ -28,9 +28,7 @@ module SoftLayer
     sl_attr :VLAN_number, 'vlanNumber'
 
     ##
-    # :attr_reader:
-    #
-    # The set of rules applied by this firewall to incoming traffic.
+    # Retrieve the set of rules applied by this firewall to incoming traffic.
     # The object will retrieve the rules from the network API every
     # time you ask it for the rules.
     #
@@ -38,6 +36,8 @@ module SoftLayer
     # order that the firewall applies the rules, however please see
     # the important note in change_rules! concerning the "orderValue"
     # property of the rules.
+    # :call-seq:
+    #   rules(force_update=false)
     sl_dynamic_attr :rules do |firewall_rules|
       firewall_rules.should_update? do
         # firewall rules update every time you ask for them.
