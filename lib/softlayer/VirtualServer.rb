@@ -22,26 +22,65 @@ module SoftLayer
     sl_attr :cores, 'maxCpu'
 
     ##
+    # :attr_reader: provision_date
+    # The date the Virtual Server was provisioned.  This attribute can be
+    # nil if the SoftLayer system has not yet finished provisioning the
+    # server (consequently this attribute is used by the #wait_until_ready
+    # method to determine when a server has been provisioned)
+    sl_attr :provision_date, 'provisionDate'
+
+    ##
     # :attr_reader:
     # The date the Virtual Server was provisioned.  This attribute can be
     # nil if the SoftLayer system has not yet finished provisioning the
     # server (consequently this attribute is used by the #wait_until_ready
     # method to determine when a server has been provisioned)
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of provision_date
+    # and will be removed in the next major release.
     sl_attr :provisionDate
+
+    ##
+    # :attr_reader: active_transaction
+    # The active transaction (if any) for this virtual server. Transactions
+    # are used to make configuration changes to the server and only one
+    # transaction can be active at a time.
+    sl_attr :active_transaction, 'activeTransaction'
 
     ##
     # :attr_reader:
     # The active transaction (if any) for this virtual server. Transactions
     # are used to make configuration changes to the server and only one
     # transaction can be active at a time.
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of active_transaction
+    # and will be removed in the next major release.
     sl_attr :activeTransaction
+
+    ##
+    # :attr_reader: block_devices
+    # Storage devices attached to the server. Storage may be local
+    # to the host running the Virtual Server, or it may be located
+    # on the SAN
+    sl_attr :block_devices, 'blockDevices'
 
     ##
     # :attr_reader:
     # Storage devices attached to the server. Storage may be local
     # to the host running the Virtual Server, or it may be located
     # on the SAN
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of block_devices
+    # and will be removed in the next major release.
     sl_attr :blockDevices
+
+    ##
+    # :attr_reader: last_operating_system_reload
+    # The last operating system reload transaction that was
+    # run for this server. #wait_until_ready compares the
+    # ID of this transaction to the ID of the active transaction
+    # to determine if an OS reload is in progress.
+    sl_attr :last_operating_system_reload, 'lastOperatingSystemReload'
 
     ##
     # :attr_reader:
@@ -49,6 +88,9 @@ module SoftLayer
     # run for this server. #wait_until_ready compares the
     # ID of this transaction to the ID of the active transaction
     # to determine if an OS reload is in progress.
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of last_operating_system_reload
+    # and will be removed in the next major release.
     sl_attr :lastOperatingSystemReload
 
     ##
@@ -130,7 +172,7 @@ module SoftLayer
         has_os_reload = has_sl_property? :lastOperatingSystemReload
         has_active_transaction = has_sl_property? :activeTransaction
 
-        reloading_os = has_active_transaction && has_os_reload && (self.lastOperatingSystemReload['id'] == self.activeTransaction['id'])
+        reloading_os = has_active_transaction && has_os_reload && (self.last_operating_system_reload['id'] == self.active_transaction['id'])
         provisioned = has_sl_property?(:provisionDate) && ! self['provisionDate'].empty?
 
         # a server is ready when it is provisioned, not reloading the OS

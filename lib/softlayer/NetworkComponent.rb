@@ -6,9 +6,31 @@
 
 module SoftLayer
   class NetworkComponent < SoftLayer::ModelBase
-    sl_attr :name
-    sl_attr :port
-    sl_attr :speed
+    ##
+    # :attr_reader: max_speed
+    # A network component's maximum allowed speed,
+    sl_attr :max_speed, 'maxSpeed'
+
+    ##
+    # :attr_reader:
+    # A network component's maximum allowed speed,
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of max_speed
+    # and will be removed in the next major release.
     sl_attr :maxSpeed
+
+    ##
+    # :attr_reader:
+    # A network component's short name.
+    sl_attr :name
+
+    # :attr_reader:
+    # A network component's port number.
+    sl_attr :port
+
+    ##
+    # :attr_reader: 
+    # A network component's speed, measured in Mbit per second.
+    sl_attr :speed
   end
 end

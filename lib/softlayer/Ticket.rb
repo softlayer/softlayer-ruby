@@ -18,8 +18,16 @@ module SoftLayer
     sl_attr :subject
 
     ##
+    # :attr_reader: last_edited
+    # The date the ticket was last updated.
+    sl_attr :last_edited, 'lastEditDate'
+
+    ##
     # :attr_reader:
     # The date the ticket was last updated.
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of last_edited
+    # and will be removed in the next major release.
     sl_attr :lastEditDate
 
     ##

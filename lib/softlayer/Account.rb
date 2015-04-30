@@ -9,18 +9,42 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
+    # :attr_reader: company_name
+    # The company name of the primary contact
+    sl_attr :company_name, 'companyName'
+
+    ##
     # :attr_reader:
     # The company name of the primary contact
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of company_name
+    # and will be removed in the next major release.
     sl_attr :companyName
+
+    ##
+    # :attr_reader: first_name
+    # The given name name of the primary contact
+    sl_attr :first_name, 'firstName'
 
     ##
     # :attr_reader:
     # The given name name of the primary contact
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of first_name
+    # and will be removed in the next major release.
     sl_attr :firstName
+
+    ##
+    # :attr_reader: last_name
+    # The surname of the primary contact
+    sl_attr :last_name, 'lastName'
 
     ##
     # :attr_reader:
     # The surname of the primary contact
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of last_name
+    # and will be removed in the next major release.
     sl_attr :lastName
 
     ##
@@ -52,13 +76,29 @@ module SoftLayer
     sl_attr :country
 
     ##
+    # :attr_reader: postal_code
+    # The postal code (in the US, aka. zip code) of the primary contact's address
+    sl_attr :postal_code, 'postalCode'
+
+    ##
     # :attr_reader:
     # The postal code (in the US, aka. zip code) of the primary contact's address
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of postal_code
+    # and will be removed in the next major release.
     sl_attr :postalCode
+
+    ##
+    # :attr_reader: office_phone
+    # The office phone number listed for the primary contact
+    sl_attr :office_phone, 'officePhone'
 
     ##
     # :attr_reader:
     # The office phone number listed for the primary contact
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of office_phone
+    # and will be removed in the next major release.
     sl_attr :officePhone
 
     ##

@@ -10,9 +10,14 @@ module SoftLayer
   # the product order is the price_id, the rest of the information is provided
   # to make the object friendly to humans who may be searching for the
   # meaning of a given price_id.
-  class ProductConfigurationOption < Struct.new(:capacity, :capacityRestrictionMaximum, :capacityRestrictionMinimum,
-     :capacityRestrictionType, :description, :hourlyRecurringFee, :laborFee, :oneTimeFee, :price_id, :recurringFee,
-     :requiredCoreCount, :setupFee, :units)
+  #
+  # DEPRECATION WARNING: The following configuration option keys have been deprecated and
+  # will be removed with the next major version: capacityRestrictionMaximum, capacityRestrictionMinimum,
+  # capacityRestrictionType, hourlyRecurringFee, laborFee, oneTimeFee, recurringFee, requiredCoreCount, setupFee
+  class ProductConfigurationOption < Struct.new(:capacity, :capacityRestrictionMaximum, :capicity_restriction_maximum,
+     :capacityRestrictionMinimum, :capacity_restriction_minimum, :capacityRestrictionType, :capacity_restriction_type,
+     :description, :hourlyRecurringFee, :hourly_recurring_fee, :laborFee, :labor_fee, :oneTimeFee, :one_time_fee,
+     :price_id, :recurringFee, :recurring_fee, :requiredCoreCount, :required_core_count, :setupFee, :setup_fee, :units)
     # Is it evil, or just incongruous to give methods to a struct?
 
     def initialize(package_item_data, price_item_data)
@@ -20,6 +25,7 @@ module SoftLayer
       self.description = package_item_data['description']
       self.units       = package_item_data['units']
 
+      #DEPRECATION WARNING: All these are deprecated and will be removed with the next major version, pleace use keys below
       self.capacityRestrictionMaximum = price_item_data['capacityRestrictionMaximum'] ? price_item_data['capacityRestrictionMaximum'] : nil
       self.capacityRestrictionMinimum = price_item_data['capacityRestrictionMinimum'] ? price_item_data['capacityRestrictionMinimum'] : nil
       self.capacityRestrictionType    = price_item_data['capacityRestrictionType']    ? price_item_data['capacityRestrictionType']    : nil
@@ -30,6 +36,16 @@ module SoftLayer
       self.recurringFee               = price_item_data['recurringFee']               ? price_item_data['recurringFee'].to_f          : 0.0
       self.requiredCoreCount          = price_item_data['requiredCoreCount']          ? price_item_data['requiredCoreCount']          : nil
       self.setupFee                   = price_item_data['setupFee']                   ? price_item_data['setupFee'].to_f              : 0.0
+
+      self.capacity_restriction_maximum = price_item_data['capacityRestrictionMaximum'] ? price_item_data['capacityRestrictionMaximum'] : nil
+      self.capacity_restriction_minimum = price_item_data['capacityRestrictionMinimum'] ? price_item_data['capacityRestrictionMinimum'] : nil
+      self.capacity_restriction_type    = price_item_data['capacityRestrictionType']    ? price_item_data['capacityRestrictionType']    : nil
+      self.hourly_recurring_fee         = price_item_data['hourlyRecurringFee']         ? price_item_data['hourlyRecurringFee'].to_f    : 0.0
+      self.labor_fee                    = price_item_data['laborFee']                   ? price_item_data['laborFee'].to_f              : 0.0
+      self.one_time_fee                 = price_item_data['oneTimeFee']                 ? price_item_data['oneTimeFee'].to_f            : 0.0
+      self.recurring_fee                = price_item_data['recurringFee']               ? price_item_data['recurringFee'].to_f          : 0.0
+      self.required_core_count          = price_item_data['requiredCoreCount']          ? price_item_data['requiredCoreCount']          : nil
+      self.setup_fee                    = price_item_data['setupFee']                   ? price_item_data['setupFee'].to_f              : 0.0
     end
 
     # returns true if the configuration option has no fees associated with it.
@@ -52,9 +68,18 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
+    # :attr_reader: category_code
+    # The categoryCode is a primary identifier for a particular
+    # category.  It is a string like 'os' or 'ram'
+    sl_attr :category_code, 'categoryCode'
+
+    ##
     # :attr_reader:
     # The categoryCode is a primary identifier for a particular
     # category.  It is a string like 'os' or 'ram'
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of category_code
+    # and will be removed in the next major release.
     sl_attr :categoryCode
 
     ##

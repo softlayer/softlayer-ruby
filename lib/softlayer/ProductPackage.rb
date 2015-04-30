@@ -127,7 +127,7 @@ module SoftLayer
     ##
     # Returns the product category with the given category code (or nil if one cannot be found)
     def category(category_code)
-      categories.find { |category| category.categoryCode == category_code }
+      categories.find { |category| category.category_code == category_code }
     end
 
     ##
