@@ -42,7 +42,7 @@ module SoftLayer
     # The domain of the server being created (i.e. 'softlayer.com' is the domain of sldn.softlayer.com)
     attr_accessor :domain
 
-    # The value of this property should be a hash. The keys of the hash are ProdcutItemCategory
+    # The value of this property should be a hash. The keys of the hash are ProductItemCategory
     # codes (like 'os' and 'ram') while the values may be Integers or Objects. The Integer values
     # should be the +id+ of a +SoftLayer_Product_Item_Price+ representing the configuration option
     # chosen for that category. Objects must respond to the +price_id+ message and return an integer

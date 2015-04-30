@@ -178,7 +178,7 @@ module SoftLayer
       }
     end
 
-    # Matches when key path value is equal to one of the given values in the Enumarable
+    # Matches when key path value is equal to one of the given values in the Enumerable
     def self.is_contained_by(value)
       raise "Expected an Enumerable value with a list of acceptable values that can be converted to strings" unless value.kind_of?(Enumerable)
 
@@ -193,7 +193,7 @@ module SoftLayer
       }
     end
 
-    # Matches when key path value is not equal to one of the given values in the Enumarable
+    # Matches when key path value is not equal to one of the given values in the Enumerable
     def self.is_not_contained_by(value)
       raise "Expected an Enumerable value with a list of acceptable values that can be converted to strings" unless value.kind_of?(Enumerable)
 
