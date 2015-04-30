@@ -68,7 +68,7 @@ end
 # object masks
 class Array
   # Returns a string representing the object mask content represented by the
-  # Array. Each value in the array is converted to its object mask eqivalent
+  # Array. Each value in the array is converted to its object mask equivalent
   # This routine is an implementation detail used in the conversion of hashes
   # to object mask strings. You should not have to call this method directly.
   def _to_sl_object_mask_property()

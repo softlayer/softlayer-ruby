@@ -70,7 +70,7 @@ module SoftLayer
   #     => {... lots of information here representing the list of open tickets ...}
   #
   class Service
-    # The name of the service that this object calls. Cannot be emtpy or nil.
+    # The name of the service that this object calls. Cannot be empty or nil.
     attr_reader :service_name
     attr_reader :client
 

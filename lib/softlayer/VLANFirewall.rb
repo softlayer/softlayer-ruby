@@ -21,16 +21,14 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
-    #:attr_reader:
+    # :attr_reader: VLAN_number
     #
     # The number of the VLAN protected by this firewall.
     #
     sl_attr :VLAN_number, 'vlanNumber'
 
     ##
-    # :attr_reader:
-    #
-    # The set of rules applied by this firewall to incoming traffic.
+    # Retrieve the set of rules applied by this firewall to incoming traffic.
     # The object will retrieve the rules from the network API every
     # time you ask it for the rules.
     #
@@ -38,6 +36,8 @@ module SoftLayer
     # order that the firewall applies the rules, however please see
     # the important note in change_rules! concerning the "orderValue"
     # property of the rules.
+    # :call-seq:
+    #   rules(force_update=false)
     sl_dynamic_attr :rules do |firewall_rules|
       firewall_rules.should_update? do
         # firewall rules update every time you ask for them.
@@ -120,7 +120,7 @@ module SoftLayer
     # *NOTE!* The rules themselves have an "orderValue" property.
     # It is this property, and *not* the order that the rules are
     # found in the rules_data array, which will determine in which
-    # order the firewall applies its rules to incomming traffic.
+    # order the firewall applies its rules to incoming traffic.
     #
     # *NOTE!* Changes to the rules are not applied immediately
     # on the server side. Instead, they are enqueued by the
@@ -210,7 +210,7 @@ module SoftLayer
       softlayer_client = client || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      # only VLAN firewallas have a networkVlanFirewall component
+      # only VLAN firewalls have a networkVlanFirewall component
       vlan_firewall_filter = SoftLayer::ObjectFilter.new() { |filter|
         filter.accept("networkVlans.networkVlanFirewall").when_it is_not_null
       }

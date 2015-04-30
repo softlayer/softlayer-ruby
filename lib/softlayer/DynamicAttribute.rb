@@ -7,7 +7,7 @@
 module SoftLayer
 
   ##
-  # This module is inteneded to be used by classes in the SoftLayer
+  # This module is intended to be used by classes in the SoftLayer
   # object model. It creates a small DSL for creating attributes
   # that update themselves dynamically (usually by making requests
   # to the SoftLayer API)

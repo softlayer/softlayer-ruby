@@ -9,7 +9,7 @@
 module SoftLayer
   #
   # This class represents a Bare Metal Server, a hardware server in contrast to a virtual machine,
-  # in the SoftLayer Environment. It corresponds rougly to the +SoftLayer_Hardware+ and
+  # in the SoftLayer Environment. It corresponds roughly to the +SoftLayer_Hardware+ and
   # +SoftLayer_Hardware_Server+ services in the SoftLayer API
   #
   # http://sldn.softlayer.com/reference/datatypes/SoftLayer_Hardware
@@ -23,7 +23,7 @@ module SoftLayer
     # a Bare Metal Instance is physical, hardware server that is is provisioned to
     # match a profile with characteristics similar to a Virtual Server
     #
-    # This is an important distincition in rare cases, like cancelling the server.
+    # This is an important distinction in rare cases, like cancelling the server.
     #
     def bare_metal_instance?
       if has_sl_property?(:bareMetalInstanceFlag)
@@ -65,7 +65,7 @@ module SoftLayer
     # Returns the typical Service used to work with this Server
     # For Bare Metal Servers that is +SoftLayer_Hardware+ though in some special cases
     # you may have to use +SoftLayer_Hardware_Server+ as a type or service.  That
-    # service object is available thorugh the hardware_server_service method
+    # service object is available through the hardware_server_service method
     def service
       return softlayer_client[:Hardware_Server].object_with_id(self.id)
     end
@@ -146,7 +146,7 @@ module SoftLayer
     end
 
     ##
-    # Retrive the bare metal server with the given server ID from the
+    # Retrieve the bare metal server with the given server ID from the
     # SoftLayer API
     #
     # The options parameter should contain:

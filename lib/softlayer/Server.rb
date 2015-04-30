@@ -39,12 +39,12 @@ module SoftLayer
     sl_attr :datacenter
 
     ##
-    # :attr_reader:
+    # :attr_reader: primary_public_ip
     # The IP address of the primary public interface for the server
     sl_attr :primary_public_ip, "primaryIpAddress"
 
     ##
-    # :attr_reader:
+    # :attr_reader: primary_private_ip
     # The IP address of the primary private interface for the server
     sl_attr :primary_private_ip, "primaryBackendIpAddress"
 
@@ -53,6 +53,10 @@ module SoftLayer
     # Notes about these server (for use by the customer)
     sl_attr :notes
 
+    ##
+    # Retrieve the primary network component
+    # :call-seq:
+    #   primary_network_component(force_update=false)
     sl_dynamic_attr :primary_network_component do |primary_component|
       primary_component.should_update? do
         return @primary_network_component == nil
@@ -65,8 +69,9 @@ module SoftLayer
     end
 
     ##
-    # :attr_reader:
-    # All software installed on current server
+    # Retrieve all software installed on current server
+    # :call-seq:
+    #   software(force_update=false)
     sl_dynamic_attr :software do |software|
       software.should_update? do
         @software == nil
@@ -97,7 +102,7 @@ module SoftLayer
     # Reboot the server.  This action is taken immediately.
     # Servers can be rebooted in three different ways:
     # :default_reboot - (Try soft, then hard) Attempts to reboot a server using the :os_reboot technique then, if that is not successful, tries the :power_cycle method
-    # :os_reboot - (aka. soft rebot) instructs the server's host operating system to reboot
+    # :os_reboot - (aka. soft reboot) instructs the server's host operating system to reboot
     # :power_cycle - (aka. hard reboot) The actual (for hardware) or metaphorical (for virtual servers) equivalent to pulling the plug on the server then plugging it back in.
     def reboot!(reboot_technique = :default_reboot)
       case reboot_technique

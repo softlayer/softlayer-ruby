@@ -12,7 +12,7 @@ module SoftLayer
   #
   # This is also called a "Shared Firewall" in some documentation.
   #
-  # Instances of this class rougly correspond to instances of the
+  # Instances of this class roughly correspond to instances of the
   # SoftLayer_Network_Component_Firewall service entity.
   #
 	class ServerFirewall < SoftLayer::ModelBase
@@ -27,11 +27,12 @@ module SoftLayer
     sl_attr :status
 
     ##
-    # :attr_reader:
-    # The firewall rules assigned to this firewall. These rules will
+    # Retrieve the firewall rules assigned to this firewall. These rules will
     # be read from the network API every time you ask for the value
     # of this property. To change the rules on the server use the
     # asymmetric method change_rules!
+    # :call-seq:
+    #   rules(force_update=false)
     sl_dynamic_attr :rules do |firewall_rules|
       firewall_rules.should_update? do
         # firewall rules update every time you ask for them.
@@ -56,10 +57,10 @@ module SoftLayer
     end
 
     ##
-    # :attr_reader:
-    # The server that this firewall is attached to. The result may be
+    # Retrieve the server that this firewall is attached to. The result may be
     # either a bare metal or virtual server.
-    #
+    # :call-seq:
+    #   protected_server(force_update=false)
     sl_dynamic_attr :protected_server do |protected_server|
       protected_server.should_update? do
         @protected_server == nil
@@ -129,7 +130,7 @@ module SoftLayer
     # *NOTE!* The rules themselves have an "orderValue" property.
     # It is this property, and *not* the order that the rules are
     # found in the rules_data array, which will determine in which
-    # order the firewall applies it's rules to incomming traffic.
+    # order the firewall applies it's rules to incoming traffic.
     #
     # *NOTE!* Changes to the rules are not applied immediately
     # on the server side. Instead, they are enqueued by the

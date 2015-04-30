@@ -38,16 +38,19 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
+    # :attr_reader:
     # A friendly, readable name for the package
     sl_attr :name
 
     ##
+    # :attr_reader: available_locations
     # The list of locations where this product package is available.
     sl_attr :available_locations, 'availableLocations'
 
     ##
-    # The set of product categories needed to make an order for this product package.
-    #
+    # Retrieve the set of product categories needed to make an order for this product package.
+    # :call-seq:
+    #   configuration(force_update=false)
     sl_dynamic_attr :configuration do |resource|
       resource.should_update? do
         # only retrieved once per instance
@@ -96,8 +99,9 @@ module SoftLayer
     end # configuration
 
     ##
-    # The full set of product categories contained in the package
-    #
+    # Retrieve the full set of product categories contained in the package
+    # :call-seq:
+    #   categories(force_update=false)
     sl_dynamic_attr :categories do |resource|
       resource.should_update? do
         @categories == nil
@@ -109,7 +113,7 @@ module SoftLayer
         # that are required)
         self.configuration
 
-        # return the value constructed by the configuraiton
+        # return the value constructed by the configuration
         @categories
       end
     end

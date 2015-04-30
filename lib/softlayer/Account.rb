@@ -58,11 +58,11 @@ module SoftLayer
 
     ##
     # :attr_reader:
-    # The office phone nubmer listed for the primary contact
+    # The office phone number listed for the primary contact
     sl_attr :officePhone
 
     ##
-    # The Bare Metal Servers (physical hardware) associated with the
+    # Retrieve the Bare Metal Servers (physical hardware) associated with the
     # account. Unless you force these to update, they will be refreshed every
     # five minutes.
     # :call-seq:
@@ -82,6 +82,8 @@ module SoftLayer
     ##
     # Retrieve an account's master EVault user. This is only used when an account
     # has an EVault service.
+    # :call-seq:
+    #   evault_master_users(force_update=false)
     sl_dynamic_attr :evault_master_users do |evault_users|
       evault_users.should_update? do
         @evault_master_users == nil
@@ -94,7 +96,10 @@ module SoftLayer
     end
 
     ##
-    # Retrieve an account's image templates
+    # Retrieve an account's image templates. Unless you force 
+    # these to update, they will be refreshed every five minutes
+    # :call-seq:
+    #   image_templates(force_update=false)
     sl_dynamic_attr :image_templates do |image_templates|
       image_templates.should_update? do
         @last_image_template_update ||= Time.at(0)
@@ -108,7 +113,9 @@ module SoftLayer
     end
 
     ##
-    # Retrieve an account's network message delivery acounts.
+    # Retrieve an account's network message delivery accounts.
+    # :call-seq:
+    #   network_message_delivery_accounts(force_update=false)
     sl_dynamic_attr :network_message_delivery_accounts do |net_msg_deliv_accts|
       net_msg_deliv_accts.should_update? do
         @network_message_delivery_accounts == nil
@@ -122,6 +129,8 @@ module SoftLayer
 
     ##
     # Retrieve an account's network storage groups.
+    # :call-seq:
+    #   network_storage_groups(force_update=false)
     sl_dynamic_attr :network_storage_groups do |net_stor_groups|
       net_stor_groups.should_update? do
         @network_storage_groups == nil
@@ -134,7 +143,10 @@ module SoftLayer
     end
 
     ##
-    # Retrieve an account's open tickets
+    # Retrieve an account's open tickets. Unless you force these 
+    # to update, they will be refreshed every five minutes
+    # :call-seq:
+    #   open_tickets(force_update=false)
     sl_dynamic_attr :open_tickets do |open_tickets|
       open_tickets.should_update? do
         @last_open_tickets_update ||= Time.at(0)
@@ -150,6 +162,8 @@ module SoftLayer
 
     ##
     # Retrieve an account's portal users.
+    # :call-seq:
+    #   users(force_update=false)
     sl_dynamic_attr :users do |users|
       users.should_update? do
         @users == nil
@@ -162,7 +176,10 @@ module SoftLayer
     end
 
     ##
-    # Retrieve an account's virtual disk images
+    # Retrieve an account's virtual disk images. Unless you force 
+    # these to update, they will be refreshed every five minutes
+    # :call-seq:
+    #   virtual_disk_images(force_update=false)
     sl_dynamic_attr :virtual_disk_images do |virtual_disk_images|
       virtual_disk_images.should_update? do
         @last_virtual_disk_images_update ||= Time.at(0)
@@ -177,7 +194,7 @@ module SoftLayer
     end
 
     ##
-    # The virtual servers (aka. CCIs or Virtual_Guests) associated with the
+    # Retrieve the virtual servers (aka. CCIs or Virtual_Guests) associated with the
     # account. Unless you force these to update, they will be refreshed every
     # five minutes.
     # :call-seq:

@@ -16,8 +16,8 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
-    # :attr_reader:
-    # A count of the nubmer of virtual processing cores allocated
+    # :attr_reader: cores
+    # A count of the number of virtual processing cores allocated
     # to the server.
     sl_attr :cores, 'maxCpu'
 
@@ -52,9 +52,9 @@ module SoftLayer
     sl_attr :lastOperatingSystemReload
 
     ##
-    # A virtual server can find out about items that are
-    # available for upgrades.
-    #
+    # Retrieve information about items that are available for upgrades.
+    # :call-seq:
+    #   upgrade_options(force_update=false)
     sl_dynamic_attr :upgrade_options do |resource|
       resource.should_update? do
         @upgrade_options == nil
@@ -148,7 +148,7 @@ module SoftLayer
     end
 
     ##
-    # Retrive the virtual server with the given server ID from the API
+    # Retrieve the virtual server with the given server ID from the API
     #
     # The options parameter should contain:
     #

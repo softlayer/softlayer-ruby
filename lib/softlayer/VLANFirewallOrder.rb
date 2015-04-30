@@ -14,7 +14,7 @@ module SoftLayer
     attr_reader :vlan_id
 
     ##
-    # Set high_availabilty to true if you want redundant
+    # Set high_availability to true if you want redundant
     # firewall devices (defaults to false, no high_availability)
     attr_accessor :high_availability
 

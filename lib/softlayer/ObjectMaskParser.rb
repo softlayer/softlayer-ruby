@@ -138,4 +138,4 @@ module SoftLayer
     end
 
   end
-end # Module SoftLaye
+end # Module SoftLayer

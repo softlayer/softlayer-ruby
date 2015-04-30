@@ -21,22 +21,24 @@ module SoftLayer
     sl_attr :name
 
     ##
-    # :attr_reader:
+    # :attr_reader: private_ip
     # The backend IP address for this resource
     sl_attr :private_ip,   'backendIpAddress'
 
     ##
-    # :attr_reader:
+    # :attr_reader: public_ip
     # The frontend IP address for this resource
     sl_attr :public_ip,    'frontendIpAddress'
 
     ##
-    # :attr_reader:
+    # :attr_reader: ssh_username
     # The ssh username of for this resource
     sl_attr :ssh_username, 'sshUsername'
 
     ##
-    # Returns the datacenter that this network service resource is available in
+    # Retrieve the datacenter that this network service resource is available in
+    # :call-seq:
+    #   datacenter(force_update=false)
     sl_dynamic_attr :datacenter do |resource|
       resource.should_update? do
         #only retrieved once per instance

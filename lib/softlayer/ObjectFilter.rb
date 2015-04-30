@@ -115,7 +115,7 @@ module SoftLayer
   # The ObjectFilterDefinitionContext defines a bunch of methods
   # that allow the property conditions of an object filter to
   # be defined in a "pretty" way. Each method returns a block
-  # (a lambda, a proc) that, when called and pased the tail property
+  # (a lambda, a proc) that, when called and passed the tail property
   # of a property chain will generate a fragment of an object filter
   # asking that that property match the given conditions.
   #
@@ -155,7 +155,7 @@ module SoftLayer
       filter_criteria('$=', value)
     end
 
-    # Maches the given value in a case-insensitive way
+    # Matches the given value in a case-insensitive way
     def self.matches_ignoring_case(value)
       filter_criteria('_=', value)
     end
@@ -178,7 +178,7 @@ module SoftLayer
       }
     end
 
-    # Matches when key path value is equal to one of the given values in the Enumarable
+    # Matches when key path value is equal to one of the given values in the Enumerable
     def self.is_contained_by(value)
       raise "Expected an Enumerable value with a list of acceptable values that can be converted to strings" unless value.kind_of?(Enumerable)
 
@@ -193,7 +193,7 @@ module SoftLayer
       }
     end
 
-    # Matches when key path value is not equal to one of the given values in the Enumarable
+    # Matches when key path value is not equal to one of the given values in the Enumerable
     def self.is_not_contained_by(value)
       raise "Expected an Enumerable value with a list of acceptable values that can be converted to strings" unless value.kind_of?(Enumerable)
 

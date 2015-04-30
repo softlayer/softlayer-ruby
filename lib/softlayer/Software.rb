@@ -16,17 +16,19 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
-    # :attr_reader:
+    # :attr_reader: manufacturer_activation_code
     # The manufacturer code that is needed to activate a license.
     sl_attr :manufacturer_activation_code, 'manufacturerActivationCode'
 
     ##
-    # :attr_reader:
+    # :attr_reader: manufacturer_license_key
     # A license key for this specific installation of software, if it is needed.
     sl_attr :manufacturer_license_key,     'manufacturerLicenseInstance'
 
     ##
-    # The manufacturer, name and version of a piece of software.
+    # Retrieve the manufacturer, name and version of a piece of software.
+    # :call-seq:
+    #   description(force_update=false)
     sl_dynamic_attr :description do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -40,7 +42,9 @@ module SoftLayer
     end
 
     ##
-    # The name of this specific piece of software. 
+    # Retrieve the name of this specific piece of software. 
+    # :call-seq:
+    #   name(force_update=false)
     sl_dynamic_attr :name do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -54,7 +58,9 @@ module SoftLayer
     end
 
     ##
-    # Username/Password pairs used for access to this Software Installation.
+    # Retrieve the Username/Password pairs used for access to this Software Installation.
+    # :call-seq:
+    #   passwords(force_update=false)
     sl_dynamic_attr :passwords do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -110,7 +116,7 @@ module SoftLayer
     end
 
     ##
-    # Returns whether or not one of the Software Passowrd instances pertains to the specified user
+    # Returns whether or not one of the Software Password instances pertains to the specified user
     #
     def has_user_password?(username)
       self.passwords.map { |sw_pw| sw_pw.username }.include?(username)

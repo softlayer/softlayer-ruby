@@ -26,7 +26,7 @@ module SoftLayer
     sl_attr :checksum
 
     ##
-    # :attr_reader:
+    # :attr_reader: created
     # The date a disk image was created.
     sl_attr :created,    'createDate'
 
@@ -36,7 +36,7 @@ module SoftLayer
     sl_attr :description
 
     ##
-    # :attr_reader:
+    # :attr_reader: modified
     # The date a disk image was last modified.
     sl_attr :modified,   'modifyDate'
 
@@ -57,7 +57,9 @@ module SoftLayer
     sl_attr :uuid
 
     ##
-    # Returns coalesced disk images associated with this virtual disk image
+    # Retrieve coalesced disk images associated with this virtual disk image
+    # :call-seq:
+    #   coalesced_disk_images(force_update=false)
     sl_dynamic_attr :coalesced_disk_images do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -71,7 +73,9 @@ module SoftLayer
     end
     
     ##
-    # Returns local disk flag associated with virtual disk image
+    # Retrieve local disk flag associated with virtual disk image
+    # :call-seq:
+    #   local_disk(force_update=false)
     sl_dynamic_attr :local_disk do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -84,8 +88,10 @@ module SoftLayer
     end
 
     ##
-    # Whether this disk image is meant for storage of custom user data
-    # supplied with a Cloud Computing Instance order.
+    # Retrieve metadata as to whether this disk image is meant for 
+    # storage of custom user data supplied with a Cloud Computing Instance order.
+    # :call-seq:
+    #   metadata(force_update=false)
     sl_dynamic_attr :metadata do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -98,7 +104,9 @@ module SoftLayer
     end
 
     ##
-    # References to the software that resides on a disk image.
+    # Retrieve the references to the software that resides on a disk image.
+    # :call-seq:
+    #   software(force_update=false)
     sl_dynamic_attr :software do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -112,7 +120,9 @@ module SoftLayer
     end
 
     ##
-    # The original disk image that the current disk image was cloned from.
+    # Retrieve the original disk image that the current disk image was cloned from.
+    # :call-seq:
+    #   source_disk_image(force_update=false)
     sl_dynamic_attr :source_disk_image do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -126,7 +136,9 @@ module SoftLayer
     end
 
     ##
-    # A brief description of a virtual disk image type's function.
+    # Retrieve a brief description of a virtual disk image type's function.
+    # :call-seq:
+    #   type_description(force_update=false)
     sl_dynamic_attr :type_description do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -140,7 +152,9 @@ module SoftLayer
     end
 
     ##
-    # A virtual disk image type's name.
+    # Retrieve a virtual disk image type's name.
+    # :call-seq:
+    #   type_name(force_update=false)
     sl_dynamic_attr :type_name do |resource|
       resource.should_update? do
         #only retrieved once per instance

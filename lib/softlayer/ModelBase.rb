@@ -69,7 +69,7 @@ module SoftLayer
     ##
     # Returns the value of of the given property as stored in the
     # softlayer_hash. This gives you access to the low-level, raw
-    # properties that underly this model object.  The need for this
+    # properties that underlie this model object.  The need for this
     # is not uncommon, but using this method should still be done
     # with deliberation.
     def [](softlayer_property)
@@ -107,7 +107,7 @@ module SoftLayer
 
     ##
     # Subclasses should implement this method as part of enabling the
-    # refresh_details fuctionality The implementation should make a request
+    # refresh_details functionality The implementation should make a request
     # to the SoftLayer API and retrieve an up-to-date SoftLayer hash
     # representation of this object. That hash should be the return value
     # of this routine.

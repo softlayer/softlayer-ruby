@@ -15,7 +15,9 @@ module SoftLayer
     sl_attr :name
 
     ##
-    # The NetworkStorageGroup instances assigned to this host
+    # Retrieve the NetworkStorageGroup instances assigned to this host
+    # :call-seq:
+    #   assigned_groups(force_update=false)
     sl_dynamic_attr :assigned_groups do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -29,7 +31,9 @@ module SoftLayer
     end
 
     ##
-    # The NetworkStorage instances assigned to this host
+    # Retrieve the NetworkStorage instances assigned to this host
+    # :call-seq:
+    #   assigned_volumes(force_update=false)
     sl_dynamic_attr :assigned_volumes do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -43,7 +47,9 @@ module SoftLayer
     end
 
     ##
-    # The NetworkStorageCredential instance used to access NetworkStorage for this host
+    # Retrieve the NetworkStorageCredential instance used to access NetworkStorage for this host
+    # :call-seq:
+    #   credential(force_update=false)
     sl_dynamic_attr :credential do |resource|
       resource.should_update? do
         #only retrieved once per instance

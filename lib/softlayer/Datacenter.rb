@@ -17,7 +17,15 @@ module SoftLayer
   # represent.
 
   class Datacenter < SoftLayer::ModelBase
+
+    ##
+    # :attr_reader:
+    # A short location description
     sl_attr :name
+
+    ##
+    # :attr_reader: long_name
+    # A longer location description
     sl_attr :long_name, "longName"
 
     ##
@@ -30,7 +38,7 @@ module SoftLayer
     # Return a list of all the datacenters
     #
     # If the client parameter is not provided, the routine
-    # will try to use Client::defult_client.  If no client
+    # will try to use Client::default_client.  If no client
     # can be found, the routine will raise an exception
     #
     # This routine will only retrieve the list of datacenters from
