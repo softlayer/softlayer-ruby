@@ -115,7 +115,7 @@ module SoftLayer
 
       resource.to_update do
         external_bindings = self.service.object_mask(UserCustomerExternalBinding.default_object_mask).getExternalBindings
-        external_bindings.collect { |external_binding| UserCustomerExternalBinding.new(soflayer_client, external_binding) }
+        external_bindings.collect { |external_binding| UserCustomerExternalBinding.new(softlayer_client, external_binding) }
       end
     end
 
