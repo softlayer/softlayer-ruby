@@ -9,7 +9,7 @@ module SoftLayer
   ##
   # A Virtual Server Image Template.
   #
-  # This class roughly corresponds to the unwieldy named
+  # This class roughly corresponds to the unwieldily named
   # +SoftLayer_Virtual_Guest_Block_Device_Template_Group+
   # service:
   #
