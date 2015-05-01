@@ -22,7 +22,7 @@ module SoftLayer
   class NetworkMonitorQueryResult < Struct.new(:finished_at, :responded_in, :response_status)
     ##
     # This constant is a mapping of network monitor query result statuses to descriptions
-    QUERY_RESULT_STATUS_DESCRIPTIONS    = {
+    STATUS_DESCRIPTIONS = {
       0 => "Down/Critical: Server is down and/or has passed the critical response threshold (extremely long ping response, abnormal behavior, etc.).",
       1 => "Warning - Server may be recovering from a previous down state, or may have taken too long to respond.",
       2 => "Up",
