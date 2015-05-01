@@ -22,12 +22,12 @@ module SoftLayer
     sl_attr :cores, 'maxCpu'
 
     ##
-    # :attr_reader: provision_date
+    # :attr_reader: provisioned_at
     # The date the Virtual Server was provisioned.  This attribute can be
     # nil if the SoftLayer system has not yet finished provisioning the
     # server (consequently this attribute is used by the #wait_until_ready
     # method to determine when a server has been provisioned)
-    sl_attr :provision_date, 'provisionDate'
+    sl_attr :provisioned_at, 'provisionDate'
 
     ##
     # :attr_reader:
@@ -36,7 +36,7 @@ module SoftLayer
     # server (consequently this attribute is used by the #wait_until_ready
     # method to determine when a server has been provisioned)
     #
-    # DEPRECATION WARNING: This attribute is deprecated in favor of provision_date
+    # DEPRECATION WARNING: This attribute is deprecated in favor of provisioned_at
     # and will be removed in the next major release.
     sl_attr :provisionDate
 

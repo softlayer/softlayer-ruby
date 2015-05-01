@@ -15,7 +15,7 @@ module SoftLayer
   # Instances of this class roughly correspond to instances of the
   # SoftLayer_Network_Component_Firewall service entity.
   #
-	class ServerFirewall < SoftLayer::ModelBase
+  class ServerFirewall < SoftLayer::ModelBase
     include ::SoftLayer::DynamicAttribute
 
     ##

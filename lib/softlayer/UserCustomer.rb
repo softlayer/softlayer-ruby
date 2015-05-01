@@ -21,8 +21,15 @@ module SoftLayer
     sl_attr :alternate_phone,  'alternatePhone'
 
     ##
+    # :attr_reader: created_at
+    # The date a portal user's record was created.
+    sl_attr :created_at,          'createDate'
+
+    ##
     # :attr_reader: created
     # The date a portal user's record was created.
+    # DEPRECATION WARNING: This attribute is deprecated in favor of created_at
+    # and will be removed in the next major release.
     sl_attr :created,          'createDate'
 
     ##
@@ -46,8 +53,15 @@ module SoftLayer
     sl_attr :last_name,        'lastName'
 
     ##
+    # :attr_reader: modified_at
+    # The date a portal user's record was last modified.
+    sl_attr :modified_at,         'modifyDate'
+
+    ##
     # :attr_reader: modified
     # The date a portal user's record was last modified.
+    # DEPRECATION WARNING: This attribute is deprecated in favor of modified_at
+    # and will be removed in the next major release.
     sl_attr :modified,         'modifyDate'
 
     ##

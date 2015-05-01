@@ -21,8 +21,15 @@ module SoftLayer
     sl_attr :capacity,   'capacityGb'
 
     ##
+    # :attr_reader: created_at
+    # The date a network storage volume was created.
+    sl_attr :created_at, 'createDate'
+
+    ##
     # :attr_reader: created
     # The date a network storage volume was created.
+    # DEPRECATION WARNING: This attribute is deprecated in favor of created_at
+    # and will be removed in the next major release.
     sl_attr :created,    'createDate'
 
     ##

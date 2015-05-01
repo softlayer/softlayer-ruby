@@ -17,13 +17,27 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
+    # :attr_reader: created_at
+    # This is the data that the record was created in the table.
+    sl_attr :created_at,  'createDate'
+
+    ##
     # :attr_reader: created
     # This is the data that the record was created in the table.
+    # DEPRECATION WARNING: This attribute is deprecated in favor of created_at
+    # and will be removed in the next major release.
     sl_attr :created,  'createDate'
+
+    ##
+    # :attr_reader: modified_at
+    # This is the date that the record was last updated in the table.
+    sl_attr :modified_at, 'modifyDate'
 
     ##
     # :attr_reader: modified
     # This is the date that the record was last updated in the table.
+    # DEPRECATION WARNING: This attribute is deprecated in favor of modified_at
+    # and will be removed in the next major release.
     sl_attr :modified, 'modifyDate'
 
     ##

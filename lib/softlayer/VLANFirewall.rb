@@ -79,7 +79,7 @@ module SoftLayer
     ##
     # The fully qualified domain name of the physical device the
     # firewall is implemented by.
-    def fully_qualified_domain_name
+    def fqdn
       if self.has_sl_property?('networkVlanFirewall')
         return self['networkVlanFirewall']['fullyQualifiedDomainName']
       else
@@ -91,7 +91,7 @@ module SoftLayer
     # The fully qualified domain name of the physical device the
     # firewall is implemented by.
     #
-    # DEPRECATION WARNING: This method is deprecated in favor of fully_qualified_domain_name
+    # DEPRECATION WARNING: This method is deprecated in favor of fqdn
     # and will be removed in the next major release.
     def fullyQualifiedDomainName
       if self.has_sl_property?('networkVlanFirewall')

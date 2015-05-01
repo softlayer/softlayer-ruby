@@ -14,15 +14,29 @@ module SoftLayer
   #
   class SoftwarePassword < ModelBase
     include ::SoftLayer::DynamicAttribute
+
+    ##
+    # :attr_reader: created_at
+    # The date this username/password pair was created.
+    sl_attr :created_at, 'createDate'
     
     ##
     # :attr_reader: created
     # The date this username/password pair was created.
+    # DEPRECATION WARNING: This attribute is deprecated in favor of created_at
+    # and will be removed in the next major release.
     sl_attr :created, 'createDate'
+
+    ##
+    # :attr_reader: modified_at
+    # The date of the last modification to this username/password pair.
+    sl_attr :modified_at, 'modifyDate'
 
     ##
     # :attr_reader: modified
     # The date of the last modification to this username/password pair.
+    # DEPRECATION WARNING: This attribute is deprecated in favor of modified_at
+    # and will be removed in the next major release.
     sl_attr :modified, 'modifyDate'
 
     ##

@@ -26,8 +26,15 @@ module SoftLayer
     sl_attr :checksum
 
     ##
+    # :attr_reader: created_at
+    # The date a disk image was created.
+    sl_attr :created_at,    'createDate'
+
+    ##
     # :attr_reader: created
     # The date a disk image was created.
+    # DEPRECATION WARNING: This attribute is deprecated in favor of created_at
+    # and will be removed in the next major release.
     sl_attr :created,    'createDate'
 
     ##
@@ -36,8 +43,15 @@ module SoftLayer
     sl_attr :description
 
     ##
+    # :attr_reader: modified_at
+    # The date a disk image was last modified.
+    sl_attr :modified_at,   'modifyDate'
+
+    ##
     # :attr_reader: modified
     # The date a disk image was last modified.
+    # DEPRECATION WARNING: This attribute is deprecated in favor of modified_at
+    # and will be removed in the next major release.
     sl_attr :modified,   'modifyDate'
 
     ##
