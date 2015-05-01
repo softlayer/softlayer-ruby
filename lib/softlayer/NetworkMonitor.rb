@@ -6,6 +6,51 @@
 
 module SoftLayer
   ##
+  # This struct represents the network monitor levels of a server.
+  # It is roughly equivalent to SoftLayer data type
+  # SoftLayer_Network_Monitor_Version1_Query_Host_Stratum
+  class NetworkMonitorLevels < Struct.new(:monitor_level, :response_level)
+    def initialize(monitor_levels_data)
+      self.monitor_level  = monitor_levels_data['monitorLevel']
+      self.response_level = monitor_levels_data['responseLevel']
+    end
+  end
+
+  ##
+  # This struct represents a network monitor query result that shows the last
+  # state of the network monitor
+  class NetworkMonitorQueryResult < Struct.new(:finished_at, :responded_in, :response_status)
+    def initialize(query_result_data)
+      self.finished_at     = query_result_data['finishTime']
+      self.responded_in    = query_result_data['responseTime']
+      self.response_status = query_result_data['responseStatus']
+    end
+  end
+
+  ##
+  # This struct represents a network monitor query type used for creating
+  # new network monitors.
+  class NetworkMonitorQueryType < Struct.new(:argument_description, :description, :id, :monitor_level, :name)
+    def initialize(query_type_data)
+      self.argument_description = query_type_data['arugmentDescription']
+      self.description          = query_type_data['description']
+      self.id                   = query_type_data['monitorLevel']
+      self.name                 = query_type_data['name']
+    end
+  end
+
+  ##
+  # This struct represents a network monitor response type used for configuring
+  # network monitor responses when created.
+  class NetworkMonitorResponseType < Struct.new(:action_description, :id, :level)
+    def initialize(response_type_data)
+      self.action_description = response_type_data['actionDescription']
+      self.id                 = response_type_data['id']
+      self.level              = response_type_data['level']
+    end
+  end
+
+  ##
   # Each SoftLayer NetworkMonitor instance provides information about network
   # monitors configured to check host ping or host ports of servers.
   #
@@ -15,9 +60,7 @@ module SoftLayer
   class NetworkMonitor < ModelBase
     include ::SoftLayer::DynamicAttribute
 
-    @@available_query_types      = nil
-    @@available_response_actions = nil
-    @@query_result_descriptions  = {
+    QUERY_RESULT_DESCRIPTIONS    = {
       0 => "Down/Critical: Server is down and/or has passed the critical response threshold (extremely long ping response, abnormal behavior, etc.).",
       1 => "Warning - Server may be recovering from a previous down state, or may have taken too long to respond.",
       2 => "Up",
@@ -26,14 +69,17 @@ module SoftLayer
       5 => "Unknown - An unknown error has occurred. If the problem persists, contact support."
     }
 
+    @@available_query_types    = nil
+    @@available_response_types = nil
+
     ##
-    # :attr_reader:
+    # :attr_reader: argument_value
     # The argument to be used for this monitor, if necessary. The lowest monitoring levels (like ping)
     # ignore this setting, but higher levels like HTTP custom use it.
     sl_attr :argument_value, 'arg1Value'
 
     ##
-    # :attr_reader:
+    # :attr_reader: ip_address
     # The IP address to be monitored. Must be attached to the server on this object.
     sl_attr :ip_address, 'ipAddress'
 
@@ -43,13 +89,15 @@ module SoftLayer
     sl_attr :status
 
     ##
-    # :attr_reader:
+    # :attr_reader: wait_cycles
     # The number of 5-minute cycles to wait before the "responseAction" is taken. If set to 0, the response
     # action will be taken immediately.
     sl_attr :wait_cycles, 'waitCycles'
 
     ##
     # The most recent result for this particular monitoring instance.
+    # :call-seq:
+    #   last_query_result(force_update=false)
     sl_dynamic_attr :last_query_result do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -57,12 +105,14 @@ module SoftLayer
       end
 
       resource.to_update do
-        self.service.object_mask("mask[finishTime,responseStatus,responseTime]").getLastResult
+        NetworkMonitorQueryResult.new(self.service.object_mask("mask[finishTime,responseStatus,responseTime]").getLastResult)
       end
     end
 
     ##
     # The type of monitoring query that is executed when this server is monitored.
+    # :call-seq:
+    #   query_type(force_update=false)
     sl_dynamic_attr :query_type do |resource|
       resource.should_update? do
         #only retrieved once per instance
@@ -70,42 +120,41 @@ module SoftLayer
       end
 
       resource.to_update do
-        self.service.getQueryType
+        NetworkMonitorQueryType.new(self.service.getQueryType)
       end
     end
 
     ##
-    # The action taken when a monitor fails.
-    sl_dynamic_attr :response_action do |resource|
+    # The response action taken when a monitor fails.
+    # :call-seq:
+    #   response_type(force_update=false)
+    sl_dynamic_attr :response_type do |resource|
       resource.should_update? do
         #only retrieved once per instance
-        @response_action == nil
+        @response_type == nil
       end
 
       resource.to_update do
-        self.service.getResponseAction
+        NetworkMonitorResponseType.new(self.service.getResponseAction)
       end
     end
 
     ##
     # Add a network monitor for a host ping or port check to a server.
     #
-    def self.add_network_monitor(server, ip_address, query_type, response_action, wait_cycles = 0, argument_value = nil, options = {})
+    def self.add_network_monitor(server, ip_address, query_type, response_type, wait_cycles = 0, argument_value = nil, options = {})
       softlayer_client = options[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
       raise "#{__method__} requires a server to monitor but none was given" if !server || !server.kind_of?(Server)
       raise "#{__method__} requires an IP address to monitor but none was given" if !ip_address || ip_address.empty?
-      raise "#{__method__} requires a query type for the monitor but none was given" if !query_type || (query_type.kind_of?(Hash) && !query_type.include?('id'))
-      raise "#{__method__} requires a response action for the monitor but none was given" if !response_action || (response_action.kind_of?(Hash) && !response_action.include?('id'))
+      raise "#{__method__} requires a query type for the monitor but none was given" if !query_type || !query_type.kind_of?(NetworkMonitorQueryType)
+      raise "#{__method__} requires a response type for the monitor but none was given" if !response_type || !response_type.kind_of?(NetworkMonitorResponseType)
 
-      query_type_id      = query_type.kind_of?(Hash) ? query_type['id'] : query_type
-      response_action_id = response_action.kind_of?(Hash) ? response_action['id'] : response_action
-
-      if available_query_types(:client => softlayer_client, :query_level => server.network_monitor_levels['monitorLevel']).select{ |query_type| query_type['id'] == query_type_id }.empty?
+      if available_query_types(:client => softlayer_client, :query_level => server.network_monitor_levels.monitor_level).select{ |query| query.id == query_type.id }.empty?
         raise "#{__method__} requested monitor query level is not supported for this server"
       end
 
-      if available_response_actions(:client => softlayer_client, :response_level => server.network_monitor_levels['responseLevel']).select{ |response| response['id'] == response_action_id }.empty?
+      if available_response_types(:client => softlayer_client, :response_level => server.network_monitor_levels.response_level).select{ |response| response.id == response_type.id }.empty?
         raise "#{__method__} requested monitor response level is not supported for this server"
       end
 
@@ -115,8 +164,8 @@ module SoftLayer
       network_monitor_object_filter.modify { |filter| filter.accept('networkMonitors.arg1Value').when_it          is(argument_value.to_s) }
       network_monitor_object_filter.modify { |filter| filter.accept('networkMonitors.' + server_id_label).when_it is(server.id)           }
       network_monitor_object_filter.modify { |filter| filter.accept('networkMonitors.ipAddress').when_it          is(ip_address.to_s)     }
-      network_monitor_object_filter.modify { |filter| filter.accept('networkMonitors.queryTypeId').when_it        is(query_type_id)       }
-      network_monitor_object_filter.modify { |filter| filter.accept('networkMonitors.responseActionId').when_it   is(response_action_id)  }
+      network_monitor_object_filter.modify { |filter| filter.accept('networkMonitors.queryTypeId').when_it        is(query_type.id)       }
+      network_monitor_object_filter.modify { |filter| filter.accept('networkMonitors.responseActionId').when_it   is(response_type.id)    }
       network_monitor_object_filter.modify { |filter| filter.accept('networkMonitors.waitCycles').when_it         is(wait_cycles)         }
 
       if server.service.object_filter(network_monitor_object_filter).getNetworkMonitors.empty?
@@ -124,8 +173,8 @@ module SoftLayer
                                                                                                 'arg1Value'        => argument_value.to_s,
                                                                                                 server_id_label    => server.id,
                                                                                                 'ipAddress'        => ip_address.to_s,
-                                                                                                'queryTypeId'      => query_type_id,
-                                                                                                'responseActionId' => response_action_id,
+                                                                                                'queryTypeId'      => query_type.id,
+                                                                                                'responseActionId' => response_type.id,
                                                                                                 'waitCycles'       => wait_cycles
                                                                                               })
 
@@ -175,31 +224,33 @@ module SoftLayer
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
       unless @@available_query_types
-        @@available_query_types = softlayer_client[:Network_Monitor_Version1_Query_Host_Stratum].getAllQueryTypes
+        available_query_types_data = softlayer_client[:Network_Monitor_Version1_Query_Host_Stratum].getAllQueryTypes
+        @@available_query_types    = available_query_types_data.map{ |query_type| NetworkMonitorQueryType.new(query_type) }
       end
 
       if options[:query_level]
-        @@available_query_types.select { |query_type| query_type['monitorLevel'].to_i <= options[:query_level].to_i }
+        @@available_query_types.select { |query_type| query_type.monitor_level.to_i <= options[:query_level].to_i }
       else
         @@available_query_types
       end
     end
 
     ##
-    # Return the list of available response actions (optionally limited to a max response level)
+    # Return the list of available response types (optionally limited to a max response level)
     #
-    def self.available_response_actions(options = {})
+    def self.available_response_types(options = {})
       softlayer_client = options[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      unless @@available_response_actions
-        @@available_response_actions = softlayer_client[:Network_Monitor_Version1_Query_Host_Stratum].getAllResponseTypes
+      unless @@available_response_types
+        available_response_types_data = softlayer_client[:Network_Monitor_Version1_Query_Host_Stratum].getAllResponseTypes
+        @@available_response_types    = available_response_types_data.map { |response_type| NetworkMonitorResponseType.new(response_type) }
       end
 
       if options[:response_level]
-        @@available_response_actions.select { |response_action| response_action['level'].to_i <= options[:response_level].to_i }
+        @@available_response_types.select { |response_type| response_type.level.to_i <= options[:response_level].to_i }
       else
-        @@available_response_actions
+        @@available_response_types
       end
     end
 
@@ -223,18 +274,10 @@ module SoftLayer
         user_customer_data
       end
 
-      current_user_customers = user_customers_data.map { |user_customer| user_customer['id'] }
-
+      current_user_customers                  = user_customers_data.map { |user_customer| user_customer['id'] }
       monitor_user_notification_object_filter = ObjectFilter.new()
 
-      monitor_user_notification_object_filter.set_criteria_for_key_path('monitoringUserNotification.userId',
-                                                                        {
-                                                                          'operation' => 'in',
-                                                                          'options' => [{
-                                                                                          'name' => 'data',
-                                                                                          'value' => current_user_customers.map{ |uid| uid.to_s }
-                                                                                        }]
-                                                                        })
+      monitor_user_notification_object_filter.modify { |filter| filter.accept('monitoringUserNotification.userId').when_it is(current_user_customers) }
 
       monitor_user_notification_data = server.service.object_filter(monitor_user_notification_object_filter).object_mask("mask[id]").getMonitoringUserNotification
 
@@ -259,13 +302,6 @@ module SoftLayer
       end
 
       softlayer_client[:Network_Monitor_Version1_Query_Host].deleteObjects(network_monitors_data)
-    end
-
-    ##
-    # Return the list of descriptions by result id for last query responses.
-    #
-    def self.query_result_descriptions
-      @@query_result_descriptions
     end
 
     ##
