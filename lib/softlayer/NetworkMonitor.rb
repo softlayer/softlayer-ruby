@@ -20,6 +20,17 @@ module SoftLayer
   # This struct represents a network monitor query result that shows the last
   # state of the network monitor
   class NetworkMonitorQueryResult < Struct.new(:finished_at, :responded_in, :response_status)
+    ##
+    # This constant is a mapping of network monitor query result statuses to descriptions
+    QUERY_RESULT_STATUS_DESCRIPTIONS    = {
+      0 => "Down/Critical: Server is down and/or has passed the critical response threshold (extremely long ping response, abnormal behavior, etc.).",
+      1 => "Warning - Server may be recovering from a previous down state, or may have taken too long to respond.",
+      2 => "Up",
+      3 => "Not used",
+      4 => "Unknown - An unknown error has occurred. If the problem persists, contact support.",
+      5 => "Unknown - An unknown error has occurred. If the problem persists, contact support."
+    }
+
     def initialize(query_result_data)
       self.finished_at     = query_result_data['finishTime']
       self.responded_in    = query_result_data['responseTime']
@@ -59,15 +70,6 @@ module SoftLayer
   #
   class NetworkMonitor < ModelBase
     include ::SoftLayer::DynamicAttribute
-
-    QUERY_RESULT_DESCRIPTIONS    = {
-      0 => "Down/Critical: Server is down and/or has passed the critical response threshold (extremely long ping response, abnormal behavior, etc.).",
-      1 => "Warning - Server may be recovering from a previous down state, or may have taken too long to respond.",
-      2 => "Up",
-      3 => "Not used",
-      4 => "Unknown - An unknown error has occurred. If the problem persists, contact support.",
-      5 => "Unknown - An unknown error has occurred. If the problem persists, contact support."
-    }
 
     @@available_query_types    = nil
     @@available_response_types = nil

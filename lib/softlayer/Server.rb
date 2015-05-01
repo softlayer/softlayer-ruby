@@ -55,7 +55,8 @@ module SoftLayer
 
     ##
     # The maximum network monitor query/response levels currently supported by the server
-    #
+    # :call-seq:
+    #   network_monitor_levels(force_update=false)
     sl_dynamic_attr :network_monitor_levels do |resource|
       resource.should_update? do
         @network_monitor_levels == nil
@@ -68,7 +69,8 @@ module SoftLayer
 
     ##
     # A lsst of configured network monitors.
-    #
+    # :call-seq:
+    #   network_monitors(force_update=false)
     sl_dynamic_attr :network_monitors do |resource|
       resource.should_update? do
         @network_monitors == nil
@@ -88,6 +90,8 @@ module SoftLayer
     ##
     # :attr_reader:
     # The list of user customers notified on monitoring failures
+    # :call-seq:
+    #   notified_network_monitor_users(force_update=false)
     sl_dynamic_attr :notified_network_monitor_users do |resource|
       resource.should_update? do
         #only retrieved once per instance
