@@ -62,7 +62,7 @@ module SoftLayer
       end
 
       resource.to_update do
-        self.service.getAvailableMonitoring
+        NetworkMonitorLevels.new(self.service.getAvailableMonitoring)
       end
     end
 
