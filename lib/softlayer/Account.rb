@@ -264,6 +264,26 @@ module SoftLayer
     # The IDs of the different segments can be helpful for ordering
     # firewalls.
     #
+    def find_vlan_with_number(vlan_number)
+      filter = SoftLayer::ObjectFilter.new() { |filter|
+        filter.accept('networkVlans.vlanNumber').when_it is vlan_number
+      }
+
+      vlan_data = self.service.object_mask("mask[id,vlanNumber,primaryRouter,networkSpace]").object_filter(filter).getNetworkVlans
+      return vlan_data
+    end
+
+    ##
+    # Searches the account's list of VLANs for the ones with the given
+    # vlan number. This may return multiple results because a VLAN can
+    # span different routers and you will get a separate segment for
+    # each router.
+    #
+    # The IDs of the different segments can be helpful for ordering
+    # firewalls.
+    #
+    # DEPRECATION WARNING: This method is deprecated in favor of find_vlan_with_number
+    # and will be removed in the next major release.
     def find_VLAN_with_number(vlan_number)
       filter = SoftLayer::ObjectFilter.new() { |filter|
         filter.accept('networkVlans.vlanNumber').when_it is vlan_number

@@ -75,6 +75,13 @@ module SoftLayer
 
     # The URI of a script to execute on the server after it has been provisioned. This may be
     # any object which accepts the to_s message. The resulting string will be passed to SoftLayer API.
+    attr_accessor :provision_script_uri
+
+    # The URI of a script to execute on the server after it has been provisioned. This may be
+    # any object which accepts the to_s message. The resulting string will be passed to SoftLayer API.
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of provision_script_uri
+    # and will be removed in the next major release.
     attr_accessor :provision_script_URI
 
     # An array of the ids of SSH keys to install on the server upon provisioning
@@ -150,6 +157,7 @@ module SoftLayer
       product_order['imageTemplateGlobalIdentifier']  = @image_template.global_id         if @image_template
       product_order['location']                       = @datacenter.id                    if @datacenter
       product_order['provisionScripts']               = [@provision_script_URI.to_s]      if @provision_script_URI
+      product_order['provisionScripts']               = [@provision_script_uri.to_s]      if @provision_script_uri
       product_order['sshKeys']                        = [{ 'sshKeyIds' => @ssh_key_ids }] if @ssh_key_ids
       product_order['virtualGuests'][0]['userData']   = @user_metadata                    if @user_metadata
       product_order['primaryNetworkComponent']        = { "networkVlan" => { "id" => @public_vlan_id.to_i } } if @public_vlan_id

@@ -84,6 +84,12 @@ module SoftLayer
     attr_accessor :private_vlan_id
 
     # String, The URI of a post provisioning script to run on this server once it is created
+    attr_accessor :provision_script_uri
+
+    # String, The URI of a post provisioning script to run on this server once it is created
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of provision_script_uri
+    # and will be removed in the next major release.
     attr_accessor :provision_script_URI
 
     # Integer, The id of the public VLAN this server should join
@@ -156,13 +162,14 @@ module SoftLayer
       template['dedicatedAccountHostOnlyFlag'] = true if @dedicated_host_only
       template['privateNetworkOnlyFlag'] = true if @private_network_only
 
-      template['datacenter'] = {"name" => @datacenter.name} if @datacenter
-      template['userData'] = [{'value' => @user_metadata}] if @user_metadata
-      template['networkComponents'] = [{'maxSpeed'=> @max_port_speed}] if @max_port_speed
-      template['postInstallScriptUri'] = @provision_script_URI.to_s if @provision_script_URI
-      template['sshKeys'] = @ssh_key_ids.collect { |ssh_key_id| {'id'=> ssh_key_id.to_i } } if @ssh_key_ids
-      template['primaryNetworkComponent'] = { "networkVlan" => { "id" => @public_vlan_id.to_i } } if @public_vlan_id
+      template['datacenter']                     = {"name" => @datacenter.name}     if @datacenter
+      template['userData']                       = [{'value' => @user_metadata}]    if @user_metadata
+      template['networkComponents']              = [{'maxSpeed'=> @max_port_speed}] if @max_port_speed
+      template['postInstallScriptUri']           = @provision_script_URI.to_s       if @provision_script_URI
+      template['postInstallScriptUri']           = @provision_script_uri.to_s       if @provision_script_uri
+      template['primaryNetworkComponent']        = { "networkVlan" => { "id" => @public_vlan_id.to_i } } if @public_vlan_id
       template['primaryBackendNetworkComponent'] = { "networkVlan" => {"id" => @private_vlan_id.to_i } } if @private_vlan_id
+      template['sshKeys']                        = @ssh_key_ids.collect { |ssh_key_id| {'id'=> ssh_key_id.to_i } } if @ssh_key_ids
 
       if @image_template
           template['blockDeviceTemplateGroup'] = {"globalIdentifier" => @image_template.global_id}

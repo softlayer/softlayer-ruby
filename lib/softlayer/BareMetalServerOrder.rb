@@ -78,6 +78,14 @@ module SoftLayer
     # Object responding to to_s and providing a valid URI, The URI of a post provisioning script to run on
     # this server once it is created.
     # Corresponds to +postInstallScriptUri+ in the +createObject+ documentation
+    attr_accessor :provision_script_uri
+
+    # Object responding to to_s and providing a valid URI, The URI of a post provisioning script to run on
+    # this server once it is created.
+    # Corresponds to +postInstallScriptUri+ in the +createObject+ documentation
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of provision_script_uri
+    # and will be removed in the next major release.
     attr_accessor :provision_script_URI
 
     # Boolean, If true then the server will only have a private network interface (and no public network interface)
@@ -149,13 +157,14 @@ module SoftLayer
 
       template['privateNetworkOnlyFlag'] = true if @private_network_only
 
-      template['datacenter'] = {"name" => @datacenter.name} if @datacenter
-      template['userData'] = [{'value' => @user_metadata}] if @user_metadata
-      template['networkComponents'] = [{'maxSpeed'=> @max_port_speed}] if @max_port_speed
-      template['postInstallScriptUri'] = @provision_script_URI.to_s if @provision_script_URI
-      template['sshKeys'] = @ssh_key_ids.collect { |ssh_key| {'id'=> ssh_key.to_i } } if @ssh_key_ids
-      template['primaryNetworkComponent'] = { "networkVlan" => { "id" => @public_vlan_id.to_i } } if @public_vlan_id
+      template['datacenter']                     = {"name" => @datacenter.name}     if @datacenter
+      template['userData']                       = [{'value' => @user_metadata}]    if @user_metadata
+      template['networkComponents']              = [{'maxSpeed'=> @max_port_speed}] if @max_port_speed
+      template['postInstallScriptUri']           = @provision_script_URI.to_s       if @provision_script_URI
+      template['postInstallScriptUri']           = @provision_script_uri.to_s       if @provision_script_uri
+      template['primaryNetworkComponent']        = { "networkVlan" => { "id" => @public_vlan_id.to_i } } if @public_vlan_id
       template['primaryBackendNetworkComponent'] = { "networkVlan" => {"id" => @private_vlan_id.to_i } } if @private_vlan_id
+      template['sshKeys']                        = @ssh_key_ids.collect { |ssh_key| {'id'=> ssh_key.to_i } } if @ssh_key_ids
 
       if @disks && !@disks.empty?
         template['hardDrives'] = @disks.collect do |disk|
