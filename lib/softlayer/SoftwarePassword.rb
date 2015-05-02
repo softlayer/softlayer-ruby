@@ -79,10 +79,17 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # You may filter the list returned by adding options:
-    # * <b>+:datacenter+</b>    (string/array) - Include software passwords from application delivery controllers matching this datacenter
-    # * <b>+:name+</b>          (string/array) - Include software passwords from application delivery controllers that matches this name
-    # * <b>+:tags+</b>          (string/array  - Include software passwords from application delivery controllers that matches these tags
-    # * <b>+:username+</b>      (string/array) - Include software passwords that match this username
+    # * <b>+:datacenter+</b> (string/array) - Include software passwords from application delivery controllers matching this datacenter
+    # * <b>+:name+</b>       (string/array) - Include software passwords from application delivery controllers that matches this name
+    # * <b>+:tags+</b>       (string/array  - Include software passwords from application delivery controllers that matches these tags
+    # * <b>+:username+</b>   (string/array) - Include software passwords that match this username
+    #
+    # Additionally you may provide options related to the request itself:
+    # * <b>*:application_delivery_controller_object_filter*</b> (ObjectFilter) - Include software passwords from application delivery controllers
+    #                                                                            that matches the criteria of this object filter
+    # * <b>*:software_password_object_filter*</b>               (ObjectFilter) - Include software passwords that match the criteria of this object filter
+    # * <b>*:software_password_object_mask*</b>                 (string)       - The object mask of properties you wish to receive for the items returned.
+    #                                                                            If not provided, the result will use the default object mask
     #
     def self.find_passwords_for_application_delivery_controllers(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
@@ -166,6 +173,15 @@ module SoftLayer
     # * <b>+:vlan_fw_tags+</b>  (string/array) - Include software passwords from vlan firewalls that matches these tags
     # * <b>+:vlan_fw_type+</b>  (string/array) - Include software passwords from vlan firewalls that match this type
     # * <b>+:username+</b>      (string/array) - Include software passwords that match this username
+    #
+    # Additionally you may provide options related to the request itself:
+    # * <b>*:software_password_object_filter*</b> (ObjectFilter) - Include software passwords that match the criteria of this object filter
+    # * <b>*:software_password_object_mask*</b>   (string)       - The object mask of properties you wish to receive for the items returned.
+    #                                                              If not provided, the result will use the default object mask
+    # * <b>*:vlan_firewall_object_filter*</b>     (ObjectFilter) - Include software passwords from vlan firewalls that match the
+    #                                                              criteria of this object filter
+    # * <b>*:vlan_object_filter*</b>              (ObjectFilter) - Include software passwords from vlan firewalls whose vlans match the
+    #                                                              criteria of this object filter
     #
     def self.find_passwords_for_vlan_firewalls(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client

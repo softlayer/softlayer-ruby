@@ -283,7 +283,7 @@ module SoftLayer
 
       account_service = softlayer_client[:Account]
       network_hash = account_service.getObject()
-      new(softlayer_client, network_hash)
+      Account.new(softlayer_client, network_hash)
     end
 
     ##

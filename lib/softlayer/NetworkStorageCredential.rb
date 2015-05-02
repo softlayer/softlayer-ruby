@@ -75,14 +75,22 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # You may filter the list returned by adding options:
-    # * <b>+:datacenter+</b>                  (string/array) - Include network storage account passwords associated with servers matching this datacenter
-    # * <b>+:domain+</b>                      (string/array) - Include network storage account passwords associated with servers matching this domain
-    # * <b>+:hostname+</b>                    (string/array) - Include network storage account passwords associated with servers matching this hostname
-    # * <b>+:network_storage_server_type+</b> (string)       - Include network storage account passwords associated with services of this server type
-    # * <b>+:network_storage_type+</b>        (string)       - Include network storage account passwords from devices of this storage type
-    # * <b>+:service+</b>                     (string/array) - Include network storage account passwords from devices with this service fqdn
-    # * <b>+:tags+</b>                        (string/array) - Include network storage account passwords associated with servers matching these tags
-    # * <b>+:username+</b>                    (string/array) - Include network storage account passwords with this username only
+    # * <b>+:datacenter+</b>                  (string/array) - Include network storage credentials associated with servers matching this datacenter
+    # * <b>+:domain+</b>                      (string/array) - Include network storage credentials associated with servers matching this domain
+    # * <b>+:hostname+</b>                    (string/array) - Include network storage credentials associated with servers matching this hostname
+    # * <b>+:network_storage_server_type+</b> (symbol)       - Include network storage credentials associated with services of this server type
+    # * <b>+:network_storage_type+</b>        (symbol)       - Include network storage credentials from devices of this storage type
+    # * <b>+:service+</b>                     (string/array) - Include network storage credentials from devices with this service fqdn
+    # * <b>+:tags+</b>                        (string/array) - Include network storage credentials associated with servers matching these tags
+    # * <b>+:username+</b>                    (string/array) - Include network storage credentials with this username only
+    #
+    # Additionally you may provide options related to the request itself:
+    # * <b>*:network_storage_credential_object_filter*</b> (ObjectFilter) - Include network storage credentials that match the
+    #                                                                       criteria of this object filter
+    # * <b>*:network_storage_credential_object_mask*</b>   (string)       - The object mask of properties you wish to receive for the items returned.
+    #                                                                       If not provided, the result will use the default object mask
+    # * <b>*:network_storage_object_filter*</b>            (ObjectFilter) - Include network storage credentials from network storage that matches the
+    #                                                                       criteria of this object filter
     #
     def self.find_network_storage_credentials(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client

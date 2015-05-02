@@ -212,6 +212,14 @@ module SoftLayer
     # * <b>+:name+</b>      (string/array) - Return templates with the given name
     # * <b>+:global_id+</b> (string/array) - Return templates with the given global identifier
     # * <b>+:tags+</b>      (string/array) - Return templates with the tags
+    #
+    # Additionally you may provide options related to the request itself:
+    #
+    # * <b>*:object_filter*</b> (ObjectFilter)                       - Include private image templates for templates that matche the
+    #                                                                  criteria of this object filter
+    # * <b>+:object_mask+</b>   (string, hash, or array)             - The object mask of properties you wish to receive for the items returned.
+    #                                                                  If not provided, the result will use the default object mask
+    # * <b>+:result_limit+</b>  (hash with :limit, and :offset keys) - Limit the scope of results returned.
     def self.find_private_templates(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
@@ -239,20 +247,14 @@ module SoftLayer
       account_service = softlayer_client[:Account]
       account_service = account_service.object_filter(object_filter) unless object_filter.empty?
       account_service = account_service.object_mask(default_object_mask)
+      account_service = account_service.object_mask(options_hash[:object_mask]) if options_hash[:object_mask]
 
-      if options_hash.has_key? :object_mask
-        account_service = account_service.object_mask(options_hash[:object_mask])
-      end
-
-      if options_hash.has_key?(:result_limit)
-        offset = options[:result_limit][:offset]
-        limit = options[:result_limit][:limit]
-
-        account_service = account_service.result_limit(offset, limit)
+      if options_hash[:result_limit] && options_hash[:result_limit][:offset] && options_hash[:result_limit][:limit]
+        account_service = account_service.result_limit(options_hash[:result_limit][:offset], options_hash[:result_limit][:limit])
       end
 
       templates_data = account_service.getPrivateBlockDeviceTemplateGroups
-      templates_data.collect { |template_data| new(softlayer_client, template_data) }
+      templates_data.collect { |template_data| ImageTemplate.new(softlayer_client, template_data) }
     end
 
     ##
@@ -269,6 +271,14 @@ module SoftLayer
     # * <b>+:name+</b>      (string/array) - Return templates with the given name
     # * <b>+:global_id+</b> (string/array) - Return templates with the given global identifier
     # * <b>+:tags+</b>      (string/array) - Return templates with the tags
+    #
+    # Additionally you may provide options related to the request itself:
+    #
+    # * <b>*:object_filter*</b> (ObjectFilter)                       - Include public image templates for templates that matche the
+    #                                                                  criteria of this object filter
+    # * <b>+:object_mask+</b>   (string, hash, or array)             - The object mask of properties you wish to receive for the items returned.
+    #                                                                  If not provided, the result will use the default object mask
+    # * <b>+:result_limit+</b>  (hash with :limit, and :offset keys) - Limit the scope of results returned.
     def self.find_public_templates(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
@@ -296,20 +306,14 @@ module SoftLayer
       template_service = softlayer_client[:Virtual_Guest_Block_Device_Template_Group]
       template_service = template_service.object_filter(object_filter) unless object_filter.empty?
       template_service = template_service.object_mask(default_object_mask)
+      template_service = template_service.object_mask(options_hash[:object_mask]) if options_hash[:object_mask]
 
-      if options_hash.has_key? :object_mask
-        template_service = template_service.object_mask(options_hash[:object_mask])
-      end
-
-      if options_hash.has_key?(:result_limit)
-        offset = options[:result_limit][:offset]
-        limit = options[:result_limit][:limit]
-
-        template_service = template_service.result_limit(offset, limit)
+      if options_hash[:result_limit] && options_hash[:result_limit][:offset] && options_hash[:result_limit][:limit]
+        template_service = template_service.result_limit(options_hash[:result_limit][:offset], options_hash[:result_limit][:limit])
       end
 
       templates_data = template_service.getPublicImages
-      templates_data.collect { |template_data| new(softlayer_client, template_data) }
+      templates_data.collect { |template_data| ImageTemplate.new(softlayer_client, template_data) }
     end
 
     ##
@@ -337,7 +341,7 @@ module SoftLayer
       end
 
       template_data = service.getObject
-      new(softlayer_client, template_data)
+      ImageTemplate.new(softlayer_client, template_data)
     end
 
     ##

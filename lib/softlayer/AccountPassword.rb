@@ -79,10 +79,18 @@ module SoftLayer
     # * <b>+:datacenter+</b>                  (string/array) - Include network storage account passwords from servers matching this datacenter
     # * <b>+:domain+</b>                      (string/array) - Include network storage account passwords from servers matching this domain
     # * <b>+:hostname+</b>                    (string/array) - Include network storage account passwords from servers matching this hostname
-    # * <b>+:network_storage_server_type+</b> (string)       - Include network storage account passwords attached to this server type
-    # * <b>+:network_storage_type+</b>        (string)       - Include network storage account passwords from devices of this storage type
+    # * <b>+:network_storage_server_type+</b> (symbol)       - Include network storage account passwords attached to this server type
+    # * <b>+:network_storage_type+</b>        (symbol)       - Include network storage account passwords from devices of this storage type
     # * <b>+:tags+</b>                        (string/array) - Include network storage account passwords from servers matching these tags
     # * <b>+:username+</b>                    (string/array) - Include network storage account passwords with this username only
+    #
+    # Additionally you may provide options related to the request itself:
+    # * <b>*:account_password_object_filter*</b> (ObjectFilter) - Include network storage account passwords for account passwords that match the
+    #                                                             criteria of this object filter
+    # * <b>*:account_password_object_mask*</b>   (string)       - The object mask of properties you wish to receive for the items returned.
+    #                                                             If not provided, the result will use the default object mask
+    # * <b>*:network_storage_object_filter*</b>  (ObjectFilter) - Include network storage account passwords from network storage that matches the
+    #                                                             criteria of this object filter
     #
     def self.find_network_storage_account_passwords(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
@@ -197,10 +205,18 @@ module SoftLayer
     # * <b>+:datacenter+</b>                  (string/array) - Include network storage webcc passwords from servers matching this datacenter
     # * <b>+:domain+</b>                      (string/array) - Include network storage webcc passwords from servers matching this domain
     # * <b>+:hostname+</b>                    (string/array) - Include network storage webcc passwords from servers matching this hostname
-    # * <b>+:network_storage_server_type+</b> (string)       - Include network storage webcc passwords attached to this server type
-    # * <b>+:network_storage_type+</b>        (string)       - Include network storage webcc passwords from devices of this storage type
+    # * <b>+:network_storage_server_type+</b> (symbol)       - Include network storage webcc passwords attached to this server type
+    # * <b>+:network_storage_type+</b>        (symbol)       - Include network storage webcc passwords from devices of this storage type
     # * <b>+:tags+</b>                        (string/array) - Include network storage webcc passwords from servers matching these tags
     # * <b>+:username+</b>                    (string/array) - Include network storage webcc passwords with this username only
+    #
+    # Additionally you may provide options related to the request itself:
+    # * <b>*:network_storage_object_filter*</b>  (ObjectFilter) - Include network storage account passwords from network storage that matches the
+    #                                                             criteria of this object filter
+    # * <b>*:webcc_password_object_filter*</b>   (ObjectFilter) - Include network storage account passwords for webcc passwords that match the
+    #                                                             criteria of this object filter
+    # * <b>*:webcc_password_object_mask*</b>     (string)       - The object mask of properties you wish to receive for the items returned.
+    #                                                             If not provided, the result will use the default object mask
     #
     def self.find_network_storage_webcc_passwords(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client

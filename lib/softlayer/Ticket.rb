@@ -120,6 +120,9 @@ module SoftLayer
     # If a client is not provided then the routine will search Client::default_client
     # If Client::default_client is also nil the routine will raise an error.
     #
+    # Additionally you may provide options related to the request itself:
+    # * <b>*:object_mask*</b> (string) - The object mask of properties you wish to receive for the items returned.
+    #                                    If not provided, the result will use the default object mask
     def self.ticket_with_id(ticket_id, options = {})
       softlayer_client = options[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
@@ -132,7 +135,7 @@ module SoftLayer
 
       ticket_data = softlayer_client[:Ticket].object_with_id(ticket_id).object_mask(object_mask).getObject()
 
-      return new(softlayer_client, ticket_data)
+      return Ticket.new(softlayer_client, ticket_data)
     end
 
     ##
