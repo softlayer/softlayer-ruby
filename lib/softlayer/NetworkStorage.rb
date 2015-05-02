@@ -260,23 +260,12 @@ module SoftLayer
       end
       
       if options_hash[:network_storage_server_type]
-        [ :datacenter, :domain, :hostname ].each do |option|
+        [ :datacenter, :domain, :hostname, :tags ].each do |option|
           if options_hash[option]
             network_storage_object_filter.modify do |filter|
               filter.accept(option_to_filter_path[option].call(network_storage_type, options_hash[:network_storage_server_type])).when_it is(options_hash[option])
             end
           end
-        end
-
-        if options_hash[:tags]
-          network_storage_object_filter.set_criteria_for_key_path(option_to_filter_path[:tags].call(network_storage_type, options_hash[:network_storage_server_type]),
-                                                                  {
-                                                                    'operation' => 'in',
-                                                                    'options' => [{
-                                                                                    'name' => 'data',
-                                                                                    'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
-                                                                                  }]
-                                                                  })
         end
       end
 
