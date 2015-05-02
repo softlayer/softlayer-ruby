@@ -127,13 +127,11 @@ module SoftLayer
       softlayer_client = options[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
-      if options.has_key?(:object_mask)
-        object_mask = options[:object_mask]
-      else
-        object_mask = default_object_mask.to_sl_object_mask
-      end
+      ticket_service = softlayer_client[:Ticket].object_with_id(ticket_id)
+      ticket_service = ticket_service.object_mask(default_object_mask.to_sl_object_mask)
+      ticket_service = ticket_service.object_mask(options[:object_mask]) if options[:object_mask]
 
-      ticket_data = softlayer_client[:Ticket].object_with_id(ticket_id).object_mask(object_mask).getObject()
+      ticket_data    = ticket_service.getObject()
 
       return Ticket.new(softlayer_client, ticket_data)
     end

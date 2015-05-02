@@ -334,11 +334,8 @@ module SoftLayer
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
 
       service = softlayer_client[:Virtual_Guest_Block_Device_Template_Group].object_with_id(id)
-      service.object_mask(default_object_mask)
-
-      if options_hash.has_key? :object_mask
-        service = service.object_mask(options_hash[:object_mask])
-      end
+      service = service.object_mask(default_object_mask)
+      service = service.object_mask(options_hash[:object_mask]) if options_hash[:object_mask]
 
       template_data = service.getObject
       ImageTemplate.new(softlayer_client, template_data)
