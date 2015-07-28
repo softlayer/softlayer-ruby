@@ -62,6 +62,65 @@ module SoftLayer
     sl_attr :notes
 
     ##
+    # The maximum network monitor query/response levels currently supported by the server
+    # :call-seq:
+    #   network_monitor_levels(force_update=false)
+    sl_dynamic_attr :network_monitor_levels do |resource|
+      resource.should_update? do
+        @network_monitor_levels == nil
+      end
+
+      resource.to_update do
+        NetworkMonitorLevels.new(self.service.getAvailableMonitoring)
+      end
+    end
+
+    ##
+    # A lsst of configured network monitors.
+    # :call-seq:
+    #   network_monitors(force_update=false)
+    sl_dynamic_attr :network_monitors do |resource|
+      resource.should_update? do
+        @network_monitors == nil
+      end
+
+      resource.to_update do
+        network_monitors_data = self.service.object_mask(NetworkMonitor.default_object_mask).getNetworkMonitors
+
+        network_monitors_data.map! do |network_monitor|
+          NetworkMonitor.new(softlayer_client, network_monitor) unless network_monitor.empty?
+        end
+
+        network_monitors_data.compact
+      end
+    end
+
+    ##
+    # :attr_reader:
+    # The list of user customers notified on monitoring failures
+    # :call-seq:
+    #   notified_network_monitor_users(force_update=false)
+    sl_dynamic_attr :notified_network_monitor_users do |resource|
+      resource.should_update? do
+        #only retrieved once per instance
+        @notified_network_monitor_users == nil
+      end
+
+      resource.to_update do
+        notified_network_monitor_users_data = self.service.object_mask("mask[userId]").getMonitoringUserNotification
+
+        notified_network_monitor_users = notified_network_monitor_users_data.collect do |notified_network_monitor_user|
+          user_customer_service = softlayer_client[:User_Customer].object_with_id(notified_network_monitor_user['userId'])
+          user_customer_data    = user_customer_service.object_mask(UserCustomer.default_object_mask).getObject
+
+          UserCustomer.new(softlayer_client, user_customer_data) unless user_customer_data.empty?
+        end
+
+        notified_network_monitor_users.compact
+      end
+    end
+
+    ##
     # Retrieve the primary network component
     # :call-seq:
     #   primary_network_component(force_update=false)
