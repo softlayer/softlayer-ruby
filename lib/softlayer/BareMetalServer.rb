@@ -155,6 +155,10 @@ module SoftLayer
     #
     # If no client is given, then the routine will try to use Client.default_client
     # If no client can be found the routine will raise an error.
+    #
+    # Additionally you may provide options related to the request itself:
+    # * <b>*:object_mask*</b>   (string) - The object mask of properties you wish to receive for the items returned.
+    #                                      If not provided, the result will use the default object mask
     def self.server_with_id(server_id, options = {})
       softlayer_client = options[:client] || Client.default_client
       raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
@@ -194,9 +198,11 @@ module SoftLayer
     # * <b>+:private_ip+</b> (string/array) - same as :public_ip, but for private IP addresses
     #
     # Additionally you may provide options related to the request itself:
-    #
-    # * <b>+:object_mask+</b> (string, hash, or array) - The object mask of properties you wish to receive for the items returned If not provided, the result will use the default object mask
-    # * <b>+:result_limit+</b> (hash with :limit, and :offset keys) - Limit the scope of results returned.
+    # * <b>*:object_filter*</b> (ObjectFilter)                       - Include hardware servers for servers that matche the
+    #                                                                  criteria of this object filter
+    # * <b>+:object_mask+</b>   (string, hash, or array)             - The object mask of properties you wish to receive for the items returned.
+    #                                                                  If not provided, the result will use the default object mask
+    # * <b>+:result_limit+</b>  (hash with :limit, and :offset keys) - Limit the scope of results returned.
     #
     def self.find_servers(options_hash = {})
       softlayer_client = options_hash[:client] || Client.default_client
@@ -231,16 +237,10 @@ module SoftLayer
       account_service = softlayer_client[:Account]
       account_service = account_service.object_filter(object_filter) unless object_filter.empty?
       account_service = account_service.object_mask(default_object_mask.to_sl_object_mask)
+      account_service = account_service.object_mask(options_hash[:object_mask]) if options_hash[:object_mask]
 
-      if(options_hash.has_key? :object_mask)
-        account_service = account_service.object_mask(options_hash[:object_mask])
-      end
-
-      if options_hash.has_key?(:result_limit)
-        offset = options[:result_limit][:offset]
-        limit = options[:result_limit][:limit]
-
-        account_service = account_service.result_limit(offset, limit)
+      if options_hash[:result_limit] && options_hash[:result_limit][:offset] && options_hash[:result_limit][:limit]
+        account_service = account_service.result_limit(options_hash[:result_limit][:offset], options_hash[:result_limit][:limit])
       end
 
       bare_metal_data = account_service.getHardware()

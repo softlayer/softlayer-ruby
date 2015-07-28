@@ -21,10 +21,18 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
+    # :attr_reader: vlan_number
+    #
+    # The number of the VLAN protected by this firewall.
+    sl_attr :vlan_number, 'vlanNumber'
+
+    ##
     # :attr_reader: VLAN_number
     #
     # The number of the VLAN protected by this firewall.
     #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of vlan_number
+    # and will be removed in the next major release.
     sl_attr :VLAN_number, 'vlanNumber'
 
     ##
@@ -54,6 +62,16 @@ module SoftLayer
     ##
     # Returns the name of the primary router the firewall is attached to.
     # This is often a "customer router" in one of the datacenters.
+    def primary_router
+      return self['primaryRouter']['hostname']
+    end
+
+    ##
+    # Returns the name of the primary router the firewall is attached to.
+    # This is often a "customer router" in one of the datacenters.
+    #
+    # DEPRECATION WARNING: This method is deprecated in favor of primary_router
+    # and will be removed in the next major release.
     def primaryRouter
       return self['primaryRouter']['hostname']
     end
@@ -61,6 +79,20 @@ module SoftLayer
     ##
     # The fully qualified domain name of the physical device the
     # firewall is implemented by.
+    def fqdn
+      if self.has_sl_property?('networkVlanFirewall')
+        return self['networkVlanFirewall']['fullyQualifiedDomainName']
+      else
+        return @softlayer_hash
+      end
+    end
+
+    ##
+    # The fully qualified domain name of the physical device the
+    # firewall is implemented by.
+    #
+    # DEPRECATION WARNING: This method is deprecated in favor of fqdn
+    # and will be removed in the next major release.
     def fullyQualifiedDomainName
       if self.has_sl_property?('networkVlanFirewall')
         return self['networkVlanFirewall']['fullyQualifiedDomainName']

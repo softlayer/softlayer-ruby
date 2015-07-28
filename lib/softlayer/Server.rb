@@ -29,8 +29,16 @@ module SoftLayer
     sl_attr :domain
 
     ##
+    # :attr_reader: fqdn
+    # A convenience attribute that combines the hostname and domain name
+    sl_attr :fqdn, 'fullyQualifiedDomainName'
+
+    ##
     # :attr_reader:
     # A convenience attribute that combines the hostname and domain name
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of fqdn
+    # and will be removed in the next major release.
     sl_attr :fullyQualifiedDomainName
 
     ##

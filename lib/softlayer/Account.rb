@@ -9,18 +9,42 @@ module SoftLayer
     include ::SoftLayer::DynamicAttribute
 
     ##
+    # :attr_reader: company_name
+    # The company name of the primary contact
+    sl_attr :company_name, 'companyName'
+
+    ##
     # :attr_reader:
     # The company name of the primary contact
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of company_name
+    # and will be removed in the next major release.
     sl_attr :companyName
+
+    ##
+    # :attr_reader: first_name
+    # The given name name of the primary contact
+    sl_attr :first_name, 'firstName'
 
     ##
     # :attr_reader:
     # The given name name of the primary contact
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of first_name
+    # and will be removed in the next major release.
     sl_attr :firstName
+
+    ##
+    # :attr_reader: last_name
+    # The surname of the primary contact
+    sl_attr :last_name, 'lastName'
 
     ##
     # :attr_reader:
     # The surname of the primary contact
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of last_name
+    # and will be removed in the next major release.
     sl_attr :lastName
 
     ##
@@ -52,13 +76,29 @@ module SoftLayer
     sl_attr :country
 
     ##
+    # :attr_reader: postal_code
+    # The postal code (in the US, aka. zip code) of the primary contact's address
+    sl_attr :postal_code, 'postalCode'
+
+    ##
     # :attr_reader:
     # The postal code (in the US, aka. zip code) of the primary contact's address
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of postal_code
+    # and will be removed in the next major release.
     sl_attr :postalCode
+
+    ##
+    # :attr_reader: office_phone
+    # The office phone number listed for the primary contact
+    sl_attr :office_phone, 'officePhone'
 
     ##
     # :attr_reader:
     # The office phone number listed for the primary contact
+    #
+    # DEPRECATION WARNING: This attribute is deprecated in favor of office_phone
+    # and will be removed in the next major release.
     sl_attr :officePhone
 
     ##
@@ -224,6 +264,26 @@ module SoftLayer
     # The IDs of the different segments can be helpful for ordering
     # firewalls.
     #
+    def find_vlan_with_number(vlan_number)
+      filter = SoftLayer::ObjectFilter.new() { |filter|
+        filter.accept('networkVlans.vlanNumber').when_it is vlan_number
+      }
+
+      vlan_data = self.service.object_mask("mask[id,vlanNumber,primaryRouter,networkSpace]").object_filter(filter).getNetworkVlans
+      return vlan_data
+    end
+
+    ##
+    # Searches the account's list of VLANs for the ones with the given
+    # vlan number. This may return multiple results because a VLAN can
+    # span different routers and you will get a separate segment for
+    # each router.
+    #
+    # The IDs of the different segments can be helpful for ordering
+    # firewalls.
+    #
+    # DEPRECATION WARNING: This method is deprecated in favor of find_vlan_with_number
+    # and will be removed in the next major release.
     def find_VLAN_with_number(vlan_number)
       filter = SoftLayer::ObjectFilter.new() { |filter|
         filter.accept('networkVlans.vlanNumber').when_it is vlan_number
@@ -243,7 +303,7 @@ module SoftLayer
 
       account_service = softlayer_client[:Account]
       network_hash = account_service.getObject()
-      new(softlayer_client, network_hash)
+      Account.new(softlayer_client, network_hash)
     end
 
     ##

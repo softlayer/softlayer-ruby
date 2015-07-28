@@ -21,8 +21,15 @@ module SoftLayer
     sl_attr :capacity,   'capacityGb'
 
     ##
+    # :attr_reader: created_at
+    # The date a network storage volume was created.
+    sl_attr :created_at, 'createDate'
+
+    ##
     # :attr_reader: created
     # The date a network storage volume was created.
+    # DEPRECATION WARNING: This attribute is deprecated in favor of created_at
+    # and will be removed in the next major release.
     sl_attr :created,    'createDate'
 
     ##
@@ -189,13 +196,20 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # You may filter the list returned by adding options:
-    # * <b>+:datacenter+</b>                  (string) - Include network storage associated with servers matching this datacenter
-    # * <b>+:domain+</b>                      (string) - Include network storage associated with servers matching this domain
-    # * <b>+:hostname+</b>                    (string) - Include network storage associated with servers matching this hostname
-    # * <b>+:network_storage_server_type+</b> (string) - Include network storage associated with this server type
-    # * <b>+:network_storage_type+</b>        (string) - Include network storage from devices of this storage type
-    # * <b>+:service+</b>                     (string) - Include network storage from devices with this service fqdn
-    # * <b>+:tags+</b>                        (Array)  - Include network storage associated with servers matching these tags
+    # * <b>+:datacenter+</b>                  (string/array) - Include network storage associated with servers matching this datacenter
+    # * <b>+:domain+</b>                      (string/array) - Include network storage associated with servers matching this domain
+    # * <b>+:hostname+</b>                    (string/array) - Include network storage associated with servers matching this hostname
+    # * <b>+:network_storage_server_type+</b> (symbol)       - Include network storage associated with this server type
+    # * <b>+:network_storage_type+</b>        (symbol)       - Include network storage from devices of this storage type
+    # * <b>+:service+</b>                     (string/array) - Include network storage from devices with this service fqdn
+    # * <b>+:tags+</b>                        (string/array) - Include network storage associated with servers matching these tags
+    #
+    # Additionally you may provide options related to the request itself:
+    # * <b>*:network_storage_object_mask*</b>   (string)             - The object mask of properties you wish to receive for the items returned.
+    #                                                                  If not provided, the result will use the default object mask
+    # * <b>*:network_storage_object_filter*</b> (ObjectFilter)       - Include network storage credentials from network storage that matches the
+    #                                                                  criteria of this object filter
+    # * <b>+:result_limit+</b>  (hash with :limit, and :offset keys) - Limit the scope of results returned.
     #
     def self.find_network_storage(options_hash  = {})
       softlayer_client = options_hash[:client] || Client.default_client
@@ -224,11 +238,11 @@ module SoftLayer
       }
 
       option_to_filter_path = {
-        :datacenter                 => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.datacenter.name' ].join                  },
-        :domain                     => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.domain' ].join                           },
-        :hostname                   => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.hostname' ].join                         },
-        :service                    => lambda { |storage_type|              return [ filter_label[storage_type],                                 '.serviceResource.backendIpAddress' ].join },
-        :tags                       => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.tagReferences.tag.name' ].join           },
+        :datacenter => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.datacenter.name' ].join                  },
+        :domain     => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.domain' ].join                           },
+        :hostname   => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.hostname' ].join                         },
+        :service    => lambda { |storage_type|              return [ filter_label[storage_type],                                 '.serviceResource.backendIpAddress' ].join },
+        :tags       => lambda { |storage_type, server_type| return [ filter_label[storage_type], '.', filter_label[server_type], '.tagReferences.tag.name' ].join           },
       }
 
       if options_hash[:network_storage_type]
@@ -246,23 +260,12 @@ module SoftLayer
       end
       
       if options_hash[:network_storage_server_type]
-        [ :datacenter, :domain, :hostname ].each do |option|
+        [ :datacenter, :domain, :hostname, :tags ].each do |option|
           if options_hash[option]
             network_storage_object_filter.modify do |filter|
               filter.accept(option_to_filter_path[option].call(network_storage_type, options_hash[:network_storage_server_type])).when_it is(options_hash[option])
             end
           end
-        end
-
-        if options_hash[:tags]
-          network_storage_object_filter.set_criteria_for_key_path(option_to_filter_path[:tags].call(network_storage_type, options_hash[:network_storage_server_type]),
-                                                                  {
-                                                                    'operation' => 'in',
-                                                                    'options' => [{
-                                                                                    'name' => 'data',
-                                                                                    'value' => options_hash[:tags].collect{ |tag_value| tag_value.to_s }
-                                                                                  }]
-                                                                  })
         end
       end
 
@@ -270,6 +273,10 @@ module SoftLayer
       account_service = account_service.object_filter(network_storage_object_filter) unless network_storage_object_filter.empty?
       account_service = account_service.object_mask(NetworkStorage.default_object_mask)
       account_service = account_service.object_mask(options_hash[:network_storage_object_mask]) if options_hash[:network_storage_object_mask]
+
+      if options_hash[:result_limit] && options_hash[:result_limit][:offset] && options_hash[:result_limit][:limit]
+        account_service = account_service.result_limit(options_hash[:result_limit][:offset], options_hash[:result_limit][:limit])
+      end
 
       case options_hash[:network_storage_type]
       when :evault

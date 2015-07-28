@@ -15,7 +15,7 @@ module SoftLayer
   # Instances of this class roughly correspond to instances of the
   # SoftLayer_Network_Component_Firewall service entity.
   #
-	class ServerFirewall < SoftLayer::ModelBase
+  class ServerFirewall < SoftLayer::ModelBase
     include ::SoftLayer::DynamicAttribute
 
     ##
@@ -216,11 +216,11 @@ module SoftLayer
       end
 
       bare_metal_firewalls = bare_metal_firewalls_data.collect { |bare_metal_firewall_data|
-        self.new(softlayer_client, bare_metal_firewall_data)
+        ServerFirewall.new(softlayer_client, bare_metal_firewall_data)
       }
 
       virtual_server_firewalls = virtual_firewalls_data.collect { |virtual_firewall_data|
-        self.new(softlayer_client, virtual_firewall_data)
+        ServerFirewall.new(softlayer_client, virtual_firewall_data)
       }
 
       return bare_metal_firewalls + virtual_server_firewalls

@@ -15,13 +15,27 @@ module SoftLayer
     sl_attr :alias
 
     ##
+    # :attr_reader: created_at
+    # The date this group was created.
+    sl_attr :created_at, 'createDate'
+
+    ##
     # :attr_reader: created
     # The date this group was created.
+    # DEPRECATION WARNING: This attribute is deprecated in favor of created_at
+    # and will be removed in the next major release.
     sl_attr :created, 'createDate'
+
+    ##
+    # :attr_reader: modified_at
+    # The date this group was modified.
+    sl_attr :modified_at, 'modifyDate'
 
     ##
     # :attr_reader: modified
     # The date this group was modified.
+    # DEPRECATION WARNING: This attribute is deprecated in favor of modified_at
+    # and will be removed in the next major release.
     sl_attr :modified, 'modifyDate'
 
     ##
