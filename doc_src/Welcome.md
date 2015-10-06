@@ -1,6 +1,6 @@
 # Welcome
 
-The `softlyer_api` Ruby Gem provides a convenient way to call into the SoftLayer API from the Ruby programming language. This is accomplished using the XML-RPC interface provided by SoftLayer and the XMLRPC client built into the core Ruby language.
+The `softlayer_api` Ruby Gem provides a convenient way to call into the SoftLayer API from the Ruby programming language. This is accomplished using the XML-RPC interface provided by SoftLayer and the XMLRPC client built into the core Ruby language.
 
 For more information about the SoftLayer API, and the routines and data structures it offers should visit the [SoftLayer Developer Network (SLDN) website](http://sldn.softlayer.com).
 
