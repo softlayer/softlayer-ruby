@@ -24,7 +24,7 @@ This will create a new folder named `doc` inside of the project source and popul
 
 This software is written by the SoftLayer Development Team [sldn@softlayer.com](mailto:sldn@softlayer.com).
 
-Please join us in the [SoftLayer Developer Network forums](http://forums.softlayer.com/forum/softlayer-developer-network)
+Please join us at [Stack Overflow](https://stackoverflow.com/). Stack Overflow Best Practices Tip: Tag your posts with “SoftLayer” so our team can easily find your post.
 
 # Contributer License Agreement
 
