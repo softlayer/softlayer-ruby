@@ -59,6 +59,32 @@ module SoftLayer
     end
 
     ##
+    # This will be using your username and password to get a portal
+    # token with which to authenticate client calls.
+    # This is a wrapper around Client.new. You can pass it the same
+    # parameters as with Client.new, with the exception that this will
+    # be expecting a password in the options hash.
+    def self.with_password(options = {})
+      if options[:username].nil? || options[:username].empty?
+        raise 'A username is required to create this client'
+      end
+
+      if options[:password].nil? || options[:password].empty?
+        raise 'A password is required to create this client'
+      end
+
+      service = SoftLayer::Service.new('SoftLayer_User_Customer')
+      token = service.getPortalLoginToken(
+        options[:username], options[:password]
+      )
+
+      options[:userId] = token['userId']
+      options[:authToken] = token['hash']
+
+      SoftLayer::Client.new(options)
+    end
+
+    ##
     #
     # Clients are built with a number of settings:
     # * <b>+:username+</b> - The username of the account you wish to access through the API
@@ -81,6 +107,10 @@ module SoftLayer
       # do a similar thing for the api key
       @api_key = settings[:api_key] || ""
 
+      # grab token pair
+      @userId = settings[:userId]
+      @authToken = settings[:authToken]
+
       # and the endpoint url
       @endpoint_url = settings[:endpoint_url] || API_PUBLIC_ENDPOINT
 
@@ -90,19 +120,40 @@ module SoftLayer
       # and assign a time out if the settings offer one
       @network_timeout = settings[:timeout] if settings.has_key?(:timeout)
 
-      raise "A SoftLayer Client requires a username" if !@username || @username.empty?
-      raise "A SoftLayer Client requires an api_key" if !@api_key || @api_key.empty?
+      if token_based?
+        raise "A SoftLayer Client requires a userId" if !@userId
+        raise "A SoftLayer Client requires an authToken" if !@authToken || @api_key.empty?
+      else
+        raise "A SoftLayer Client requires a username" if !@username || @username.empty?
+        raise "A SoftLayer Client requires an api_key" if !@api_key || @api_key.empty?
+      end
+
       raise "A SoftLayer Client requires an endpoint URL" if !@endpoint_url || @endpoint_url.empty?
+    end
+
+    # return whether this client is using token-based authentication
+    def token_based?
+      @userId && @authToken && !@authToken.empty?
     end
 
     # return a hash of the authentication headers for the client
     def authentication_headers
-      {
-        "authenticate" => {
-          "username" => @username,
-          "apiKey" => @api_key
+      if token_based?
+        {
+          'authenticate' => {
+            'complexType' => 'PortalLoginToken',
+            'userId' => @userId,
+            'authToken' => @authToken
+          }
         }
-      }
+      else
+        {
+          'authenticate' => {
+            'username' => @username,
+            'apiKey' => @api_key
+          }
+        }
+      end
     end
 
     # Returns a service with the given name.
