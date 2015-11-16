@@ -41,42 +41,43 @@ describe SoftLayer::Client do
     expect(client.api_key).to eq 'fake_key'
   end
 
-  it 'raises an error if passed an empty user name' do
-    expect do
-      $SL_API_USERNAME = ''
-      client = SoftLayer::Client.new(:api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
-    end.to raise_error
+  it 'produces empty auth headers if the username is empty' do
 
-    expect do
-      $SL_API_USERNAME = 'good_username'
-      $SL_API_KEY = 'sample'
-      client = SoftLayer::Client.new(:username => '', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
-    end.to raise_error
+    $SL_API_USERNAME = ''
+    client = SoftLayer::Client.new(:api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
+
+    expect(client.authentication_headers.empty?).to be true
+
+    $SL_API_USERNAME = 'good_username'
+    $SL_API_KEY = 'sample'
+    client = SoftLayer::Client.new(:username => '', :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
+
+    expect(client.authentication_headers.empty?).to be true
   end
 
-  it 'fails if the user name is nil' do
-    expect do
-      $SL_API_USERNAME = nil
-      client = SoftLayer::Client.new(:username => nil, :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
-    end.to raise_error
+  it 'produces empty auth headers if the username is nil' do
+    $SL_API_USERNAME = nil
+    client = SoftLayer::Client.new(:username => nil, :api_key => 'fake_key', :endpoint_url => 'http://fakeurl.org/')
+
+    expect(client.authentication_headers.empty?).to be true
   end
 
-  it 'fails if the api_key is empty' do
-    expect do
-      $SL_API_KEY = ''
-      client = SoftLayer::Client.new(:username => 'fake_user', :endpoint_url => 'http://fakeurl.org/')
-    end.to raise_error
+  it 'produces empty auth headers if the api_key is empty' do
+    $SL_API_KEY = ''
+    client = SoftLayer::Client.new(:username => 'fake_user', :endpoint_url => 'http://fakeurl.org/')
 
-    expect do
-      client = SoftLayer::Client.new(:username => 'fake_user', :api_key => '', :endpoint_url => 'http://fakeurl.org/')
-    end.to raise_error
+    expect(client.authentication_headers.empty?).to be true
+
+    client = SoftLayer::Client.new(:username => 'fake_user', :api_key => '', :endpoint_url => 'http://fakeurl.org/')
+
+    expect(client.authentication_headers.empty?).to be true
   end
 
-  it 'fails if the api_key is nil' do
-    expect do
-      $SL_API_KEY = nil
-      client = SoftLayer::Client.new(:username => 'fake_user', :endpoint_url => 'http://fakeurl.org/', :api_key => nil)
-    end.to raise_error
+  it 'produces empty auth headers if the api_key is nil' do
+    $SL_API_KEY = nil
+    client = SoftLayer::Client.new(:username => 'fake_user', :endpoint_url => 'http://fakeurl.org/', :api_key => nil)
+
+    expect(client.authentication_headers.empty?).to be true
   end
 
   it 'initializes by default with nil as the timeout' do
