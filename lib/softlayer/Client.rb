@@ -102,10 +102,10 @@ module SoftLayer
       settings = Config.client_settings(options)
 
       # pick up the username from the options, the global, or assume no username
-      @username = settings[:username] || ""
+      @username = settings[:username]
 
       # do a similar thing for the api key
-      @api_key = settings[:api_key] || ""
+      @api_key = settings[:api_key]
 
       # grab token pair
       @userId = settings[:userId]
@@ -120,17 +120,17 @@ module SoftLayer
       # and assign a time out if the settings offer one
       @network_timeout = settings[:timeout] if settings.has_key?(:timeout)
 
-      unless token_based?
-        raise "A SoftLayer Client requires a username" if !@username || @username.empty?
-        raise "A SoftLayer Client requires an api_key" if !@api_key || @api_key.empty?
-      end
-
       raise "A SoftLayer Client requires an endpoint URL" if !@endpoint_url || @endpoint_url.empty?
     end
 
     # return whether this client is using token-based authentication
     def token_based?
       @userId && @authToken && !@authToken.empty?
+    end
+
+    # return whether this client is using api_key-based authentication
+    def key_based?
+      @username && !@username.empty? && @api_key && !@api_key.empty?
     end
 
     # return a hash of the authentication headers for the client
@@ -143,13 +143,15 @@ module SoftLayer
             'authToken' => @authToken
           }
         }
-      else
+      elsif key_based?
         {
           'authenticate' => {
             'username' => @username,
             'apiKey' => @api_key
           }
         }
+      else
+        {}
       end
     end
 
