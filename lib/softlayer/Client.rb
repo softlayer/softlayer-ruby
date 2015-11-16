@@ -120,10 +120,7 @@ module SoftLayer
       # and assign a time out if the settings offer one
       @network_timeout = settings[:timeout] if settings.has_key?(:timeout)
 
-      if token_based?
-        raise "A SoftLayer Client requires a userId" if !@userId
-        raise "A SoftLayer Client requires an authToken" if !@authToken || @api_key.empty?
-      else
+      unless token_based?
         raise "A SoftLayer Client requires a username" if !@username || @username.empty?
         raise "A SoftLayer Client requires an api_key" if !@api_key || @api_key.empty?
       end
