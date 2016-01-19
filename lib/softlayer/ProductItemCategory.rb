@@ -14,7 +14,7 @@ module SoftLayer
   # DEPRECATION WARNING: The following configuration option keys have been deprecated and
   # will be removed with the next major version: capacityRestrictionMaximum, capacityRestrictionMinimum,
   # capacityRestrictionType, hourlyRecurringFee, laborFee, oneTimeFee, recurringFee, requiredCoreCount, setupFee
-  class ProductConfigurationOption < Struct.new(:capacity, :capacityRestrictionMaximum, :capicity_restriction_maximum,
+  class ProductConfigurationOption < Struct.new(:capacity, :capacityRestrictionMaximum, :capacity_restriction_maximum,
      :capacityRestrictionMinimum, :capacity_restriction_minimum, :capacityRestrictionType, :capacity_restriction_type,
      :description, :hourlyRecurringFee, :hourly_recurring_fee, :laborFee, :labor_fee, :oneTimeFee, :one_time_fee,
      :price_id, :recurringFee, :recurring_fee, :requiredCoreCount, :required_core_count, :setupFee, :setup_fee, :units)
