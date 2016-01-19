@@ -133,7 +133,7 @@ module SoftLayer
       order_template = yield order_template if block_given?
 
       server_hash = @softlayer_client[:Hardware].createObject(order_template)
-      SoftLayer::BareMetalServer.server_with_id(server_hash['id'], :client => @softlayer_client) if server_hash
+      return server_hash
     end
 
     protected
