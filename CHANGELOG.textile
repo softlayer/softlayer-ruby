@@ -1,3 +1,6 @@
+*3.2.1*
+Fix a crashing issue where a Bare Metal server order tried to retrieve the hardware ordered before it has been provisioned.
+
 *3.2*
 * Add password-based authentication with `SoftLayer::Client.with_password(username: '...', password: '...', ...)`.
 
