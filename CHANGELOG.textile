@@ -4,6 +4,10 @@ Fix a crashing issue where a Bare Metal server order tried to retrieve the hardw
 *3.2*
 * Add password-based authentication with `SoftLayer::Client.with_password(username: '...', password: '...', ...)`.
 
+*3.1.0*
+* Many SoftLayer Attributes are now shadowed with snake_case names.  The old CamelCase versions are deprecated and will be removed in the next major release
+* New functionality related to network monitoring has been added
+
 *3.0*
 * Substantially rewrote the ObjectFilter class. ObjectFilters used to be hashes which made it easy to manipulate their content incorrectly. The new implementation has a strict interface that makes it harder to manipulate filters incorrectly.
 * Added a model for Virtual Server Image Templates (SoftLayer::ImageTemplate) - VirtualServerOrder now requires an instance of this class rather than allowing you to provide the global_id of an image
