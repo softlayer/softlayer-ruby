@@ -189,7 +189,7 @@ module SoftLayer
     end
 
     ##
-    # Retrieve the virtual disk image with the given server ID from the API
+    # Retrieve the virtual disk image with the given image ID from the API
     #
     # The options parameter should contain:
     #
