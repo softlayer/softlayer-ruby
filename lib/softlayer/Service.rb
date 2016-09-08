@@ -14,9 +14,11 @@ ensure
   $VERBOSE = old_verbose
 end
 
-# enable parsing of "nil" values in structures returned from the API
 with_warnings(nil) {
+  # enable parsing of "nil" values in structures returned from the API
   XMLRPC::Config.const_set('ENABLE_NIL_PARSER', true)
+  # enable serialization of "nil" values in structures sent to the API
+  XMLRPC::Config.const_set('ENABLE_NIL_CREATE', true)
 }
 
 # The XML-RPC spec calls for the "faultCode" in faults to be an integer
