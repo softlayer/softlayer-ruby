@@ -27,5 +27,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rdoc', '>=2.4.2'
   s.add_development_dependency 'json', '~> 1.8', '>= 1.8.1'
-  s.add_development_dependency 'coveralls'
+  # Fixing the following gems' versions to avoid requiring
+  # Ruby 2.0.
+  s.add_development_dependency 'mime-types', '= 2.99.3'
+  s.add_development_dependency 'coveralls', '= 0.7.2'
 end
