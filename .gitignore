@@ -7,3 +7,4 @@ internal_examples/
 doc/
 coverage/
 Gemfile.lock
+vendor/
