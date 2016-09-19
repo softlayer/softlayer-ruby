@@ -199,7 +199,7 @@ module SoftLayer
     # If no client can be found the routine will raise an error.
     #
     # The options may include the following keys
-    # * <b>+:object_mask+</b> (string) - A object mask of properties, in addition to the default properties, that you wish to retrieve for the server
+    # * <b>+:object_mask+</b> (string) - A object mask of properties, in addition to the default properties, that you wish to retrieve for the image
     #
     def self.image_with_id(image_id, options = {})
       softlayer_client = options[:client] || Client.default_client
