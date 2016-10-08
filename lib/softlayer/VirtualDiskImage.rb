@@ -188,6 +188,35 @@ module SoftLayer
       softlayer_client[:Virtual_Disk_Image].object_with_id(self.id)
     end
 
+    ##
+    # Retrieve the virtual disk image with the given image ID from the API
+    #
+    # The options parameter should contain:
+    #
+    # <b>+:client+</b> - The client used to connect to the API
+    #
+    # If no client is given, then the routine will try to use Client.default_client
+    # If no client can be found the routine will raise an error.
+    #
+    # The options may include the following keys
+    # * <b>+:object_mask+</b> (string) - A object mask of properties, in addition to the default properties, that you wish to retrieve for the image
+    #
+    def self.image_with_id(image_id, options = {})
+      softlayer_client = options[:client] || Client.default_client
+      raise "#{__method__} requires a client but none was given and Client::default_client is not set" if !softlayer_client
+
+      vdi_service = softlayer_client[:Virtual_Disk_Image]
+      vdi_service = vdi_service.object_mask(default_object_mask.to_sl_object_mask)
+
+      if options.has_key?(:object_mask)
+        vdi_service = vdi_service.object_mask(options[:object_mask])
+      end
+
+      image_data = vdi_service.object_with_id(image_id).getObject()
+
+      return VirtualDiskImage.new(softlayer_client, image_data)
+    end
+
     protected
 
     def self.default_object_mask
