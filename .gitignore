@@ -8,3 +8,4 @@ doc/
 coverage/
 Gemfile.lock
 vendor/
+pkg/
