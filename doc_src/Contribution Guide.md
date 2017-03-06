@@ -6,8 +6,8 @@ The `softlayer_api` Ruby Gem is an open source project and the developers who us
 
 Contributions to the softlayer-ruby project require the submission of a
 contributer license agreement. Individual contributers should review and
-complete the [CLA](./cla-individual.md). Contributions made of behalf of a 
-company/employer will necessitate the completion of the [CCLA](./cla-corporate.md).
+complete the [CLA](./cla-individual_md.html). Contributions made of behalf of a
+company/employer will necessitate the completion of the [CCLA](./cla-corporate_md.html).
 
 # Requesting Changes
 
@@ -138,4 +138,3 @@ If you intend to offer new models, please carefully review the Model Layer docum
 # Submitting Changes
 
 Contributions are made to the `softlayer_api` Gem by submitting a pull-request on GitHub. The community will review pull requests and offer constructive advice on improvements.  The determination on whether a pull-request will be accepted into the gem is made at the sole discretion of SoftLayer with the wise counsel of the community.
-
