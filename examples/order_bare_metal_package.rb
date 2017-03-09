@@ -37,24 +37,26 @@ require 'pp'
 # a server.
 def tl_dr_version
   client = SoftLayer::Client.new(
-    # :username => "joecustomer"              # enter your username here
+    # :username => "joecustomer",            # enter your username here
     # :api_key => "feeddeadbeefbadf00d..."   # enter your api key here
   )
 
   # Select a package
-  quad_intel_package = SoftLayer::ProductPackage.package_with_id(client, 32)
+  product_package = SoftLayer::ProductPackage.package_with_id(251, client)
 
   # Find required Categories and fill config_options with defaults
   config_options = {}
-  required_categories = quad_intel_package.configuration.select { |category| category.required? }
+  required_categories = product_package.configuration.select { |category| category.required? }
   required_categories.each { |required_category| config_options[required_category.categoryCode] = required_category.default_option }
 
-  # Provide a value for missing config categories
-  config_options['server'] = 1417 # price id of Quad Processor Quad Core Intel 7420 - 2.13GHz (Dunnington) - 4 x 6MB / 8MB cache
+  # Provide a value for missing config categories as they don't have defaults
+  config_options['server'] = 50691 # Dual Intel Xeon E5-2620 v3 (12 Cores, 2.40 GHz)
+  config_options['ram'] = 49427 # 64 GB RAM
+  config_options['disk0'] = 49811 # 1.00 TB SATA
 
   # With all the config options in place we can now construct the product order.
-  server_order = SoftLayer::BareMetalServerOrder_Package.new(quad_intel_package, client)
-  server_order.location = 'sng01'
+  server_order = SoftLayer::BareMetalServerOrder_Package.new(product_package, client)
+  server_order.datacenter = SoftLayer::Datacenter.datacenter_named 'sng01', client
   server_order.hostname = 'sample'
   server_order.domain = 'softlayerapi.org'
   server_order.configuration_options = config_options
@@ -69,7 +71,7 @@ end
 
 begin
   client = SoftLayer::Client.new(
-    # :username => "joecustomer"              # enter your username here
+    # :username => "joecustomer",            # enter your username here
     # :api_key => "feeddeadbeefbadf00d..."   # enter your api key here
   )
 
@@ -80,14 +82,14 @@ begin
   packages.each { |package| puts "#{package.id}\t#{package.name}"}
 
   # For this example, we'll assume that we've selected the a package
-  # with an id of 32 representing a "Quad Processor, Quad Core Intel"
-  quad_intel_package = SoftLayer::ProductPackage.package_with_id(32, client)
+  # with an id of 251 representing a "Dual E5-2600 v3 Series (12 Drives)"
+  product_package = SoftLayer::ProductPackage.package_with_id(251, client)
 
   # Now we need to now what ProductItemCategories are required to
   # configure a server in that package. This code prints out a table
   # of the required category codes with a description of each
-  puts "\nRequired Categories for '#{quad_intel_package.name}':"
-  required_categories = quad_intel_package.configuration.select { |category| category.required? }
+  puts "\nRequired Categories for '#{product_package.name}':"
+  required_categories = product_package.configuration.select { |category| category.required? }
   max_code_length = required_categories.inject(0) { |max_code_length, category| [category.categoryCode.length, max_code_length].max }
   printf "%#{max_code_length}s\tCategory Description\n", "Category Code"
   printf "%#{max_code_length}s\t--------------------\n", "-------------"
@@ -96,7 +98,7 @@ begin
   # We will need to provide values for each of the required category codes in our
   # configuration_options. Let's see what configuration options are available for
   # just one of the categories... Say 'os'
-  os_category = quad_intel_package.category('os')
+  os_category = product_package.category('os')
   config_options = os_category.configuration_options
   puts "\nConfiguration options in the 'os' category:"
   config_options.each { |option| printf "%5s\t#{option.description}\n", option.price_id }
@@ -119,20 +121,25 @@ begin
   # Regardless of the default values... we know we want the os selection we discovered above:
   config_options['os'] = os_config_option
 
+  # Provide a value for missing config categories as they don't have defaults
+  config_options['server'] = 50691 # Dual Intel Xeon E5-2620 v3 (12 Cores, 2.40 GHz)
+  config_options['ram'] = 49427 # 64 GB RAM
+  config_options['disk0'] = 49811 # 1.00 TB SATA
+
   # And we can customize the default config by providing selections for any config categories
   # we are interested in
   config_options.merge! ({
-    'server' => 1417, # price id of Quad Processor Quad Core Intel 7420 - 2.13GHz (Dunnington) - 4 x 6MB / 8MB cache
-    'port_speed' => 274 # 1 Gbps Public & Private Network Uplinks
+    'port_speed' => 37220, # 1 Gbps Public & Private Network Uplinks (Unbonded)
+    'bandwidth' => 50233 #  1000 GB Bandwidth
   })
 
   # We have a configuration for the server, we also need a location for the new server.
   # The package can give us a list of locations. Let's print out that list
-  puts "\nData Centers for '#{quad_intel_package.name}':"
-  quad_intel_package.datacenter_options.each { |datacenter| puts "\t#{datacenter.name}"}
+  puts "\nData Centers for '#{product_package.name}':"
+  product_package.datacenter_options.each { |datacenter| puts "\t#{datacenter.name}"}
 
   # With all the config options in place we can now construct the product order.
-  server_order = SoftLayer::BareMetalServerOrder_Package.new(quad_intel_package, client)
+  server_order = SoftLayer::BareMetalServerOrder_Package.new(product_package, client)
   server_order.datacenter = SoftLayer::Datacenter.datacenter_named 'sng01', client
   server_order.hostname = 'sample'
   server_order.domain = 'softlayerapi.org'
@@ -151,4 +158,3 @@ begin
 rescue Exception => exception
   $stderr.puts "An exception occurred while trying to complete the SoftLayer API calls #{exception}"
 end
-
