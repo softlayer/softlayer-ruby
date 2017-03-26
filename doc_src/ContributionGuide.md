@@ -64,7 +64,7 @@ gems are built into the `pkg` directory and will have a name of the form `softla
 
 You can install your modified gem to your system with the gem command:
 
-    $ bundle gem install pkg/softlayer_api-<version>.gem
+    $ bundle exec gem install pkg/softlayer_api-<version>.gem
 
 (don't forget to substitute the version you are installing where the `<version>` tag appears in the command line above)
 
@@ -138,4 +138,3 @@ If you intend to offer new models, please carefully review the Model Layer docum
 # Submitting Changes
 
 Contributions are made to the `softlayer_api` Gem by submitting a pull-request on GitHub. The community will review pull requests and offer constructive advice on improvements.  The determination on whether a pull-request will be accepted into the gem is made at the sole discretion of SoftLayer with the wise counsel of the community.
-

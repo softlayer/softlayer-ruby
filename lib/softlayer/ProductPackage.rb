@@ -45,7 +45,7 @@ module SoftLayer
     ##
     # :attr_reader: available_locations
     # The list of locations where this product package is available.
-    sl_attr :available_locations, 'availableLocations'
+    sl_attr :available_locations, 'regions'
 
     ##
     # Retrieve the set of product categories needed to make an order for this product package.
@@ -230,7 +230,7 @@ module SoftLayer
                                            "groups.prices.requiredCoreCount" ].join(",") + "]"
 
     def self.default_object_mask(root)
-      "#{root}[id,name,description,availableLocations.location]"
+      "#{root}[id,name,description,regions]"
     end
   end
 end # SoftLayer
