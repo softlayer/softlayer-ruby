@@ -1,5 +1,9 @@
+*3.2.2*
+* Fix NoMethodError when getting the datacenters out of an ImageTemplate and the value was nil.
+* Fix NoMethodError when getting public and private images with a result limit of 1.
+
 *3.2.1*
-Fix a crashing issue where a Bare Metal server order tried to retrieve the hardware ordered before it has been provisioned.
+* Fix a crashing issue where a Bare Metal server order tried to retrieve the hardware ordered before it has been provisioned.
 
 *3.2*
 * Add password-based authentication with `SoftLayer::Client.with_password(username: '...', password: '...', ...)`.

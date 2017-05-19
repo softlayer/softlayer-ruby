@@ -78,7 +78,9 @@ module SoftLayer
     ##
     # Returns the an array containing the datacenters where this image is available.
     def datacenters
-      self['datacenters'].collect{ |datacenter_data| SoftLayer::Datacenter.datacenter_named(datacenter_data['name'])}
+      Array(self['datacenters']).collect do |datacenter_data|
+        SoftLayer::Datacenter.datacenter_named(datacenter_data['name'])
+      end
     end
 
     ##
@@ -253,7 +255,7 @@ module SoftLayer
         account_service = account_service.result_limit(options_hash[:result_limit][:offset], options_hash[:result_limit][:limit])
       end
 
-      templates_data = account_service.getPrivateBlockDeviceTemplateGroups
+      templates_data = Array(account_service.getPrivateBlockDeviceTemplateGroups)
       templates_data.collect { |template_data| ImageTemplate.new(softlayer_client, template_data) }
     end
 
@@ -312,7 +314,9 @@ module SoftLayer
         template_service = template_service.result_limit(options_hash[:result_limit][:offset], options_hash[:result_limit][:limit])
       end
 
-      templates_data = template_service.getPublicImages
+      # Ensure this is an array with Array(). SL won't return array if the result set is of just one
+      # (like when the user specifies a limit of 1)
+      templates_data = Array(template_service.getPublicImages)
       templates_data.collect { |template_data| ImageTemplate.new(softlayer_client, template_data) }
     end
 
