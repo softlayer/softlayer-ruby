@@ -34,8 +34,8 @@ describe SoftLayer::ObjectMaskParser, "#parse_property_set" do
   end
 
   it "should reject extraeous text" do
-    expect { result = subject.parse("mask.simple, bob") }.to raise_error
-    expect { result = subject.parse("mask[two,children], bob") }.to raise_error
+    expect { result = subject.parse("mask.simple, bob") }.to raise_error(SoftLayer::ObjectMaskParserError)
+    expect { result = subject.parse("mask[two,children], bob") }.to raise_error(SoftLayer::ObjectMaskParserError)
   end
 
   it "should parse a mask with fiterMask" do
@@ -76,12 +76,12 @@ describe SoftLayer::ObjectMaskParser, "#parse_property_set" do
 
   it "should fail if missing the starting bracket" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("propertyName]")
-    expect { sequence = subject.parse_property_set(tokenizer) }.to raise_error
+    expect { sequence = subject.parse_property_set(tokenizer) }.to raise_error(SoftLayer::ObjectMaskParserError)
   end
 
   it "should fail if missing the ending bracket" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("[propertyName")
-    expect { sequence = subject.parse_property_set(tokenizer) }.to raise_error
+    expect { sequence = subject.parse_property_set(tokenizer) }.to raise_error(SoftLayer::ObjectMaskParserError)
   end
 end
 
@@ -116,12 +116,12 @@ describe SoftLayer::ObjectMaskParser, "#parse_property_sequence" do
 
   it "should reject an incomplete sequence" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("propertyName,")
-    expect { sequence = subject.parse_property_sequence(tokenizer) }.to raise_error
+    expect { sequence = subject.parse_property_sequence(tokenizer) }.to raise_error(SoftLayer::ObjectMaskParserError)
   end
 
   it "should reject an invalid property" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("propertyName,bad_property")
-    expect { sequence = subject.parse_property_sequence(tokenizer) }.to raise_error
+    expect { sequence = subject.parse_property_sequence(tokenizer) }.to raise_error(SoftLayer::ObjectMaskParserError)
   end
 end
 
@@ -222,17 +222,17 @@ describe SoftLayer::ObjectMaskParser, "#parse_property_type" do
 
   it "should fail if you try to provide a type list" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("(Valid_Property_Type,Some_Other_Type)")
-    expect { subject.parse_property_type(tokenizer) }.to raise_error
+    expect { subject.parse_property_type(tokenizer) }.to raise_error(SoftLayer::ObjectMaskParserError)
   end
 
   it "should fail if you leave off the first paren" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("Valid_Property_Type)")
-    expect { subject.parse_property_type(tokenizer) }.to raise_error
+    expect { subject.parse_property_type(tokenizer) }.to raise_error(SoftLayer::ObjectMaskParserError)
   end
 
   it "should fail if you leave off the last paren" do
     tokenizer = SoftLayer::ObjectMaskTokenizer.new("Valid_Property_Type[foo,bar]")
-    expect { subject.parse_property_type(tokenizer) }.to raise_error
+    expect { subject.parse_property_type(tokenizer) }.to raise_error(SoftLayer::ObjectMaskParserError)
   end
 end
 

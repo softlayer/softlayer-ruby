@@ -20,7 +20,7 @@ describe SoftLayer::APIParameterFilter do
     end
 
     it "rejects nil object masks" do
-      expect { filter.object_mask(nil) }.to raise_error
+      expect { filter.object_mask(nil) }.to raise_error(ArgumentError)
     end
 
     it "stores its value in server_object_id when called " do
@@ -38,13 +38,13 @@ describe SoftLayer::APIParameterFilter do
 
   describe "#object_mask" do
     it "rejects nil object masks" do
-      expect { filter.object_mask(nil) }.to raise_error
+      expect { filter.object_mask(nil) }.to raise_error(ArgumentError)
     end
 
     it "rejects calls that pass things other than strings" do
-      expect { filter.object_mask(['anArray']) }.to raise_error
-      expect { filter.object_mask({"a" => "hash"}) }.to raise_error
-      expect { filter.object_mask(Object.new) }.to raise_error
+      expect { filter.object_mask(['anArray']) }.to raise_error(ArgumentError)
+      expect { filter.object_mask({"a" => "hash"}) }.to raise_error(ArgumentError)
+      expect { filter.object_mask(Object.new) }.to raise_error(ArgumentError)
     end
 
     it "accepts strings representing a property set" do
@@ -73,7 +73,7 @@ describe SoftLayer::APIParameterFilter do
 
   describe "#object_filter" do
     it "rejects nil filters" do
-      expect { filter.object_filter(nil) }.to raise_error
+      expect { filter.object_filter(nil) }.to raise_error(ArgumentError)
     end
 
     it "stores its value in server_object_filter when called" do

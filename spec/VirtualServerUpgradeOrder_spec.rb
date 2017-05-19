@@ -36,8 +36,8 @@ describe SoftLayer::VirtualServerUpgradeOrder do
   end
 
   it "requires a virtual server when initialized" do
-    expect { SoftLayer::VirtualServerUpgradeOrder.new(nil) }.to raise_error
-    expect { SoftLayer::VirtualServerUpgradeOrder.new("foo") }.to raise_error
+    expect { SoftLayer::VirtualServerUpgradeOrder.new(nil) }.to raise_error(RuntimeError)
+    expect { SoftLayer::VirtualServerUpgradeOrder.new("foo") }.to raise_error(RuntimeError)
     expect { SoftLayer::VirtualServerUpgradeOrder.new(test_virtual_server) }.to_not raise_error
   end
 

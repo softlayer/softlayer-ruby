@@ -30,7 +30,7 @@ describe SoftLayer::VirtualServerOrder do
 
   it "raises an error if you try to create an order with no client" do
     SoftLayer::Client.default_client = nil
-    expect {SoftLayer::VirtualServerOrder.new()}.to raise_error
+    expect {SoftLayer::VirtualServerOrder.new()}.to raise_error(RuntimeError)
   end
 
   it "places its :datacenter attribute into the order template" do
@@ -305,14 +305,14 @@ describe SoftLayer::VirtualServerOrder do
 
     it "has options routines that raise if not given a client" do
       SoftLayer::Client.default_client = nil
-      expect { SoftLayer::VirtualServerOrder.create_object_options() }.to raise_error
-      expect { SoftLayer::VirtualServerOrder.datacenter_options() }.to raise_error
-      expect { SoftLayer::VirtualServerOrder.create_object_options() }.to raise_error
-      expect { SoftLayer::VirtualServerOrder.core_options() }.to raise_error
-      expect { SoftLayer::VirtualServerOrder.memory_options() }.to raise_error
-      expect { SoftLayer::VirtualServerOrder.disk_options() }.to raise_error
-      expect { SoftLayer::VirtualServerOrder.os_reference_code_options() }.to raise_error
-      expect { SoftLayer::VirtualServerOrder.max_port_speed_options() }.to raise_error
+      expect { SoftLayer::VirtualServerOrder.create_object_options() }.to raise_error(RuntimeError)
+      expect { SoftLayer::VirtualServerOrder.datacenter_options() }.to raise_error(RuntimeError)
+      expect { SoftLayer::VirtualServerOrder.create_object_options() }.to raise_error(RuntimeError)
+      expect { SoftLayer::VirtualServerOrder.core_options() }.to raise_error(RuntimeError)
+      expect { SoftLayer::VirtualServerOrder.memory_options() }.to raise_error(RuntimeError)
+      expect { SoftLayer::VirtualServerOrder.disk_options() }.to raise_error(RuntimeError)
+      expect { SoftLayer::VirtualServerOrder.os_reference_code_options() }.to raise_error(RuntimeError)
+      expect { SoftLayer::VirtualServerOrder.max_port_speed_options() }.to raise_error(RuntimeError)
     end
   end
 end

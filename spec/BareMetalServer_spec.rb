@@ -39,7 +39,7 @@ describe SoftLayer::BareMetalServer do
   it_behaves_like "server with mutable hostname" do
 		let (:server) { sample_server }
   end
-  
+
 	it "can be cancelled" do
 		mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "DEADBEEFBADF00D")
 		allow(mock_client).to receive(:[]) do |service_name|

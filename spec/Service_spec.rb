@@ -25,9 +25,9 @@ describe SoftLayer::Service, "#new" do
     end
 
     it "rejects a nil or empty service name" do
-      expect {service = SoftLayer::Service.new(nil)}.to raise_error
-      expect {service = SoftLayer::Service.new("")}.to raise_error
-      expect {service = SoftLayer::Service.new('')}.to raise_error
+      expect {service = SoftLayer::Service.new(nil)}.to raise_error(ArgumentError)
+      expect {service = SoftLayer::Service.new("")}.to raise_error(ArgumentError)
+      expect {service = SoftLayer::Service.new('')}.to raise_error(ArgumentError)
     end
 
     it "assigns the service name for the service" do

@@ -30,7 +30,7 @@ describe SoftLayer::BareMetalServerOrder do
 
   it "raises an error if you try to create an order with no client" do
     SoftLayer::Client.default_client = nil
-    expect {SoftLayer::BareMetalServerOrder.new()}.to raise_error
+    expect {SoftLayer::BareMetalServerOrder.new()}.to raise_error(RuntimeError)
   end
 
   it "places its :datacenter attribute into the order template" do
@@ -259,12 +259,12 @@ describe SoftLayer::BareMetalServerOrder do
 
     it "has options routines that raise if not given a client" do
       SoftLayer::Client.default_client = nil
-      expect { SoftLayer::BareMetalServerOrder.create_object_options() }.to raise_error
-      expect { SoftLayer::BareMetalServerOrder.datacenter_options() }.to raise_error
-      expect { SoftLayer::BareMetalServerOrder.core_options() }.to raise_error
-      expect { SoftLayer::BareMetalServerOrder.disk_options() }.to raise_error
-      expect { SoftLayer::BareMetalServerOrder.os_reference_code_options() }.to raise_error
-      expect { SoftLayer::BareMetalServerOrder.max_port_speed_options() }.to raise_error
+      expect { SoftLayer::BareMetalServerOrder.create_object_options() }.to raise_error(RuntimeError)
+      expect { SoftLayer::BareMetalServerOrder.datacenter_options() }.to raise_error(RuntimeError)
+      expect { SoftLayer::BareMetalServerOrder.core_options() }.to raise_error(RuntimeError)
+      expect { SoftLayer::BareMetalServerOrder.disk_options() }.to raise_error(RuntimeError)
+      expect { SoftLayer::BareMetalServerOrder.os_reference_code_options() }.to raise_error(RuntimeError)
+      expect { SoftLayer::BareMetalServerOrder.max_port_speed_options() }.to raise_error(RuntimeError)
     end
   end
 

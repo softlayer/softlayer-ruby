@@ -71,10 +71,10 @@ describe SoftLayer::ProductPackage do
 
     it "calling with no client should raise" do
       SoftLayer::Client.default_client = nil
-      expect { SoftLayer::ProductPackage.packages_with_key_name('BARE_METAL_CORE') }.to raise_error
-      expect { SoftLayer::ProductPackage.virtual_server_package() }.to raise_error
-      expect { SoftLayer::ProductPackage.bare_metal_instance_package() }.to raise_error
-      expect { SoftLayer::ProductPackage.bare_metal_server_packages() }.to raise_error
+      expect { SoftLayer::ProductPackage.packages_with_key_name('BARE_METAL_CORE') }.to raise_error(RuntimeError)
+      expect { SoftLayer::ProductPackage.virtual_server_package() }.to raise_error(RuntimeError)
+      expect { SoftLayer::ProductPackage.bare_metal_instance_package() }.to raise_error(RuntimeError)
+      expect { SoftLayer::ProductPackage.bare_metal_server_packages() }.to raise_error(RuntimeError)
     end
   end
 end

@@ -124,7 +124,7 @@ describe SoftLayer::Account do
   describe "Account.account_for_client" do
     it "raises an error if there is no client available" do
       SoftLayer::Client.default_client = nil
-      expect {SoftLayer::Account.account_for_client}.to raise_error
+      expect {SoftLayer::Account.account_for_client}.to raise_error(RuntimeError)
     end
 
     it "uses the default client if one is available" do

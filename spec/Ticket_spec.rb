@@ -40,7 +40,7 @@ describe SoftLayer::Ticket do
 
   it "raises an error if you try to get ticket subjects with no client" do
     SoftLayer::Client.default_client = nil
-    expect {SoftLayer::Ticket.ticket_subjects() }.to raise_error
+    expect {SoftLayer::Ticket.ticket_subjects() }.to raise_error(RuntimeError)
   end
 
   it "identifies itself with the ticket service" do

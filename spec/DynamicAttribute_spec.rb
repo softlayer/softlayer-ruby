@@ -131,8 +131,8 @@ describe SoftLayer::DynamicAttribute do
     end
 
     it "raises an exception if passed an invalid name" do
-      expect { SoftLayer::DynamicAttribute::DynamicAttributeDefinition.new(nil) }.to raise_error
-      expect { SoftLayer::DynamicAttribute::DynamicAttributeDefinition.new("") }.to raise_error
+      expect { SoftLayer::DynamicAttribute::DynamicAttributeDefinition.new(nil) }.to raise_error(ArgumentError)
+      expect { SoftLayer::DynamicAttribute::DynamicAttributeDefinition.new("") }.to raise_error(ArgumentError)
     end
 
     it "has valid initial values" do

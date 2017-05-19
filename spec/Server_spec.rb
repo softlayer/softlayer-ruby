@@ -13,6 +13,6 @@ require 'rspec'
 describe SoftLayer::Server do
 	it "is an abstract base class" do
 		mock_client = SoftLayer::Client.new(:username => "fakeuser", :api_key => "DEADBEEFBADF00D")
-		expect { SoftLayer::Server.new(mock_client, { "id" => 12345 }) }.to raise_error
+		expect { SoftLayer::Server.new(mock_client, { "id" => 12345 }) }.to raise_error(RuntimeError)
 	end
 end

@@ -135,8 +135,8 @@ describe SoftLayer::Client do
     end
 
     it "should reject empty or nil service names" do
-      expect { test_client.service_named('') }.to raise_error
-      expect { test_client.service_named(nil) }.to raise_error
+      expect { test_client.service_named('') }.to raise_error(ArgumentError)
+      expect { test_client.service_named(nil) }.to raise_error(ArgumentError)
     end
 
     it "should be able to construct a service" do
