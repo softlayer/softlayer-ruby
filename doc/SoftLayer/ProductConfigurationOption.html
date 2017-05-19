@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::ProductConfigurationOption - softlayer_api gem 3.0.1</title>
+<title>class SoftLayer::ProductConfigurationOption - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
@@ -58,7 +59,7 @@
   <h3>Parent</h3>
 
   
-  <p class="link">Struct.new(:capacity, :capacityRestrictionMaximum, :capacityRestrictionMinimum,      :capacityRestrictionType, :description, :hourlyRecurringFee, :laborFee, :oneTimeFee, :price_id, :recurringFee,      :requiredCoreCount, :setupFee, :units)
+  <p class="link">Struct.new(:capacity, :capacityRestrictionMaximum, :capacity_restriction_maximum,      :capacityRestrictionMinimum, :capacity_restriction_minimum, :capacityRestrictionType, :capacity_restriction_type,      :description, :hourlyRecurringFee, :hourly_recurring_fee, :laborFee, :labor_fee, :oneTimeFee, :one_time_fee,      :price_id, :recurringFee, :recurring_fee, :requiredCoreCount, :required_core_count, :setupFee, :setup_fee, :units)
   
 </div>
 
@@ -92,6 +93,12 @@ product order.  Strictly speaking the only information required for the
 product order is the price_id, the rest of the information is provided to
 make the object friendly to humans who may be searching for the meaning of
 a given price_id.</p>
+
+<p>DEPRECATION WARNING: The following configuration option keys have been
+deprecated and will be removed with the next major version:
+capacityRestrictionMaximum, capacityRestrictionMinimum,
+capacityRestrictionType, hourlyRecurringFee, laborFee, oneTimeFee,
+recurringFee, requiredCoreCount, setupFee</p>
 
   </section>
 
@@ -133,22 +140,33 @@ a given price_id.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductItemCategory.rb, line 18</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductItemCategory.rb, line 23</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">package_item_data</span>, <span class="ruby-identifier">price_item_data</span>)
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">capacity</span>    = <span class="ruby-identifier">package_item_data</span>[<span class="ruby-string">'capacity'</span>]
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">description</span> = <span class="ruby-identifier">package_item_data</span>[<span class="ruby-string">'description'</span>]
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">units</span>       = <span class="ruby-identifier">package_item_data</span>[<span class="ruby-string">'units'</span>]
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">capacity</span>    = <span class="ruby-identifier">package_item_data</span>[<span class="ruby-string">&#39;capacity&#39;</span>]
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">description</span> = <span class="ruby-identifier">package_item_data</span>[<span class="ruby-string">&#39;description&#39;</span>]
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">units</span>       = <span class="ruby-identifier">package_item_data</span>[<span class="ruby-string">&#39;units&#39;</span>]
 
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">capacityRestrictionMaximum</span> = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'capacityRestrictionMaximum'</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'capacityRestrictionMaximum'</span>] <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">capacityRestrictionMinimum</span> = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'capacityRestrictionMinimum'</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'capacityRestrictionMinimum'</span>] <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">capacityRestrictionType</span>    = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'capacityRestrictionType'</span>]    <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'capacityRestrictionType'</span>]    <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">hourlyRecurringFee</span>         = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'hourlyRecurringFee'</span>]         <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'hourlyRecurringFee'</span>].<span class="ruby-identifier">to_f</span>    <span class="ruby-operator">:</span> <span class="ruby-value">0.0</span>
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">laborFee</span>                   = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'laborFee'</span>]                   <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'laborFee'</span>].<span class="ruby-identifier">to_f</span>              <span class="ruby-operator">:</span> <span class="ruby-value">0.0</span>
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">oneTimeFee</span>                 = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'oneTimeFee'</span>]                 <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'oneTimeFee'</span>].<span class="ruby-identifier">to_f</span>            <span class="ruby-operator">:</span> <span class="ruby-value">0.0</span>
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">price_id</span>                   = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'id'</span>]
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">recurringFee</span>               = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'recurringFee'</span>]               <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'recurringFee'</span>].<span class="ruby-identifier">to_f</span>          <span class="ruby-operator">:</span> <span class="ruby-value">0.0</span>
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">requiredCoreCount</span>          = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'requiredCoreCount'</span>]          <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'requiredCoreCount'</span>]          <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">setupFee</span>                   = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'setupFee'</span>]                   <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">'setupFee'</span>].<span class="ruby-identifier">to_f</span>              <span class="ruby-operator">:</span> <span class="ruby-value">0.0</span>
+  <span class="ruby-comment">#DEPRECATION WARNING: All these are deprecated and will be removed with the next major version, pleace use keys below</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">capacityRestrictionMaximum</span> = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;capacityRestrictionMaximum&#39;</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;capacityRestrictionMaximum&#39;</span>] <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">capacityRestrictionMinimum</span> = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;capacityRestrictionMinimum&#39;</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;capacityRestrictionMinimum&#39;</span>] <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">capacityRestrictionType</span>    = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;capacityRestrictionType&#39;</span>]    <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;capacityRestrictionType&#39;</span>]    <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">hourlyRecurringFee</span>         = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;hourlyRecurringFee&#39;</span>]         <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;hourlyRecurringFee&#39;</span>].<span class="ruby-identifier">to_f</span>    <span class="ruby-operator">:</span> <span class="ruby-value">0.0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">laborFee</span>                   = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;laborFee&#39;</span>]                   <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;laborFee&#39;</span>].<span class="ruby-identifier">to_f</span>              <span class="ruby-operator">:</span> <span class="ruby-value">0.0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">oneTimeFee</span>                 = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;oneTimeFee&#39;</span>]                 <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;oneTimeFee&#39;</span>].<span class="ruby-identifier">to_f</span>            <span class="ruby-operator">:</span> <span class="ruby-value">0.0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">price_id</span>                   = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;id&#39;</span>]
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">recurringFee</span>               = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;recurringFee&#39;</span>]               <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;recurringFee&#39;</span>].<span class="ruby-identifier">to_f</span>          <span class="ruby-operator">:</span> <span class="ruby-value">0.0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">requiredCoreCount</span>          = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;requiredCoreCount&#39;</span>]          <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;requiredCoreCount&#39;</span>]          <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">setupFee</span>                   = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;setupFee&#39;</span>]                   <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;setupFee&#39;</span>].<span class="ruby-identifier">to_f</span>              <span class="ruby-operator">:</span> <span class="ruby-value">0.0</span>
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">capacity_restriction_maximum</span> = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;capacityRestrictionMaximum&#39;</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;capacityRestrictionMaximum&#39;</span>] <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">capacity_restriction_minimum</span> = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;capacityRestrictionMinimum&#39;</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;capacityRestrictionMinimum&#39;</span>] <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">capacity_restriction_type</span>    = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;capacityRestrictionType&#39;</span>]    <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;capacityRestrictionType&#39;</span>]    <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">hourly_recurring_fee</span>         = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;hourlyRecurringFee&#39;</span>]         <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;hourlyRecurringFee&#39;</span>].<span class="ruby-identifier">to_f</span>    <span class="ruby-operator">:</span> <span class="ruby-value">0.0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">labor_fee</span>                    = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;laborFee&#39;</span>]                   <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;laborFee&#39;</span>].<span class="ruby-identifier">to_f</span>              <span class="ruby-operator">:</span> <span class="ruby-value">0.0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">one_time_fee</span>                 = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;oneTimeFee&#39;</span>]                 <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;oneTimeFee&#39;</span>].<span class="ruby-identifier">to_f</span>            <span class="ruby-operator">:</span> <span class="ruby-value">0.0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">recurring_fee</span>                = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;recurringFee&#39;</span>]               <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;recurringFee&#39;</span>].<span class="ruby-identifier">to_f</span>          <span class="ruby-operator">:</span> <span class="ruby-value">0.0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">required_core_count</span>          = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;requiredCoreCount&#39;</span>]          <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;requiredCoreCount&#39;</span>]          <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">setup_fee</span>                    = <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;setupFee&#39;</span>]                   <span class="ruby-operator">?</span> <span class="ruby-identifier">price_item_data</span>[<span class="ruby-string">&#39;setupFee&#39;</span>].<span class="ruby-identifier">to_f</span>              <span class="ruby-operator">:</span> <span class="ruby-value">0.0</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -181,13 +199,13 @@ a given price_id.</p>
 
         <div class="method-description">
           
-          <p>returns true if the configurtion option has no fees associated with it.</p>
+          <p>returns true if the configuration option has no fees associated with it.</p>
           
           
 
           
           <div class="method-source-code" id="free-3F-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductItemCategory.rb, line 36</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductItemCategory.rb, line 52</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">free?</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">setupFee</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">laborFee</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">oneTimeFee</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">recurringFee</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">hourlyRecurringFee</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
@@ -209,7 +227,7 @@ a given price_id.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

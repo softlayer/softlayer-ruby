@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Foundation - softlayer_api gem 3.0.1</title>
+<title>Foundation - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
 </script>
 
 <script src="./js/jquery.js"></script>
@@ -79,7 +80,7 @@
 
   <ul class="link-list">
   
-    <li><a href="./Contribution Guide_md.html">Contribution Guide</a>
+    <li><a href="./ContributionGuide_md.html">ContributionGuide</a>
   
     <li><a href="./Foundation_md.html">Foundation</a>
   
@@ -119,8 +120,8 @@ href="SoftLayer.html">SoftLayer</a> API using this Gem.</p>
 fairly straightforward. There is some key information that you will have to
 provide to the Gem in order to connect to the <a
 href="SoftLayer.html">SoftLayer</a> API. You provide that information to
-classes instantiated from the Gem’s source and use those instances to make
-calls into the API.</p>
+classes instantiated from the Gem&#39;s source and use those instances to
+make calls into the API.</p>
 
 <h2 id="label-Key+Information">Key Information<span><a href="#label-Key+Information">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
@@ -156,10 +157,10 @@ from anywhere. These two URLs are available as global variables in the <a
 href="SoftLayer.html">SoftLayer</a> module:</p>
 
 <pre class="ruby"><span class="ruby-comment"># The base URL of the SoftLayer API available to the public internet.</span>
-<span class="ruby-constant">API_PUBLIC_ENDPOINT</span> = <span class="ruby-string">'https://api.softlayer.com/xmlrpc/v3/'</span>
+<span class="ruby-constant">API_PUBLIC_ENDPOINT</span> = <span class="ruby-string">&#39;https://api.softlayer.com/xmlrpc/v3/&#39;</span>
 
-<span class="ruby-comment"># The base URL of the SoftLayer API available through SoftLayer's private network</span>
-<span class="ruby-constant">API_PRIVATE_ENDPOINT</span> = <span class="ruby-string">'https://api.service.softlayer.com/xmlrpc/v3/'</span>
+<span class="ruby-comment"># The base URL of the SoftLayer API available through SoftLayer&#39;s private network</span>
+<span class="ruby-constant">API_PRIVATE_ENDPOINT</span> = <span class="ruby-string">&#39;https://api.service.softlayer.com/xmlrpc/v3/&#39;</span>
 </pre>
 
 <p>In most cases, you will not have to specify the endpoint URL and the Gem
@@ -250,7 +251,7 @@ href="http://sldn.softlayer.com">SLDN documentation</a>. The values in the
 hashes vary depending on the data type of the property represented by the
 hash key. In the example above, the <code>getOpenTickets</code> call
 returns an array of hashes. Each hash offers information about a single
-ticket in the account’s open ticket list.</p>
+ticket in the account&#39;s open ticket list.</p>
 
 <p>The network <a href="SoftLayer.html">SoftLayer</a> API provides helpful
 techniques for limiting and filtering the result set from calls to the
@@ -348,11 +349,11 @@ introduction to the Service Helpers section above.</p>
 
 <p><a href="Object.html">Object</a> Masks offer a way for a script to limit
 the results of a particular call so that the result includes particular
-properties of the objects returned by the call. For example, if a problem's
-solution required the list of open tickets for an account, including each
-ticket's title and a count of the updates made to the ticket, A script
-could limit the information returned for each ticket to the title and
-update count using an object mask:</p>
+properties of the objects returned by the call. For example, if a
+problem&#39;s solution required the list of open tickets for an account,
+including each ticket&#39;s title and a count of the updates made to the
+ticket, A script could limit the information returned for each ticket to
+the title and update count using an object mask:</p>
 
 <pre class="ruby"><span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">&quot;Account&quot;</span>].<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[title,updateCount]&quot;</span>).<span class="ruby-identifier">getOpenTickets</span>()
 </pre>
@@ -416,7 +417,7 @@ property of the virtual servers being returned. That code would look like
 this:</p>
 
 <pre class="ruby"><span class="ruby-identifier">filter</span> = <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">ObjectFilter</span>.<span class="ruby-identifier">new</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span> <span class="ruby-identifier">f</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-string">&quot;virtualGuests.domain&quot;</span>).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span>(<span class="ruby-string">&quot;kitchentools.com&quot;</span>)}
-<span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">'Account'</span>].<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">filter</span>).<span class="ruby-identifier">getVirtualGuests</span>()
+<span class="ruby-identifier">softlayer_client</span>[<span class="ruby-string">&#39;Account&#39;</span>].<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">filter</span>).<span class="ruby-identifier">getVirtualGuests</span>()
 </pre>
 
 <p>Note that the string to <code>accept</code> starts with the name of the
@@ -436,7 +437,7 @@ for other matchers to use with when_it.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

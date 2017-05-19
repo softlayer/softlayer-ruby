@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::Config - softlayer_api gem 3.0.1</title>
+<title>class SoftLayer::Config - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
@@ -58,6 +59,7 @@
     <li><a href="#class-SoftLayer::Config-label-Config+File">Config File</a>
     <li><a href="#class-SoftLayer::Config-label-Environment+Variables">Environment Variables</a>
     <li><a href="#class-SoftLayer::Config-label-Global+Variables">Global Variables</a>
+    <li><a href="#class-SoftLayer::Config-label-XML+RPC+Variables">XML RPC Variables</a>
     <li><a href="#class-SoftLayer::Config-label-Direct+parameters">Direct parameters</a>
   </ul>
 </div>
@@ -108,7 +110,7 @@ information the library needs to communicate with the network <a
 href="../SoftLayer.html">SoftLayer</a> API. Those three crucial pieces of
 information are the Username, the API Key, and the endpoint_url. This
 information is collected in a hash with the keys `:username`, `:api_key`,
-and `:endpoint_url` repsectively.</p>
+and `:endpoint_url` respectively.</p>
 
 <p>The routine used to retrieve this information from a <a
 href="Config.html">Config</a> object is <a
@@ -138,21 +140,23 @@ the name from the config file.</p>
 <p>The library will search for the <a href="../SoftLayer.html">SoftLayer</a>
 config file at the file locations listed in the
 `SoftLayer::Config::FILE_LOCATIONS` array. The config file follows the
-format recognized by Python’s ConfigParser class (and consequently is
+format recognized by Python&#39;s ConfigParser class (and consequently is
 compatible with the) SoftLayer-Python language bindings).  A simple config
 file looks something like this:</p>
 
 <pre class="ruby">[<span class="ruby-identifier">softlayer</span>]
-<span class="ruby-identifier">username</span> = <span class="ruby-identifier">joeusername</span>
 <span class="ruby-identifier">api_key</span> = <span class="ruby-constant">DEADBEEFBADF00D</span>
+<span class="ruby-identifier">endpoint_url</span> = <span class="ruby-string">&#39;API_PUBLIC_ENDPOINT&#39;</span>
 <span class="ruby-identifier">timeout</span> = <span class="ruby-value">60</span>
+<span class="ruby-identifier">user_agent</span> = <span class="ruby-string">&quot;softlayer-ruby x.x.x&quot;</span>
+<span class="ruby-identifier">username</span> = <span class="ruby-identifier">joeusername</span>
 </pre>
 
 <h1 id="class-SoftLayer::Config-label-Environment+Variables">Environment Variables<span><a href="#class-SoftLayer::Config-label-Environment+Variables">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
 <p>The config class will search the environment variables SL_USERNAME and
 SL_API_KEY for the username and API key respectively. The endpoint_url may
-not be set thorugh environment variables.</p>
+not be set through environment variables.</p>
 
 <h1 id="class-SoftLayer::Config-label-Global+Variables">Global Variables<span><a href="#class-SoftLayer::Config-label-Global+Variables">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
@@ -163,7 +167,20 @@ authentication key are:</p>
 </li><li>
 <p>+$SL_API_KEY+</p>
 </li><li>
-<p>+$SL_API_BASE_URL+</p>
+<p>+$SL_API_BASE_URL+ (or alias +$SL_API_ENDPOINT_URL+)</p>
+</li></ul>
+
+<h1 id="class-SoftLayer::Config-label-XML+RPC+Variables">XML RPC Variables<span><a href="#class-SoftLayer::Config-label-XML+RPC+Variables">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The config allows for two variables that are passed on to the underlying
+XML RPC agent for interacting with the <a
+href="../SoftLayer.html">SoftLayer</a> API (as with other settings these
+can be loaded from config file, environment variables, globals or provided
+values):</p>
+<ul><li>
+<p><code>SL_API_TIMEOUT</code></p>
+</li><li>
+<p><code>SL_API_USER_AGENT</code></p>
 </li></ul>
 
 <h1 id="class-SoftLayer::Config-label-Direct+parameters">Direct parameters<span><a href="#class-SoftLayer::Config-label-Direct+parameters">&para;</a> <a href="#top">&uarr;</a></span></h1>
@@ -190,6 +207,11 @@ techniques above.</p>
         <h3>Constants</h3>
       </header>
       <dl>
+      
+        <dt id="ENDPOINT_URL_ALIAS">ENDPOINT_URL_ALIAS
+        
+        <dd>
+        
       
         <dt id="FILE_LOCATIONS">FILE_LOCATIONS
         
@@ -228,16 +250,17 @@ techniques above.</p>
 
           
           <div class="method-source-code" id="client_settings-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Config.rb, line 111</span>
-          <span class="ruby-keyword">def</span> <span class="ruby-constant">Config</span>.<span class="ruby-identifier">client_settings</span>(<span class="ruby-identifier">provided_settings</span> = {})
-<span class="ruby-identifier">settings</span> = { <span class="ruby-value">:endpoint_url</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">API_PUBLIC_ENDPOINT</span> }
-                  <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">merge!</span> <span class="ruby-identifier">file_settings</span>
-                  <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">merge!</span> <span class="ruby-identifier">environment_settings</span>
-                  <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">merge!</span> <span class="ruby-identifier">globals_settings</span>
-                  <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">merge!</span> <span class="ruby-identifier">provided_settings</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Config.rb, line 78</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Config</span>.<span class="ruby-identifier">client_settings</span>(<span class="ruby-identifier">provided_settings</span> = {})
+  <span class="ruby-identifier">settings</span> = { <span class="ruby-value">:endpoint_url</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">API_PUBLIC_ENDPOINT</span> }
 
-                  <span class="ruby-identifier">settings</span>
-          <span class="ruby-keyword">end</span></pre>
+  <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">merge!</span> <span class="ruby-identifier">file_settings</span>
+  <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">merge!</span> <span class="ruby-identifier">environment_settings</span>
+  <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">merge!</span> <span class="ruby-identifier">globals_settings</span>
+  <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">merge!</span> <span class="ruby-identifier">provided_settings</span>
+
+  <span class="ruby-identifier">settings</span>
+<span class="ruby-keyword">end</span></pre>
           </div>
           
         </div>
@@ -267,12 +290,30 @@ techniques above.</p>
 
           
           <div class="method-source-code" id="environment_settings-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Config.rb, line 73</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Config.rb, line 89</span>
 <span class="ruby-keyword">def</span> <span class="ruby-constant">Config</span>.<span class="ruby-identifier">environment_settings</span>
-        <span class="ruby-identifier">result</span> = {}
-        <span class="ruby-identifier">result</span>[<span class="ruby-value">:username</span>] =  <span class="ruby-constant">ENV</span>[<span class="ruby-string">'SL_USERNAME'</span>] <span class="ruby-keyword">if</span> <span class="ruby-constant">ENV</span>[<span class="ruby-string">'SL_USERNAME'</span>]
-        <span class="ruby-identifier">result</span>[<span class="ruby-value">:api_key</span>] = <span class="ruby-constant">ENV</span>[<span class="ruby-string">'SL_API_KEY'</span>] <span class="ruby-keyword">if</span> <span class="ruby-constant">ENV</span>[<span class="ruby-string">'SL_API_KEY'</span>]
-        <span class="ruby-identifier">result</span>
+  <span class="ruby-identifier">result</span> = {}
+
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:api_key</span>]      = <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_KEY&#39;</span>] <span class="ruby-keyword">if</span> <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_KEY&#39;</span>]
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:user_agent</span>]   = <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_USER_AGENT&#39;</span>] <span class="ruby-operator">||</span> <span class="ruby-node">&quot;softlayer_api gem/#{SoftLayer::VERSION} (Ruby #{RUBY_PLATFORM}/#{RUBY_VERSION})&quot;</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:username</span>]     = <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_USERNAME&#39;</span>] <span class="ruby-keyword">if</span> <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_USERNAME&#39;</span>]
+
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_BASE_URL&#39;</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">ENDPOINT_URL_ALIAS</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_BASE_URL&#39;</span>])
+    <span class="ruby-identifier">result</span>[<span class="ruby-value">:endpoint_url</span>] = (<span class="ruby-constant">ENV</span>[<span class="ruby-string">&quot;SL_API_BASE_URL&quot;</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;API_PUBLIC_ENDPOINT&quot;</span> <span class="ruby-operator">?</span> <span class="ruby-constant">API_PUBLIC_ENDPOINT</span> <span class="ruby-operator">:</span> <span class="ruby-constant">API_PRIVATE_ENDPOINT</span>)
+  <span class="ruby-keyword">elsif</span> <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_ENDPOINT_URL&#39;</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">ENDPOINT_URL_ALIAS</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_ENDPOINT_URL&#39;</span>])
+    <span class="ruby-identifier">result</span>[<span class="ruby-value">:endpoint_url</span>] = (<span class="ruby-constant">ENV</span>[<span class="ruby-string">&quot;SL_API_ENDPOINT_URL&quot;</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;API_PUBLIC_ENDPOINT&quot;</span> <span class="ruby-operator">?</span> <span class="ruby-constant">API_PUBLIC_ENDPOINT</span> <span class="ruby-operator">:</span> <span class="ruby-constant">API_PRIVATE_ENDPOINT</span>)
+  <span class="ruby-keyword">elsif</span> (<span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_BASE_URL&#39;</span>]     <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span> <span class="ruby-constant">ENDPOINT_URL_ALIAS</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_BASE_URL&#39;</span>])) <span class="ruby-operator">||</span>
+        (<span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_ENDPOINT_URL&#39;</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span> <span class="ruby-constant">ENDPOINT_URL_ALIAS</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_ENDPOINT_URL&#39;</span>]))
+    <span class="ruby-identifier">result</span>[<span class="ruby-value">:endpoint_url</span>] = <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_BASE_URL&#39;</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_ENDPOINT_URL&#39;</span>]
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">result</span>[<span class="ruby-value">:timeout</span>] = <span class="ruby-constant">Integer</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_TIMEOUT&#39;</span>]) <span class="ruby-keyword">if</span> <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;SL_API_TIMEOUT&#39;</span>]
+  <span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">integer_parse_exception</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Expected the value of the timeout configuration property, &#39;#{ENV[&#39;SL_API_TIMEOUT&#39;]}&#39;, to be parseable as an integer&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">result</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -303,35 +344,44 @@ techniques above.</p>
 
           
           <div class="method-source-code" id="file_settings-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Config.rb, line 82</span>
-    <span class="ruby-keyword">def</span> <span class="ruby-constant">Config</span>.<span class="ruby-identifier">file_settings</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">additional_files</span>)
-            <span class="ruby-identifier">result</span> = {}
+            <pre><span class="ruby-comment"># File lib/softlayer/Config.rb, line 114</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Config</span>.<span class="ruby-identifier">file_settings</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">additional_files</span>)
+  <span class="ruby-identifier">result</span> = {}
 
-            <span class="ruby-identifier">search_path</span> = <span class="ruby-constant">FILE_LOCATIONS</span>
-            <span class="ruby-identifier">search_path</span> = <span class="ruby-identifier">search_path</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">additional_files</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">additional_files</span>
-            <span class="ruby-identifier">search_path</span> = <span class="ruby-identifier">search_path</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">file_path</span><span class="ruby-operator">|</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">file_path</span>) }
+  <span class="ruby-identifier">search_path</span> = <span class="ruby-constant">FILE_LOCATIONS</span>
+  <span class="ruby-identifier">search_path</span> = <span class="ruby-identifier">search_path</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">additional_files</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">additional_files</span>
+  <span class="ruby-identifier">search_path</span> = <span class="ruby-identifier">search_path</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">file_path</span><span class="ruby-operator">|</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">file_path</span>) }
 
-            <span class="ruby-identifier">search_path</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file_path</span><span class="ruby-operator">|</span>
-                    <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span> <span class="ruby-identifier">file_path</span>
-                            <span class="ruby-identifier">config</span> = <span class="ruby-constant">ConfigParser</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">file_path</span>
-                            <span class="ruby-identifier">softlayer_section</span> = <span class="ruby-identifier">config</span>[<span class="ruby-string">'softlayer'</span>]
+  <span class="ruby-identifier">search_path</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file_path</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">readable?</span> <span class="ruby-identifier">file_path</span>
+      <span class="ruby-identifier">config</span>            = <span class="ruby-constant">ConfigParser</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">file_path</span>
+      <span class="ruby-identifier">softlayer_section</span> = <span class="ruby-identifier">config</span>[<span class="ruby-string">&#39;softlayer&#39;</span>]
 
-                            <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>
-                                    <span class="ruby-identifier">result</span>[<span class="ruby-value">:username</span>] = <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'username'</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'username'</span>]
-                                    <span class="ruby-identifier">result</span>[<span class="ruby-value">:endpoint_url</span>] = <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'endpoint_url'</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'endpoint_url'</span>]
-                                    <span class="ruby-identifier">result</span>[<span class="ruby-value">:api_key</span>] = <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'api_key'</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'api_key'</span>]
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>
+        <span class="ruby-identifier">result</span>[<span class="ruby-value">:api_key</span>]      = <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;api_key&#39;</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;api_key&#39;</span>]
+        <span class="ruby-identifier">result</span>[<span class="ruby-value">:user_agent</span>]   = <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;user_agent&#39;</span>] <span class="ruby-operator">||</span> <span class="ruby-node">&quot;softlayer_api gem/#{SoftLayer::VERSION} (Ruby #{RUBY_PLATFORM}/#{RUBY_VERSION})&quot;</span>
+        <span class="ruby-identifier">result</span>[<span class="ruby-value">:username</span>]     = <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;username&#39;</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;username&#39;</span>]
 
-<span class="ruby-keyword">begin</span>
-                                      <span class="ruby-identifier">result</span>[<span class="ruby-value">:timeout</span>] = <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'timeout'</span>]) <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">'timeout'</span>]
-<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">integer_parse_exception</span>
-  <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Expected the value of the timeout configuration property, '#{result[:timeout]}', to be parseable as an integer&quot;</span>
-<span class="ruby-keyword">end</span>
-                            <span class="ruby-keyword">end</span>
-                    <span class="ruby-keyword">end</span>
-            <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;base_url&#39;</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">ENDPOINT_URL_ALIAS</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;base_url&#39;</span>])
+          <span class="ruby-identifier">result</span>[<span class="ruby-value">:endpoint_url</span>] = (<span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;base_url&#39;</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;API_PUBLIC_ENDPOINT&quot;</span> <span class="ruby-operator">?</span> <span class="ruby-constant">API_PUBLIC_ENDPOINT</span> <span class="ruby-operator">:</span> <span class="ruby-constant">API_PRIVATE_ENDPOINT</span>)
+        <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;endpoint_url&#39;</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">ENDPOINT_URL_ALIAS</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;endpoint_url&#39;</span>])
+          <span class="ruby-identifier">result</span>[<span class="ruby-value">:endpoint_url</span>] = (<span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;endpoint_url&#39;</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;API_PUBLIC_ENDPOINT&quot;</span> <span class="ruby-operator">?</span> <span class="ruby-constant">API_PUBLIC_ENDPOINT</span> <span class="ruby-operator">:</span> <span class="ruby-constant">API_PRIVATE_ENDPOINT</span>)
+        <span class="ruby-keyword">elsif</span> (<span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;base_url&#39;</span>]     <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span> <span class="ruby-constant">ENDPOINT_URL_ALIAS</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;base_url&#39;</span>])) <span class="ruby-operator">||</span>
+              (<span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;endpoint_url&#39;</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span> <span class="ruby-constant">ENDPOINT_URL_ALIAS</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;endpoint_url&#39;</span>]))
+          <span class="ruby-identifier">result</span>[<span class="ruby-value">:endpoint_url</span>] = <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;base_url&#39;</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;endpoint_url&#39;</span>]
+        <span class="ruby-keyword">end</span>
 
-            <span class="ruby-identifier">result</span>
-    <span class="ruby-keyword">end</span></pre>
+        <span class="ruby-keyword">begin</span>
+          <span class="ruby-identifier">result</span>[<span class="ruby-value">:timeout</span>] = <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;timeout&#39;</span>]) <span class="ruby-keyword">if</span> <span class="ruby-identifier">softlayer_section</span>[<span class="ruby-string">&#39;timeout&#39;</span>]
+        <span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">integer_parse_exception</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Expected the value of the timeout configuration property, &#39;#{softlayer_section[&#39;timeout&#39;]}&#39;, to be parseable as an integer&quot;</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">result</span>
+<span class="ruby-keyword">end</span></pre>
           </div>
           
         </div>
@@ -361,13 +411,30 @@ techniques above.</p>
 
           
           <div class="method-source-code" id="globals_settings-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Config.rb, line 65</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Config.rb, line 152</span>
 <span class="ruby-keyword">def</span> <span class="ruby-constant">Config</span>.<span class="ruby-identifier">globals_settings</span>
-        <span class="ruby-identifier">result</span> = {}
-        <span class="ruby-identifier">result</span>[<span class="ruby-value">:username</span>] =  <span class="ruby-identifier">$SL_API_USERNAME</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">$SL_API_USERNAME</span>
-        <span class="ruby-identifier">result</span>[<span class="ruby-value">:api_key</span>] = <span class="ruby-identifier">$SL_API_KEY</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">$SL_API_KEY</span>
-        <span class="ruby-identifier">result</span>[<span class="ruby-value">:endpoint_url</span>] = <span class="ruby-identifier">$SL_API_BASE_URL</span> <span class="ruby-operator">||</span> <span class="ruby-constant">API_PUBLIC_ENDPOINT</span>
-        <span class="ruby-identifier">result</span>
+  <span class="ruby-identifier">result</span> = {}
+
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:api_key</span>]      = <span class="ruby-identifier">$SL_API_KEY</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">$SL_API_KEY</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:user_agent</span>]   = <span class="ruby-identifier">$SL_API_USER_AGENT</span> <span class="ruby-operator">||</span> <span class="ruby-node">&quot;softlayer_api gem/#{SoftLayer::VERSION} (Ruby #{RUBY_PLATFORM}/#{RUBY_VERSION})&quot;</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:username</span>]     = <span class="ruby-identifier">$SL_API_USERNAME</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">$SL_API_USERNAME</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">$SL_API_ENDPOINT_URL</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">ENDPOINT_URL_ALIAS</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">$SL_API_ENDPOINT_URL</span>)
+    <span class="ruby-identifier">result</span>[<span class="ruby-value">:endpoint_url</span>] = (<span class="ruby-identifier">$SL_API_ENDPOINT_URL</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;API_PUBLIC_ENDPOINT&quot;</span> <span class="ruby-operator">?</span> <span class="ruby-constant">API_PUBLIC_ENDPOINT</span> <span class="ruby-operator">:</span> <span class="ruby-constant">API_PRIVATE_ENDPOINT</span>)
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">$SL_API_BASE_URL</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">ENDPOINT_URL_ALIAS</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">$SL_API_BASE_URL</span>)
+    <span class="ruby-identifier">result</span>[<span class="ruby-value">:endpoint_url</span>] = (<span class="ruby-identifier">$SL_API_BASE_URL</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;API_PUBLIC_ENDPOINT&quot;</span> <span class="ruby-operator">?</span> <span class="ruby-constant">API_PUBLIC_ENDPOINT</span> <span class="ruby-operator">:</span> <span class="ruby-constant">API_PRIVATE_ENDPOINT</span>)
+  <span class="ruby-keyword">elsif</span> (<span class="ruby-identifier">$SL_API_BASE_URL</span>     <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span> <span class="ruby-constant">ENDPOINT_URL_ALIAS</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">$SL_API_BASE_URL</span>)) <span class="ruby-operator">||</span>
+        (<span class="ruby-identifier">$SL_API_ENDPOINT_URL</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span> <span class="ruby-constant">ENDPOINT_URL_ALIAS</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">$SL_API_ENDPOINT_URL</span>))
+    <span class="ruby-identifier">result</span>[<span class="ruby-value">:endpoint_url</span>] = <span class="ruby-identifier">$SL_API_ENDPOINT_URL</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">$SL_API_BASE_URL</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">result</span>[<span class="ruby-value">:timeout</span>] = <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">$SL_API_TIMEOUT</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">$SL_API_TIMEOUT</span>
+  <span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">integer_parse_exception</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Expected the value of the timeout configuration property, &#39;#{$SL_API_TIMEOUT}&#39;, to be parseable as an integer&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">result</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -387,7 +454,7 @@ techniques above.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::NetworkStorageAllowedHost - softlayer_api gem 3.0.1</title>
+<title>class SoftLayer::NetworkStorageAllowedHost - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
@@ -173,12 +174,12 @@ SoftLayer_Network_Storage_Allowed_Host in the API.</p>
 
           
           <div class="method-source-code" id="default_object_mask-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageAllowedHost.rb, line 68</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageAllowedHost.rb, line 74</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
   {
     <span class="ruby-string">&quot;mask(SoftLayer_Network_Storage_Allowed_Host)&quot;</span> =<span class="ruby-operator">&gt;</span> [
-                                                       <span class="ruby-string">'id'</span>,
-                                                       <span class="ruby-string">'name'</span>
+                                                       <span class="ruby-string">&#39;id&#39;</span>,
+                                                       <span class="ruby-string">&#39;name&#39;</span>
                                                       ]
   }.<span class="ruby-identifier">to_sl_object_mask</span>
 <span class="ruby-keyword">end</span></pre>
@@ -202,25 +203,28 @@ SoftLayer_Network_Storage_Allowed_Host in the API.</p>
     
       <div id="method-i-assigned_groups" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">assigned_groups</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            assigned_groups(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>The <a href="NetworkStorageGroup.html">NetworkStorageGroup</a> instances
-assigned to this host</p>
+          <p>Retrieve the <a href="NetworkStorageGroup.html">NetworkStorageGroup</a>
+instances assigned to this host</p>
           
           
 
           
           <div class="method-source-code" id="assigned_groups-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageAllowedHost.rb, line 19</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageAllowedHost.rb, line 21</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:assigned_groups</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -244,25 +248,28 @@ assigned to this host</p>
     
       <div id="method-i-assigned_volumes" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">assigned_volumes</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            assigned_volumes(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>The <a href="NetworkStorage.html">NetworkStorage</a> instances assigned to
-this host</p>
+          <p>Retrieve the <a href="NetworkStorage.html">NetworkStorage</a> instances
+assigned to this host</p>
           
           
 
           
           <div class="method-source-code" id="assigned_volumes-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageAllowedHost.rb, line 33</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageAllowedHost.rb, line 37</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:assigned_volumes</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -286,26 +293,30 @@ this host</p>
     
       <div id="method-i-credential" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">credential</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            credential(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>The <a href="NetworkStorageCredential.html">NetworkStorageCredential</a>
-instance used to access <a href="NetworkStorage.html">NetworkStorage</a>
-for this host</p>
+          <p>Retrieve the <a
+href="NetworkStorageCredential.html">NetworkStorageCredential</a> instance
+used to access <a href="NetworkStorage.html">NetworkStorage</a> for this
+host</p>
           
           
 
           
           <div class="method-source-code" id="credential-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageAllowedHost.rb, line 47</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageAllowedHost.rb, line 53</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:credential</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -347,7 +358,7 @@ network API</p>
 
           
           <div class="method-source-code" id="service-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageAllowedHost.rb, line 62</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageAllowedHost.rb, line 68</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">service</span>
   <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Network_Storage_Allowed_Host</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -369,7 +380,7 @@ network API</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

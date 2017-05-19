@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module SoftLayer::ObjectFilterDefinitionContext - softlayer_api gem 3.0.1</title>
+<title>module SoftLayer::ObjectFilterDefinitionContext - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
@@ -75,6 +76,10 @@
     
     <li ><a href="#method-c-is">::is</a>
     
+    <li ><a href="#method-c-is_between_dates">::is_between_dates</a>
+    
+    <li ><a href="#method-c-is_contained_by">::is_contained_by</a>
+    
     <li ><a href="#method-c-is_greater_or_equal_to">::is_greater_or_equal_to</a>
     
     <li ><a href="#method-c-is_greater_than">::is_greater_than</a>
@@ -84,6 +89,8 @@
     <li ><a href="#method-c-is_less_than">::is_less_than</a>
     
     <li ><a href="#method-c-is_not">::is_not</a>
+    
+    <li ><a href="#method-c-is_not_contained_by">::is_not_contained_by</a>
     
     <li ><a href="#method-c-is_not_null">::is_not_null</a>
     
@@ -112,9 +119,9 @@
 href="ObjectFilterDefinitionContext.html">ObjectFilterDefinitionContext</a>
 defines a bunch of methods that allow the property conditions of an object
 filter to be defined in a “pretty” way. Each method returns a block (a
-lambda, a proc) that, when called and pased the tail property of a property
-chain will generate a fragment of an object filter asking that that
-property match the given conditions.</p>
+lambda, a proc) that, when called and passed the tail property of a
+property chain will generate a fragment of an object filter asking that
+that property match the given conditions.</p>
 
 <p>This class, as a whole, is largely an implementation detail of object
 filter definitions and there is probably not a good reason to call into it
@@ -161,9 +168,9 @@ is not case sensitive</p>
 
           
           <div class="method-source-code" id="begins_with-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 146</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 148</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">begins_with</span>(<span class="ruby-identifier">value</span>)
-  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">'^='</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">&#39;^=&#39;</span>, <span class="ruby-identifier">value</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -195,9 +202,9 @@ sensitive</p>
 
           
           <div class="method-source-code" id="contains-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 140</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 142</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">contains</span>(<span class="ruby-identifier">value</span>)
-  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">'*='</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">&#39;*=&#39;</span>, <span class="ruby-identifier">value</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -229,9 +236,9 @@ case sensitive</p>
 
           
           <div class="method-source-code" id="contains_exactly-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 183</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 233</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">contains_exactly</span>(<span class="ruby-identifier">value</span>)
-  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">'~'</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">&#39;~&#39;</span>, <span class="ruby-identifier">value</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -263,9 +270,9 @@ case sensitive</p>
 
           
           <div class="method-source-code" id="does_not_contain-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 189</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 239</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">does_not_contain</span>(<span class="ruby-identifier">value</span>)
-  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">'!~'</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">&#39;!~&#39;</span>, <span class="ruby-identifier">value</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -297,9 +304,9 @@ case sensitive</p>
 
           
           <div class="method-source-code" id="ends_with-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 152</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 154</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">ends_with</span>(<span class="ruby-identifier">value</span>)
-  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">'$='</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">&#39;$=&#39;</span>, <span class="ruby-identifier">value</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -325,15 +332,108 @@ case sensitive</p>
         <div class="method-description">
           
           <p>Matches when the value in the field is exactly equal to the given value.
-This is a case-sensitive match</p>
+This is a case-sensitive match If value is Enumerable, it is equivalent to
+calling <a
+href="ObjectFilterDefinitionContext.html#method-c-is_contained_by">::is_contained_by</a></p>
           
           
 
           
           <div class="method-source-code" id="is-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 128</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 129</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is</span>(<span class="ruby-identifier">value</span>)
-  { <span class="ruby-string">'operation'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">value</span> }
+  <span class="ruby-identifier">value</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Enumerable</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">is_contained_by</span>(<span class="ruby-identifier">value</span>) <span class="ruby-operator">:</span> { <span class="ruby-string">&#39;operation&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">value</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-is_between_dates" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_between_dates</span><span
+            class="method-args">(start_date, end_date)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Matches when the key path value is a date between the start and end dates
+provided Dates should be strings in &#39;%m/%d/%Y %T&#39; format or
+Date/DateTime instances</p>
+          
+          
+
+          
+          <div class="method-source-code" id="is_between_dates-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 165</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_between_dates</span>(<span class="ruby-identifier">start_date</span>, <span class="ruby-identifier">end_date</span>)
+  {
+    <span class="ruby-string">&#39;operation&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;betweenDate&#39;</span>,
+    <span class="ruby-string">&#39;options&#39;</span>   =<span class="ruby-operator">&gt;</span> [
+                    {
+                      <span class="ruby-string">&#39;name&#39;</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;startDate&#39;</span>,
+                      <span class="ruby-string">&#39;value&#39;</span> =<span class="ruby-operator">&gt;</span> [ <span class="ruby-identifier">start_date</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Date</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">start_date</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&#39;%m/%d/%Y %T&#39;</span>) <span class="ruby-operator">:</span> <span class="ruby-constant">DateTime</span>.<span class="ruby-identifier">strptime</span>(<span class="ruby-identifier">start_date</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-string">&#39;%m/%d/%Y %T&#39;</span>).<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&#39;%m/%d/%Y %T&#39;</span>) ]
+                    },
+                    {
+                      <span class="ruby-string">&#39;name&#39;</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;endDate&#39;</span>,
+                      <span class="ruby-string">&#39;value&#39;</span> =<span class="ruby-operator">&gt;</span> [ <span class="ruby-identifier">end_date</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Date</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">end_date</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&#39;%m/%d/%Y %T&#39;</span>) <span class="ruby-operator">:</span> <span class="ruby-constant">DateTime</span>.<span class="ruby-identifier">strptime</span>(<span class="ruby-identifier">end_date</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-string">&#39;%m/%d/%Y %T&#39;</span>).<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&#39;%m/%d/%Y %T&#39;</span>) ]
+                    }
+                   ]
+  }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-is_contained_by" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_contained_by</span><span
+            class="method-args">(value)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Matches when key path value is equal to one of the given values in the
+Enumerable</p>
+          
+          
+
+          
+          <div class="method-source-code" id="is_contained_by-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 182</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_contained_by</span>(<span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;Expected an Enumerable value with a list of acceptable values that can be converted to strings&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Enumerable</span>)
+
+  {
+    <span class="ruby-string">&#39;operation&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;in&#39;</span>,
+    <span class="ruby-string">&#39;options&#39;</span>   =<span class="ruby-operator">&gt;</span> [
+                    {
+                      <span class="ruby-string">&#39;name&#39;</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;data&#39;</span>,
+                      <span class="ruby-string">&#39;value&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">enum_val</span><span class="ruby-operator">|</span> <span class="ruby-identifier">enum_val</span>.<span class="ruby-identifier">to_s</span> }
+                    }
+                   ]
+  }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -365,9 +465,9 @@ value</p>
 
           
           <div class="method-source-code" id="is_greater_or_equal_to-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 172</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 222</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_greater_or_equal_to</span>(<span class="ruby-identifier">value</span>)
-  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">'&gt;='</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">&#39;&gt;=&#39;</span>, <span class="ruby-identifier">value</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -398,9 +498,9 @@ value</p>
 
           
           <div class="method-source-code" id="is_greater_than-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 162</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 212</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_greater_than</span>(<span class="ruby-identifier">value</span>)
-  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">'&gt;'</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">&#39;&gt;&#39;</span>, <span class="ruby-identifier">value</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -432,9 +532,9 @@ value</p>
 
           
           <div class="method-source-code" id="is_less_or_equal_to-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 177</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 227</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_less_or_equal_to</span>(<span class="ruby-identifier">value</span>)
-  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">'&lt;='</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">&#39;&lt;=&#39;</span>, <span class="ruby-identifier">value</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -465,9 +565,9 @@ value</p>
 
           
           <div class="method-source-code" id="is_less_than-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 167</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 217</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_less_than</span>(<span class="ruby-identifier">value</span>)
-  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">'&lt;'</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">&#39;&lt;&#39;</span>, <span class="ruby-identifier">value</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -493,15 +593,60 @@ value</p>
         <div class="method-description">
           
           <p>Matches is the value in the field does not exactly equal the value passed
-in.</p>
+in. If value is Enumerable, it is equivalent to calling <a
+href="ObjectFilterDefinitionContext.html#method-c-is_not_contained_by">::is_not_contained_by</a></p>
           
           
 
           
           <div class="method-source-code" id="is_not-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 134</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 136</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_not</span>(<span class="ruby-identifier">value</span>)
-  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">'!='</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">value</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Enumerable</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">is_not_contained_by</span>(<span class="ruby-identifier">value</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">&#39;!=&#39;</span>, <span class="ruby-identifier">value</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-is_not_contained_by" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_not_contained_by</span><span
+            class="method-args">(value)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Matches when key path value is not equal to one of the given values in the
+Enumerable</p>
+          
+          
+
+          
+          <div class="method-source-code" id="is_not_contained_by-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 197</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_not_contained_by</span>(<span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;Expected an Enumerable value with a list of acceptable values that can be converted to strings&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Enumerable</span>)
+
+  {
+    <span class="ruby-string">&#39;operation&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;not in&#39;</span>,
+    <span class="ruby-string">&#39;options&#39;</span>   =<span class="ruby-operator">&gt;</span> [
+                    {
+                      <span class="ruby-string">&#39;name&#39;</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;data&#39;</span>,
+                      <span class="ruby-string">&#39;value&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">enum_val</span><span class="ruby-operator">|</span> <span class="ruby-identifier">enum_val</span>.<span class="ruby-identifier">to_s</span> }
+                    }
+                   ]
+  }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -526,15 +671,15 @@ in.</p>
 
         <div class="method-description">
           
-          <p>Matches when the property’s value is not null</p>
+          <p>Matches when the property&#39;s value is not null</p>
           
           
 
           
           <div class="method-source-code" id="is_not_null-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 199</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 249</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_not_null</span>()
-  { <span class="ruby-string">'operation'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'not null'</span> }
+  { <span class="ruby-string">&#39;operation&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;not null&#39;</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -559,15 +704,15 @@ in.</p>
 
         <div class="method-description">
           
-          <p>Matches when the property’s value is null</p>
+          <p>Matches when the property&#39;s value is null</p>
           
           
 
           
           <div class="method-source-code" id="is_null-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 194</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 244</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_null</span>
-  { <span class="ruby-string">'operation'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'is null'</span> }
+  { <span class="ruby-string">&#39;operation&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;is null&#39;</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -592,15 +737,15 @@ in.</p>
 
         <div class="method-description">
           
-          <p>Maches the given value in a case-insensitive way</p>
+          <p>Matches the given value in a case-insensitive way</p>
           
           
 
           
           <div class="method-source-code" id="matches_ignoring_case-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 157</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 159</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">matches_ignoring_case</span>(<span class="ruby-identifier">value</span>)
-  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">'_='</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">filter_criteria</span>(<span class="ruby-string">&#39;_=&#39;</span>, <span class="ruby-identifier">value</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -639,10 +784,10 @@ followed by a space, followed by operand e.g.</p>
 <p>The query language also accepts some aliases using asterisks in a
 regular-expression-like way. Those aliases look like:</p>
 
-<pre>'value'   Exact value match (translates to '_= value')
-'value*'  Begins with value (translates to '^= value')
-'*value'  Ends with value (translates to '$= value')
-'*value*' Contains value (translates to '*= value')</pre>
+<pre>&#39;value&#39;   Exact value match (translates to &#39;_= value&#39;)
+&#39;value*&#39;  Begins with value (translates to &#39;^= value&#39;)
+&#39;*value&#39;  Ends with value (translates to &#39;$= value&#39;)
+&#39;*value*&#39; Contains value (translates to &#39;*= value&#39;)</pre>
 
 <p>This method corresponds to the <code>query_filter</code> method in the
 SoftLayer-Python API.</p>
@@ -651,7 +796,7 @@ SoftLayer-Python API.</p>
 
           
           <div class="method-source-code" id="matches_query-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 230</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 280</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">matches_query</span>(<span class="ruby-identifier">query_string</span>)
   <span class="ruby-identifier">query</span> = <span class="ruby-identifier">query_string</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">strip</span>
 
@@ -706,7 +851,7 @@ knowledge and great care.</p>
 
           
           <div class="method-source-code" id="satisfies_the_raw_condition-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 206</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ObjectFilter.rb, line 256</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">satisfies_the_raw_condition</span>(<span class="ruby-identifier">condition_hash</span>)
   <span class="ruby-identifier">condition_hash</span>
 <span class="ruby-keyword">end</span></pre>
@@ -728,7 +873,7 @@ knowledge and great care.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::Client - softlayer_api gem 3.0.1</title>
+<title>class SoftLayer::Client - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
@@ -76,11 +77,17 @@
     
     <li ><a href="#method-c-new">::new</a>
     
+    <li ><a href="#method-c-with_password">::with_password</a>
+    
     <li ><a href="#method-i-5B-5D">#[]</a>
     
     <li ><a href="#method-i-authentication_headers">#authentication_headers</a>
     
+    <li ><a href="#method-i-key_based-3F">#key_based?</a>
+    
     <li ><a href="#method-i-service_named">#service_named</a>
+    
+    <li ><a href="#method-i-token_based-3F">#token_based?</a>
     
   </ul>
 </div>
@@ -96,7 +103,7 @@
   <section class="description">
     
 <p>A client is responsible for storing authentication information for API
-calls and it serves as a centeral repository for the <a
+calls and it serves as a central repository for the <a
 href="Service.html">Service</a> instances that call into the network API.</p>
 
 <p>When you create a client, you pass in hash arguments specifying how the
@@ -146,7 +153,7 @@ provide the missing information.  Please see that class for details.</p>
         <div class="method-description">
         
         <p>An API key passed as part of the authentication of each request. Cannot be
-emtpy or nil.</p>
+empty or nil.</p>
         
         </div>
       </div>
@@ -159,7 +166,7 @@ emtpy or nil.</p>
 
         <div class="method-description">
         
-        <p>The base URL for requests that are passed to the server. Cannot be emtpy or
+        <p>The base URL for requests that are passed to the server. Cannot be empty or
 nil.</p>
         
         </div>
@@ -189,7 +196,7 @@ network communication (often 30 seconds)</p>
 
         <div class="method-description">
         
-        <p>A string passsed as the value for the User-Agent header when requests are
+        <p>A string passed as the value for the User-Agent header when requests are
 sent to <a href="../SoftLayer.html">SoftLayer</a> API.</p>
         
         </div>
@@ -203,7 +210,7 @@ sent to <a href="../SoftLayer.html">SoftLayer</a> API.</p>
 
         <div class="method-description">
         
-        <p>A username passed as authentication for each request. Cannot be emtpy or
+        <p>A username passed as authentication for each request. Cannot be empty or
 nil.</p>
         
         </div>
@@ -311,7 +318,7 @@ wish to access through the API</p>
 <p><strong><code>:api_key</code></strong> - The API key used to authenticate
 the user with the API</p>
 </li><li>
-<p><strong><code>:enpoint_url</code></strong> - The API endpoint the client
+<p><strong><code>:endpoint_url</code></strong> - The API endpoint the client
 should connect to.  This defaults to API_PUBLIC_ENDPOINT</p>
 </li><li>
 <p><strong><code>:user_agent</code></strong> - A string that is passed along
@@ -331,17 +338,21 @@ href="../SoftLayer.html">SoftLayer</a> config file (if one exists)</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Client.rb, line 73</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Client.rb, line 99</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">options</span> = {})
   <span class="ruby-ivar">@services</span> = { }
 
   <span class="ruby-identifier">settings</span> = <span class="ruby-constant">Config</span>.<span class="ruby-identifier">client_settings</span>(<span class="ruby-identifier">options</span>)
 
   <span class="ruby-comment"># pick up the username from the options, the global, or assume no username</span>
-  <span class="ruby-ivar">@username</span> = <span class="ruby-identifier">settings</span>[<span class="ruby-value">:username</span>] <span class="ruby-operator">||</span> <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-ivar">@username</span> = <span class="ruby-identifier">settings</span>[<span class="ruby-value">:username</span>]
 
   <span class="ruby-comment"># do a similar thing for the api key</span>
-  <span class="ruby-ivar">@api_key</span> = <span class="ruby-identifier">settings</span>[<span class="ruby-value">:api_key</span>] <span class="ruby-operator">||</span> <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-ivar">@api_key</span> = <span class="ruby-identifier">settings</span>[<span class="ruby-value">:api_key</span>]
+
+  <span class="ruby-comment"># grab token pair</span>
+  <span class="ruby-ivar">@userId</span> = <span class="ruby-identifier">settings</span>[<span class="ruby-value">:userId</span>]
+  <span class="ruby-ivar">@authToken</span> = <span class="ruby-identifier">settings</span>[<span class="ruby-value">:authToken</span>]
 
   <span class="ruby-comment"># and the endpoint url</span>
   <span class="ruby-ivar">@endpoint_url</span> = <span class="ruby-identifier">settings</span>[<span class="ruby-value">:endpoint_url</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">API_PUBLIC_ENDPOINT</span>
@@ -352,9 +363,60 @@ href="../SoftLayer.html">SoftLayer</a> config file (if one exists)</p>
   <span class="ruby-comment"># and assign a time out if the settings offer one</span>
   <span class="ruby-ivar">@network_timeout</span> = <span class="ruby-identifier">settings</span>[<span class="ruby-value">:timeout</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:timeout</span>)
 
-  <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;A SoftLayer Client requires a username&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@username</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@username</span>.<span class="ruby-identifier">empty?</span>
-  <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;A SoftLayer Client requires an api_key&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@api_key</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@api_key</span>.<span class="ruby-identifier">empty?</span>
-  <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;A SoftLayer Clietn requires an enpoint URL&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@endpoint_url</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@endpoint_url</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;A SoftLayer Client requires an endpoint URL&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@endpoint_url</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@endpoint_url</span>.<span class="ruby-identifier">empty?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-with_password" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">with_password</span><span
+            class="method-args">(options = {})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>This will be using your username and password to get a portal token with
+which to authenticate client calls. This is a wrapper around <a
+href="Client.html#method-c-new">::new</a>. You can pass it the same
+parameters as with <a href="Client.html#method-c-new">::new</a>, with the
+exception that this will be expecting a password in the options hash.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="with_password-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Client.rb, line 67</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">with_password</span>(<span class="ruby-identifier">options</span> = {})
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:username</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:username</span>].<span class="ruby-identifier">empty?</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-string">&#39;A username is required to create this client&#39;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:password</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:password</span>].<span class="ruby-identifier">empty?</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-string">&#39;A password is required to create this client&#39;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">service</span> = <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">Service</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;SoftLayer_User_Customer&#39;</span>)
+  <span class="ruby-identifier">token</span> = <span class="ruby-identifier">service</span>.<span class="ruby-identifier">getPortalLoginToken</span>(
+    <span class="ruby-identifier">options</span>[<span class="ruby-value">:username</span>], <span class="ruby-identifier">options</span>[<span class="ruby-value">:password</span>]
+  )
+
+  <span class="ruby-identifier">options</span>[<span class="ruby-value">:userId</span>] = <span class="ruby-identifier">token</span>[<span class="ruby-string">&#39;userId&#39;</span>]
+  <span class="ruby-identifier">options</span>[<span class="ruby-value">:authToken</span>] = <span class="ruby-identifier">token</span>[<span class="ruby-string">&#39;hash&#39;</span>]
+
+  <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">Client</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -393,7 +455,7 @@ href="../SoftLayer.html">SoftLayer</a> config file (if one exists)</p>
 
           
           <div class="method-source-code" id="5B-5D-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Client.rb, line 140</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Client.rb, line 190</span>
 <span class="ruby-keyword">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">service_name</span>)
   <span class="ruby-identifier">service_named</span>(<span class="ruby-identifier">service_name</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -426,14 +488,59 @@ href="../SoftLayer.html">SoftLayer</a> config file (if one exists)</p>
 
           
           <div class="method-source-code" id="authentication_headers-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Client.rb, line 99</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Client.rb, line 137</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">authentication_headers</span>
-  {
-    <span class="ruby-string">&quot;authenticate&quot;</span> =<span class="ruby-operator">&gt;</span> {
-      <span class="ruby-string">&quot;username&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@username</span>,
-      <span class="ruby-string">&quot;apiKey&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@api_key</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">token_based?</span>
+    {
+      <span class="ruby-string">&#39;authenticate&#39;</span> =<span class="ruby-operator">&gt;</span> {
+        <span class="ruby-string">&#39;complexType&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;PortalLoginToken&#39;</span>,
+        <span class="ruby-string">&#39;userId&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@userId</span>,
+        <span class="ruby-string">&#39;authToken&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@authToken</span>
+      }
     }
-  }
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">key_based?</span>
+    {
+      <span class="ruby-string">&#39;authenticate&#39;</span> =<span class="ruby-operator">&gt;</span> {
+        <span class="ruby-string">&#39;username&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@username</span>,
+        <span class="ruby-string">&#39;apiKey&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@api_key</span>
+      }
+    }
+  <span class="ruby-keyword">else</span>
+    {}
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-key_based-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">key_based?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>return whether this client is using api_key-based authentication</p>
+          
+          
+
+          
+          <div class="method-source-code" id="key_based-3F-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Client.rb, line 132</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">key_based?</span>
+  <span class="ruby-ivar">@username</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@username</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@api_key</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@api_key</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -469,14 +576,14 @@ along to the creative function. However, when returning a previously
 created <a href="Service.html">Service</a>, the service_options will be
 ignored.</p>
 
-<p>If the service_name provided does not start with ‘SoftLayer_’ that prefix
-will be added</p>
+<p>If the service_name provided does not start with &#39;SoftLayer_&#39; that
+prefix will be added</p>
           
           
 
           
           <div class="method-source-code" id="service_named-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Client.rb, line 120</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Client.rb, line 170</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">service_named</span>(<span class="ruby-identifier">service_name</span>, <span class="ruby-identifier">service_options</span> = {})
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>,<span class="ruby-string">&quot;Please provide a service name&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">service_name</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">service_name</span>.<span class="ruby-identifier">empty?</span>
 
@@ -487,7 +594,7 @@ will be added</p>
     <span class="ruby-identifier">full_name</span> = <span class="ruby-node">&quot;SoftLayer_#{service_name}&quot;</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-comment"># if we've already created this service, just return it</span>
+  <span class="ruby-comment"># if we&#39;ve already created this service, just return it</span>
   <span class="ruby-comment"># otherwise create a new service</span>
   <span class="ruby-identifier">service_key</span> = <span class="ruby-identifier">full_name</span>.<span class="ruby-identifier">to_sym</span>
   <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@services</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">service_key</span>)
@@ -495,6 +602,39 @@ will be added</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-ivar">@services</span>[<span class="ruby-identifier">service_key</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-token_based-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">token_based?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>return whether this client is using token-based authentication</p>
+          
+          
+
+          
+          <div class="method-source-code" id="token_based-3F-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Client.rb, line 127</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">token_based?</span>
+  <span class="ruby-ivar">@userId</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@authToken</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@authToken</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -514,7 +654,7 @@ will be added</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::Ticket - softlayer_api gem 3.0.1</title>
+<title>class SoftLayer::Ticket - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
@@ -129,6 +130,23 @@
         <div class="method-description">
         
         <p>The date the ticket was last updated.</p>
+
+<p>DEPRECATION WARNING: This attribute is deprecated in favor of <a
+href="Ticket.html#attribute-i-last_edited_at">#last_edited_at</a> and will
+be removed in the next major release.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-last_edited_at" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">last_edited_at</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The date the ticket was last updated.</p>
         
         </div>
       </div>
@@ -214,7 +232,7 @@ whom the ticket should be assigned</p>
 
           
           <div class="method-source-code" id="create_standard_ticket-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 146</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 155</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">create_standard_ticket</span>(<span class="ruby-identifier">options</span> = {})
   <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:client</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
@@ -226,14 +244,14 @@ whom the ticket should be assigned</p>
 
   <span class="ruby-keyword">if</span>(<span class="ruby-keyword">nil</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">assigned_user_id</span>)
     <span class="ruby-identifier">current_user</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Account</span>].<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;id&quot;</span>).<span class="ruby-identifier">getCurrentUser</span>()
-    <span class="ruby-identifier">assigned_user_id</span> = <span class="ruby-identifier">current_user</span>[<span class="ruby-string">'id'</span>]
+    <span class="ruby-identifier">assigned_user_id</span> = <span class="ruby-identifier">current_user</span>[<span class="ruby-string">&#39;id&#39;</span>]
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">new_ticket</span> = {
-    <span class="ruby-string">'subjectId'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">subject_id</span>,
-    <span class="ruby-string">'contents'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">body</span>,
-    <span class="ruby-string">'assignedUserId'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">assigned_user_id</span>,
-    <span class="ruby-string">'title'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">title</span>
+    <span class="ruby-string">&#39;subjectId&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">subject_id</span>,
+    <span class="ruby-string">&#39;contents&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">body</span>,
+    <span class="ruby-string">&#39;assignedUserId&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">assigned_user_id</span>,
+    <span class="ruby-string">&#39;title&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">title</span>
   }
 
   <span class="ruby-identifier">ticket_data</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Ticket</span>].<span class="ruby-identifier">createStandardTicket</span>(<span class="ruby-identifier">new_ticket</span>, <span class="ruby-identifier">body</span>)
@@ -270,25 +288,25 @@ server.</p>
 
           
           <div class="method-source-code" id="default_object_mask-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 70</span>
-          <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
-{
-  <span class="ruby-string">&quot;mask&quot;</span> =<span class="ruby-operator">&gt;</span> [
-    <span class="ruby-string">'id'</span>,                                                 <span class="ruby-comment"># This is an internal ticket ID, not the one usually seen in the portal</span>
-    <span class="ruby-string">'serviceProvider'</span>,
-    <span class="ruby-string">'serviceProviderResourceId'</span>,  <span class="ruby-comment"># This is the ticket ID usually seen in the portal</span>
-    <span class="ruby-string">'title'</span>,
-    <span class="ruby-string">'subject'</span>,
-    {<span class="ruby-string">'assignedUser'</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">'username'</span>, <span class="ruby-string">'firstName'</span>, <span class="ruby-string">'lastName'</span>] },
-    <span class="ruby-string">'status.id'</span>,
-    <span class="ruby-string">'createDate'</span>,
-    <span class="ruby-string">'lastEditDate'</span>,
-    <span class="ruby-string">'newUpdatesFlag'</span>,             <span class="ruby-comment"># This comes in from the server as a Boolean value</span>
-    <span class="ruby-string">'awaitingUserResponseFlag'</span>,   <span class="ruby-comment"># This comes in from the server as a Boolean value</span>
-    <span class="ruby-string">'serverAdministrationFlag'</span>,   <span class="ruby-comment"># This comes in from the server as an integer :-(</span>
-  ]
-}.<span class="ruby-identifier">to_sl_object_mask</span>
-          <span class="ruby-keyword">end</span></pre>
+            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 78</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
+  {
+    <span class="ruby-string">&quot;mask&quot;</span> =<span class="ruby-operator">&gt;</span> [
+      <span class="ruby-string">&#39;id&#39;</span>,                                                 <span class="ruby-comment"># This is an internal ticket ID, not the one usually seen in the portal</span>
+      <span class="ruby-string">&#39;serviceProvider&#39;</span>,
+      <span class="ruby-string">&#39;serviceProviderResourceId&#39;</span>,  <span class="ruby-comment"># This is the ticket ID usually seen in the portal</span>
+      <span class="ruby-string">&#39;title&#39;</span>,
+      <span class="ruby-string">&#39;subject&#39;</span>,
+      {<span class="ruby-string">&#39;assignedUser&#39;</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">&#39;username&#39;</span>, <span class="ruby-string">&#39;firstName&#39;</span>, <span class="ruby-string">&#39;lastName&#39;</span>] },
+      <span class="ruby-string">&#39;status.id&#39;</span>,
+      <span class="ruby-string">&#39;createDate&#39;</span>,
+      <span class="ruby-string">&#39;lastEditDate&#39;</span>,
+      <span class="ruby-string">&#39;newUpdatesFlag&#39;</span>,             <span class="ruby-comment"># This comes in from the server as a Boolean value</span>
+      <span class="ruby-string">&#39;awaitingUserResponseFlag&#39;</span>,   <span class="ruby-comment"># This comes in from the server as a Boolean value</span>
+      <span class="ruby-string">&#39;serverAdministrationFlag&#39;</span>,   <span class="ruby-comment"># This comes in from the server as an integer :-(</span>
+    ]
+  }.<span class="ruby-identifier">to_sl_object_mask</span>
+<span class="ruby-keyword">end</span></pre>
           </div>
           
         </div>
@@ -319,19 +337,19 @@ list of the valid ticket subjects.</p>
 
           
           <div class="method-source-code" id="ticket_subjects-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 92</span>
-        <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">ticket_subjects</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
-                <span class="ruby-ivar">@ticket_subjects</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 100</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">ticket_subjects</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-ivar">@ticket_subjects</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">nil</span>
 
-                <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@ticket_subjects</span>
-<span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">client</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
-<span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@ticket_subjects</span>
+    <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">client</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
 
-                        <span class="ruby-ivar">@ticket_subjects</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Ticket_Subject</span>].<span class="ruby-identifier">getAllObjects</span>();
-                <span class="ruby-keyword">end</span>
+    <span class="ruby-ivar">@ticket_subjects</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Ticket_Subject</span>].<span class="ruby-identifier">getAllObjects</span>();
+  <span class="ruby-keyword">end</span>
 
-                <span class="ruby-ivar">@ticket_subjects</span>
-        <span class="ruby-keyword">end</span></pre>
+  <span class="ruby-ivar">@ticket_subjects</span>
+<span class="ruby-keyword">end</span></pre>
           </div>
           
         </div>
@@ -367,25 +385,31 @@ href="Client.html#method-c-default_client">SoftLayer::Client.default_client</a>
 If <a
 href="Client.html#method-c-default_client">SoftLayer::Client.default_client</a>
 is also nil the routine will raise an error.</p>
+
+<p>Additionally you may provide options related to the request itself:</p>
+<ul><li>
+<p><strong>:object_mask</strong> (string) - The object mask of properties you
+wish to receive for the items returned.</p>
+
+<pre>If not provided, the result will use the default object mask</pre>
+</li></ul>
           
           
 
           
           <div class="method-source-code" id="ticket_with_id-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 115</span>
-            <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">ticket_with_id</span>(<span class="ruby-identifier">ticket_id</span>, <span class="ruby-identifier">options</span> = {})
+            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 126</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">ticket_with_id</span>(<span class="ruby-identifier">ticket_id</span>, <span class="ruby-identifier">options</span> = {})
   <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:client</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
 
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:object_mask</span>)
-    <span class="ruby-identifier">object_mask</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:object_mask</span>]
-  <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">object_mask</span> = <span class="ruby-identifier">default_object_mask</span>.<span class="ruby-identifier">to_sl_object_mask</span>
-  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">ticket_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Ticket</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">ticket_id</span>)
+  <span class="ruby-identifier">ticket_service</span> = <span class="ruby-identifier">ticket_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">default_object_mask</span>.<span class="ruby-identifier">to_sl_object_mask</span>)
+  <span class="ruby-identifier">ticket_service</span> = <span class="ruby-identifier">ticket_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:object_mask</span>]) <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:object_mask</span>]
 
-  <span class="ruby-identifier">ticket_data</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Ticket</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">ticket_id</span>).<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">object_mask</span>).<span class="ruby-identifier">getObject</span>()
+  <span class="ruby-identifier">ticket_data</span>    = <span class="ruby-identifier">ticket_service</span>.<span class="ruby-identifier">getObject</span>()
 
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">ticket_data</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">Ticket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">ticket_data</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -424,9 +448,9 @@ is also nil the routine will raise an error.</p>
 
           
           <div class="method-source-code" id="has_updates-3F-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 27</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 35</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">has_updates?</span>
-  <span class="ruby-keyword">self</span>[<span class="ruby-string">'newUpdatesFlag'</span>]
+  <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;newUpdatesFlag&#39;</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -457,10 +481,10 @@ is also nil the routine will raise an error.</p>
 
           
           <div class="method-source-code" id="server_admin_ticket-3F-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 33</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 41</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">server_admin_ticket?</span>
   <span class="ruby-comment"># note that serverAdministrationFlag comes from the server as an Integer (0, or 1)</span>
-  <span class="ruby-keyword">self</span>[<span class="ruby-string">'serverAdministrationFlag'</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+  <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;serverAdministrationFlag&#39;</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -492,7 +516,7 @@ the SoftLayer_Ticket service set up to talk to the ticket with my ID.</p>
 
           
           <div class="method-source-code" id="service-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 48</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 56</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">service</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Ticket</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -526,18 +550,18 @@ server.</p>
 
           
           <div class="method-source-code" id="softlayer_properties-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 55</span>
-          <span class="ruby-keyword">def</span> <span class="ruby-identifier">softlayer_properties</span>(<span class="ruby-identifier">object_mask</span> = <span class="ruby-keyword">nil</span>)
-<span class="ruby-identifier">my_service</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 63</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">softlayer_properties</span>(<span class="ruby-identifier">object_mask</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">my_service</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>
 
-<span class="ruby-keyword">if</span>(<span class="ruby-identifier">object_mask</span>)
-  <span class="ruby-identifier">my_service</span> = <span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">object_mask</span>)
-<span class="ruby-keyword">else</span>
-  <span class="ruby-identifier">my_service</span> = <span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">default_object_mask</span>.<span class="ruby-identifier">to_sl_object_mask</span>)
-<span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">if</span>(<span class="ruby-identifier">object_mask</span>)
+    <span class="ruby-identifier">my_service</span> = <span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">object_mask</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">my_service</span> = <span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">default_object_mask</span>.<span class="ruby-identifier">to_sl_object_mask</span>)
+  <span class="ruby-keyword">end</span>
 
-<span class="ruby-identifier">my_service</span>.<span class="ruby-identifier">getObject</span>()
-          <span class="ruby-keyword">end</span></pre>
+  <span class="ruby-identifier">my_service</span>.<span class="ruby-identifier">getObject</span>()
+<span class="ruby-keyword">end</span></pre>
           </div>
           
         </div>
@@ -567,9 +591,9 @@ server.</p>
 
           
           <div class="method-source-code" id="update-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 41</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Ticket.rb, line 49</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">body</span> = <span class="ruby-keyword">nil</span>)
-        <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">edit</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_hash</span>, <span class="ruby-identifier">body</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">edit</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_hash</span>, <span class="ruby-identifier">body</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -589,7 +613,7 @@ server.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

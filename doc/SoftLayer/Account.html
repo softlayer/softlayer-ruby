@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::Account - softlayer_api gem 3.0.1</title>
+<title>class SoftLayer::Account - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
@@ -89,6 +90,8 @@
     
     <li ><a href="#method-i-find_VLAN_with_number">#find_VLAN_with_number</a>
     
+    <li ><a href="#method-i-find_vlan_with_number">#find_vlan_with_number</a>
+    
     <li ><a href="#method-i-image_templates">#image_templates</a>
     
     <li ><a href="#method-i-network_message_delivery_accounts">#network_message_delivery_accounts</a>
@@ -147,7 +150,7 @@
 
         <div class="method-description">
         
-        <p>The first address line for the primary contact’s address</p>
+        <p>The first address line for the primary contact&#39;s address</p>
         
         </div>
       </div>
@@ -160,7 +163,7 @@
 
         <div class="method-description">
         
-        <p>The second address line (if any, may be nil) for the primary contact’s
+        <p>The second address line (if any, may be nil) for the primary contact&#39;s
 address</p>
         
         </div>
@@ -174,7 +177,7 @@ address</p>
 
         <div class="method-description">
         
-        <p>The city stored as part of the primary contact’s address</p>
+        <p>The city stored as part of the primary contact&#39;s address</p>
         
         </div>
       </div>
@@ -182,6 +185,23 @@ address</p>
       <div id="attribute-i-companyName" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">companyName</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The company name of the primary contact</p>
+
+<p>DEPRECATION WARNING: This attribute is deprecated in favor of <a
+href="Account.html#attribute-i-company_name">#company_name</a> and will be
+removed in the next major release.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-company_name" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">company_name</span><span
             class="attribute-access-type">[R]</span>
         </div>
 
@@ -200,7 +220,7 @@ address</p>
 
         <div class="method-description">
         
-        <p>The country stored as part of the primary contact’s address</p>
+        <p>The country stored as part of the primary contact&#39;s address</p>
         
         </div>
       </div>
@@ -208,6 +228,23 @@ address</p>
       <div id="attribute-i-firstName" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">firstName</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The given name name of the primary contact</p>
+
+<p>DEPRECATION WARNING: This attribute is deprecated in favor of <a
+href="Account.html#attribute-i-first_name">#first_name</a> and will be
+removed in the next major release.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-first_name" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">first_name</span><span
             class="attribute-access-type">[R]</span>
         </div>
 
@@ -227,6 +264,23 @@ address</p>
         <div class="method-description">
         
         <p>The surname of the primary contact</p>
+
+<p>DEPRECATION WARNING: This attribute is deprecated in favor of <a
+href="Account.html#attribute-i-last_name">#last_name</a> and will be
+removed in the next major release.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-last_name" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">last_name</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The surname of the primary contact</p>
         
         </div>
       </div>
@@ -239,7 +293,24 @@ address</p>
 
         <div class="method-description">
         
-        <p>The office phone nubmer listed for the primary contact</p>
+        <p>The office phone number listed for the primary contact</p>
+
+<p>DEPRECATION WARNING: This attribute is deprecated in favor of <a
+href="Account.html#attribute-i-office_phone">#office_phone</a> and will be
+removed in the next major release.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-office_phone" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">office_phone</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The office phone number listed for the primary contact</p>
         
         </div>
       </div>
@@ -252,7 +323,26 @@ address</p>
 
         <div class="method-description">
         
-        <p>The postal code (in the US, aka. zip code) of the primary contact’s address</p>
+        <p>The postal code (in the US, aka. zip code) of the primary contact&#39;s
+address</p>
+
+<p>DEPRECATION WARNING: This attribute is deprecated in favor of <a
+href="Account.html#attribute-i-postal_code">#postal_code</a> and will be
+removed in the next major release.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-postal_code" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">postal_code</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The postal code (in the US, aka. zip code) of the primary contact&#39;s
+address</p>
         
         </div>
       </div>
@@ -268,7 +358,7 @@ address</p>
         <p>The two character abbreviation for the state, province, or other similar
 national division that is part of the address of the primary contact.  For
 addresses outside of the US and Canada, where there may not be an
-equivalent to a state, this may be ‘NA’ (for not applicable)</p>
+equivalent to a state, this may be &#39;NA&#39; (for not applicable)</p>
         
         </div>
       </div>
@@ -303,14 +393,14 @@ with those credentials.</p>
 
           
           <div class="method-source-code" id="account_for_client-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 223</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 300</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">account_for_client</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">client</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
 
   <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Account</span>]
   <span class="ruby-identifier">network_hash</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">getObject</span>()
-  <span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">network_hash</span>)
+  <span class="ruby-constant">Account</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">network_hash</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -346,15 +436,15 @@ with those credentials.</p>
 
         <div class="method-description">
           
-          <p>The Bare Metal Servers (physical hardware) associated with the account.
-Unless you force these to update, they will be refreshed every five
-minutes.</p>
+          <p>Retrieve the Bare Metal Servers (physical hardware) associated with the
+account. Unless you force these to update, they will be refreshed every
+five minutes.</p>
           
           
 
           
           <div class="method-source-code" id="bare_metal_servers-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 70</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 110</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:bare_metal_servers</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">bare_metal</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">bare_metal</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@last_bare_metal_update</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">at</span>(<span class="ruby-value">0</span>)
@@ -378,25 +468,28 @@ minutes.</p>
     
       <div id="method-i-evault_master_users" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">evault_master_users</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            evault_master_users(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>Retrieve an account’s master EVault user. This is only used when an account
-has an EVault service.</p>
+          <p>Retrieve an account&#39;s master EVault user. This is only used when an
+account has an EVault service.</p>
           
           
 
           
           <div class="method-source-code" id="evault_master_users-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 85</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 127</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:evault_master_users</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">evault_users</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">evault_users</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@evault_master_users</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span>
@@ -430,7 +523,53 @@ has an EVault service.</p>
 
         <div class="method-description">
           
-          <p>Searches the account’s list of VLANs for the ones with the given vlan
+          <p>Searches the account&#39;s list of VLANs for the ones with the given vlan
+number. This may return multiple results because a VLAN can span different
+routers and you will get a separate segment for each router.</p>
+
+<p>The IDs of the different segments can be helpful for ordering firewalls.</p>
+
+<p>DEPRECATION WARNING: This method is deprecated in favor of <a
+href="Account.html#method-i-find_vlan_with_number">#find_vlan_with_number</a>
+and will be removed in the next major release.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="find_VLAN_with_number-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 287</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_VLAN_with_number</span>(<span class="ruby-identifier">vlan_number</span>)
+  <span class="ruby-identifier">filter</span> = <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">ObjectFilter</span>.<span class="ruby-identifier">new</span>() { <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-string">&#39;networkVlans.vlanNumber&#39;</span>).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span> <span class="ruby-identifier">vlan_number</span>
+  }
+
+  <span class="ruby-identifier">vlan_data</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[id,vlanNumber,primaryRouter,networkSpace]&quot;</span>).<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">filter</span>).<span class="ruby-identifier">getNetworkVlans</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">vlan_data</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-find_vlan_with_number" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">find_vlan_with_number</span><span
+            class="method-args">(vlan_number)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Searches the account&#39;s list of VLANs for the ones with the given vlan
 number. This may return multiple results because a VLAN can span different
 routers and you will get a separate segment for each router.</p>
 
@@ -439,11 +578,11 @@ routers and you will get a separate segment for each router.</p>
           
 
           
-          <div class="method-source-code" id="find_VLAN_with_number-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 210</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_VLAN_with_number</span>(<span class="ruby-identifier">vlan_number</span>)
+          <div class="method-source-code" id="find_vlan_with_number-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 267</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_vlan_with_number</span>(<span class="ruby-identifier">vlan_number</span>)
   <span class="ruby-identifier">filter</span> = <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">ObjectFilter</span>.<span class="ruby-identifier">new</span>() { <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-string">'networkVlans.vlanNumber'</span>).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span> <span class="ruby-identifier">vlan_number</span>
+    <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-string">&#39;networkVlans.vlanNumber&#39;</span>).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span> <span class="ruby-identifier">vlan_number</span>
   }
 
   <span class="ruby-identifier">vlan_data</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[id,vlanNumber,primaryRouter,networkSpace]&quot;</span>).<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">filter</span>).<span class="ruby-identifier">getNetworkVlans</span>
@@ -461,24 +600,28 @@ routers and you will get a separate segment for each router.</p>
     
       <div id="method-i-image_templates" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">image_templates</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            image_templates(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>Retrieve an account’s image templates</p>
+          <p>Retrieve an account&#39;s image templates. Unless you force  these to
+update, they will be refreshed every five minutes</p>
           
           
 
           
           <div class="method-source-code" id="image_templates-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 98</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 143</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:image_templates</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">image_templates</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">image_templates</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@last_image_template_update</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">at</span>(<span class="ruby-value">0</span>)
@@ -502,24 +645,27 @@ routers and you will get a separate segment for each router.</p>
     
       <div id="method-i-network_message_delivery_accounts" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">network_message_delivery_accounts</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            network_message_delivery_accounts(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>Retrieve an account’s network message delivery acounts.</p>
+          <p>Retrieve an account&#39;s network message delivery accounts.</p>
           
           
 
           
           <div class="method-source-code" id="network_message_delivery_accounts-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 112</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 159</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:network_message_delivery_accounts</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">net_msg_deliv_accts</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">net_msg_deliv_accts</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@network_message_delivery_accounts</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span>
@@ -542,24 +688,27 @@ routers and you will get a separate segment for each router.</p>
     
       <div id="method-i-network_storage_groups" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">network_storage_groups</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            network_storage_groups(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>Retrieve an account’s network storage groups.</p>
+          <p>Retrieve an account&#39;s network storage groups.</p>
           
           
 
           
           <div class="method-source-code" id="network_storage_groups-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 125</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 174</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:network_storage_groups</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">net_stor_groups</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">net_stor_groups</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@network_storage_groups</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span>
@@ -582,24 +731,28 @@ routers and you will get a separate segment for each router.</p>
     
       <div id="method-i-open_tickets" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">open_tickets</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            open_tickets(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>Retrieve an account’s open tickets</p>
+          <p>Retrieve an account&#39;s open tickets. Unless you force these  to update,
+they will be refreshed every five minutes</p>
           
           
 
           
           <div class="method-source-code" id="open_tickets-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 138</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 190</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:open_tickets</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">open_tickets</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">open_tickets</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@last_open_tickets_update</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">at</span>(<span class="ruby-value">0</span>)
@@ -642,7 +795,7 @@ bare metal and virtual servers</p>
 
           
           <div class="method-source-code" id="servers-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 235</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 312</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">servers</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">bare_metal_servers</span> <span class="ruby-operator">+</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">virtual_servers</span>
 <span class="ruby-keyword">end</span></pre>
@@ -675,7 +828,7 @@ bare metal and virtual servers</p>
 
           
           <div class="method-source-code" id="service-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 197</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 254</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">service</span>
   <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Account</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -691,24 +844,27 @@ bare metal and virtual servers</p>
     
       <div id="method-i-users" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">users</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            users(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>Retrieve an account’s portal users.</p>
+          <p>Retrieve an account&#39;s portal users.</p>
           
           
 
           
           <div class="method-source-code" id="users-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 153</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 207</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:users</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">users</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">users</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@users</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span>
@@ -731,24 +887,28 @@ bare metal and virtual servers</p>
     
       <div id="method-i-virtual_disk_images" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">virtual_disk_images</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            virtual_disk_images(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>Retrieve an account’s virtual disk images</p>
+          <p>Retrieve an account&#39;s virtual disk images. Unless you force  these to
+update, they will be refreshed every five minutes</p>
           
           
 
           
           <div class="method-source-code" id="virtual_disk_images-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 166</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 223</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:virtual_disk_images</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">virtual_disk_images</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">virtual_disk_images</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@last_virtual_disk_images_update</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">at</span>(<span class="ruby-value">0</span>)
@@ -787,15 +947,15 @@ bare metal and virtual servers</p>
 
         <div class="method-description">
           
-          <p>The virtual servers (aka. CCIs or Virtual_Guests) associated with the
-account. Unless you force these to update, they will be refreshed every
+          <p>Retrieve the virtual servers (aka. CCIs or Virtual_Guests) associated with
+the account. Unless you force these to update, they will be refreshed every
 five minutes.</p>
           
           
 
           
           <div class="method-source-code" id="virtual_servers-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 185</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Account.rb, line 242</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:virtual_servers</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">virtual_servers</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">virtual_servers</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@last_virtual_server_update</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">at</span>(<span class="ruby-value">0</span>)
@@ -825,7 +985,7 @@ five minutes.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

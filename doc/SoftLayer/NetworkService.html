@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::NetworkService - softlayer_api gem 3.0.1</title>
+<title>class SoftLayer::NetworkService - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
@@ -129,32 +130,6 @@ SoftLayer_Network_Service_Resource in the API.</p>
       </header>
 
       
-      <div id="attribute-i-backendIpAddress" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">backendIpAddress</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        <p>The backend IP address for this resource</p>
-        
-        </div>
-      </div>
-      
-      <div id="attribute-i-frontendIpAddress" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">frontendIpAddress</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        <p>The frontend IP address for this resource</p>
-        
-        </div>
-      </div>
-      
       <div id="attribute-i-name" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">name</span><span
@@ -190,19 +165,6 @@ SoftLayer_Network_Service_Resource in the API.</p>
         <div class="method-description">
         
         <p>The frontend IP address for this resource</p>
-        
-        </div>
-      </div>
-      
-      <div id="attribute-i-sshUsername" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">sshUsername</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        <p>The ssh username of for this resource</p>
         
         </div>
       </div>
@@ -249,24 +211,24 @@ SoftLayer_Network_Service_Resource in the API.</p>
 
           
           <div class="method-source-code" id="default_object_mask-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkService.rb, line 74</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkService.rb, line 76</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
   {
     <span class="ruby-string">&quot;mask(SoftLayer_Network_Service_Resource)&quot;</span> =<span class="ruby-operator">&gt;</span> [
-                                                   <span class="ruby-string">'apiHost'</span>,
-                                                   <span class="ruby-string">'apiPassword'</span>,
-                                                   <span class="ruby-string">'apiPath'</span>,
-                                                   <span class="ruby-string">'apiPort'</span>,
-                                                   <span class="ruby-string">'apiProtocol'</span>,
-                                                   <span class="ruby-string">'apiUsername'</span>,
-                                                   <span class="ruby-string">'backendIpAddress'</span>,
-                                                   <span class="ruby-string">'datacenter'</span>,
-                                                   <span class="ruby-string">'frontendIpAddress'</span>,
-                                                   <span class="ruby-string">'id'</span>,
-                                                   <span class="ruby-string">'name'</span>,
-                                                   <span class="ruby-string">'networkDevice.id'</span>,
-                                                   <span class="ruby-string">'sshUsername'</span>,
-                                                   <span class="ruby-string">'type.type'</span>
+                                                   <span class="ruby-string">&#39;apiHost&#39;</span>,
+                                                   <span class="ruby-string">&#39;apiPassword&#39;</span>,
+                                                   <span class="ruby-string">&#39;apiPath&#39;</span>,
+                                                   <span class="ruby-string">&#39;apiPort&#39;</span>,
+                                                   <span class="ruby-string">&#39;apiProtocol&#39;</span>,
+                                                   <span class="ruby-string">&#39;apiUsername&#39;</span>,
+                                                   <span class="ruby-string">&#39;backendIpAddress&#39;</span>,
+                                                   <span class="ruby-string">&#39;datacenter&#39;</span>,
+                                                   <span class="ruby-string">&#39;frontendIpAddress&#39;</span>,
+                                                   <span class="ruby-string">&#39;id&#39;</span>,
+                                                   <span class="ruby-string">&#39;name&#39;</span>,
+                                                   <span class="ruby-string">&#39;networkDevice.id&#39;</span>,
+                                                   <span class="ruby-string">&#39;sshUsername&#39;</span>,
+                                                   <span class="ruby-string">&#39;type.type&#39;</span>
                                                   ]
   }.<span class="ruby-identifier">to_sl_object_mask</span>
 <span class="ruby-keyword">end</span></pre>
@@ -307,15 +269,15 @@ SoftLayer_Network_Service_Resource in the API.</p>
 
           
           <div class="method-source-code" id="api-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkService.rb, line 54</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkService.rb, line 56</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">api</span>
   {
-      <span class="ruby-string">'host'</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiHost'</span>],
-      <span class="ruby-string">'password'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiPassword'</span>],
-      <span class="ruby-string">'path'</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiPath'</span>],
-      <span class="ruby-string">'port'</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiPort'</span>],
-      <span class="ruby-string">'protocol'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiProtocol'</span>],
-      <span class="ruby-string">'username'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'apiUsername'</span>]
+      <span class="ruby-string">&#39;host&#39;</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;apiHost&#39;</span>],
+      <span class="ruby-string">&#39;password&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;apiPassword&#39;</span>],
+      <span class="ruby-string">&#39;path&#39;</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;apiPath&#39;</span>],
+      <span class="ruby-string">&#39;port&#39;</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;apiPort&#39;</span>],
+      <span class="ruby-string">&#39;protocol&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;apiProtocol&#39;</span>],
+      <span class="ruby-string">&#39;username&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;apiUsername&#39;</span>]
   }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -330,24 +292,27 @@ SoftLayer_Network_Service_Resource in the API.</p>
     
       <div id="method-i-datacenter" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">datacenter</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            datacenter(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>Returns the datacenter that this network service resource is available in</p>
+          <p>Retrieve the datacenter that this network service resource is available in</p>
           
           
 
           
           <div class="method-source-code" id="datacenter-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkService.rb, line 40</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkService.rb, line 42</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:datacenter</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -355,7 +320,7 @@ SoftLayer_Network_Service_Resource in the API.</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-constant">Datacenter</span><span class="ruby-operator">::</span><span class="ruby-identifier">datacenter_named</span>(<span class="ruby-keyword">self</span>[<span class="ruby-string">'datacenter'</span>][<span class="ruby-string">'name'</span>], <span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_client</span>)
+    <span class="ruby-constant">Datacenter</span><span class="ruby-operator">::</span><span class="ruby-identifier">datacenter_named</span>(<span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;datacenter&#39;</span>][<span class="ruby-string">&#39;name&#39;</span>], <span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_client</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -387,9 +352,9 @@ SoftLayer_Network_Service_Resource in the API.</p>
 
           
           <div class="method-source-code" id="type-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkService.rb, line 68</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkService.rb, line 70</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">type</span>
-  <span class="ruby-keyword">self</span>[<span class="ruby-string">'type'</span>][<span class="ruby-string">'type'</span>]
+  <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;type&#39;</span>][<span class="ruby-string">&#39;type&#39;</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -409,7 +374,7 @@ SoftLayer_Network_Service_Resource in the API.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::Service - softlayer_api gem 3.0.1</title>
+<title>class SoftLayer::Service - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
@@ -127,7 +128,7 @@ initialization options, however if you do so you will need to prepend the
 :api_key=&gt;&quot;&lt;your api key here&gt;&quot;)</pre>
 
 <p>A service communicates with the <a href="../SoftLayer.html">SoftLayer</a>
-API through the the XML-RPC interface using Ruby’s built in classes</p>
+API through the the XML-RPC interface using Ruby&#39;s built in classes</p>
 
 <p>Once you have a service, you can invoke methods in the service like this:</p>
 
@@ -174,7 +175,7 @@ API through the the XML-RPC interface using Ruby’s built in classes</p>
 
         <div class="method-description">
         
-        <p>The name of the service that this object calls. Cannot be emtpy or nil.</p>
+        <p>The name of the service that this object calls. Cannot be empty or nil.</p>
         
         </div>
       </div>
@@ -208,7 +209,7 @@ API through the the XML-RPC interface using Ruby’s built in classes</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 77</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 79</span>
     <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> (<span class="ruby-identifier">service_name</span>, <span class="ruby-identifier">options</span> = {})
       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>,<span class="ruby-string">&quot;Please provide a service name&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">service_name</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">service_name</span>.<span class="ruby-identifier">empty?</span>
 
@@ -242,14 +243,14 @@ API through the the XML-RPC interface using Ruby’s built in classes</p>
           <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">%q{
 Creating services with Client initialization options is deprecated and may be removed
 in a future release. Please change your code to create a client and obtain a service
-using either client.service_named('&lt;service_name_here&gt;') or client['&lt;service_name_here&gt;']}</span>
+using either client.service_named(&#39;&lt;service_name_here&gt;&#39;) or client[&#39;&lt;service_name_here&gt;&#39;]}</span>
         <span class="ruby-keyword">end</span>
 
         <span class="ruby-ivar">@client</span> = <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">Client</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">client_options</span>)
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-comment"># this has proven to be very helpful during debugging. It helps prevent infinite recursion</span>
-      <span class="ruby-comment"># when you don't get a method call just right</span>
+      <span class="ruby-comment"># when you don&#39;t get a method call just right</span>
       <span class="ruby-ivar">@method_missing_call_depth</span> = <span class="ruby-value">0</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">$DEBUG</span>
     <span class="ruby-keyword">end</span></pre>
           </div>
@@ -302,7 +303,7 @@ not be called directly.</p>
 
           
           <div class="method-source-code" id="call_softlayer_api_with_params-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 219</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 221</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">call_softlayer_api_with_params</span>(<span class="ruby-identifier">method_name</span>, <span class="ruby-identifier">parameters</span>, <span class="ruby-identifier">args</span>)
   <span class="ruby-identifier">additional_headers</span> = {};
 
@@ -383,7 +384,7 @@ not be called directly.</p>
         <div class="method-description">
           
           <p>This is the primary mechanism by which requests are made. If you call the
-service with a method it doesn’t understand, it will send a call to the
+service with a method it doesn&#39;t understand, it will send a call to the
 endpoint for a method of the same name.</p>
           
           
@@ -395,7 +396,7 @@ endpoint for a method of the same name.</p>
 
           
           <div class="method-source-code" id="method_missing-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 178</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 180</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">method_missing</span>(<span class="ruby-identifier">method_name</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-comment"># During development, if you end up with a stray name in some</span>
   <span class="ruby-comment"># code, you can end up in an infinite recursive loop as method_missing</span>
@@ -410,7 +411,7 @@ endpoint for a method of the same name.</p>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-comment"># if we're in debug mode, we put out a little helpful information</span>
+  <span class="ruby-comment"># if we&#39;re in debug mode, we put out a little helpful information</span>
   <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;SoftLayer::Service#method_missing called #{method_name}, #{args.inspect}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">$DEBUG</span>
 
   <span class="ruby-keyword">if</span>(<span class="ruby-operator">!</span><span class="ruby-identifier">block</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">method_name</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/[[:alnum:]]+/</span>))
@@ -454,7 +455,7 @@ endpoint for a method of the same name.</p>
 
           
           <div class="method-source-code" id="object_filter-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 170</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 172</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">filter</span>)
   <span class="ruby-identifier">proxy</span> = <span class="ruby-constant">APIParameterFilter</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">proxy</span>.<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">filter</span>)
@@ -496,7 +497,7 @@ part of the request sent to the server</p>
 
           
           <div class="method-source-code" id="object_mask-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 154</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 156</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">object_mask</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
   <span class="ruby-identifier">proxy</span> = <span class="ruby-constant">APIParameterFilter</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">proxy</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
@@ -536,7 +537,7 @@ in. For example, this call would return the ticket whose ID is 35212</p>
 
           
           <div class="method-source-code" id="object_with_id-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 141</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 143</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">object_of_interest</span>)
   <span class="ruby-identifier">proxy</span> = <span class="ruby-constant">APIParameterFilter</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">proxy</span>.<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">object_of_interest</span>)
@@ -571,7 +572,7 @@ will use the same client as this service</p>
 
           
           <div class="method-source-code" id="related_service_named-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 123</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 125</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">related_service_named</span>(<span class="ruby-identifier">service_name</span>)
   <span class="ruby-ivar">@client</span>.<span class="ruby-identifier">service_named</span>(<span class="ruby-identifier">service_name</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -610,7 +611,7 @@ href="Service.html#method-i-result_limit">#result_limit</a>(10,5) etc.</p>
 
           
           <div class="method-source-code" id="result_limit-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 164</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 166</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">result_limit</span>(<span class="ruby-identifier">offset</span>, <span class="ruby-identifier">limit</span>)
   <span class="ruby-identifier">proxy</span> = <span class="ruby-constant">APIParameterFilter</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">proxy</span>.<span class="ruby-identifier">result_limit</span>(<span class="ruby-identifier">offset</span>, <span class="ruby-identifier">limit</span>)
@@ -647,7 +648,7 @@ service.  In a service, the target is itself.</p>
 
           
           <div class="method-source-code" id="target-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 130</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 132</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">target</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
@@ -686,7 +687,7 @@ href="../SoftLayer.html">SoftLayer</a> API</p>
 
           
           <div class="method-source-code" id="to_ary-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 280</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Service.rb, line 282</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_ary</span>
   <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -708,7 +709,7 @@ href="../SoftLayer.html">SoftLayer</a> API</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

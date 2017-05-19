@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::NetworkStorageGroup - softlayer_api gem 3.0.1</title>
+<title>class SoftLayer::NetworkStorageGroup - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
@@ -153,22 +154,25 @@ SoftLayer_Network_Storage_Group in the API.</p>
         </div>
       </div>
       
-      <div id="attribute-i-createDate" class="method-detail">
+      <div id="attribute-i-created" class="method-detail">
         <div class="method-heading attribute-method-heading">
-          <span class="method-name">createDate</span><span
+          <span class="method-name">created</span><span
             class="attribute-access-type">[R]</span>
         </div>
 
         <div class="method-description">
         
-        <p>The date this group was created.</p>
+        <p>The date this group was created. DEPRECATION WARNING: This attribute is
+deprecated in favor of <a
+href="NetworkStorageGroup.html#attribute-i-created_at">#created_at</a> and
+will be removed in the next major release.</p>
         
         </div>
       </div>
       
-      <div id="attribute-i-created" class="method-detail">
+      <div id="attribute-i-created_at" class="method-detail">
         <div class="method-heading attribute-method-heading">
-          <span class="method-name">created</span><span
+          <span class="method-name">created_at</span><span
             class="attribute-access-type">[R]</span>
         </div>
 
@@ -187,14 +191,17 @@ SoftLayer_Network_Storage_Group in the API.</p>
 
         <div class="method-description">
         
-        <p>The date this group was modified.</p>
+        <p>The date this group was modified. DEPRECATION WARNING: This attribute is
+deprecated in favor of <a
+href="NetworkStorageGroup.html#attribute-i-modified_at">#modified_at</a>
+and will be removed in the next major release.</p>
         
         </div>
       </div>
       
-      <div id="attribute-i-modifyDate" class="method-detail">
+      <div id="attribute-i-modified_at" class="method-detail">
         <div class="method-heading attribute-method-heading">
-          <span class="method-name">modifyDate</span><span
+          <span class="method-name">modified_at</span><span
             class="attribute-access-type">[R]</span>
         </div>
 
@@ -234,14 +241,14 @@ SoftLayer_Network_Storage_Group in the API.</p>
 
           
           <div class="method-source-code" id="default_object_mask-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 148</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 180</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
   {
     <span class="ruby-string">&quot;mask(SoftLayer_Network_Storage_Group)&quot;</span> =<span class="ruby-operator">&gt;</span> [
-                                                <span class="ruby-string">'alias'</span>,
-                                                <span class="ruby-string">'createDate'</span>,
-                                                <span class="ruby-string">'id'</span>,
-                                                <span class="ruby-string">'modifyDate'</span>
+                                                <span class="ruby-string">&#39;alias&#39;</span>,
+                                                <span class="ruby-string">&#39;createDate&#39;</span>,
+                                                <span class="ruby-string">&#39;id&#39;</span>,
+                                                <span class="ruby-string">&#39;modifyDate&#39;</span>
                                                ]
   }.<span class="ruby-identifier">to_sl_object_mask</span>
 <span class="ruby-keyword">end</span></pre>
@@ -265,24 +272,27 @@ SoftLayer_Network_Storage_Group in the API.</p>
     
       <div id="method-i-account" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">account</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            account(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>The SoftLayer_Account which owns this group.</p>
+          <p>Retrieve the SoftLayer_Account which owns this group.</p>
           
           
 
           
           <div class="method-source-code" id="account-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 29</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 45</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:account</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -306,24 +316,27 @@ SoftLayer_Network_Storage_Group in the API.</p>
     
       <div id="method-i-allowed_hosts" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">allowed_hosts</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            allowed_hosts(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>The allowed hosts list for this group.</p>
+          <p>Retrieve the allowed hosts list for this group.</p>
           
           
 
           
           <div class="method-source-code" id="allowed_hosts-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 43</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 61</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:allowed_hosts</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -347,24 +360,27 @@ SoftLayer_Network_Storage_Group in the API.</p>
     
       <div id="method-i-attached_volumes" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">attached_volumes</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            attached_volumes(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>The network storage volumes this group is attached to.</p>
+          <p>Retrieve the network storage volumes this group is attached to.</p>
           
           
 
           
           <div class="method-source-code" id="attached_volumes-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 57</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 77</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:attached_volumes</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -388,25 +404,28 @@ SoftLayer_Network_Storage_Group in the API.</p>
     
       <div id="method-i-ip_address" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">ip_address</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            ip_address(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>The IP address for for SoftLayer_Network_Storage_Allowed_Host objects
-within this group.</p>
+          <p>Retrieve the IP address for for SoftLayer_Network_Storage_Allowed_Host
+objects within this group.</p>
           
           
 
           
           <div class="method-source-code" id="ip_address-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 71</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 93</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:ip_address</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -430,25 +449,28 @@ within this group.</p>
     
       <div id="method-i-os_description" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">os_description</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            os_description(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>The description of theSoftLayer_Network_Storage_OS_Type Operating System
-designation that this group was created for.</p>
+          <p>Retrieve the description of the SoftLayer_Network_Storage_OS_Type 
+Operating System designation that this group was created for.</p>
           
           
 
           
           <div class="method-source-code" id="os_description-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 85</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 110</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:os_description</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -472,25 +494,28 @@ designation that this group was created for.</p>
     
       <div id="method-i-os_name" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">os_name</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            os_name(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>The name of theSoftLayer_Network_Storage_OS_Type Operating System
-designation that this group was created for.</p>
+          <p>Retrieve the name of the SoftLayer_Network_Storage_OS_Type  Operating
+System designation that this group was created for.</p>
           
           
 
           
           <div class="method-source-code" id="os_name-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 99</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 127</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:os_name</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -532,7 +557,7 @@ network API</p>
 
           
           <div class="method-source-code" id="service-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 142</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 174</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">service</span>
   <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Network_Storage_Group</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -548,24 +573,27 @@ network API</p>
     
       <div id="method-i-service_resource" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">service_resource</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            service_resource(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>The network resource this group is created on.</p>
+          <p>Retrieve the network resource this group is created on.</p>
           
           
 
           
           <div class="method-source-code" id="service_resource-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 113</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 143</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:service_resource</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -589,25 +617,28 @@ network API</p>
     
       <div id="method-i-type" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">type</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            type(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>The name of the SoftLayer_Network_Storage_Group_Type which describes this
-group.</p>
+          <p>Retrieve the name of the SoftLayer_Network_Storage_Group_Type which
+describes this group.</p>
           
           
 
           
           <div class="method-source-code" id="type-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 127</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorageGroup.rb, line 159</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:type</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -637,7 +668,7 @@ group.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

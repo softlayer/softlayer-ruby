@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::Software - softlayer_api gem 3.0.1</title>
+<title>class SoftLayer::Software - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
@@ -142,32 +143,6 @@ in the API.</p>
       </header>
 
       
-      <div id="attribute-i-manufacturerActivationCode" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">manufacturerActivationCode</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        <p>The manufacturer code that is needed to activate a license.</p>
-        
-        </div>
-      </div>
-      
-      <div id="attribute-i-manufacturerLicenseInstance" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">manufacturerLicenseInstance</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        <p>A license key for this specific installation of software, if it is needed.</p>
-        
-        </div>
-      </div>
-      
       <div id="attribute-i-manufacturer_activation_code" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">manufacturer_activation_code</span><span
@@ -230,29 +205,29 @@ If no client can be found the routine will raise an error.</p>
 
 <p>You may filter the list returned by adding options:</p>
 <ul><li>
-<p><strong><code>:datacenter</code></strong>    (string) - Include software
-from hardware matching this datacenter</p>
+<p><strong><code>:datacenter</code></strong>    (string/array) - Include
+software from hardware matching this datacenter</p>
 </li><li>
-<p><strong><code>:description</code></strong>   (string) - Include software
-that matches this description</p>
+<p><strong><code>:description</code></strong>   (string/array) - Include
+software that matches this description</p>
 </li><li>
-<p><strong><code>:domain</code></strong>        (string) - Include software
-from hardware matching this domain</p>
+<p><strong><code>:domain</code></strong>        (string/array) - Include
+software from hardware matching this domain</p>
 </li><li>
-<p><strong><code>:hardware_type</code></strong> (string) - Include software
-from hardware matching this hardware type</p>
+<p><strong><code>:hardware_type</code></strong> (symbol)       - Include
+software from hardware matching this hardware type</p>
 </li><li>
-<p><strong><code>:hostname</code></strong>      (string) - Include software
-from hardware matching this hostname</p>
+<p><strong><code>:hostname</code></strong>      (string/array) - Include
+software from hardware matching this hostname</p>
 </li><li>
-<p><strong><code>:manufacturer</code></strong>  (string) - Include software
-that matches this manufacturer</p>
+<p><strong><code>:manufacturer</code></strong>  (string/array) - Include
+software that matches this manufacturer</p>
 </li><li>
-<p><strong><code>:name</code></strong>          (string) - Include software
-that matches this name</p>
+<p><strong><code>:name</code></strong>          (string/array) - Include
+software that matches this name</p>
 </li><li>
-<p><strong><code>:username</code></strong>      (string) - Include software
-that has software password matching this username</p>
+<p><strong><code>:username</code></strong>      (string/array) - Include
+software that has software password matching this username</p>
 </li></ul>
 
 <p>You may use the following properties to provide hardware or software object
@@ -273,7 +248,7 @@ Include software properties that matches the criteria of this object mask</p>
 
           
           <div class="method-source-code" id="find_software_on_hardware-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 144</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 150</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find_software_on_hardware</span>(<span class="ruby-identifier">options_hash</span> = {})
   <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:client</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
@@ -300,10 +275,12 @@ Include software properties that matches the criteria of this object mask</p>
   }
 
   <span class="ruby-identifier">option_to_filter_path</span> = {
-    <span class="ruby-value">:datacenter</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">'.datacenter.name'</span> ].<span class="ruby-identifier">join</span>        },
-    <span class="ruby-value">:domain</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">'.domain'</span> ].<span class="ruby-identifier">join</span>                 },
-    <span class="ruby-value">:hostname</span>       =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">'.hostname'</span> ].<span class="ruby-identifier">join</span>               },
-    <span class="ruby-value">:tags</span>           =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">'.tagReferences.tag.name'</span> ].<span class="ruby-identifier">join</span> },
+    <span class="ruby-value">:hardware</span>       =<span class="ruby-operator">&gt;</span> {
+      <span class="ruby-value">:datacenter</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">&#39;.datacenter.name&#39;</span> ].<span class="ruby-identifier">join</span>        },
+      <span class="ruby-value">:domain</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">&#39;.domain&#39;</span> ].<span class="ruby-identifier">join</span>                 },
+      <span class="ruby-value">:hostname</span>       =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">&#39;.hostname&#39;</span> ].<span class="ruby-identifier">join</span>               },
+      <span class="ruby-value">:tags</span>           =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hardware_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">hardware_type</span>], <span class="ruby-string">&#39;.tagReferences.tag.name&#39;</span> ].<span class="ruby-identifier">join</span> }
+    },
     <span class="ruby-value">:software</span>       =<span class="ruby-operator">&gt;</span> {
       <span class="ruby-value">:description</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;softwareComponents.softwareDescription.longDescription&quot;</span>,
       <span class="ruby-value">:manufacturer</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;softwareComponents.softwareDescription.manufacturer&quot;</span>,
@@ -318,21 +295,10 @@ Include software properties that matches the criteria of this object mask</p>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
-  [ <span class="ruby-value">:datacenter</span>, <span class="ruby-value">:domain</span>, <span class="ruby-value">:hostname</span> ].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">option</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">option_to_filter_path</span>[<span class="ruby-value">:hardware</span>].<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">option</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-identifier">option</span>]
-      <span class="ruby-identifier">hardware_object_filter</span>.<span class="ruby-identifier">modify</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span> <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-identifier">option_to_filter_path</span>[<span class="ruby-identifier">option</span>].<span class="ruby-identifier">call</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:hardware_type</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:hardware</span>)).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-identifier">option</span>]) }
+      <span class="ruby-identifier">hardware_object_filter</span>.<span class="ruby-identifier">modify</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span> <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-identifier">option_to_filter_path</span>[<span class="ruby-value">:hardware</span>][<span class="ruby-identifier">option</span>].<span class="ruby-identifier">call</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:hardware_type</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:hardware</span>)).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-identifier">option</span>]) }
     <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>]
-    <span class="ruby-identifier">hardware_object_filter</span>.<span class="ruby-identifier">set_criteria_for_key_path</span>(<span class="ruby-identifier">option_to_filter_path</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">call</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:hardware_type</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:hardware</span>),
-                                                     {
-                                                       <span class="ruby-string">'operation'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'in'</span>,
-                                                       <span class="ruby-string">'options'</span> =<span class="ruby-operator">&gt;</span> [{
-                                                                       <span class="ruby-string">'name'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'data'</span>,
-                                                                       <span class="ruby-string">'value'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
-                                                                     }]
-                                                     })
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">option_to_filter_path</span>[<span class="ruby-value">:software</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">option</span>, <span class="ruby-identifier">filter_path</span><span class="ruby-operator">|</span>
@@ -355,7 +321,7 @@ Include software properties that matches the criteria of this object mask</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">software</span> = <span class="ruby-identifier">hardware_data</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">hardware</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">hardware_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Hardware</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">hardware</span>[<span class="ruby-string">'id'</span>])
+    <span class="ruby-identifier">hardware_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Hardware</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">hardware</span>[<span class="ruby-string">&#39;id&#39;</span>])
     <span class="ruby-identifier">hardware_service</span> = <span class="ruby-identifier">hardware_service</span>.<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">software_object_filter</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">software_object_filter</span>.<span class="ruby-identifier">empty?</span>
     <span class="ruby-identifier">hardware_service</span> = <span class="ruby-identifier">hardware_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-constant">Software</span>.<span class="ruby-identifier">default_object_mask</span>)
     <span class="ruby-identifier">hardware_service</span> = <span class="ruby-identifier">hardware_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:software_object_mask</span>]) <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:software_object_mask</span>]
@@ -402,26 +368,26 @@ If no client can be found the routine will raise an error.</p>
 
 <p>You may filter the list returned by adding options:</p>
 <ul><li>
-<p><strong><code>:datacenter</code></strong>    (string) - Include software
-from virtual servers matching this datacenter</p>
+<p><strong><code>:datacenter</code></strong>    (string/array) - Include
+software from virtual servers matching this datacenter</p>
 </li><li>
-<p><strong><code>:description</code></strong>   (string) - Include software
-that matches this description</p>
+<p><strong><code>:description</code></strong>   (string/array) - Include
+software that matches this description</p>
 </li><li>
-<p><strong><code>:domain</code></strong>        (string) - Include software
-from virtual servers matching this domain</p>
+<p><strong><code>:domain</code></strong>        (string/array) - Include
+software from virtual servers matching this domain</p>
 </li><li>
-<p><strong><code>:hostname</code></strong>      (string) - Include software
-from virtual servers matching this hostname</p>
+<p><strong><code>:hostname</code></strong>      (string/array) - Include
+software from virtual servers matching this hostname</p>
 </li><li>
-<p><strong><code>:manufacturer</code></strong>  (string) - Include software
-that matches this manufacturer</p>
+<p><strong><code>:manufacturer</code></strong>  (string/array) - Include
+software that matches this manufacturer</p>
 </li><li>
-<p><strong><code>:name</code></strong>          (string) - Include software
-that matches this name</p>
+<p><strong><code>:name</code></strong>          (string/array) - Include
+software that matches this name</p>
 </li><li>
-<p><strong><code>:username</code></strong>      (string) - Include software
-that has software password matching this username</p>
+<p><strong><code>:username</code></strong>      (string/array) - Include
+software that has software password matching this username</p>
 </li></ul>
 
 <p>You may use the following properties to provide virtual server or software
@@ -442,7 +408,7 @@ object filter</p>
 
           
           <div class="method-source-code" id="find_software_on_virtual_servers-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 261</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 258</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find_software_on_virtual_servers</span>(<span class="ruby-identifier">options_hash</span> = {})
   <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:client</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
@@ -476,19 +442,7 @@ object filter</p>
     }
   }
 
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>]
-    <span class="ruby-identifier">virtual_server_object_filter</span>.<span class="ruby-identifier">set_criteria_for_key_path</span>(<span class="ruby-identifier">option_to_filter_path</span>[<span class="ruby-value">:virtual_server</span>][<span class="ruby-value">:tags</span>],
-                                                           {
-                                                             <span class="ruby-string">'operation'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'in'</span>,
-                                                             <span class="ruby-string">'options'</span> =<span class="ruby-operator">&gt;</span> [{
-                                                                             <span class="ruby-string">'name'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'data'</span>,
-                                                                             <span class="ruby-string">'value'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
-                                                                           }]
-                                                           })
-  <span class="ruby-keyword">end</span>
-
   <span class="ruby-identifier">option_to_filter_path</span>[<span class="ruby-value">:virtual_server</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">option</span>, <span class="ruby-identifier">filter_path</span><span class="ruby-operator">|</span>
-    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">option</span> <span class="ruby-operator">==</span> <span class="ruby-value">:tags</span>
     <span class="ruby-identifier">virtual_server_object_filter</span>.<span class="ruby-identifier">modify</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span> <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-identifier">filter_path</span>).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-identifier">option</span>]) } <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-identifier">option</span>]
   <span class="ruby-keyword">end</span>
 
@@ -503,7 +457,7 @@ object filter</p>
   <span class="ruby-identifier">virtual_server_data</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">getVirtualGuests</span>
 
   <span class="ruby-identifier">software</span> = <span class="ruby-identifier">virtual_server_data</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">virtual_server</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">virtual_server_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Virtual_Guest</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">virtual_server</span>[<span class="ruby-string">'id'</span>])
+    <span class="ruby-identifier">virtual_server_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Virtual_Guest</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">virtual_server</span>[<span class="ruby-string">&#39;id&#39;</span>])
     <span class="ruby-identifier">virtual_server_service</span> = <span class="ruby-identifier">virtual_server_service</span>.<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">software_object_filter</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">software_object_filter</span>.<span class="ruby-identifier">empty?</span>
     <span class="ruby-identifier">virtual_server_service</span> = <span class="ruby-identifier">virtual_server_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-constant">Software</span>.<span class="ruby-identifier">default_object_mask</span>)
     <span class="ruby-identifier">virtual_server_service</span> = <span class="ruby-identifier">virtual_server_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:software_object_mask</span>]) <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:software_object_mask</span>]
@@ -551,13 +505,13 @@ object filter</p>
 
           
           <div class="method-source-code" id="default_object_mask-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 358</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 343</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
   {
     <span class="ruby-string">&quot;mask(SoftLayer_Software_Component)&quot;</span> =<span class="ruby-operator">&gt;</span> [
-                                             <span class="ruby-string">'id'</span>,
-                                             <span class="ruby-string">'manufacturerActivationCode'</span>,
-                                             <span class="ruby-string">'manufacturerLicenseInstance'</span>
+                                             <span class="ruby-string">&#39;id&#39;</span>,
+                                             <span class="ruby-string">&#39;manufacturerActivationCode&#39;</span>,
+                                             <span class="ruby-string">&#39;manufacturerLicenseInstance&#39;</span>
                                             ]
   }.<span class="ruby-identifier">to_sl_object_mask</span>
 <span class="ruby-keyword">end</span></pre>
@@ -598,7 +552,7 @@ object filter</p>
 
           
           <div class="method-source-code" id="add_user_password-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 73</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 79</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">add_user_password</span>(<span class="ruby-identifier">username</span>, <span class="ruby-identifier">password</span>, <span class="ruby-identifier">options</span> = {})
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new password cannot be nil&quot;</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">password</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new username cannot be nil&quot;</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">username</span>
@@ -608,13 +562,13 @@ object filter</p>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">Exception</span>, <span class="ruby-string">&quot;Cannot add username password, a Software Password already exists for the provided username&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">has_user_password?</span>(<span class="ruby-identifier">username</span>.<span class="ruby-identifier">to_s</span>)
 
   <span class="ruby-identifier">add_user_pw_template</span> = {
-    <span class="ruby-string">'softwareId'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'id'</span>].<span class="ruby-identifier">to_i</span>,
-    <span class="ruby-string">'password'</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">password</span>.<span class="ruby-identifier">to_s</span>,
-    <span class="ruby-string">'username'</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">username</span>.<span class="ruby-identifier">to_s</span>
+    <span class="ruby-string">&#39;softwareId&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;id&#39;</span>].<span class="ruby-identifier">to_i</span>,
+    <span class="ruby-string">&#39;password&#39;</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">password</span>.<span class="ruby-identifier">to_s</span>,
+    <span class="ruby-string">&#39;username&#39;</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">username</span>.<span class="ruby-identifier">to_s</span>
   }
 
-  <span class="ruby-identifier">add_user_pw_template</span>[<span class="ruby-string">'notes'</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-string">'notes'</span>].<span class="ruby-identifier">to_s</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'notes'</span>)
-  <span class="ruby-identifier">add_user_pw_template</span>[<span class="ruby-string">'port'</span>]  = <span class="ruby-identifier">options</span>[<span class="ruby-string">'port'</span>].<span class="ruby-identifier">to_i</span>  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'port'</span>)
+  <span class="ruby-identifier">add_user_pw_template</span>[<span class="ruby-string">&#39;notes&#39;</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-string">&#39;notes&#39;</span>].<span class="ruby-identifier">to_s</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">&#39;notes&#39;</span>)
+  <span class="ruby-identifier">add_user_pw_template</span>[<span class="ruby-string">&#39;port&#39;</span>]  = <span class="ruby-identifier">options</span>[<span class="ruby-string">&#39;port&#39;</span>].<span class="ruby-identifier">to_i</span>  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">&#39;port&#39;</span>)
 
   <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Software_Component_Password</span>].<span class="ruby-identifier">createObject</span>(<span class="ruby-identifier">add_user_pw_template</span>)
 
@@ -654,12 +608,12 @@ immediately.</p>
 
           
           <div class="method-source-code" id="delete_user_password-21-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 103</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 109</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">delete_user_password!</span>(<span class="ruby-identifier">username</span>)
   <span class="ruby-identifier">user_password</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">passwords</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">sw_pw</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sw_pw</span>.<span class="ruby-identifier">username</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">username</span>.<span class="ruby-identifier">to_s</span> }
 
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">user_password</span>.<span class="ruby-identifier">empty?</span>
-    <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Software_Component_Password</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">user_password</span>.<span class="ruby-identifier">first</span>[<span class="ruby-string">'id'</span>]).<span class="ruby-identifier">deleteObject</span>
+    <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Software_Component_Password</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">user_password</span>.<span class="ruby-identifier">first</span>[<span class="ruby-string">&#39;id&#39;</span>]).<span class="ruby-identifier">deleteObject</span>
     <span class="ruby-ivar">@passwords</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
@@ -675,24 +629,27 @@ immediately.</p>
     
       <div id="method-i-description" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">description</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            description(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>The manufacturer, name and version of a piece of software.</p>
+          <p>Retrieve the manufacturer, name and version of a piece of software.</p>
           
           
 
           
           <div class="method-source-code" id="description-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 30</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 32</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:description</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -701,7 +658,7 @@ immediately.</p>
 
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">description</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">getSoftwareDescription</span>
-    <span class="ruby-identifier">description</span>[<span class="ruby-string">'longDescription'</span>]
+    <span class="ruby-identifier">description</span>[<span class="ruby-string">&#39;longDescription&#39;</span>]
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -728,13 +685,13 @@ immediately.</p>
         <div class="method-description">
           
           <p>Returns whether or not one of the <a href="Software.html">Software</a>
-Passowrd instances pertains to the specified user</p>
+Password instances pertains to the specified user</p>
           
           
 
           
           <div class="method-source-code" id="has_user_password-3F-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 115</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 121</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">has_user_password?</span>(<span class="ruby-identifier">username</span>)
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">passwords</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">sw_pw</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sw_pw</span>.<span class="ruby-identifier">username</span> }.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">username</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -750,24 +707,27 @@ Passowrd instances pertains to the specified user</p>
     
       <div id="method-i-name" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">name</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            name(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>The name of this specific piece of software.</p>
+          <p>Retrieve the name of this specific piece of software.</p>
           
           
 
           
           <div class="method-source-code" id="name-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 44</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 48</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:name</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -776,7 +736,7 @@ Passowrd instances pertains to the specified user</p>
 
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">description</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">getSoftwareDescription</span>
-    <span class="ruby-identifier">description</span>[<span class="ruby-string">'name'</span>]
+    <span class="ruby-identifier">description</span>[<span class="ruby-string">&#39;name&#39;</span>]
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -791,25 +751,28 @@ Passowrd instances pertains to the specified user</p>
     
       <div id="method-i-passwords" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">passwords</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            passwords(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>Username/Password pairs used for access to this <a
+          <p>Retrieve the Username/Password pairs used for access to this <a
 href="Software.html">Software</a> Installation.</p>
           
           
 
           
           <div class="method-source-code" id="passwords-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 58</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 64</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:passwords</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -851,7 +814,7 @@ the network API</p>
 
           
           <div class="method-source-code" id="service-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 336</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 321</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">service</span>
   <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Software_Component</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -885,7 +848,7 @@ the latest properties hash for this object.</p>
 
           
           <div class="method-source-code" id="softlayer_properties-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 344</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/Software.rb, line 329</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">softlayer_properties</span>(<span class="ruby-identifier">object_mask</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">my_service</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>
 
@@ -915,7 +878,7 @@ the latest properties hash for this object.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

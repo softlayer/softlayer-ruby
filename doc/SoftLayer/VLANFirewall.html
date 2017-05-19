@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::VLANFirewall - softlayer_api gem 3.0.1</title>
+<title>class SoftLayer::VLANFirewall - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
@@ -83,8 +84,6 @@
     
     <li ><a href="#method-c-find_firewalls">::find_firewalls</a>
     
-    <li ><a href="#method-i-VLAN_number">#VLAN_number</a>
-    
     <li ><a href="#method-i-cancel-21">#cancel!</a>
     
     <li ><a href="#method-i-change_routing_bypass-21">#change_routing_bypass!</a>
@@ -93,11 +92,17 @@
     
     <li ><a href="#method-i-change_rules_bypass-21">#change_rules_bypass!</a>
     
+    <li ><a href="#method-i-fqdn">#fqdn</a>
+    
     <li ><a href="#method-i-fullyQualifiedDomainName">#fullyQualifiedDomainName</a>
     
     <li ><a href="#method-i-high_availability-3F">#high_availability?</a>
     
     <li ><a href="#method-i-primaryRouter">#primaryRouter</a>
+    
+    <li ><a href="#method-i-primary_router">#primary_router</a>
+    
+    <li ><a href="#method-i-rules">#rules</a>
     
     <li ><a href="#method-i-service">#service</a>
     
@@ -148,21 +153,32 @@ SoftLayer_Network_Vlan service.</p>
       </header>
 
       
-      <div id="attribute-i-rules" class="method-detail">
+      <div id="attribute-i-VLAN_number" class="method-detail">
         <div class="method-heading attribute-method-heading">
-          <span class="method-name">rules</span><span
+          <span class="method-name">VLAN_number</span><span
             class="attribute-access-type">[R]</span>
         </div>
 
         <div class="method-description">
         
-        <p>The set of rules applied by this firewall to incoming traffic. The object
-will retrieve the rules from the network API every time you ask it for the
-rules.</p>
+        <p>The number of the VLAN protected by this firewall.</p>
 
-<p>The code will sort the rules by their “orderValue” which is the order that
-the firewall applies the rules, however please see the important note in
-change_rules! concerning the “orderValue” property of the rules.</p>
+<p>DEPRECATION WARNING: This attribute is deprecated in favor of <a
+href="VLANFirewall.html#attribute-i-vlan_number">#vlan_number</a> and will
+be removed in the next major release.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-vlan_number" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">vlan_number</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The number of the VLAN protected by this firewall.</p>
         
         </div>
       </div>
@@ -199,12 +215,12 @@ also have a networkVlanFirewall component.</p>
 
           
           <div class="method-source-code" id="find_firewalls-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 209</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 241</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find_firewalls</span>(<span class="ruby-identifier">client</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">client</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
 
-  <span class="ruby-comment"># only VLAN firewallas have a networkVlanFirewall component</span>
+  <span class="ruby-comment"># only VLAN firewalls have a networkVlanFirewall component</span>
   <span class="ruby-identifier">vlan_firewall_filter</span> = <span class="ruby-constant">SoftLayer</span><span class="ruby-operator">::</span><span class="ruby-constant">ObjectFilter</span>.<span class="ruby-identifier">new</span>() { <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-string">&quot;networkVlans.networkVlanFirewall&quot;</span>).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is_not_null</span>
   }
@@ -228,40 +244,6 @@ also have a networkVlanFirewall component.</p>
        <header>
          <h3>Public Instance Methods</h3>
        </header>
-
-    
-      <div id="method-i-VLAN_number" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">VLAN_number</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>:attr_reader:</p>
-
-<pre>The number of the VLAN protected by this firewall.</pre>
-          
-          
-
-          
-          <div class="method-source-code" id="VLAN_number-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 28</span>
-<span class="ruby-identifier">sl_attr</span> <span class="ruby-value">:VLAN_number</span>, <span class="ruby-string">'vlanNumber'</span>
-</pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
 
     
       <div id="method-i-cancel-21" class="method-detail ">
@@ -290,19 +272,19 @@ or nil, a default string will be added.</p>
 
           
           <div class="method-source-code" id="cancel-21-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 91</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 123</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">cancel!</span>(<span class="ruby-identifier">notes</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">user</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Account</span>].<span class="ruby-identifier">object_mask</span>(<span class="ruby-string">&quot;mask[id,account.id]&quot;</span>).<span class="ruby-identifier">getCurrentUser</span>
   <span class="ruby-identifier">notes</span> = <span class="ruby-node">&quot;Cancelled by a call to #{__method__} in the softlayer_api gem&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">notes</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">notes</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;&quot;</span>
 
   <span class="ruby-identifier">cancellation_request</span> = {
-    <span class="ruby-string">'accountId'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>[<span class="ruby-string">'account'</span>][<span class="ruby-string">'id'</span>],
-    <span class="ruby-string">'userId'</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>[<span class="ruby-string">'id'</span>],
-    <span class="ruby-string">'items'</span> =<span class="ruby-operator">&gt;</span> [ {
-      <span class="ruby-string">'billingItemId'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'networkVlanFirewall'</span>][<span class="ruby-string">'billingItem'</span>][<span class="ruby-string">'id'</span>],
-      <span class="ruby-string">'immediateCancellationFlag'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-string">&#39;accountId&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>[<span class="ruby-string">&#39;account&#39;</span>][<span class="ruby-string">&#39;id&#39;</span>],
+    <span class="ruby-string">&#39;userId&#39;</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>[<span class="ruby-string">&#39;id&#39;</span>],
+    <span class="ruby-string">&#39;items&#39;</span> =<span class="ruby-operator">&gt;</span> [ {
+      <span class="ruby-string">&#39;billingItemId&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;networkVlanFirewall&#39;</span>][<span class="ruby-string">&#39;billingItem&#39;</span>][<span class="ruby-string">&#39;id&#39;</span>],
+      <span class="ruby-string">&#39;immediateCancellationFlag&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span>
       } ],
-    <span class="ruby-string">'notes'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">notes</span>
+    <span class="ruby-string">&#39;notes&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">notes</span>
   }
 
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Billing_Item_Cancellation_Request</span>].<span class="ruby-identifier">createObject</span>(<span class="ruby-identifier">cancellation_request</span>)
@@ -353,9 +335,9 @@ servers.</p>
 
           
           <div class="method-source-code" id="change_routing_bypass-21-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 189</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 221</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">change_routing_bypass!</span>(<span class="ruby-identifier">routing_symbol</span>)
-  <span class="ruby-identifier">vlan_firewall_id</span> = <span class="ruby-keyword">self</span>[<span class="ruby-string">'networkVlanFirewall'</span>][<span class="ruby-string">'id'</span>]
+  <span class="ruby-identifier">vlan_firewall_id</span> = <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;networkVlanFirewall&#39;</span>][<span class="ruby-string">&#39;id&#39;</span>]
 
   <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;Could not identify the device for a VLAN firewall&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">vlan_firewall_id</span>
 
@@ -400,10 +382,10 @@ SoftLayer::ServerFirewall.default_rules_mask_keys</p>
 pass in a complete set of rules each time. The rules you submit will
 replace the entire ruleset on the destination firewall.</p>
 
-<p><strong>NOTE!</strong> The rules themselves have an "orderValue" property.
+<p><strong>NOTE!</strong> The rules themselves have an “orderValue” property.
 It is this property, and <strong>not</strong> the order that the rules are
 found in the rules_data array, which will determine in which order the
-firewall applies its rules to incomming traffic.</p>
+firewall applies its rules to incoming traffic.</p>
 
 <p><strong>NOTE!</strong> Changes to the rules are not applied immediately on
 the server side. Instead, they are enqueued by the firewall update service
@@ -415,7 +397,7 @@ circumstances.</p>
 
           
           <div class="method-source-code" id="change_rules-21-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 130</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 162</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">change_rules!</span>(<span class="ruby-identifier">rules_data</span>)
   <span class="ruby-identifier">change_object</span> = {
     <span class="ruby-string">&quot;firewallContextAccessControlListId&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">rules_ACL_id</span>(),
@@ -468,7 +450,7 @@ provides no protection.</p>
 
           
           <div class="method-source-code" id="change_rules_bypass-21-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 155</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 187</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">change_rules_bypass!</span>(<span class="ruby-identifier">bypass_symbol</span>)
   <span class="ruby-identifier">change_object</span> = {
     <span class="ruby-string">&quot;firewallContextAccessControlListId&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">rules_ACL_id</span>(),
@@ -477,13 +459,51 @@ provides no protection.</p>
 
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">bypass_symbol</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">:apply_firewall_rules</span>
-    <span class="ruby-identifier">change_object</span>[<span class="ruby-string">'bypassFlag'</span>] = <span class="ruby-keyword">false</span>
+    <span class="ruby-identifier">change_object</span>[<span class="ruby-string">&#39;bypassFlag&#39;</span>] = <span class="ruby-keyword">false</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Network_Firewall_Update_Request</span>].<span class="ruby-identifier">createObject</span>(<span class="ruby-identifier">change_object</span>)
   <span class="ruby-keyword">when</span> <span class="ruby-value">:bypass_firewall_rules</span>
-    <span class="ruby-identifier">change_object</span>[<span class="ruby-string">'bypassFlag'</span>] = <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">change_object</span>[<span class="ruby-string">&#39;bypassFlag&#39;</span>] = <span class="ruby-keyword">true</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Network_Firewall_Update_Request</span>].<span class="ruby-identifier">createObject</span>(<span class="ruby-identifier">change_object</span>)
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;An invalid parameter was sent to #{__method__}. It accepts :apply_firewall_rules and :bypass_firewall_rules&quot;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-fqdn" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">fqdn</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The fully qualified domain name of the physical device the firewall is
+implemented by.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="fqdn-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 82</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">fqdn</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">has_sl_property?</span>(<span class="ruby-string">&#39;networkVlanFirewall&#39;</span>)
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;networkVlanFirewall&#39;</span>][<span class="ruby-string">&#39;fullyQualifiedDomainName&#39;</span>]
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-ivar">@softlayer_hash</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -511,15 +531,18 @@ provides no protection.</p>
           
           <p>The fully qualified domain name of the physical device the firewall is
 implemented by.</p>
+
+<p>DEPRECATION WARNING: This method is deprecated in favor of fqdn and will be
+removed in the next major release.</p>
           
           
 
           
           <div class="method-source-code" id="fullyQualifiedDomainName-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 64</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 96</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">fullyQualifiedDomainName</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">has_sl_property?</span>(<span class="ruby-string">'networkVlanFirewall'</span>)
-    <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'networkVlanFirewall'</span>][<span class="ruby-string">'fullyQualifiedDomainName'</span>]
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">has_sl_property?</span>(<span class="ruby-string">&#39;networkVlanFirewall&#39;</span>)
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;networkVlanFirewall&#39;</span>][<span class="ruby-string">&#39;fullyQualifiedDomainName&#39;</span>]
   <span class="ruby-keyword">else</span>
     <span class="ruby-keyword">return</span> <span class="ruby-ivar">@softlayer_hash</span>
   <span class="ruby-keyword">end</span>
@@ -554,10 +577,10 @@ that exists as one member of a redundant pair.</p>
 
           
           <div class="method-source-code" id="high_availability-3F-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 75</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 107</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">high_availability?</span>
   <span class="ruby-comment"># note that highAvailabilityFirewallFlag is a boolean in the softlayer hash</span>
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">has_sl_property?</span>(<span class="ruby-string">'highAvailabilityFirewallFlag'</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'highAvailabilityFirewallFlag'</span>]
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">has_sl_property?</span>(<span class="ruby-string">&#39;highAvailabilityFirewallFlag&#39;</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;highAvailabilityFirewallFlag&#39;</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -584,14 +607,103 @@ that exists as one member of a redundant pair.</p>
           
           <p>Returns the name of the primary router the firewall is attached to. This is
 often a “customer router” in one of the datacenters.</p>
+
+<p>DEPRECATION WARNING: This method is deprecated in favor of <a
+href="VLANFirewall.html#method-i-primary_router">#primary_router</a> and
+will be removed in the next major release.</p>
           
           
 
           
           <div class="method-source-code" id="primaryRouter-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 57</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 75</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">primaryRouter</span>
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">'primaryRouter'</span>][<span class="ruby-string">'hostname'</span>]
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;primaryRouter&#39;</span>][<span class="ruby-string">&#39;hostname&#39;</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-primary_router" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">primary_router</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the name of the primary router the firewall is attached to. This is
+often a “customer router” in one of the datacenters.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="primary_router-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 65</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">primary_router</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;primaryRouter&#39;</span>][<span class="ruby-string">&#39;hostname&#39;</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-rules" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            rules(force_update=false)
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve the set of rules applied by this firewall to incoming traffic. The
+object will retrieve the rules from the network API every time you ask it
+for the rules.</p>
+
+<p>The code will sort the rules by their “orderValue” which is the order that
+the firewall applies the rules, however please see the important note in
+change_rules! concerning the “orderValue” property of the rules.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="rules-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 49</span>
+<span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:rules</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">firewall_rules</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">firewall_rules</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-comment"># firewall rules update every time you ask for them.</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">firewall_rules</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">acl_id</span> = <span class="ruby-identifier">rules_ACL_id</span>()
+    <span class="ruby-identifier">rules_data</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Network_Firewall_AccessControlList</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">acl_id</span>).<span class="ruby-identifier">object_mask</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">default_rules_mask</span>).<span class="ruby-identifier">getRules</span>
+    <span class="ruby-identifier">rules_data</span>.<span class="ruby-identifier">sort</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">lhs</span>, <span class="ruby-identifier">rhs</span><span class="ruby-operator">|</span> <span class="ruby-identifier">lhs</span>[<span class="ruby-string">&#39;orderValue&#39;</span>] <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">rhs</span>[<span class="ruby-string">&#39;orderValue&#39;</span>] }
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -622,7 +734,7 @@ often a “customer router” in one of the datacenters.</p>
 
           
           <div class="method-source-code" id="service-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 227</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 258</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">service</span>
   <span class="ruby-comment"># Objects of this class are a bit odd because they actually represent VLANs (the VLAN protected by the firewall)</span>
   <span class="ruby-comment"># and not the physical hardware implementing the firewall itself.  (although the device is accessible as the</span>
@@ -658,7 +770,7 @@ often a “customer router” in one of the datacenters.</p>
 
           
           <div class="method-source-code" id="softlayer_properties-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 234</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VLANFirewall.rb, line 265</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">softlayer_properties</span>(<span class="ruby-identifier">object_mask</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">service</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>
   <span class="ruby-identifier">service</span> = <span class="ruby-identifier">service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">object_mask</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">object_mask</span>
@@ -682,7 +794,7 @@ often a “customer router” in one of the datacenters.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

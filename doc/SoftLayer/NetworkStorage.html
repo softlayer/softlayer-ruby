@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::NetworkStorage - softlayer_api gem 3.0.1</title>
+<title>class SoftLayer::NetworkStorage - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
@@ -158,33 +159,7 @@ the API.</p>
 
         <div class="method-description">
         
-        <p>A Storage account’s capacity, measured in gigabytes.</p>
-        
-        </div>
-      </div>
-      
-      <div id="attribute-i-capacityGb" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">capacityGb</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        <p>A Storage account’s capacity, measured in gigabytes.</p>
-        
-        </div>
-      </div>
-      
-      <div id="attribute-i-createDate" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">createDate</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        <p>The date a network storage volume was created.</p>
+        <p>A Storage account&#39;s capacity, measured in gigabytes.</p>
         
         </div>
       </div>
@@ -197,20 +172,23 @@ the API.</p>
 
         <div class="method-description">
         
-        <p>The date a network storage volume was created.</p>
+        <p>The date a network storage volume was created. DEPRECATION WARNING: This
+attribute is deprecated in favor of <a
+href="NetworkStorage.html#attribute-i-created_at">#created_at</a> and will
+be removed in the next major release.</p>
         
         </div>
       </div>
       
-      <div id="attribute-i-nasType" class="method-detail">
+      <div id="attribute-i-created_at" class="method-detail">
         <div class="method-heading attribute-method-heading">
-          <span class="method-name">nasType</span><span
+          <span class="method-name">created_at</span><span
             class="attribute-access-type">[R]</span>
         </div>
 
         <div class="method-description">
         
-        <p>A Storage account’s type.</p>
+        <p>The date a network storage volume was created.</p>
         
         </div>
       </div>
@@ -250,7 +228,7 @@ used to register the EVault server agent with the vault backup system.</p>
 
         <div class="method-description">
         
-        <p>A Storage account’s type.</p>
+        <p>A Storage account&#39;s type.</p>
         
         </div>
       </div>
@@ -258,19 +236,6 @@ used to register the EVault server agent with the vault backup system.</p>
       <div id="attribute-i-upgradable" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">upgradable</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        <p>This flag indicates whether this storage type is upgradable or not.</p>
-        
-        </div>
-      </div>
-      
-      <div id="attribute-i-upgradableFlag" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">upgradableFlag</span><span
             class="attribute-access-type">[R]</span>
         </div>
 
@@ -331,33 +296,50 @@ If no client can be found the routine will raise an error.</p>
 
 <p>You may filter the list returned by adding options:</p>
 <ul><li>
-<p><strong><code>:datacenter</code></strong>                  (string) -
+<p><strong><code>:datacenter</code></strong>                  (string/array) -
 Include network storage associated with servers matching this datacenter</p>
 </li><li>
-<p><strong><code>:domain</code></strong>                      (string) -
+<p><strong><code>:domain</code></strong>                      (string/array) -
 Include network storage associated with servers matching this domain</p>
 </li><li>
-<p><strong><code>:hostname</code></strong>                    (string) -
+<p><strong><code>:hostname</code></strong>                    (string/array) -
 Include network storage associated with servers matching this hostname</p>
 </li><li>
-<p><strong><code>:network_storage_server_type</code></strong> (string) -
+<p><strong><code>:network_storage_server_type</code></strong> (symbol)       -
 Include network storage associated with this server type</p>
 </li><li>
-<p><strong><code>:network_storage_type</code></strong>        (string) -
+<p><strong><code>:network_storage_type</code></strong>        (symbol)       -
 Include network storage from devices of this storage type</p>
 </li><li>
-<p><strong><code>:service</code></strong>                     (string) -
+<p><strong><code>:service</code></strong>                     (string/array) -
 Include network storage from devices with this service fqdn</p>
 </li><li>
-<p><strong><code>:tags</code></strong>                        (Array)  -
+<p><strong><code>:tags</code></strong>                        (string/array) -
 Include network storage associated with servers matching these tags</p>
+</li></ul>
+
+<p>Additionally you may provide options related to the request itself:</p>
+<ul><li>
+<p><strong>:network_storage_object_mask</strong>   (string)             - The
+object mask of properties you wish to receive for the items returned.</p>
+
+<pre>If not provided, the result will use the default object mask</pre>
+</li><li>
+<p><strong>:network_storage_object_filter</strong> (ObjectFilter)       -
+Include network storage credentials from network storage that matches the</p>
+
+<pre class="ruby"><span class="ruby-identifier">criteria</span> <span class="ruby-identifier">of</span> <span class="ruby-identifier">this</span> <span class="ruby-identifier">object</span> <span class="ruby-identifier">filter</span>
+</pre>
+</li><li>
+<p><strong><code>:result_limit</code></strong>  (hash with :limit, and :offset
+keys) - Limit the scope of results returned.</p>
 </li></ul>
           
           
 
           
           <div class="method-source-code" id="find_network_storage-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 194</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 214</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find_network_storage</span>(<span class="ruby-identifier">options_hash</span>  = {})
   <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:client</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
@@ -385,11 +367,11 @@ Include network storage associated with servers matching these tags</p>
   }
 
   <span class="ruby-identifier">option_to_filter_path</span> = {
-    <span class="ruby-value">:datacenter</span>                 =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">storage_type</span>, <span class="ruby-identifier">server_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">storage_type</span>], <span class="ruby-string">'.'</span>, <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">server_type</span>], <span class="ruby-string">'.datacenter.name'</span> ].<span class="ruby-identifier">join</span>                  },
-    <span class="ruby-value">:domain</span>                     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">storage_type</span>, <span class="ruby-identifier">server_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">storage_type</span>], <span class="ruby-string">'.'</span>, <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">server_type</span>], <span class="ruby-string">'.domain'</span> ].<span class="ruby-identifier">join</span>                           },
-    <span class="ruby-value">:hostname</span>                   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">storage_type</span>, <span class="ruby-identifier">server_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">storage_type</span>], <span class="ruby-string">'.'</span>, <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">server_type</span>], <span class="ruby-string">'.hostname'</span> ].<span class="ruby-identifier">join</span>                         },
-    <span class="ruby-value">:service</span>                    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">storage_type</span><span class="ruby-operator">|</span>              <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">storage_type</span>],                                 <span class="ruby-string">'.serviceResource.backendIpAddress'</span> ].<span class="ruby-identifier">join</span> },
-    <span class="ruby-value">:tags</span>                       =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">storage_type</span>, <span class="ruby-identifier">server_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">storage_type</span>], <span class="ruby-string">'.'</span>, <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">server_type</span>], <span class="ruby-string">'.tagReferences.tag.name'</span> ].<span class="ruby-identifier">join</span>           },
+    <span class="ruby-value">:datacenter</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">storage_type</span>, <span class="ruby-identifier">server_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">storage_type</span>], <span class="ruby-string">&#39;.&#39;</span>, <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">server_type</span>], <span class="ruby-string">&#39;.datacenter.name&#39;</span> ].<span class="ruby-identifier">join</span>                  },
+    <span class="ruby-value">:domain</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">storage_type</span>, <span class="ruby-identifier">server_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">storage_type</span>], <span class="ruby-string">&#39;.&#39;</span>, <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">server_type</span>], <span class="ruby-string">&#39;.domain&#39;</span> ].<span class="ruby-identifier">join</span>                           },
+    <span class="ruby-value">:hostname</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">storage_type</span>, <span class="ruby-identifier">server_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">storage_type</span>], <span class="ruby-string">&#39;.&#39;</span>, <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">server_type</span>], <span class="ruby-string">&#39;.hostname&#39;</span> ].<span class="ruby-identifier">join</span>                         },
+    <span class="ruby-value">:service</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">storage_type</span><span class="ruby-operator">|</span>              <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">storage_type</span>],                                 <span class="ruby-string">&#39;.serviceResource.backendIpAddress&#39;</span> ].<span class="ruby-identifier">join</span> },
+    <span class="ruby-value">:tags</span>       =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">storage_type</span>, <span class="ruby-identifier">server_type</span><span class="ruby-operator">|</span> <span class="ruby-keyword">return</span> [ <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">storage_type</span>], <span class="ruby-string">&#39;.&#39;</span>, <span class="ruby-identifier">filter_label</span>[<span class="ruby-identifier">server_type</span>], <span class="ruby-string">&#39;.tagReferences.tag.name&#39;</span> ].<span class="ruby-identifier">join</span>           },
   }
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_type</span>]
@@ -407,23 +389,12 @@ Include network storage associated with servers matching these tags</p>
   <span class="ruby-keyword">end</span>
   
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_server_type</span>]
-    [ <span class="ruby-value">:datacenter</span>, <span class="ruby-value">:domain</span>, <span class="ruby-value">:hostname</span> ].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">option</span><span class="ruby-operator">|</span>
+    [ <span class="ruby-value">:datacenter</span>, <span class="ruby-value">:domain</span>, <span class="ruby-value">:hostname</span>, <span class="ruby-value">:tags</span> ].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">option</span><span class="ruby-operator">|</span>
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-identifier">option</span>]
         <span class="ruby-identifier">network_storage_object_filter</span>.<span class="ruby-identifier">modify</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span>
           <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">accept</span>(<span class="ruby-identifier">option_to_filter_path</span>[<span class="ruby-identifier">option</span>].<span class="ruby-identifier">call</span>(<span class="ruby-identifier">network_storage_type</span>, <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_server_type</span>])).<span class="ruby-identifier">when_it</span> <span class="ruby-identifier">is</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-identifier">option</span>])
         <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">end</span>
-
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>]
-      <span class="ruby-identifier">network_storage_object_filter</span>.<span class="ruby-identifier">set_criteria_for_key_path</span>(<span class="ruby-identifier">option_to_filter_path</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">call</span>(<span class="ruby-identifier">network_storage_type</span>, <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_server_type</span>]),
-                                                              {
-                                                                <span class="ruby-string">'operation'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'in'</span>,
-                                                                <span class="ruby-string">'options'</span> =<span class="ruby-operator">&gt;</span> [{
-                                                                                <span class="ruby-string">'name'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'data'</span>,
-                                                                                <span class="ruby-string">'value'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:tags</span>].<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">tag_value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tag_value</span>.<span class="ruby-identifier">to_s</span> }
-                                                                              }]
-                                                              })
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
@@ -431,6 +402,10 @@ Include network storage associated with servers matching these tags</p>
   <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">object_filter</span>(<span class="ruby-identifier">network_storage_object_filter</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">network_storage_object_filter</span>.<span class="ruby-identifier">empty?</span>
   <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-constant">NetworkStorage</span>.<span class="ruby-identifier">default_object_mask</span>)
   <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_object_mask</span>]) <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_object_mask</span>]
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:result_limit</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:result_limit</span>][<span class="ruby-value">:offset</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:result_limit</span>][<span class="ruby-value">:limit</span>]
+    <span class="ruby-identifier">account_service</span> = <span class="ruby-identifier">account_service</span>.<span class="ruby-identifier">result_limit</span>(<span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:result_limit</span>][<span class="ruby-value">:offset</span>], <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:result_limit</span>][<span class="ruby-value">:limit</span>])
+  <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">options_hash</span>[<span class="ruby-value">:network_storage_type</span>]
   <span class="ruby-keyword">when</span> <span class="ruby-value">:evault</span>
@@ -486,18 +461,18 @@ Include network storage associated with servers matching these tags</p>
 
           
           <div class="method-source-code" id="default_object_mask-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 325</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 338</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
   {
     <span class="ruby-string">&quot;mask(SoftLayer_Network_Storage)&quot;</span> =<span class="ruby-operator">&gt;</span> [
-                                          <span class="ruby-string">'capacityGb'</span>,
-                                          <span class="ruby-string">'createDate'</span>,
-                                          <span class="ruby-string">'id'</span>,
-                                          <span class="ruby-string">'nasType'</span>,
-                                          <span class="ruby-string">'notes'</span>,
-                                          <span class="ruby-string">'password'</span>,
-                                          <span class="ruby-string">'upgradableFlag'</span>,
-                                          <span class="ruby-string">'username'</span>
+                                          <span class="ruby-string">&#39;capacityGb&#39;</span>,
+                                          <span class="ruby-string">&#39;createDate&#39;</span>,
+                                          <span class="ruby-string">&#39;id&#39;</span>,
+                                          <span class="ruby-string">&#39;nasType&#39;</span>,
+                                          <span class="ruby-string">&#39;notes&#39;</span>,
+                                          <span class="ruby-string">&#39;password&#39;</span>,
+                                          <span class="ruby-string">&#39;upgradableFlag&#39;</span>,
+                                          <span class="ruby-string">&#39;username&#39;</span>
                                          ]
   }.<span class="ruby-identifier">to_sl_object_mask</span>
 <span class="ruby-keyword">end</span></pre>
@@ -521,24 +496,27 @@ Include network storage associated with servers matching these tags</p>
     
       <div id="method-i-account_password" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">account_password</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            account_password(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>Other usernames and passwords associated with a Storage volume.</p>
+          <p>Retrieve other usernames and passwords associated with a Storage volume.</p>
           
           
 
           
           <div class="method-source-code" id="account_password-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 59</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 68</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:account_password</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -579,7 +557,7 @@ Include network storage associated with servers matching these tags</p>
 
           
           <div class="method-source-code" id="add_credential-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 114</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 127</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">add_credential</span>(<span class="ruby-identifier">credential_type</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new credential type cannot be nil&quot;</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">credential_type</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new credential type cannot be empty&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">credential_type</span>.<span class="ruby-identifier">empty?</span>
@@ -620,7 +598,7 @@ the network storage instance</p>
 
           
           <div class="method-source-code" id="assign_credential-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 128</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 141</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">assign_credential</span>(<span class="ruby-identifier">username</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The username cannot be nil&quot;</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">username</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The username cannot be empty&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">username</span>.<span class="ruby-identifier">empty?</span>
@@ -641,24 +619,27 @@ the network storage instance</p>
     
       <div id="method-i-credentials" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">credentials</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            credentials(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>A Storage volume’s access credentials.</p>
+          <p>A Storage volume&#39;s access credentials.</p>
           
           
 
           
           <div class="method-source-code" id="credentials-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 73</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 84</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:credentials</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -698,7 +679,7 @@ the network storage instance</p>
 
           
           <div class="method-source-code" id="has_user_credential-3F-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 140</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 153</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">has_user_credential?</span>(<span class="ruby-identifier">username</span>)
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">credentials</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">credential</span><span class="ruby-operator">|</span> <span class="ruby-identifier">credential</span>.<span class="ruby-identifier">username</span> }.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">username</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -731,7 +712,7 @@ the network storage instance</p>
 
           
           <div class="method-source-code" id="notes-3D-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 147</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 160</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">notes=</span>(<span class="ruby-identifier">notes</span>)
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">editObject</span>({ <span class="ruby-string">&quot;notes&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">notes</span>.<span class="ruby-identifier">to_s</span> })
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">refresh_details</span>()
@@ -765,7 +746,7 @@ the network storage instance</p>
 
           
           <div class="method-source-code" id="password-3D-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 155</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 168</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">password=</span>(<span class="ruby-identifier">password</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new password cannot be nil&quot;</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">password</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new password cannot be empty&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">password</span>.<span class="ruby-identifier">empty?</span>
@@ -803,7 +784,7 @@ from the network storage instance</p>
 
           
           <div class="method-source-code" id="remove_credential-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 166</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 179</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_credential</span>(<span class="ruby-identifier">username</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The username cannot be nil&quot;</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">username</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The username cannot be empty&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">username</span>.<span class="ruby-identifier">empty?</span>
@@ -842,7 +823,7 @@ network API</p>
 
           
           <div class="method-source-code" id="service-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 289</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 302</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">service</span>
   <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Network_Storage</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -858,13 +839,16 @@ network API</p>
     
       <div id="method-i-service_resource" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">service_resource</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            service_resource(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
+        
         
 
         <div class="method-description">
@@ -875,7 +859,7 @@ network API</p>
 
           
           <div class="method-source-code" id="service_resource-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 86</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 99</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:service_resource</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -916,7 +900,7 @@ the latest properties hash for this object.</p>
 
           
           <div class="method-source-code" id="softlayer_properties-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 297</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 310</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">softlayer_properties</span>(<span class="ruby-identifier">object_mask</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">my_service</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>
 
@@ -958,7 +942,7 @@ specified.</p>
 
           
           <div class="method-source-code" id="update_credential_password-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 312</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 325</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update_credential_password</span>(<span class="ruby-identifier">username</span>, <span class="ruby-identifier">password</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new password cannot be nil&quot;</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">password</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;The new username cannot be nil&quot;</span>   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">username</span>
@@ -998,7 +982,7 @@ specified.</p>
 
           
           <div class="method-source-code" id="webcc_account-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 99</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/NetworkStorage.rb, line 112</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:webcc_account</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -1028,7 +1012,7 @@ specified.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

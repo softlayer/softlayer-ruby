@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::ProductItemCategory - softlayer_api gem 3.0.1</title>
+<title>class SoftLayer::ProductItemCategory - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
@@ -83,6 +84,8 @@
     
     <li class="calls-super" ><a href="#method-c-new">::new</a>
     
+    <li ><a href="#method-i-configuration_options">#configuration_options</a>
+    
     <li ><a href="#method-i-default_option">#default_option</a>
     
     <li ><a href="#method-i-required-3F">#required?</a>
@@ -110,7 +113,7 @@ product order.</p>
 <a href="ProductPackage.html">ProductPackage</a> object. There should not
 be a need to create instances of this class directly.</p>
 
-<p>This class rougly represents entities in the
+<p>This class roughly represents entities in the
 <code>SoftLayer_Product_Item_Category</code> service.</p>
 
   </section>
@@ -141,7 +144,25 @@ be a need to create instances of this class directly.</p>
         <div class="method-description">
         
         <p>The categoryCode is a primary identifier for a particular category.  It is
-a string like ‘os’ or ‘ram’</p>
+a string like &#39;os&#39; or &#39;ram&#39;</p>
+
+<p>DEPRECATION WARNING: This attribute is deprecated in favor of <a
+href="ProductItemCategory.html#attribute-i-category_code">#category_code</a>
+and will be removed in the next major release.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-category_code" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">category_code</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The categoryCode is a primary identifier for a particular category.  It is
+a string like &#39;os&#39; or &#39;ram&#39;</p>
         
         </div>
       </div>
@@ -196,7 +217,7 @@ required for orders against the package that created it.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductItemCategory.rb, line 119</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductItemCategory.rb, line 148</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">network_hash</span>, <span class="ruby-identifier">is_required</span>)
   <span class="ruby-keyword">super</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">network_hash</span>)
   <span class="ruby-ivar">@is_required</span> = <span class="ruby-identifier">is_required</span>
@@ -217,6 +238,64 @@ required for orders against the package that created it.</p>
        <header>
          <h3>Public Instance Methods</h3>
        </header>
+
+    
+      <div id="method-i-configuration_options" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            configuration_options(force_update=false)
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve the product item configuration information</p>
+          
+          
+
+          
+          <div class="method-source-code" id="configuration_options-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductItemCategory.rb, line 94</span>
+<span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:configuration_options</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">config_opts</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">config_opts</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-comment"># only retrieved once per instance</span>
+    <span class="ruby-ivar">@configuration_options</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">config_opts</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-comment"># This method assumes that the group and price item data was sent in</span>
+    <span class="ruby-comment"># as part of the +network_hash+ used to initialize this object (as is done)</span>
+    <span class="ruby-comment"># by the ProductPackage class. That class, in turn, gets its information</span>
+    <span class="ruby-comment"># from SoftLayer_Product_Package::getCategories which does some complex</span>
+    <span class="ruby-comment"># work on the back end to ensure the prices returned are correct.</span>
+    <span class="ruby-comment">#</span>
+    <span class="ruby-comment"># If this object was created in any other way, the configuration</span>
+    <span class="ruby-comment"># options might be incorrect. So Caveat Emptor.</span>
+    <span class="ruby-comment">#</span>
+    <span class="ruby-comment"># Options are divided into groups (for convenience in the</span>
+    <span class="ruby-comment"># web UI), but this code collapses the groups.</span>
+    <span class="ruby-keyword">self</span>[<span class="ruby-string">&#39;groups&#39;</span>].<span class="ruby-identifier">collect</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">group</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">group</span>[<span class="ruby-string">&#39;prices&#39;</span>].<span class="ruby-identifier">sort</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">lhs</span>,<span class="ruby-identifier">rhs</span><span class="ruby-operator">|</span> <span class="ruby-identifier">lhs</span>[<span class="ruby-string">&#39;sort&#39;</span>] <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">rhs</span>[<span class="ruby-string">&#39;sort&#39;</span>]}.<span class="ruby-identifier">collect</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">price_item</span><span class="ruby-operator">|</span>
+        <span class="ruby-constant">ProductConfigurationOption</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">price_item</span>[<span class="ruby-string">&#39;item&#39;</span>], <span class="ruby-identifier">price_item</span>)
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>.<span class="ruby-identifier">flatten</span> <span class="ruby-comment"># flatten out the individual group arrays.</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
 
     
       <div id="method-i-default_option" class="method-detail ">
@@ -249,7 +328,7 @@ this method *<strong>will</strong>* return nil.</p>
 
           
           <div class="method-source-code" id="default_option-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductItemCategory.rb, line 108</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductItemCategory.rb, line 137</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">default_option</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">configuration_options</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">configuration_options</span>.<span class="ruby-identifier">first</span>
@@ -286,7 +365,7 @@ this method *<strong>will</strong>* return nil.</p>
 
           
           <div class="method-source-code" id="required-3F-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductItemCategory.rb, line 125</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductItemCategory.rb, line 154</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">required?</span>()
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@is_required</span>
 <span class="ruby-keyword">end</span></pre>
@@ -319,7 +398,7 @@ this method *<strong>will</strong>* return nil.</p>
 
           
           <div class="method-source-code" id="service-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/ProductItemCategory.rb, line 91</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/ProductItemCategory.rb, line 120</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">service</span>
   <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:SoftLayer_Product_Item_Category</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -341,7 +420,7 @@ this method *<strong>will</strong>* return nil.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

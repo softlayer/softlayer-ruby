@@ -4,10 +4,11 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class SoftLayer::VirtualDiskImage - softlayer_api gem 3.0.1</title>
+<title>class SoftLayer::VirtualDiskImage - softlayer_api gem 3.2.2</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
 </script>
 
 <script src="../js/jquery.js"></script>
@@ -83,6 +84,8 @@
     
     <li ><a href="#method-c-default_object_mask">::default_object_mask</a>
     
+    <li ><a href="#method-c-image_with_id">::image_with_id</a>
+    
     <li ><a href="#method-i-coalesced_disk_images">#coalesced_disk_images</a>
     
     <li ><a href="#method-i-local_disk">#local_disk</a>
@@ -146,7 +149,7 @@ in the API.</p>
 
         <div class="method-description">
         
-        <p>A disk image’s size measured in gigabytes.</p>
+        <p>A disk image&#39;s size measured in gigabytes.</p>
         
         </div>
       </div>
@@ -159,20 +162,7 @@ in the API.</p>
 
         <div class="method-description">
         
-        <p>A disk image’s unique md5 checksum.</p>
-        
-        </div>
-      </div>
-      
-      <div id="attribute-i-createDate" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">createDate</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        <p>The date a disk image was created.</p>
+        <p>A disk image&#39;s unique md5 checksum.</p>
         
         </div>
       </div>
@@ -180,6 +170,22 @@ in the API.</p>
       <div id="attribute-i-created" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">created</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The date a disk image was created. DEPRECATION WARNING: This attribute is
+deprecated in favor of <a
+href="VirtualDiskImage.html#attribute-i-created_at">#created_at</a> and
+will be removed in the next major release.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-created_at" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">created_at</span><span
             class="attribute-access-type">[R]</span>
         </div>
 
@@ -211,14 +217,17 @@ in the API.</p>
 
         <div class="method-description">
         
-        <p>The date a disk image was last modified.</p>
+        <p>The date a disk image was last modified. DEPRECATION WARNING: This
+attribute is deprecated in favor of <a
+href="VirtualDiskImage.html#attribute-i-modified_at">#modified_at</a> and
+will be removed in the next major release.</p>
         
         </div>
       </div>
       
-      <div id="attribute-i-modifyDate" class="method-detail">
+      <div id="attribute-i-modified_at" class="method-detail">
         <div class="method-heading attribute-method-heading">
-          <span class="method-name">modifyDate</span><span
+          <span class="method-name">modified_at</span><span
             class="attribute-access-type">[R]</span>
         </div>
 
@@ -264,7 +273,7 @@ in the API.</p>
 
         <div class="method-description">
         
-        <p>A disk image’s unique ID on a virtualization platform.</p>
+        <p>A disk image&#39;s unique ID on a virtualization platform.</p>
         
         </div>
       </div>
@@ -273,6 +282,75 @@ in the API.</p>
     
 
     
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-image_with_id" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">image_with_id</span><span
+            class="method-args">(image_id, options = {})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve the virtual disk image with the given image ID from the API</p>
+
+<p>The options parameter should contain:</p>
+
+<p><strong><code>:client</code></strong> - The client used to connect to the
+API</p>
+
+<p>If no client is given, then the routine will try to use <a
+href="Client.html#method-c-default_client">SoftLayer::Client.default_client</a>
+If no client can be found the routine will raise an error.</p>
+
+<p>The options may include the following keys</p>
+<ul><li>
+<p><strong><code>:object_mask</code></strong> (string) - A object mask of
+properties, in addition to the default properties, that you wish to
+retrieve for the image</p>
+</li></ul>
+          
+          
+
+          
+          <div class="method-source-code" id="image_with_id-source">
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 204</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">image_with_id</span>(<span class="ruby-identifier">image_id</span>, <span class="ruby-identifier">options</span> = {})
+  <span class="ruby-identifier">softlayer_client</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:client</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Client</span>.<span class="ruby-identifier">default_client</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{__method__} requires a client but none was given and Client::default_client is not set&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">softlayer_client</span>
+
+  <span class="ruby-identifier">vdi_service</span> = <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Virtual_Disk_Image</span>]
+  <span class="ruby-identifier">vdi_service</span> = <span class="ruby-identifier">vdi_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">default_object_mask</span>.<span class="ruby-identifier">to_sl_object_mask</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:object_mask</span>)
+    <span class="ruby-identifier">vdi_service</span> = <span class="ruby-identifier">vdi_service</span>.<span class="ruby-identifier">object_mask</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:object_mask</span>])
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">image_data</span> = <span class="ruby-identifier">vdi_service</span>.<span class="ruby-identifier">object_with_id</span>(<span class="ruby-identifier">image_id</span>).<span class="ruby-identifier">getObject</span>()
+
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">VirtualDiskImage</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">softlayer_client</span>, <span class="ruby-identifier">image_data</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
      <section id="protected-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Protected Class Methods</h3>
@@ -298,19 +376,19 @@ in the API.</p>
 
           
           <div class="method-source-code" id="default_object_mask-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 165</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 222</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">default_object_mask</span>
   {
     <span class="ruby-string">&quot;mask(SoftLayer_Virtual_Disk_Image)&quot;</span> =<span class="ruby-operator">&gt;</span> [
-                                             <span class="ruby-string">'capacity'</span>,
-                                             <span class="ruby-string">'checksum'</span>,
-                                             <span class="ruby-string">'createDate'</span>,
-                                             <span class="ruby-string">'description'</span>,
-                                             <span class="ruby-string">'id'</span>,
-                                             <span class="ruby-string">'modifyDate'</span>,
-                                             <span class="ruby-string">'name'</span>,
-                                             <span class="ruby-string">'units'</span>,
-                                             <span class="ruby-string">'uuid'</span>
+                                             <span class="ruby-string">&#39;capacity&#39;</span>,
+                                             <span class="ruby-string">&#39;checksum&#39;</span>,
+                                             <span class="ruby-string">&#39;createDate&#39;</span>,
+                                             <span class="ruby-string">&#39;description&#39;</span>,
+                                             <span class="ruby-string">&#39;id&#39;</span>,
+                                             <span class="ruby-string">&#39;modifyDate&#39;</span>,
+                                             <span class="ruby-string">&#39;name&#39;</span>,
+                                             <span class="ruby-string">&#39;units&#39;</span>,
+                                             <span class="ruby-string">&#39;uuid&#39;</span>
                                             ]
   }.<span class="ruby-identifier">to_sl_object_mask</span>
 <span class="ruby-keyword">end</span></pre>
@@ -334,24 +412,27 @@ in the API.</p>
     
       <div id="method-i-coalesced_disk_images" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">coalesced_disk_images</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            coalesced_disk_images(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>Returns coalesced disk images associated with this virtual disk image</p>
+          <p>Retrieve coalesced disk images associated with this virtual disk image</p>
           
           
 
           
           <div class="method-source-code" id="coalesced_disk_images-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 61</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 77</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:coalesced_disk_images</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -375,24 +456,27 @@ in the API.</p>
     
       <div id="method-i-local_disk" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">local_disk</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            local_disk(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>Returns local disk flag associated with virtual disk image</p>
+          <p>Retrieve local disk flag associated with virtual disk image</p>
           
           
 
           
           <div class="method-source-code" id="local_disk-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 75</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 93</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:local_disk</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -415,25 +499,28 @@ in the API.</p>
     
       <div id="method-i-metadata" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">metadata</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            metadata(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>Whether this disk image is meant for storage of custom user data supplied
-with a Cloud Computing Instance order.</p>
+          <p>Retrieve metadata as to whether this disk image is meant for  storage of
+custom user data supplied with a Cloud Computing Instance order.</p>
           
           
 
           
           <div class="method-source-code" id="metadata-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 89</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 109</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:metadata</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -474,7 +561,7 @@ the network API</p>
 
           
           <div class="method-source-code" id="service-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 159</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 187</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">service</span>
   <span class="ruby-identifier">softlayer_client</span>[<span class="ruby-value">:Virtual_Disk_Image</span>].<span class="ruby-identifier">object_with_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -490,24 +577,27 @@ the network API</p>
     
       <div id="method-i-software" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">software</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            software(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>References to the software that resides on a disk image.</p>
+          <p>Retrieve the references to the software that resides on a disk image.</p>
           
           
 
           
           <div class="method-source-code" id="software-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 102</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 124</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:software</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -531,24 +621,28 @@ the network API</p>
     
       <div id="method-i-source_disk_image" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">source_disk_image</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            source_disk_image(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>The original disk image that the current disk image was cloned from.</p>
+          <p>Retrieve the original disk image that the current disk image was cloned
+from.</p>
           
           
 
           
           <div class="method-source-code" id="source_disk_image-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 116</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 140</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:source_disk_image</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -572,24 +666,27 @@ the network API</p>
     
       <div id="method-i-type_description" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">type_description</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            type_description(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>A brief description of a virtual disk image type’s function.</p>
+          <p>Retrieve a brief description of a virtual disk image type&#39;s function.</p>
           
           
 
           
           <div class="method-source-code" id="type_description-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 130</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 156</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:type_description</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -598,7 +695,7 @@ the network API</p>
 
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">type</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">getType</span>
-    <span class="ruby-identifier">type</span>[<span class="ruby-string">'description'</span>]
+    <span class="ruby-identifier">type</span>[<span class="ruby-string">&#39;description&#39;</span>]
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -613,24 +710,27 @@ the network API</p>
     
       <div id="method-i-type_name" class="method-detail ">
         
+        
         <div class="method-heading">
-          <span class="method-name">type_name</span><span
-            class="method-args">()</span>
+          <span class="method-callseq">
+            type_name(force_update=false)
+          </span>
           
           <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
+        
 
         <div class="method-description">
           
-          <p>A virtual disk image type’s name.</p>
+          <p>Retrieve a virtual disk image type&#39;s name.</p>
           
           
 
           
           <div class="method-source-code" id="type_name-source">
-            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 144</span>
+            <pre><span class="ruby-comment"># File lib/softlayer/VirtualDiskImage.rb, line 172</span>
 <span class="ruby-identifier">sl_dynamic_attr</span> <span class="ruby-value">:type_name</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">should_update?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-comment">#only retrieved once per instance</span>
@@ -639,7 +739,7 @@ the network API</p>
 
   <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">to_update</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">type</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">service</span>.<span class="ruby-identifier">getType</span>
-    <span class="ruby-identifier">type</span>[<span class="ruby-string">'name'</span>]
+    <span class="ruby-identifier">type</span>[<span class="ruby-string">&#39;name&#39;</span>]
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -660,7 +760,7 @@ the network API</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
