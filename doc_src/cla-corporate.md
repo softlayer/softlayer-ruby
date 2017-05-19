@@ -18,7 +18,7 @@ designated employees to the Project, and to grant copyright and patent licenses
 thereto.
 
 If you have not already done so, please complete and sign, then scan and email a
-pdf file of this Agreement to pjackson@softlayer.com. 
+pdf file of this Agreement to SLDNDeveloperRelations@wwpdl.vnet.ibm.com.
 
 
 

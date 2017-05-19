@@ -13,7 +13,7 @@ well as the protection of IBM and its customers; it does not change your rights
 to use your own Contributions for any other purpose.
 
 If you have not already done so, please complete and sign, then scan and email a
-pdf file of this Agreement to pjackson@softlayer.com
+pdf file of this Agreement to SLDNDeveloperRelations@wwpdl.vnet.ibm.com.
 
 Please read this document carefully before signing and keep a copy for your
 records.
