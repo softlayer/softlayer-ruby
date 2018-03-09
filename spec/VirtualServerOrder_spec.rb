@@ -175,6 +175,12 @@ describe SoftLayer::VirtualServerOrder do
     expect(subject.virtual_guest_template['networkComponents']).to eq [{'maxSpeed' => 1000}]
   end
 
+  it "puts the bootMode attribute into the template as supplementalCreateObjectOptions.bootMode" do
+    expect(subject.virtual_guest_template['supplementalCreateObjectOptions']).to be_nil
+    subject.supplementalCreateObjectOptions = {"bootMode" => 'HVM'}
+    expect(subject.virtual_guest_template['supplementalCreateObjectOptions']).to eq ({"bootMode" => "HVM"})
+  end
+
   it "calls the softlayer API to validate an order template" do
     client = SoftLayer::Client.new(:username => "fakeusername", :api_key => 'DEADBEEFBADF00D')
 
