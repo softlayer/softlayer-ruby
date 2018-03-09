@@ -108,6 +108,10 @@ module SoftLayer
     # Corresponds to +primaryBackendNetworkComponent.networkVlan.id+ in the +createObject+ documentation
     attr_accessor :user_metadata
 
+    # Hash, supplemental options - See https://sldn.softlayer.com/reference/datatypes/SoftLayer_Virtual_Guest_SupplementalCreateObjectOptions
+    # Corresponds to +supplementalCreateObjectOptions+ in the +createObject+ documentation
+    attr_accessor :supplementalCreateObjectOptions
+
     # Create a new order that works through the given client connection
     def initialize (client = nil)
       @softlayer_client = client || Client.default_client
@@ -170,11 +174,12 @@ module SoftLayer
       template['primaryNetworkComponent']        = { "networkVlan" => { "id" => @public_vlan_id.to_i } } if @public_vlan_id
       template['primaryBackendNetworkComponent'] = { "networkVlan" => {"id" => @private_vlan_id.to_i } } if @private_vlan_id
       template['sshKeys']                        = @ssh_key_ids.collect { |ssh_key_id| {'id'=> ssh_key_id.to_i } } if @ssh_key_ids
+      template['supplementalCreateObjectOptions'] = @supplementalCreateObjectOptions if @supplementalCreateObjectOptions
 
       if @image_template
-          template['blockDeviceTemplateGroup'] = {"globalIdentifier" => @image_template.global_id}
+        template['blockDeviceTemplateGroup'] = {"globalIdentifier" => @image_template.global_id}
       elsif @os_reference_code
-          template['operatingSystemReferenceCode'] = @os_reference_code
+        template['operatingSystemReferenceCode'] = @os_reference_code
       end
 
       if @disks && !@disks.empty?
