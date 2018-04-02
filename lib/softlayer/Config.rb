@@ -121,7 +121,8 @@ module SoftLayer
       search_path.each do |file_path|
         if File.readable? file_path
           config            = ConfigParser.new file_path
-          softlayer_section = config['softlayer']
+          profile_name = ENV['SL_PROFILE'] || 'softlayer'
+          softlayer_section = config[profile_name]
 
           if softlayer_section
             result[:api_key]      = softlayer_section['api_key'] if softlayer_section['api_key']
