@@ -1,3 +1,8 @@
+*3.2.3*
+* Support for profiles.
+* Support for HVM.
+
+
 *3.2.2*
 * Fix NoMethodError when getting the datacenters out of an ImageTemplate and the value was nil.
 * Fix NoMethodError when getting public and private images with a result limit of 1.
